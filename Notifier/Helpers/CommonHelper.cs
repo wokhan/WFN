@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using Windows.ApplicationModel.Resources.Core;
+//using Windows.ApplicationModel.Resources.Core;
 
 namespace WindowsFirewallNotifier
 {
