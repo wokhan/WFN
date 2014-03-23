@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Windows.Forms;
 using WindowsFirewallNotifier.Properties;
 
@@ -97,20 +98,25 @@ namespace WindowsFirewallNotifier
                 defTargetPort = resources.GetString(chkPortRule.Name + ".Text");
             }
 
+            this.Height = btnAdvanced.Top + btnAdvanced.Height + 3;
+
             chkCurrentProfile.Text = String.Format(chkCurrentProfile.Text, FirewallHelper.GetCurrentProfileAsText());
 
             this.Left = Screen.PrimaryScreen.WorkingArea.Width - this.Width - 5;
 
             this.Icon = Resources.ICON_SHIELD;
+            this.Top = Screen.PrimaryScreen.WorkingArea.Bottom - this.Height;
+            
             if (Settings.Default.UseAnimation)
             {
-                this.Top = Screen.PrimaryScreen.WorkingArea.Bottom - this.Height / 3;
+                this.Left = Screen.PrimaryScreen.WorkingArea.Right + this.Width;
                 this.Shown += new EventHandler(MainForm_Shown);
+                this.FormClosing += MainForm_FormClosing;
             }
-            else
+            /*else
             {
                 this.Top = Screen.PrimaryScreen.WorkingArea.Bottom - this.Height;
-            }
+            }*/
 
             lblPath.MouseMove += new MouseEventHandler(lbl_MouseMove);
             lblPath.MouseLeave += new EventHandler(lbl_MouseLeave);
@@ -121,6 +127,12 @@ namespace WindowsFirewallNotifier
 
             activeConn = conns[conns.Count - 1];
             showConn();
+        }
+
+        void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            animateLeft(false);
+            
         }
 
         /// <summary>
@@ -250,6 +262,7 @@ namespace WindowsFirewallNotifier
             int index = conns.IndexOf(activeConn);
 
             lblConn.Text = (index + 1) + "/" + conns.Count;
+            //lblClose.Text = Resources.
 
             btnNext.Enabled = (index < (conns.Count - 1));
             btnPrev.Enabled = (index > 0);
@@ -378,11 +391,23 @@ namespace WindowsFirewallNotifier
         /// <param name="e"></param>
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            int targetTop = Screen.PrimaryScreen.WorkingArea.Bottom - this.Height;
-            for (int i = this.Top; i > targetTop - 5; i -= 2)
+            animateLeft(true);
+        }
+
+        private void animateLeft(bool show)
+        {
+            int targetLeft = Screen.PrimaryScreen.WorkingArea.Right + (show ? -this.Width : this.Width);
+            int startLeft = this.Left;
+            int i = 1;
+
+            while (i < 20)
             {
-                this.Top = i;
+                this.Left = (int)CommonHelper.easeInOut(i++, startLeft, targetLeft - startLeft, 20);
                 Application.DoEvents();
+
+                // I know, should rely on a timer for animations, feel free to change that one...
+                Thread.Sleep(20);
+                
             }
         }
 
@@ -586,6 +611,44 @@ namespace WindowsFirewallNotifier
                 Process.Start(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Console.exe"));
             }
             catch { }
+        }
+
+
+       
+
+        private int exHeight = -1;
+        private void btnAdvanced_Click(object sender, EventArgs e)
+        {
+            int targetHeight;
+            int localexHeight = this.Height;
+            if (exHeight == -1)
+            {
+                exHeight = this.Height;
+                targetHeight = this.Height + pnlHeader.Height;
+            }
+            else
+            {
+                targetHeight = exHeight;
+                exHeight = -1;
+            }
+
+            int targetTop = Screen.PrimaryScreen.WorkingArea.Bottom - targetHeight;
+            int startTop = this.Top;
+            int i = 1;
+            while (i < 20)
+            {
+                //this.Height += (targetHeight - localexHeight) / 20;// (int)QuadEaseInOut(targetHeight, exHeight, 2, 20);
+                this.Height = (int)CommonHelper.easeInOut(i, localexHeight, targetHeight - localexHeight, 20);
+                this.Top = (int)CommonHelper.easeInOut(i, startTop, targetTop - startTop, 20); ;
+                
+                Application.DoEvents();
+
+                // I know, should rely on a timer for animations, feel free to change that one (yep, that one is a dup :-P)...
+                Thread.Sleep(10);
+                
+                i++;
+            }
+
         }
 
     }

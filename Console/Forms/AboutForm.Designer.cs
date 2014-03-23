@@ -46,7 +46,7 @@
             // 
             // pnlInsStep1
             // 
-            pnlInsStep1.BackColor = System.Drawing.Color.White;
+            pnlInsStep1.BackColor = System.Drawing.SystemColors.Window;
             pnlInsStep1.Controls.Add(lnkWebsite);
             pnlInsStep1.Controls.Add(this.lblVersion);
             pnlInsStep1.Controls.Add(this.pbIcon);
@@ -78,7 +78,7 @@
             // btnDonate
             // 
             resources.ApplyResources(btnDonate, "btnDonate");
-            btnDonate.BackColor = System.Drawing.Color.White;
+            btnDonate.BackColor = System.Drawing.SystemColors.ButtonFace;
             btnDonate.FlatAppearance.BorderColor = System.Drawing.Color.DeepSkyBlue;
             btnDonate.FlatAppearance.MouseOverBackColor = System.Drawing.Color.SkyBlue;
             btnDonate.Name = "btnDonate";
@@ -94,7 +94,7 @@
             // btnOK
             // 
             resources.ApplyResources(this.btnOK, "btnOK");
-            this.btnOK.BackColor = System.Drawing.Color.White;
+            this.btnOK.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.btnOK.FlatAppearance.BorderColor = System.Drawing.Color.DarkBlue;
             this.btnOK.FlatAppearance.MouseOverBackColor = System.Drawing.Color.SkyBlue;
             this.btnOK.Name = "btnOK";

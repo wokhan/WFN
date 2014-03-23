@@ -769,7 +769,7 @@ namespace WindowsFirewallNotifierConsole
             {
                 if (DateTime.Now.Subtract((DateTime)lvi.Tag).TotalMilliseconds > 500)
                 {
-                    lvi.BackColor = Color.Transparent;
+                    lvi.BackColor = SystemColors.Window;
                 }
 
                 lvi.Tag = DateTime.Now;
@@ -907,39 +907,39 @@ namespace WindowsFirewallNotifierConsole
         private void btnTConnections_Click(object sender, EventArgs e)
         {
             btnTConnections.BackColor = Color.LightBlue;
-            btnTLog.BackColor = Color.White;
-            btnTRules.BackColor = Color.White;
-            btnTExceptions.BackColor = Color.White;
+            btnTLog.BackColor = SystemColors.ButtonFace;
+            btnTRules.BackColor = SystemColors.ButtonFace;
+            btnTExceptions.BackColor = SystemColors.ButtonFace;
 
             tabPanel.SelectTab(tabConnections);
         }
 
         private void btnTRules_Click(object sender, EventArgs e)
         {
-            btnTConnections.BackColor = Color.White;
-            btnTLog.BackColor = Color.White;
-            btnTRules.BackColor = Color.LightBlue;
-            btnTExceptions.BackColor = Color.White;
+            btnTConnections.BackColor = SystemColors.ButtonFace;
+            btnTLog.BackColor = SystemColors.ButtonFace;
+            btnTRules.BackColor = SystemColors.ButtonFace;
+            btnTExceptions.BackColor = SystemColors.ButtonFace;
 
             tabPanel.SelectTab(tabRules);
         }
 
         private void btnTLog_Click(object sender, EventArgs e)
         {
-            btnTConnections.BackColor = Color.White;
+            btnTConnections.BackColor = SystemColors.ButtonFace;
             btnTLog.BackColor = Color.LightBlue;
-            btnTRules.BackColor = Color.White;
-            btnTExceptions.BackColor = Color.White;
+            btnTRules.BackColor = SystemColors.ButtonFace;
+            btnTExceptions.BackColor = SystemColors.ButtonFace;
 
             tabPanel.SelectTab(tabLog);
         }
 
         private void btnTExceptions_Click(object sender, EventArgs e)
         {
-            btnTConnections.BackColor = Color.White;
+            btnTConnections.BackColor = SystemColors.ButtonFace;
             btnTExceptions.BackColor = Color.LightBlue;
-            btnTLog.BackColor = Color.White;
-            btnTRules.BackColor = Color.White;
+            btnTLog.BackColor = SystemColors.ButtonFace;
+            btnTRules.BackColor = SystemColors.ButtonFace;
 
             tabPanel.SelectTab(tabExceptions);
         }

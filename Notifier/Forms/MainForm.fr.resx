@@ -117,76 +117,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="chkCurrentProfile.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 145</value>
+  <data name="btnAdvanced.Text" xml:space="preserve">
+    <value>Avancé</value>
   </data>
-  <data name="chkCurrentProfile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>303, 17</value>
+  <data name="lblTitle.Text" xml:space="preserve">
+    <value>Le pare-feu Windows a bloqué une connexion sortante.</value>
   </data>
-  <data name="chkCurrentProfile.Text" xml:space="preserve">
-    <value>Créer une règle pour le profil courant uniquement ({0})</value>
-  </data>
-  <data name="chkTemp.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 166</value>
-  </data>
-  <data name="chkTemp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>374, 17</value>
-  </data>
-  <data name="chkTemp.Text" xml:space="preserve">
-    <value>N'appliquer ce choix que pour cette fois et redemander si nécessaire</value>
-  </data>
-  <data name="btnAlwaysBlock.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAALQSURBVFhHxdJraM1hHAfwlVJKzhzmGiHmUrRSyESI
-        tJbWUpNrUitrrlninUteEMIbRMkbw0ThDWu8kqSEXFdr58zu2/F0Ljs7l/2/vs8cp+c5/2ePnJxZfV58
-        n9/5Xc5peQD+K/1h39xMHkKWfOSeqe4jLTjVhZk8hCz5yDVT3SdpIblnTiYPIUs+cs1U90laSFTOzuQh
-        ZMlHrpnqPkkLsd2zBCGHhLpP0kJ05wxByCH7AeGt0wUhh+wHBCumCYJJaNcC9NeeQeREhbEerlmHWN0F
-        RI6WGOsp9gNE+VRBMEl+ecOP/PqLNdzRauGTW+HEor+KiTiCVcVaXWE/IFA2RRBMEI8BjpMWq68dfA8d
-        3wKnv0+rhc9VufpT7Af0bpwsCCbRuxf57RKa+OtncCIh7S3Z0ojA5kLjDLIf0FM6SRCGEn10A5DfdggD
-        /q8I7Cgy9qbYD+gumSgINtGH14Bw0CXZ9Am92xYZexT2A7o2TBAEG3GkHBA9Lv1Pbho/n8F+QOf6AkEY
-        yo+aMjitzUB3u1H0/hVjn8J+QMe6AkEwCRwshdP8DWjzpTlNn7Us9d2+ZOxPsR/Qvna8IJgMfHgF+BvT
-        km+eo2vTfERundXepcCBUuMMsh/Qtnqcj2Ay8O4lwH80KfHqKTrL56VrkRun0zWpd2+J1qvgz2Q5oHWV
-        9xbBpLtyDeL1dYjcPIOOskJXPXj+MOINDxC6fMxVU9xT90laaF3pLaIkIUcWq/skLXxfMVY6RciBq6Tt
-        k7TQUpz/Wy3hH3pLo0jbJ2nBvzz/txF0nfAPvKUCGpyt7pO04F/mybSfQoQsPSYvpWeq+yQt+JZ6TGbS
-        C8Jf6KNqcs1T90laaF4yxuYQhQh/8JEWkmmGtk/SgqkhQwGdI9MhTVRJI8nUO0jdJ2nB1DAEL50iQe9p
-        O40g02c16j5JC6aGPxhteLNS90muh+FmfBw+yPsJ8/jqpZFGCv8AAAAASUVORK5CYII=
-</value>
+  <data name="btnClose.Text" xml:space="preserve">
+    <value>      Tout ignorer</value>
   </data>
   <data name="btnAlwaysBlock.Text" xml:space="preserve">
     <value>Bloquer</value>
   </data>
-  <data name="btnAlwaysAllow.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAKzSURBVFhHxdbLS1RhGMfxp6abIQwJAy2CiBYtIgpc
-        tGjRokUQBEHQrlWmXSzLLmaJ3aab1R8QtGoVtCjL7jfLW2WmTgRBIEwLF218YyhDtF+/VzzD+x7POe/c
-        tIHv4nln8XlmzszhCID/mjVc+7yDbZerqW3SktoqLYNb4lcGN+PywCZcGtiIi/0bcOHTeiT7KnG+by3O
-        fVyNs72rcKZ3JU5/WI7m98vQ9G4pTvUkcLKnIt3YHZfGrnI50blYGjoXyfGOhZanswYfLsTjBeIgnvbj
-        x97OtzydNfhwIR4vEAfxtB8/+mae5emswYcL8XiBOIin/fiR9pjl6ayBuCrimps4iIM4iIM4iKP+9Vxl
-        ejprIK5mEMfhV3OiFyCuZhDHoZeOBYirGcRR90KiFyCuSoHrVwCOg88dCxBXxeJ/MTFZAI4DzxwLEFfF
-        4BMYyxaAo/apYwHiKgwfx2go3tydmHzfLADH/ieOBYirsE8+hsxkfryhoyz7nlkAjn2PHQsQV2Ff+x+M
-        ZDNx89wrBMfeR44FiKuwaz6KH1ZNXUumnekicOx56FiAuAr7wf3CsDMHjpo2xwLEVRDuXfMMvoeWA46a
-        B44FiKfDcO+v9hND08oRR/V9SZuezhqI34rCvdurwrdseeDY3Sp3TE9nDcTXER+Pwr073Ai+5oujqlUq
-        TU9nDcT1M1zShYfcZFz4jap7tqezBuLeM9ztEuP9xMt23XUsMIXrx6gY8ZslxBMady4whZvPcHXEM0Xg
-        bcQrPNy5gA8X4kJ8BfH2PPHfxGv1NTdx5wIBuBAX4kK8nngmB/wL8TVBuHOBCFyIC/EE8evEMwH4EPFq
-        4gvCcJ3p6azBgQtxIS7EK4gniSviKeI7iceISxSuMz2dNeSIC3EhLsTLiQtxyQXXmZ5u2sFsF3g4e0H+
-        Aa71pudNX0glAAAAAElFTkSuQmCC
-</value>
-  </data>
   <data name="btnAlwaysAllow.Text" xml:space="preserve">
     <value>Autoriser</value>
   </data>
-  <data name="btnOptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        R0lGODlhEAAQAIQfAB1XlLu7u+Tk5DOCytTU1MrKyrSztNzc3PT09Pj4+J+2zMTExV2u6qWlpZauvZqa
-        mqurq+rq6vz8/KmyuO7u75STk/Hx8b3AwqKoruDg4J+foOfn6NDPztrZ2MzMzP///yH/C05FVFNDQVBF
-        Mi4wAwEBAAAh+QQBAAAfACwAAAAAEAAQAAAItgA/FOjwoaDBBBc8LLBgsIEHAgYLBpAgAMKHBAkuQvDA
-        sKAHCgksfrgQoKCEBxAyfghAIQIHAhMNRHzQQMIHDgcEbBBA4WHEkw0SBNgpIAKBBxFNPmCZocKDCimT
-        fkBgoEMHDAKkGqRQgAAHBQwcaP0QYUHRBgAGhJUqYEEGoxcIpF1rMAMBoiIXzBX7oacGAxY0RAwwd8JK
-        qgUe2Iw4Ye4FAwgQaOiYFEPaCxYMQB77AcOFDwEBADs=
-</value>
+  <data name="chkCurrentProfile.Text" xml:space="preserve">
+    <value>Créer une règle pour le profil courant uniquement ({0})</value>
+  </data>
+  <data name="chkTemp.Text" xml:space="preserve">
+    <value>N'appliquer ce choix que pour cette fois et redemander si nécessaire</value>
   </data>
   <data name="chkTRule.Text" xml:space="preserve">
     <value>Cible : {0}</value>
@@ -196,9 +146,6 @@
   </data>
   <data name="chkLPortRule.Text" xml:space="preserve">
     <value>Port local : {0}</value>
-  </data>
-  <data name="lblTitle.Text" xml:space="preserve">
-    <value>Le pare-feu Windows a bloqué une connexion sortante.</value>
   </data>
   <data name="lblPath.Text" xml:space="preserve">
     <value>Chemin : {0}</value>

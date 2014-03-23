@@ -127,9 +127,6 @@
   <data name="connLocalAddr.Text" xml:space="preserve">
     <value>Local address</value>
   </data>
-  <data name="colRProfile.Width" type="System.Int32, mscorlib">
-    <value>65</value>
-  </data>
   <data name="&gt;&gt;toolStripRules.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -139,8 +136,12 @@
   <data name="&gt;&gt;btnERemove.Name" xml:space="preserve">
     <value>btnERemove</value>
   </data>
-  <data name="lblRules.Text" xml:space="preserve">
-    <value>The grid above lists all Windows firewall rules. The ones prefixed by "Custom rules" have been created by Windows Firewall Notifier. You can not manually create rules, but you can remove useless ones if required.</value>
+  <data name="showAllToolStripMenuItem.Text" xml:space="preserve">
+    <value>Show all</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnLEvents.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
   </data>
   <data name="colRIcon.HeaderText" xml:space="preserve">
     <value />
@@ -151,6 +152,9 @@
   <data name="&gt;&gt;gridRules.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="colRDirection.HeaderText" xml:space="preserve">
+    <value>Dir.</value>
+  </data>
   <data name="lblConnections.Text" xml:space="preserve">
     <value>This screen displays all active connections on this computer, updated every second (by default).
 Closed connections (in orange) will remain displayed a few seconds before disappearing.</value>
@@ -158,10 +162,15 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="btnRRefresh.Text" xml:space="preserve">
     <value>Refresh</value>
   </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>833, 462</value>
+  </data>
+  <data name="&gt;&gt;colExcPath.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="colExcIcon.Width" type="System.Int32, mscorlib">
     <value>22</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="btnUpdate.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
   </data>
@@ -203,9 +212,6 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="&gt;&gt;toolStripSeparator6.Name" xml:space="preserve">
     <value>toolStripSeparator6</value>
   </data>
-  <data name="&gt;&gt;tabRules.Parent" xml:space="preserve">
-    <value>tabPanel</value>
-  </data>
   <data name="btnDonate.Location" type="System.Drawing.Point, System.Drawing">
     <value>719, 5</value>
   </data>
@@ -228,8 +234,8 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="&gt;&gt;btnTConnections.Name" xml:space="preserve">
     <value>btnTConnections</value>
   </data>
-  <data name="&gt;&gt;lblRules.Name" xml:space="preserve">
-    <value>lblRules</value>
+  <data name="toolStripLog.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 25</value>
   </data>
   <data name="&gt;&gt;btnRDelete.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -240,8 +246,8 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="&gt;&gt;colRIcon.Name" xml:space="preserve">
     <value>colRIcon</value>
   </data>
-  <data name="toolStripLog.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 25</value>
+  <data name="&gt;&gt;btnDonate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="colRSvc.Width" type="System.Int32, mscorlib">
     <value>67</value>
@@ -255,26 +261,20 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="&gt;&gt;toolStripConnections.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="btnTRules.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="colREnabled.Width" type="System.Int32, mscorlib">
+    <value>55</value>
   </data>
-  <data name="activeRulesOnlyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>256, 22</value>
+  <data name="&gt;&gt;toolStripLog.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
-  <data name="btnOptions.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="&gt;&gt;tabRules.Name" xml:space="preserve">
-    <value>tabRules</value>
+  <data name="&gt;&gt;fast1sToolStripMenuItem.Name" xml:space="preserve">
+    <value>fast1sToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;toolStripSeparator7.Name" xml:space="preserve">
     <value>toolStripSeparator7</value>
   </data>
   <data name="btnOptions.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
-  </data>
-  <data name="btnTLog.Text" xml:space="preserve">
-    <value>   Log</value>
   </data>
   <data name="&gt;&gt;btnTRules.Name" xml:space="preserve">
     <value>btnTRules</value>
@@ -334,9 +334,6 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="btnOpenConsole.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
     <value>None</value>
   </data>
-  <data name="btnERemove.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
   <data name="&gt;&gt;tabLog.Name" xml:space="preserve">
     <value>tabLog</value>
   </data>
@@ -358,17 +355,26 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="tabConnections.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 26</value>
   </data>
-  <data name="&gt;&gt;lblLog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;btnConnStop.Name" xml:space="preserve">
+    <value>btnConnStop</value>
   </data>
   <data name="&gt;&gt;connRemotePort.Name" xml:space="preserve">
     <value>connRemotePort</value>
   </data>
-  <data name="&gt;&gt;fast1sToolStripMenuItem.Name" xml:space="preserve">
-    <value>fast1sToolStripMenuItem</value>
+  <data name="&gt;&gt;colRAction.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;lblLog.Parent" xml:space="preserve">
-    <value>tabLog</value>
+  <data name="&gt;&gt;colPath.Name" xml:space="preserve">
+    <value>colPath</value>
+  </data>
+  <data name="&gt;&gt;toolStripLog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="btnTConnections.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="&gt;&gt;pnlOverTabTop.Name" xml:space="preserve">
+    <value>pnlOverTabTop</value>
   </data>
   <data name="btnUpdate.Location" type="System.Drawing.Point, System.Drawing">
     <value>472, 5</value>
@@ -393,17 +399,17 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="colREnabled.HeaderText" xml:space="preserve">
     <value>Enabled</value>
   </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>Windows Firewall Notifier</value>
+  <data name="&gt;&gt;pnlOverTabTop.Parent" xml:space="preserve">
+    <value>$this</value>
   </data>
   <data name="gridRules.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <data name="tabPanel.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
+  <data name="&gt;&gt;imgLstConn.Name" xml:space="preserve">
+    <value>imgLstConn</value>
   </data>
-  <data name="&gt;&gt;toolStripConnections.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="btnOptions.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="btnRRefresh.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
     <value>Magenta</value>
@@ -441,9 +447,6 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="&gt;&gt;toolStripSeparator8.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;tabPanel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;btnUpdate.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
@@ -456,17 +459,14 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="lblConnections.Size" type="System.Drawing.Size, System.Drawing">
     <value>829, 38</value>
   </data>
+  <data name="&gt;&gt;connLocalAddr.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="btnDonate.Size" type="System.Drawing.Size, System.Drawing">
     <value>111, 29</value>
   </data>
-  <data name="&gt;&gt;gridExceptions.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="&gt;&gt;tabConnections.ZOrder" xml:space="preserve">
     <value>0</value>
-  </data>
-  <data name="&gt;&gt;btnOpenConsole.Name" xml:space="preserve">
-    <value>btnOpenConsole</value>
   </data>
   <data name="&gt;&gt;toolStripConnections.Name" xml:space="preserve">
     <value>toolStripConnections</value>
@@ -480,18 +480,26 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="colDate.Width" type="System.Int32, mscorlib">
     <value>56</value>
   </data>
-  <data name="btnELocate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="toolStripLabel1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAa5JREFUOE+V0E9Ik3EYB/DH0jCCOhTaIYqIIuiQsJNM8BJ1iTwllZHnOetSg70Q
-        HTYPohWevXRTkdiL2N+XYB1iE+TdWtqa2yvbaplTXnz97X1599P2fnvRBaLMvT7wgQee5wsPD1XyI0H8
-        HNF2quRfjiL7qpnqFV8YNJEdxF5Dp6srtYsr/hKUZ9iJZ/yqpQhupITLu1lJ/8lq1A6nHzKkHwOZJzbf
-        Fv7dZ/3vd9vM+BQr1X9+O5zwMKT6UP76ALp8D3qsZ1+GvRcLtfVuh+N3GY91Q412g6cD9skDtmBNG/bc
-        +Cas/s099xKXbzNj5gbKSfvs/AsgN1RffhhcCehkytdY6UsHynMeYPGp/TDBEa4IOhlRF9PCbTDjPUDq
-        EfDD6whPeBkZn64wVboAc/YWMN8LzN13hMt3GDHpDCu+bYER6YQV70IldtMRU77OaO3dUbY0dQzr4avY
-        iLrBI+2OGBEXI3X6CCuEGqF+PAvj8yXo4YvOSOcYFcapnJ0kLE+fgPbhFNbeO/TmeImyEw3pX68P4Y94
-        GCtTTc6JTSYtjlFrUSTpt0jaQRRFCv4DOxmSMzjWKhYAAAAASUVORK5CYII=
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
+        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAALFSURBVDhPjZLdT5JRHMfPf9FNW5fdunVRW63U1loX
+        vWzl2nRYbtlm5tKmpiBqtdKLphOzxqZOUB4EE8zJSyaBgYRA4tsMliagkBIvJu8I/vo9IGZzbp3ts3PO
+        c76/zznPeR7CFE2TBrGRNL0zk8YhUw5TZGxtEJsm2EMmM0tkHMM5E9dONOI6C3N0/iD7AgzXNQ+bQ5R+
+        GfTfPfDV7oVJ6wb0aKyAQjdLbCo6UlAnNNS1jlpgyb0FO7sA0eQuhBIpiGAfTCRBa9uApnemVP3gdMEh
+        QS315RTuHl90BYBuqV0siifBF0mk8Ud3UJQC9Tc3YNb1RGg4hpAspJKne8vT2mAbdwoj0Z0kFiXAE4rv
+        4w3HYRP7dvkcVPF1VdUDepKFPOr7PKOxusGPu20GM8GNYOwQPjzJsPEHlPVoJJU8LW6cgZT3alb1K550
+        8dpWdJ/1PbLjX+EEjM7Y4R5Xpa7onSRZSClXZZbPO8G1HYVVXxjs/jA4AxEsyuDAMf2MXufjq5a8+Sgp
+        6/5EspDi1x8622QWcGB42RtMh90Y9oRi+DoxcP1GQSAMNk8QmEI93O0av3OfqyJZCIOjzCnmKMOyOQes
+        YXgd8Ufj6QsNIf4IXiTC01rhdpsMbrRKS6++GCbXWiRpSMGrUXK9RVrD6JCB1LwCTjxJLIU/w17z4RcQ
+        6KxQ2D4GL99boKJXE85jU0UIyW8UEro4bbrULHp85dlQoKpPDVzVAginbMCdmIcy7jjgGlT362Bk9idQ
+        BjuUd6tjWFx4kRbgkdKCy0/FJJ9NnTxXP/D8TC1/HJk6XcOX4/xhPlt4s6RL6W9TLIDU4gZq2gEPutVx
+        lNz6R0AbMUzyGihyniUgudjT8wxUHoMj99GSkVk3CAwOqOhRLx0puHBAkHlOj6lcBkfhpSWSGTf061cl
+        /y34KxGeLe5UKDqUi4JBk/P4HxgaqT+JtQOMAAAAAElFTkSuQmCC
 </value>
+  </data>
+  <data name="&gt;&gt;btnDonate.ZOrder" xml:space="preserve">
+    <value>6</value>
   </data>
   <data name="toolStripExceptions.Text" xml:space="preserve">
     <value>toolStrip2</value>
@@ -502,8 +510,8 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="tabExceptions.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
-  <data name="&gt;&gt;stripConnUpdSpeed.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripDropDownButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnRDelete.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
   </data>
   <data name="btnTExceptions.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
     <value>ImageBeforeText</value>
@@ -514,9 +522,6 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="btnTExceptions.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
-  <data name="&gt;&gt;toolStripExceptions.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;toolStripExceptions.Parent" xml:space="preserve">
     <value>tabExceptions</value>
   </data>
@@ -525,9 +530,6 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   </data>
   <data name="colExcTargetPort.HeaderText" xml:space="preserve">
     <value>Remote port</value>
-  </data>
-  <data name="btnOptions.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
-    <value>ImageBeforeText</value>
   </data>
   <data name="gridRules.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 28</value>
@@ -544,8 +546,8 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="btnTConnections.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;lstConnections.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ListView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnTRules.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="colRAction.Width" type="System.Int32, mscorlib">
     <value>65</value>
@@ -553,8 +555,14 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>6, 13</value>
   </data>
+  <data name="tabExceptions.Text" xml:space="preserve">
+    <value>Exceptions</value>
+  </data>
   <data name="tabRules.Text" xml:space="preserve">
     <value>Rules</value>
+  </data>
+  <data name="&gt;&gt;connLocalPort.Name" xml:space="preserve">
+    <value>connLocalPort</value>
   </data>
   <data name="btnRRefresh.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -570,8 +578,8 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
         m8QcL3TKHf+3JMHfOY6kjeMhmWafZsg5N44I+AW6yLwAZ/SnKAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="colREnabled.Width" type="System.Int32, mscorlib">
-    <value>55</value>
+  <data name="btnTLog.Text" xml:space="preserve">
+    <value>   Log</value>
   </data>
   <data name="&gt;&gt;toolStripSeparator4.Name" xml:space="preserve">
     <value>toolStripSeparator4</value>
@@ -579,14 +587,8 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="btnTRules.Size" type="System.Drawing.Size, System.Drawing">
     <value>106, 29</value>
   </data>
-  <data name="colExcIcon.MinimumWidth" type="System.Int32, mscorlib">
-    <value>22</value>
-  </data>
   <data name="toolStripLog.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 3</value>
-  </data>
-  <data name="&gt;&gt;connRemotePort.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="normal2sToolStripMenuItem.Text" xml:space="preserve">
     <value>Normal (1s)</value>
@@ -594,14 +596,14 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="&gt;&gt;wSHRulesOnlyToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;slow5SecondsToolStripMenuItem.Name" xml:space="preserve">
-    <value>slow5SecondsToolStripMenuItem</value>
-  </data>
   <data name="btnTRules.TabIndex" type="System.Int32, mscorlib">
     <value>20</value>
   </data>
   <data name="connRemotePort.Text" xml:space="preserve">
     <value>Remote port</value>
+  </data>
+  <data name="tabConnections.Text" xml:space="preserve">
+    <value>Connections</value>
   </data>
   <data name="colRIcon.MinimumWidth" type="System.Int32, mscorlib">
     <value>20</value>
@@ -642,9 +644,6 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="colRLocalport.Width" type="System.Int32, mscorlib">
     <value>75</value>
   </data>
-  <data name="&gt;&gt;toolStripExceptions.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <data name="&gt;&gt;toolStripRules.Name" xml:space="preserve">
     <value>toolStripRules</value>
   </data>
@@ -663,6 +662,9 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="toolStripSeparator6.Size" type="System.Drawing.Size, System.Drawing">
     <value>6, 25</value>
   </data>
+  <data name="tabPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
   <data name="&gt;&gt;btnOptions.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -674,6 +676,9 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   </data>
   <data name="&gt;&gt;colExcLocalPort.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="btnDonate.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
     <value>ImageBeforeText</value>
@@ -689,6 +694,9 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   </data>
   <data name="btnLLocate.Text" xml:space="preserve">
     <value>Locate</value>
+  </data>
+  <data name="colExcTarget.HeaderText" xml:space="preserve">
+    <value>Target</value>
   </data>
   <data name="stripConnUpdSpeed.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -708,22 +716,32 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
         RK5CYII=
 </value>
   </data>
-  <data name="btnTLog.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
   <data name="&gt;&gt;gridLog.Parent" xml:space="preserve">
     <value>tabLog</value>
+  </data>
+  <data name="btnTExceptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABIAAAAQCAYAAAAbBi9cAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
+        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAMQSURBVDhPjdBbTJN3HMbx33AXGpNlu1lMNEt2N930
+        brczxITEsJsFd+PFvFrQhSW4Q9REzKZixNoBVWvFrgKW4iy1lBakB+kJerKnl7ctho6D2HDQuaibJhO3
+        Zw8FMrlw8eKT/3vzfN//+wqaZVnLCgO10aXyWTltryn2jmQuW+Lz8kvsLs3ItcikmP2KdL7k1aElBtHe
+        s9f844oqBUv0XuW14YIs6Q7mxBxQ/yfUSjo6TwaphF7UOfse+JLq4vV4Sd8dzjOUZ0h9jdCSc3RBDHxe
+        nO/5DOH0KPrSs7/2jOSr6JWhN2k9Q1s43Em1vNVlngvQCh46vkAsV8RgtvTCGR9LWofzR7sC6p6rfnU7
+        A+9QBa0T/CR1NMhYhPI0hzPyAicEaN2APyNNGJ2+D29mCgPxPJyxwuPeSGHq+nAuddU/GuwYUroY2io4
+        K59yuEAoayL9ZsC4A7BW4ZlqwcTcQ6Qm7yNamII/O47BxBj6ojl0+RVc8WVMHbey7wo08gZOSQ0a5S4B
+        x6ltK+CuBQKH8CTbhenZBUw8eAZ1chZD6TtwRVXYQgravSmLyZt+r92X4T/SUCMdl334UWZwjKGTbwGW
+        asB3EE/SZkyV5pArPUJYGYdzRIE1mHne4Un2/uxOvm9iZDmkpVPlkKBB6ukBvmFMtw3o/xKPEx0oTs8g
+        UVyAM5yG1Z9c7PTe9hv64x8abybE6E4KP43jk/QDHaMjsomUcqh1O9C+C/P2w0hkFYTGZuFiyOKJPzUO
+        xBovuqJiWGHypDj+dsV3ZR9TkYCGt4HvKzCprYLD48eN2Dh6A7dhdseet7kixovOiKzS941wXL/G51TC
+        QYa+pv2CCc3uv7r7h/5u92XR7Y2g82YUesewR2cPy7mXCOrWqGfg93KkTp7igOTvnK42G+1e94WB9G8m
+        V3jR6AqDw1SzLbSxxRaSVcK3/ucr0dAjKpEWtfLB+OlquWTzVJxxJGt0tuCg7kbojxZbMN/cE9xGsmpt
+        aL80UBNv8hEJQ7ISEo0jKa22wMaz1sBerTVgoE9IlgXkX5zsqbu276DGAAAAAElFTkSuQmCC
+</value>
   </data>
   <data name="gridLog.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 28</value>
   </data>
-  <data name="&gt;&gt;activeRulesOnlyToolStripMenuItem.Name" xml:space="preserve">
-    <value>activeRulesOnlyToolStripMenuItem</value>
-  </data>
   <data name="btnUpdate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblConnections.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
@@ -760,11 +778,11 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="btnTConnections.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
   </data>
-  <data name="&gt;&gt;connLocalAddr.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;toolStripSeparator3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btnTConnections.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnConnFindR.Text" xml:space="preserve">
+    <value>Find rule</value>
   </data>
   <data name="&gt;&gt;btnTExceptions.Parent" xml:space="preserve">
     <value>pnlOverTabTop</value>
@@ -775,14 +793,14 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="&gt;&gt;colRName.Name" xml:space="preserve">
     <value>colRName</value>
   </data>
+  <data name="&gt;&gt;colExcTarget.Name" xml:space="preserve">
+    <value>colExcTarget</value>
+  </data>
   <data name="btnRShow.Text" xml:space="preserve">
     <value>Show all</value>
   </data>
   <data name="btnTConnections.TabIndex" type="System.Int32, mscorlib">
     <value>19</value>
-  </data>
-  <data name="&gt;&gt;imgLstConn.Name" xml:space="preserve">
-    <value>imgLstConn</value>
   </data>
   <data name="wSHRulesOnlyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>256, 22</value>
@@ -799,26 +817,26 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="&gt;&gt;lblExceptions.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="btnTConnections.Size" type="System.Drawing.Size, System.Drawing">
-    <value>106, 29</value>
+  <data name="&gt;&gt;colRDirection.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tabLog.Type" xml:space="preserve">
     <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="colRTarget.HeaderText" xml:space="preserve">
-    <value>Target</value>
-  </data>
   <data name="&gt;&gt;colRTarget.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="btnLEvents.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
+  <data name="&gt;&gt;btnOpenConsole.Name" xml:space="preserve">
+    <value>btnOpenConsole</value>
   </data>
   <data name="&gt;&gt;tabRules.Type" xml:space="preserve">
     <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="toolStripConnections.Size" type="System.Drawing.Size, System.Drawing">
     <value>829, 25</value>
+  </data>
+  <data name="&gt;&gt;wFNRulesOnlyToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="tabPanel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left, Right</value>
@@ -829,23 +847,14 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="toolStripLabel1.Text" xml:space="preserve">
     <value>Filter:</value>
   </data>
-  <data name="btnELocate.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="connRemoteAddr.Width" type="System.Int32, mscorlib">
-    <value>106</value>
+  <data name="&gt;&gt;lblRules.Name" xml:space="preserve">
+    <value>lblRules</value>
   </data>
   <data name="&gt;&gt;tabPanel.Name" xml:space="preserve">
     <value>tabPanel</value>
   </data>
-  <data name="btnDonate.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
   <data name="colRLocalport.HeaderText" xml:space="preserve">
     <value>Loc. port</value>
-  </data>
-  <data name="&gt;&gt;pnlOverTabTop.Parent" xml:space="preserve">
-    <value>$this</value>
   </data>
   <data name="&gt;&gt;btnOptions.Name" xml:space="preserve">
     <value>btnOptions</value>
@@ -862,8 +871,8 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="&gt;&gt;btnTConnections.Parent" xml:space="preserve">
     <value>pnlOverTabTop</value>
   </data>
-  <data name="colRAction.HeaderText" xml:space="preserve">
-    <value>Action</value>
+  <data name="btnUpdate.Text" xml:space="preserve">
+    <value>  Update</value>
   </data>
   <data name="activeRulesOnlyToolStripMenuItem.Text" xml:space="preserve">
     <value>Active rules</value>
@@ -871,14 +880,17 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="&gt;&gt;txtFilter.Name" xml:space="preserve">
     <value>txtFilter</value>
   </data>
-  <data name="&gt;&gt;pnlOverTabTop.Name" xml:space="preserve">
-    <value>pnlOverTabTop</value>
+  <data name="&gt;&gt;btnTExceptions.Name" xml:space="preserve">
+    <value>btnTExceptions</value>
   </data>
   <data name="&gt;&gt;connOwner.Name" xml:space="preserve">
     <value>connOwner</value>
   </data>
   <data name="btnRLocate.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
     <value>Magenta</value>
+  </data>
+  <data name="lblRules.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="lblLog.Size" type="System.Drawing.Size, System.Drawing">
     <value>833, 38</value>
@@ -916,11 +928,14 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
     <value>6, 25</value>
   </data>
+  <data name="&gt;&gt;txtFilter.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="gridExceptions.Size" type="System.Drawing.Size, System.Drawing">
     <value>833, 332</value>
   </data>
-  <data name="lblRules.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+  <data name="btnTLog.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="tabPanel.Location" type="System.Drawing.Point, System.Drawing">
     <value>-7, 12</value>
@@ -931,8 +946,8 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="&gt;&gt;lblRules.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="toolStripRules.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
+  <data name="&gt;&gt;toolStripExceptions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="btnConnFindR.Size" type="System.Drawing.Size, System.Drawing">
     <value>57, 22</value>
@@ -952,23 +967,23 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="gridExceptions.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 28</value>
   </data>
+  <data name="btnELocate.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
     <value>6, 25</value>
   </data>
   <data name="pnlOverTabTop.Size" type="System.Drawing.Size, System.Drawing">
     <value>833, 37</value>
   </data>
-  <data name="colRProfile.HeaderText" xml:space="preserve">
-    <value>Profile</value>
+  <data name="&gt;&gt;lblLog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="gridLog.Size" type="System.Drawing.Size, System.Drawing">
     <value>833, 356</value>
   </data>
   <data name="colRDirection.Width" type="System.Int32, mscorlib">
     <value>60</value>
-  </data>
-  <data name="&gt;&gt;fast1sToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="btnTConnections.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -999,6 +1014,9 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="tabRules.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
+  <data name="colRName.HeaderText" xml:space="preserve">
+    <value>Name</value>
+  </data>
   <data name="&gt;&gt;colExcTargetPort.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -1017,8 +1035,17 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="btnERemove.Size" type="System.Drawing.Size, System.Drawing">
     <value>70, 22</value>
   </data>
+  <data name="gridLog.RowHeadersWidth" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator6.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="toolStripExceptions.Size" type="System.Drawing.Size, System.Drawing">
     <value>833, 25</value>
+  </data>
+  <data name="pnlOverTabTop.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
   </data>
   <data name="wFNRulesOnlyToolStripMenuItem.Text" xml:space="preserve">
     <value>WFN rules</value>
@@ -1033,6 +1060,9 @@ No firewall rule is created nor removed when you update this list.</value>
   </data>
   <data name="&gt;&gt;colTarget.Name" xml:space="preserve">
     <value>colTarget</value>
+  </data>
+  <data name="&gt;&gt;btnRRefresh.Name" xml:space="preserve">
+    <value>btnRRefresh</value>
   </data>
   <data name="&gt;&gt;toolStripConnections.Parent" xml:space="preserve">
     <value>tabConnections</value>
@@ -1074,23 +1104,23 @@ No firewall rule is created nor removed when you update this list.</value>
         AAAASUVORK5CYII=
 </value>
   </data>
+  <data name="tabLog.Size" type="System.Drawing.Size, System.Drawing">
+    <value>839, 425</value>
+  </data>
   <data name="&gt;&gt;btnDonate.Parent" xml:space="preserve">
     <value>pnlOverTabTop</value>
   </data>
   <data name="&gt;&gt;lstConnections.Name" xml:space="preserve">
     <value>lstConnections</value>
   </data>
-  <data name="&gt;&gt;colExcPath.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;btnLLocate.Name" xml:space="preserve">
+    <value>btnLLocate</value>
   </data>
-  <data name="btnRDelete.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
+  <data name="&gt;&gt;btnTLog.Parent" xml:space="preserve">
+    <value>pnlOverTabTop</value>
   </data>
   <data name="btnDonate.Text" xml:space="preserve">
     <value>   About...</value>
-  </data>
-  <data name="&gt;&gt;tabExceptions.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="btnTRules.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1111,6 +1141,9 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="&gt;&gt;colRName.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="toolStripRules.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
   <data name="&gt;&gt;btnOptions.Parent" xml:space="preserve">
     <value>pnlOverTabTop</value>
   </data>
@@ -1120,16 +1153,20 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="btnConnTrack.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
+  <data name="btnOpenConsole.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wQAADsEBuJFr7QAAAYtJREFUOE9jwAfWrl/3v7BuNhj3ztv+f/2WXf+hUrjB9q07/hu11/8PWF/5P3bH
+        3P8Bcy79d2j99N+gah3YEKgyTADSKLXK/H/H06b/V75d/t958+1//01fwRhkiEvhjP8N8/qwG8Df7f5f
+        4brM/1v/V/0HgdPPv/2PuPcfrDl1xwGwoc41Yf/X71iJasD8pYv/M1ZZ/xdfFQ5WBNIIshmk2W7+//8p
+        W1b/z/0r9d91v/3/pgUTUDWDnCTgufi/Zurp/xY9V8C2WZ74B8YgPwctXgDWDHKZWkHkf4ZuD7P/F4rC
+        /28Ktv2Pj709yQscYKDwALnOOHXqf4YKEw2woq3eev/xsddGu4NdBDJAIWolJNRjtFX/d4T5gBUkG2rj
+        ZYM0g5wPoi8dP/SfAeQcmLPwsafbqP/X7lwL1giKTnAggfwEcxY+NkgzyJ+bViMlklInK7iz8LGLNaX+
+        nz+yDzV6YKaDTMbHBnkBqgUBMrQU/q8JtAYrwsfGqjlcWfY/KMRBNCE2VAsUMDAAAKRLlH+ucUEpAAAA
+        AElFTkSuQmCC
+</value>
+  </data>
   <data name="&gt;&gt;btnOpenConsole.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnConnStop.Name" xml:space="preserve">
-    <value>btnConnStop</value>
-  </data>
-  <data name="btnTConnections.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 5</value>
-  </data>
-  <data name="&gt;&gt;btnConnTrack.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tabPanel.Parent" xml:space="preserve">
@@ -1153,9 +1190,6 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="&gt;&gt;toolStripRules.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="&gt;&gt;btnLLocate.Name" xml:space="preserve">
-    <value>btnLLocate</value>
-  </data>
   <data name="connLocalPort.Width" type="System.Int32, mscorlib">
     <value>59</value>
   </data>
@@ -1177,14 +1211,14 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="&gt;&gt;tabConnections.Parent" xml:space="preserve">
     <value>tabPanel</value>
   </data>
-  <data name="&gt;&gt;btnTConnections.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
   <data name="colProtocol.Width" type="System.Int32, mscorlib">
     <value>50</value>
   </data>
   <data name="btnERemove.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
     <value>Magenta</value>
+  </data>
+  <data name="&gt;&gt;toolStripConnections.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="&gt;&gt;connCreaTime.Type" xml:space="preserve">
     <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1192,26 +1226,20 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="lblLog.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Bottom</value>
   </data>
-  <data name="lblRules.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 38</value>
-  </data>
   <data name="&gt;&gt;colREnabled.Name" xml:space="preserve">
     <value>colREnabled</value>
   </data>
   <data name="&gt;&gt;colRSvc.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btnTExceptions.Name" xml:space="preserve">
-    <value>btnTExceptions</value>
+  <data name="colPort.Width" type="System.Int32, mscorlib">
+    <value>53</value>
   </data>
   <data name="colTarget.Width" type="System.Int32, mscorlib">
     <value>64</value>
   </data>
   <data name="fast1sToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>136, 22</value>
-  </data>
-  <data name="&gt;&gt;colRLocalport.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="txtFilter.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 25</value>
@@ -1225,8 +1253,8 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="&gt;&gt;colIcon.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewImageColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="colRDirection.HeaderText" xml:space="preserve">
-    <value>Dir.</value>
+  <data name="&gt;&gt;btnConnTrack.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;toolStripLabel1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1258,11 +1286,8 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="&gt;&gt;lblConnections.Parent" xml:space="preserve">
     <value>tabConnections</value>
   </data>
-  <data name="&gt;&gt;btnOptions.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="tabLog.Size" type="System.Drawing.Size, System.Drawing">
-    <value>839, 425</value>
+  <data name="&gt;&gt;connRemotePort.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="lblLog.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 384</value>
@@ -1279,14 +1304,14 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>OptionsForm</value>
   </data>
-  <data name="&gt;&gt;btnRRefresh.Name" xml:space="preserve">
-    <value>btnRRefresh</value>
+  <data name="&gt;&gt;tabPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="toolStripSeparator3.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
-  <data name="imgLstConn.ImageSize" type="System.Drawing.Size, System.Drawing">
-    <value>18, 18</value>
+  <data name="&gt;&gt;tabRules.Parent" xml:space="preserve">
+    <value>tabPanel</value>
   </data>
   <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 8.25pt</value>
@@ -1294,8 +1319,8 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="colRPort.HeaderText" xml:space="preserve">
     <value>Rem. port</value>
   </data>
-  <data name="lblRules.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 384</value>
+  <data name="tabExceptions.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
   </data>
   <data name="lblRules.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Bottom</value>
@@ -1327,6 +1352,9 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="&gt;&gt;colRTarget.Name" xml:space="preserve">
     <value>colRTarget</value>
   </data>
+  <data name="toolStripLog.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
   <data name="btnLLocate.Size" type="System.Drawing.Size, System.Drawing">
     <value>62, 22</value>
   </data>
@@ -1344,6 +1372,9 @@ No firewall rule is created nor removed when you update this list.</value>
   </data>
   <data name="&gt;&gt;toolStripLabel1.Name" xml:space="preserve">
     <value>toolStripLabel1</value>
+  </data>
+  <data name="toolStripRules.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
   </data>
   <data name="&gt;&gt;connProtocol.Type" xml:space="preserve">
     <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1363,20 +1394,29 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="tabLog.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
+  <data name="&gt;&gt;tabPanel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="gridLog.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
   <data name="colRName.MinimumWidth" type="System.Int32, mscorlib">
     <value>200</value>
   </data>
-  <data name="&gt;&gt;colIcon.Name" xml:space="preserve">
-    <value>colIcon</value>
+  <data name="&gt;&gt;colExcIcon.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewImageColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="btnTConnections.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
+  <data name="lblRules.Text" xml:space="preserve">
+    <value>The grid above lists all Windows firewall rules. The ones prefixed by "Custom rules" have been created by Windows Firewall Notifier. You can not manually create rules, but you can remove useless ones if required.</value>
   </data>
-  <data name="tabExceptions.Text" xml:space="preserve">
-    <value>Exceptions</value>
+  <data name="btnELocate.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
   </data>
-  <data name="colProtocol.HeaderText" xml:space="preserve">
-    <value>Protocol</value>
+  <data name="btnERemove.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
+    <value>toolStripSeparator2</value>
   </data>
   <data name="toolStripRules.Text" xml:space="preserve">
     <value>toolStrip1</value>
@@ -1418,8 +1458,8 @@ No firewall rule is created nor removed when you update this list.</value>
         AAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="&gt;&gt;colRPort.Name" xml:space="preserve">
-    <value>colRPort</value>
+  <data name="&gt;&gt;toolStripLog.Parent" xml:space="preserve">
+    <value>tabLog</value>
   </data>
   <data name="toolStripConnections.Location" type="System.Drawing.Point, System.Drawing">
     <value>5, 3</value>
@@ -1444,14 +1484,11 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="tabLog.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
-  <data name="&gt;&gt;toolStripSeparator3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="colRProfile.HeaderText" xml:space="preserve">
+    <value>Profile</value>
   </data>
-  <data name="&gt;&gt;lblRules.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;connLocalPort.Name" xml:space="preserve">
-    <value>connLocalPort</value>
+  <data name="&gt;&gt;btnOptions.ZOrder" xml:space="preserve">
+    <value>5</value>
   </data>
   <data name="btnTLog.TabIndex" type="System.Int32, mscorlib">
     <value>21</value>
@@ -1489,9 +1526,6 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="colPort.HeaderText" xml:space="preserve">
     <value>Port</value>
   </data>
-  <data name="&gt;&gt;btnUpdate.Parent" xml:space="preserve">
-    <value>pnlOverTabTop</value>
-  </data>
   <data name="tabLog.Text" xml:space="preserve">
     <value>Log</value>
   </data>
@@ -1504,27 +1538,32 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="&gt;&gt;colRSvc.Name" xml:space="preserve">
     <value>colRSvc</value>
   </data>
-  <data name="btnOpenConsole.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAYtJREFUOE9jwAfWrl/3v7BuNhj3ztv+f/2WXf+hUrjB9q07/hu11/8PWF/5P3bH
-        3P8Bcy79d2j99N+gah3YEKgyTADSKLXK/H/H06b/V75d/t958+1//01fwRhkiEvhjP8N8/qwG8Df7f5f
-        4brM/1v/V/0HgdPPv/2PuPcfrDl1xwGwoc41Yf/X71iJasD8pYv/M1ZZ/xdfFQ5WBNIIshmk2W7+//8p
-        W1b/z/0r9d91v/3/pgUTUDWDnCTgufi/Zurp/xY9V8C2WZ74B8YgPwctXgDWDHKZWkHkf4ZuD7P/F4rC
-        /28Ktv2Pj709yQscYKDwALnOOHXqf4YKEw2woq3eev/xsddGu4NdBDJAIWolJNRjtFX/d4T5gBUkG2rj
-        ZYM0g5wPoi8dP/SfAeQcmLPwsafbqP/X7lwL1giKTnAggfwEcxY+NkgzyJ+bViMlklInK7iz8LGLNaX+
-        nz+yDzV6YKaDTMbHBnkBqgUBMrQU/q8JtAYrwsfGqjlcWfY/KMRBNCE2VAsUMDAAAKRLlH+ucUEpAAAA
-        AElFTkSuQmCC
-</value>
+  <data name="lblConnections.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="toolStripExceptions.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
+  <data name="imgLstConn.ImageSize" type="System.Drawing.Size, System.Drawing">
+    <value>18, 18</value>
   </data>
   <data name="&gt;&gt;btnTLog.Name" xml:space="preserve">
     <value>btnTLog</value>
   </data>
-  <data name="&gt;&gt;colPath.Name" xml:space="preserve">
-    <value>colPath</value>
+  <data name="&gt;&gt;colRPort.Name" xml:space="preserve">
+    <value>colRPort</value>
+  </data>
+  <data name="btnRShow.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
+        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAIkSURBVDhPjZHfS1NhHMbfy6CbbvonHOhtVFAERdEP
+        tZmrLbdSI+gi6KKbcGr0awQxBYks0rVm07ntzGZBdZFBijho1hprNbfpOTtnO6flMqLLp++7eWDGll58
+        +D7v833O83LOYcaxDDvlzbLTPpGZ/Tl2NigzWyjPzj9XWVf4O+ueJl4U7USpBnNbKbhGQdThz2YFvQSq
+        kAmx6lz6X0GvbUoFTZ1cZ1jbSewgvbTu1S3osQh5XHmlUagAa6iAc1OFDPnbraH8NtIJgns1C3pMfpke
+        ViEkfsE5/wNnAjIsQQUdQSVJxDsE0hV+/1vQ3z4h4fLLPLyffmIitoZAfA133xdhmpRgnszB4t+AWF3Q
+        1za+gkthGa7oKtyLqxilyfXYxxJuvdOoQATldCS60KAX2FufZXExJOHBQhEPI8Xy1OFnTrcgos2bRfv4
+        smzyiU38lZnRk7a2etK4IKxgYFbF4KwGJ02dwTmNfA1dgWW0PE2DLlTpwsb1V2asxZ2ynXiSQqc/izsz
+        ChzE7bcVHDP5smf1ZXDU9Y0KUspJT9pQ/dFZszvFjru+9h8ZScLsXYL9tYS+NxW45h7fUUaibAMVbPhr
+        5YJjI1/Y4UfxGweHP8PoTuDqdKYM19yjnUyZJp6tXTCaZIeGY+zA/cWb+4aiaH4cK8M1eSrtGnlm04L9
+        Qx/Y3oHI9d3OCDikFfIMfLfFgijb41xgu+7NOwiRdAP36hfk2F8w3nftd3BpBwAAAABJRU5ErkJggg==
+</value>
   </data>
   <data name="lstConnections.Location" type="System.Drawing.Point, System.Drawing">
     <value>5, 28</value>
@@ -1550,11 +1589,24 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="colRSvc.HeaderText" xml:space="preserve">
     <value>Service</value>
   </data>
-  <data name="pnlOverTabTop.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
+  <data name="&gt;&gt;colRIcon.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewImageColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;toolStripLog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnELocate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wQAADsEBuJFr7QAAAa5JREFUOE+V0E9Ik3EYB/DH0jCCOhTaIYqIIuiQsJNM8BJ1iTwllZHnOetSg70Q
+        HTYPohWevXRTkdiL2N+XYB1iE+TdWtqa2yvbaplTXnz97X1599P2fnvRBaLMvT7wgQee5wsPD1XyI0H8
+        HNF2quRfjiL7qpnqFV8YNJEdxF5Dp6srtYsr/hKUZ9iJZ/yqpQhupITLu1lJ/8lq1A6nHzKkHwOZJzbf
+        Fv7dZ/3vd9vM+BQr1X9+O5zwMKT6UP76ALp8D3qsZ1+GvRcLtfVuh+N3GY91Q412g6cD9skDtmBNG/bc
+        +Cas/s099xKXbzNj5gbKSfvs/AsgN1RffhhcCehkytdY6UsHynMeYPGp/TDBEa4IOhlRF9PCbTDjPUDq
+        EfDD6whPeBkZn64wVboAc/YWMN8LzN13hMt3GDHpDCu+bYER6YQV70IldtMRU77OaO3dUbY0dQzr4avY
+        iLrBI+2OGBEXI3X6CCuEGqF+PAvj8yXo4YvOSOcYFcapnJ0kLE+fgPbhFNbeO/TmeImyEw3pX68P4Y94
+        GCtTTc6JTSYtjlFrUSTpt0jaQRRFCv4DOxmSMzjWKhYAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="colRTarget.HeaderText" xml:space="preserve">
+    <value>Target</value>
   </data>
   <data name="&gt;&gt;colRPort.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1600,11 +1652,14 @@ No firewall rule is created nor removed when you update this list.</value>
         55vbxIUdXH/Qrn8QtHOPKXeDTZxL+3wohPwGPlrXuA65JtwAAAAASUVORK5CYII=
 </value>
   </data>
+  <data name="lblConnections.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
   <data name="&gt;&gt;btnTLog.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="&gt;&gt;toolStripSeparator6.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnDonate.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="btnTExceptions.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1618,11 +1673,14 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="toolStripConnections.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
-  <data name="colPort.Width" type="System.Int32, mscorlib">
-    <value>53</value>
+  <data name="&gt;&gt;tabExceptions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="gridLog.RowHeadersWidth" type="System.Int32, mscorlib">
-    <value>16</value>
+  <data name="&gt;&gt;toolStripRules.Parent" xml:space="preserve">
+    <value>tabRules</value>
+  </data>
+  <data name="colExcIcon.MinimumWidth" type="System.Int32, mscorlib">
+    <value>22</value>
   </data>
   <data name="&gt;&gt;colREnabled.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewCheckBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1639,8 +1697,8 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="lblConnections.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
   </data>
-  <data name="btnConnFindR.Text" xml:space="preserve">
-    <value>Find rule</value>
+  <data name="&gt;&gt;lblLog.Parent" xml:space="preserve">
+    <value>tabLog</value>
   </data>
   <data name="lblExceptions.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Bottom</value>
@@ -1657,8 +1715,8 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="&gt;&gt;toolStripSeparator7.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;colExcTarget.Name" xml:space="preserve">
-    <value>colExcTarget</value>
+  <data name="&gt;&gt;activeRulesOnlyToolStripMenuItem.Name" xml:space="preserve">
+    <value>activeRulesOnlyToolStripMenuItem</value>
   </data>
   <data name="tabRules.Size" type="System.Drawing.Size, System.Drawing">
     <value>839, 425</value>
@@ -1669,11 +1727,11 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="colDate.HeaderText" xml:space="preserve">
     <value>Date</value>
   </data>
-  <data name="&gt;&gt;wFNRulesOnlyToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnTConnections.Size" type="System.Drawing.Size, System.Drawing">
+    <value>106, 29</value>
   </data>
-  <data name="&gt;&gt;btnDonate.ZOrder" xml:space="preserve">
-    <value>6</value>
+  <data name="&gt;&gt;colIcon.Name" xml:space="preserve">
+    <value>colIcon</value>
   </data>
   <data name="&gt;&gt;connProtocol.Name" xml:space="preserve">
     <value>connProtocol</value>
@@ -1696,11 +1754,8 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="btnDonate.TabIndex" type="System.Int32, mscorlib">
     <value>16</value>
   </data>
-  <data name="&gt;&gt;stripConnUpdSpeed.Name" xml:space="preserve">
-    <value>stripConnUpdSpeed</value>
-  </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>833, 462</value>
+  <data name="&gt;&gt;fast1sToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="btnUpdate.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
     <value>ImageBeforeText</value>
@@ -1708,8 +1763,8 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="btnRRefresh.Size" type="System.Drawing.Size, System.Drawing">
     <value>66, 22</value>
   </data>
-  <data name="&gt;&gt;btnDonate.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="toolStripExceptions.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
   </data>
   <data name="&gt;&gt;lblConnections.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1720,20 +1775,17 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="&gt;&gt;colExcTarget.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="btnRLocate.Text" xml:space="preserve">
-    <value>Locate</value>
-  </data>
-  <data name="&gt;&gt;colExcIcon.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewImageColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;lstConnections.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ListView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="tabPanel.Padding" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="&gt;&gt;txtFilter.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnOptions.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
+    <value>ImageBeforeText</value>
   </data>
-  <data name="toolStripLog.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Windows Firewall Notifier</value>
   </data>
   <data name="&gt;&gt;colRDirection.Name" xml:space="preserve">
     <value>colRDirection</value>
@@ -1750,14 +1802,14 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="lblExceptions.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
-  <data name="&gt;&gt;toolStripRules.Parent" xml:space="preserve">
-    <value>tabRules</value>
+  <data name="colProtocol.HeaderText" xml:space="preserve">
+    <value>Protocol</value>
   </data>
   <data name="&gt;&gt;btnELocate.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="gridLog.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
+  <data name="&gt;&gt;btnTConnections.ZOrder" xml:space="preserve">
+    <value>4</value>
   </data>
   <data name="&gt;&gt;lstConnections.Parent" xml:space="preserve">
     <value>tabConnections</value>
@@ -1774,27 +1826,11 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="&gt;&gt;toolStripLog.Name" xml:space="preserve">
     <value>toolStripLog</value>
   </data>
-  <data name="&gt;&gt;toolStripSeparator1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="lblRules.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 384</value>
   </data>
-  <data name="btnTExceptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABIAAAAQCAYAAAAbBi9cAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAMQSURBVDhPjdBbTJN3HMbx33AXGpNlu1lMNEt2N930
-        brczxITEsJsFd+PFvFrQhSW4Q9REzKZixNoBVWvFrgKW4iy1lBakB+kJerKnl7ctho6D2HDQuaibJhO3
-        Zw8FMrlw8eKT/3vzfN//+wqaZVnLCgO10aXyWTltryn2jmQuW+Lz8kvsLs3ItcikmP2KdL7k1aElBtHe
-        s9f844oqBUv0XuW14YIs6Q7mxBxQ/yfUSjo6TwaphF7UOfse+JLq4vV4Sd8dzjOUZ0h9jdCSc3RBDHxe
-        nO/5DOH0KPrSs7/2jOSr6JWhN2k9Q1s43Em1vNVlngvQCh46vkAsV8RgtvTCGR9LWofzR7sC6p6rfnU7
-        A+9QBa0T/CR1NMhYhPI0hzPyAicEaN2APyNNGJ2+D29mCgPxPJyxwuPeSGHq+nAuddU/GuwYUroY2io4
-        K59yuEAoayL9ZsC4A7BW4ZlqwcTcQ6Qm7yNamII/O47BxBj6ojl0+RVc8WVMHbey7wo08gZOSQ0a5S4B
-        x6ltK+CuBQKH8CTbhenZBUw8eAZ1chZD6TtwRVXYQgravSmLyZt+r92X4T/SUCMdl334UWZwjKGTbwGW
-        asB3EE/SZkyV5pArPUJYGYdzRIE1mHne4Un2/uxOvm9iZDmkpVPlkKBB6ukBvmFMtw3o/xKPEx0oTs8g
-        UVyAM5yG1Z9c7PTe9hv64x8abybE6E4KP43jk/QDHaMjsomUcqh1O9C+C/P2w0hkFYTGZuFiyOKJPzUO
-        xBovuqJiWGHypDj+dsV3ZR9TkYCGt4HvKzCprYLD48eN2Dh6A7dhdseet7kixovOiKzS941wXL/G51TC
-        QYa+pv2CCc3uv7r7h/5u92XR7Y2g82YUesewR2cPy7mXCOrWqGfg93KkTp7igOTvnK42G+1e94WB9G8m
-        V3jR6AqDw1SzLbSxxRaSVcK3/ucr0dAjKpEWtfLB+OlquWTzVJxxJGt0tuCg7kbojxZbMN/cE9xGsmpt
-        aL80UBNv8hEJQ7ISEo0jKa22wMaz1sBerTVgoE9IlgXkX5zsqbu276DGAAAAAElFTkSuQmCC
-</value>
+  <data name="&gt;&gt;toolStripExceptions.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="&gt;&gt;connLocalPort.Type" xml:space="preserve">
     <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1805,29 +1841,26 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="stripConnUpdSpeed.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
     <value>Magenta</value>
   </data>
-  <data name="colRName.HeaderText" xml:space="preserve">
-    <value>Name</value>
+  <data name="colRAction.HeaderText" xml:space="preserve">
+    <value>Action</value>
   </data>
   <data name="btnConnTrack.Text" xml:space="preserve">
     <value>Start tracking</value>
   </data>
-  <data name="tabConnections.Text" xml:space="preserve">
-    <value>Connections</value>
+  <data name="colRProfile.Width" type="System.Int32, mscorlib">
+    <value>65</value>
   </data>
   <data name="btnRDelete.Size" type="System.Drawing.Size, System.Drawing">
     <value>70, 22</value>
   </data>
-  <data name="btnUpdate.Text" xml:space="preserve">
-    <value>  Update</value>
+  <data name="btnTConnections.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 5</value>
   </data>
   <data name="&gt;&gt;btnConnStop.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="tabExceptions.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 26</value>
-  </data>
-  <data name="&gt;&gt;btnTLog.Parent" xml:space="preserve">
-    <value>pnlOverTabTop</value>
   </data>
   <data name="btnConnStop.Size" type="System.Drawing.Size, System.Drawing">
     <value>97, 22</value>
@@ -1838,20 +1871,17 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="btnRDelete.Text" xml:space="preserve">
     <value>Remove</value>
   </data>
-  <data name="btnELocate.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
+  <data name="&gt;&gt;btnTConnections.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
-    <value>toolStripSeparator2</value>
+  <data name="&gt;&gt;colRLocalport.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;gridRules.Name" xml:space="preserve">
     <value>gridRules</value>
   </data>
-  <data name="&gt;&gt;colPort.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnUpdate.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;slow5SecondsToolStripMenuItem.Name" xml:space="preserve">
+    <value>slow5SecondsToolStripMenuItem</value>
   </data>
   <data name="colIcon.MinimumWidth" type="System.Int32, mscorlib">
     <value>20</value>
@@ -1868,56 +1898,38 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="&gt;&gt;btnRDelete.Name" xml:space="preserve">
     <value>btnRDelete</value>
   </data>
-  <data name="&gt;&gt;colRDirection.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnRLocate.Text" xml:space="preserve">
+    <value>Locate</value>
   </data>
   <data name="btnTLog.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="tabExceptions.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+  <data name="&gt;&gt;tabRules.Name" xml:space="preserve">
+    <value>tabRules</value>
   </data>
-  <data name="toolStripRules.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
+  <data name="&gt;&gt;btnUpdate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;toolStripLog.Parent" xml:space="preserve">
-    <value>tabLog</value>
+  <data name="&gt;&gt;btnUpdate.Parent" xml:space="preserve">
+    <value>pnlOverTabTop</value>
   </data>
   <data name="&gt;&gt;btnConnFindR.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="showAllToolStripMenuItem.Text" xml:space="preserve">
-    <value>Show all</value>
+  <data name="&gt;&gt;stripConnUpdSpeed.Name" xml:space="preserve">
+    <value>stripConnUpdSpeed</value>
   </data>
-  <data name="&gt;&gt;colRAction.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripLog.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="connRemoteAddr.Width" type="System.Int32, mscorlib">
+    <value>106</value>
   </data>
   <data name="&gt;&gt;btnRShow.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripDropDownButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;tabPanel.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="lblRules.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 38</value>
   </data>
-  <data name="toolStripLabel1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAALFSURBVDhPjZLdT5JRHMfPf9FNW5fdunVRW63U1loX
-        vWzl2nRYbtlm5tKmpiBqtdKLphOzxqZOUB4EE8zJSyaBgYRA4tsMliagkBIvJu8I/vo9IGZzbp3ts3PO
-        c76/zznPeR7CFE2TBrGRNL0zk8YhUw5TZGxtEJsm2EMmM0tkHMM5E9dONOI6C3N0/iD7AgzXNQ+bQ5R+
-        GfTfPfDV7oVJ6wb0aKyAQjdLbCo6UlAnNNS1jlpgyb0FO7sA0eQuhBIpiGAfTCRBa9uApnemVP3gdMEh
-        QS315RTuHl90BYBuqV0siifBF0mk8Ud3UJQC9Tc3YNb1RGg4hpAspJKne8vT2mAbdwoj0Z0kFiXAE4rv
-        4w3HYRP7dvkcVPF1VdUDepKFPOr7PKOxusGPu20GM8GNYOwQPjzJsPEHlPVoJJU8LW6cgZT3alb1K550
-        8dpWdJ/1PbLjX+EEjM7Y4R5Xpa7onSRZSClXZZbPO8G1HYVVXxjs/jA4AxEsyuDAMf2MXufjq5a8+Sgp
-        6/5EspDi1x8622QWcGB42RtMh90Y9oRi+DoxcP1GQSAMNk8QmEI93O0av3OfqyJZCIOjzCnmKMOyOQes
-        YXgd8Ufj6QsNIf4IXiTC01rhdpsMbrRKS6++GCbXWiRpSMGrUXK9RVrD6JCB1LwCTjxJLIU/w17z4RcQ
-        6KxQ2D4GL99boKJXE85jU0UIyW8UEro4bbrULHp85dlQoKpPDVzVAginbMCdmIcy7jjgGlT362Bk9idQ
-        BjuUd6tjWFx4kRbgkdKCy0/FJJ9NnTxXP/D8TC1/HJk6XcOX4/xhPlt4s6RL6W9TLIDU4gZq2gEPutVx
-        lNz6R0AbMUzyGihyniUgudjT8wxUHoMj99GSkVk3CAwOqOhRLx0puHBAkHlOj6lcBkfhpSWSGTf061cl
-        /y34KxGeLe5UKDqUi4JBk/P4HxgaqT+JtQOMAAAAAElFTkSuQmCC
-</value>
+  <data name="&gt;&gt;gridExceptions.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="btnELocate.Size" type="System.Drawing.Size, System.Drawing">
     <value>62, 22</value>
@@ -1937,29 +1949,17 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="&gt;&gt;colRPath.Name" xml:space="preserve">
     <value>colRPath</value>
   </data>
-  <data name="btnRShow.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAIkSURBVDhPjZHfS1NhHMbfy6CbbvonHOhtVFAERdEP
-        tZmrLbdSI+gi6KKbcGr0awQxBYks0rVm07ntzGZBdZFBijho1hprNbfpOTtnO6flMqLLp++7eWDGll58
-        +D7v833O83LOYcaxDDvlzbLTPpGZ/Tl2NigzWyjPzj9XWVf4O+ueJl4U7USpBnNbKbhGQdThz2YFvQSq
-        kAmx6lz6X0GvbUoFTZ1cZ1jbSewgvbTu1S3osQh5XHmlUagAa6iAc1OFDPnbraH8NtIJgns1C3pMfpke
-        ViEkfsE5/wNnAjIsQQUdQSVJxDsE0hV+/1vQ3z4h4fLLPLyffmIitoZAfA133xdhmpRgnszB4t+AWF3Q
-        1za+gkthGa7oKtyLqxilyfXYxxJuvdOoQATldCS60KAX2FufZXExJOHBQhEPI8Xy1OFnTrcgos2bRfv4
-        smzyiU38lZnRk7a2etK4IKxgYFbF4KwGJ02dwTmNfA1dgWW0PE2DLlTpwsb1V2asxZ2ynXiSQqc/izsz
-        ChzE7bcVHDP5smf1ZXDU9Y0KUspJT9pQ/dFZszvFjru+9h8ZScLsXYL9tYS+NxW45h7fUUaibAMVbPhr
-        5YJjI1/Y4UfxGweHP8PoTuDqdKYM19yjnUyZJp6tXTCaZIeGY+zA/cWb+4aiaH4cK8M1eSrtGnlm04L9
-        Qx/Y3oHI9d3OCDikFfIMfLfFgijb41xgu+7NOwiRdAP36hfk2F8w3nftd3BpBwAAAABJRU5ErkJggg==
-</value>
+  <data name="activeRulesOnlyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>256, 22</value>
   </data>
-  <data name="lblConnections.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+  <data name="&gt;&gt;stripConnUpdSpeed.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripDropDownButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="colRPort.Width" type="System.Int32, mscorlib">
     <value>80</value>
   </data>
-  <data name="&gt;&gt;colRIcon.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewImageColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;lblRules.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <data name="tabRules.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 26</value>
@@ -1967,8 +1967,8 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="&gt;&gt;btnLEvents.Name" xml:space="preserve">
     <value>btnLEvents</value>
   </data>
-  <data name="colExcTarget.HeaderText" xml:space="preserve">
-    <value>Target</value>
+  <data name="&gt;&gt;colPort.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <metadata name="colRProfile.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -2006,9 +2006,6 @@ No firewall rule is created nor removed when you update this list.</value>
   <metadata name="imgLstConn.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>789, 17</value>
   </metadata>
-  <metadata name="colExcLocalPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
   <metadata name="colExcIcon.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -2031,6 +2028,9 @@ No firewall rule is created nor removed when you update this list.</value>
     <value>44</value>
   </metadata>
   <metadata name="colDate.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colRLocalport.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <metadata name="colRSvc.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -2057,7 +2057,7 @@ No firewall rule is created nor removed when you update this list.</value>
   <metadata name="colIcon.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="colRLocalport.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="colExcLocalPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <metadata name="btnOptions.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

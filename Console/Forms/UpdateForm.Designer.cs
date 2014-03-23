@@ -40,7 +40,7 @@
             // 
             // pnlInsStep1
             // 
-            pnlInsStep1.BackColor = System.Drawing.Color.White;
+            pnlInsStep1.BackColor = System.Drawing.SystemColors.Window;
             pnlInsStep1.Controls.Add(this.txtUpdate);
             pnlInsStep1.Controls.Add(lblInstDesc);
             resources.ApplyResources(pnlInsStep1, "pnlInsStep1");
@@ -60,7 +60,7 @@
             // btnOK
             // 
             resources.ApplyResources(this.btnOK, "btnOK");
-            this.btnOK.BackColor = System.Drawing.Color.White;
+            this.btnOK.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.btnOK.FlatAppearance.BorderColor = System.Drawing.Color.DarkBlue;
             this.btnOK.FlatAppearance.MouseOverBackColor = System.Drawing.Color.SkyBlue;
             this.btnOK.Name = "btnOK";
