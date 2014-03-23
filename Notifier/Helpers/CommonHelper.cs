@@ -79,5 +79,13 @@ namespace WindowsFirewallNotifier
             return src;
 
         }
+
+        public static double easeInOut(double t, double b, double c, double d)
+        {
+            if ((t /= d / 2) < 1)
+                return c / 2 * t * t + b;
+
+            return -c / 2 * ((--t) * (t - 2) - 1) + b;
+        }
     }
 }

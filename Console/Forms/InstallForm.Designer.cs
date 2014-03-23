@@ -29,27 +29,17 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.Panel pnlInsStep1;
-            System.Windows.Forms.Label lblInstDesc;
-            WindowsFirewallNotifier.Settings settings = new WindowsFirewallNotifier.Settings();
-            //settings.ConsoleSize = new System.Drawing.Size(770, 507);
-            //settings.ConsoleState = System.Windows.Forms.FormWindowState.Normal;
-            //settings.EnableFor = 0;
-            //settings.EnableForAllAccounts = false;
-            //settings.EnableServiceDetection = true;
-            //settings.FirstRun = true;
-            //settings.SettingsKey = "";
-            //settings.UseAnimation = true;
-            //settings.UseBlockRules = false;
-            
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InstallForm));
-            this.rbDisable = new System.Windows.Forms.RadioButton();
-            this.rbEnable = new System.Windows.Forms.RadioButton();
-            this.btnOK = new System.Windows.Forms.Button();
+            WindowsFirewallNotifier.Settings settings1 = new WindowsFirewallNotifier.Settings();
+            System.Windows.Forms.Label lblInstDesc;
+            this.lblNoBlockRule = new System.Windows.Forms.Label();
             this.chkNoBlockRule = new System.Windows.Forms.CheckBox();
             this.chkOEnableServiceDetection = new System.Windows.Forms.CheckBox();
             this.chkAnimate = new System.Windows.Forms.CheckBox();
+            this.rbDisable = new System.Windows.Forms.RadioButton();
             this.ddlEnableFor = new System.Windows.Forms.ComboBox();
-            this.lblNoBlockRule = new System.Windows.Forms.Label();
+            this.rbEnable = new System.Windows.Forms.RadioButton();
+            this.btnOK = new System.Windows.Forms.Button();
             pnlInsStep1 = new System.Windows.Forms.Panel();
             lblInstDesc = new System.Windows.Forms.Label();
             pnlInsStep1.SuspendLayout();
@@ -57,7 +47,8 @@
             // 
             // pnlInsStep1
             // 
-            pnlInsStep1.BackColor = System.Drawing.Color.White;
+            resources.ApplyResources(pnlInsStep1, "pnlInsStep1");
+            pnlInsStep1.BackColor = System.Drawing.SystemColors.Window;
             pnlInsStep1.Controls.Add(this.lblNoBlockRule);
             pnlInsStep1.Controls.Add(this.chkNoBlockRule);
             pnlInsStep1.Controls.Add(this.chkOEnableServiceDetection);
@@ -66,8 +57,51 @@
             pnlInsStep1.Controls.Add(this.ddlEnableFor);
             pnlInsStep1.Controls.Add(this.rbEnable);
             pnlInsStep1.Controls.Add(lblInstDesc);
-            resources.ApplyResources(pnlInsStep1, "pnlInsStep1");
             pnlInsStep1.Name = "pnlInsStep1";
+            // 
+            // lblNoBlockRule
+            // 
+            resources.ApplyResources(this.lblNoBlockRule, "lblNoBlockRule");
+            this.lblNoBlockRule.Name = "lblNoBlockRule";
+            // 
+            // chkNoBlockRule
+            // 
+            resources.ApplyResources(this.chkNoBlockRule, "chkNoBlockRule");
+            settings1.ConsoleSize = new System.Drawing.Size(770, 507);
+            settings1.ConsoleState = System.Windows.Forms.FormWindowState.Normal;
+            settings1.EnableFor = 0;
+            settings1.EnableForAllAccounts = false;
+            settings1.EnableServiceDetection = true;
+            settings1.FirstRun = true;
+            settings1.SettingsKey = "";
+            settings1.UseAnimation = true;
+            settings1.UseBlockRules = true;
+            this.chkNoBlockRule.Checked = settings1.UseBlockRules;
+            this.chkNoBlockRule.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkNoBlockRule.DataBindings.Add(new System.Windows.Forms.Binding("Checked", settings1, "UseBlockRules", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.chkNoBlockRule.FlatAppearance.MouseOverBackColor = System.Drawing.Color.PowderBlue;
+            this.chkNoBlockRule.Name = "chkNoBlockRule";
+            this.chkNoBlockRule.UseVisualStyleBackColor = true;
+            // 
+            // chkOEnableServiceDetection
+            // 
+            resources.ApplyResources(this.chkOEnableServiceDetection, "chkOEnableServiceDetection");
+            this.chkOEnableServiceDetection.Checked = settings1.EnableServiceDetection;
+            this.chkOEnableServiceDetection.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkOEnableServiceDetection.DataBindings.Add(new System.Windows.Forms.Binding("Checked", settings1, "EnableServiceDetection", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.chkOEnableServiceDetection.FlatAppearance.MouseOverBackColor = System.Drawing.Color.PowderBlue;
+            this.chkOEnableServiceDetection.Name = "chkOEnableServiceDetection";
+            this.chkOEnableServiceDetection.UseVisualStyleBackColor = true;
+            // 
+            // chkAnimate
+            // 
+            resources.ApplyResources(this.chkAnimate, "chkAnimate");
+            this.chkAnimate.Checked = settings1.UseAnimation;
+            this.chkAnimate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAnimate.DataBindings.Add(new System.Windows.Forms.Binding("Checked", settings1, "UseAnimation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.chkAnimate.FlatAppearance.MouseOverBackColor = System.Drawing.Color.PowderBlue;
+            this.chkAnimate.Name = "chkAnimate";
+            this.chkAnimate.UseVisualStyleBackColor = true;
             // 
             // rbDisable
             // 
@@ -75,6 +109,17 @@
             this.rbDisable.Name = "rbDisable";
             this.rbDisable.TabStop = true;
             this.rbDisable.UseVisualStyleBackColor = true;
+            // 
+            // ddlEnableFor
+            // 
+            resources.ApplyResources(this.ddlEnableFor, "ddlEnableFor");
+            this.ddlEnableFor.BackColor = System.Drawing.Color.PowderBlue;
+            this.ddlEnableFor.DataBindings.Add(new System.Windows.Forms.Binding("SelectedIndex", settings1, "EnableFor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.ddlEnableFor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlEnableFor.Items.AddRange(new object[] {
+            resources.GetString("ddlEnableFor.Items"),
+            resources.GetString("ddlEnableFor.Items1")});
+            this.ddlEnableFor.Name = "ddlEnableFor";
             // 
             // rbEnable
             // 
@@ -91,7 +136,7 @@
             // btnOK
             // 
             resources.ApplyResources(this.btnOK, "btnOK");
-            this.btnOK.BackColor = System.Drawing.Color.White;
+            this.btnOK.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.btnOK.FlatAppearance.BorderColor = System.Drawing.Color.DarkBlue;
             this.btnOK.FlatAppearance.MouseOverBackColor = System.Drawing.Color.SkyBlue;
             this.btnOK.Name = "btnOK";
@@ -99,52 +144,6 @@
             this.btnOK.Tag = "";
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-            // 
-            // chkNoBlockRule
-            // 
-            this.chkNoBlockRule.Checked = settings.UseBlockRules;
-            this.chkNoBlockRule.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkNoBlockRule.DataBindings.Add(new System.Windows.Forms.Binding("Checked", settings, "UseBlockRules", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.chkNoBlockRule.FlatAppearance.MouseOverBackColor = System.Drawing.Color.PowderBlue;
-            resources.ApplyResources(this.chkNoBlockRule, "chkNoBlockRule");
-            this.chkNoBlockRule.Name = "chkNoBlockRule";
-            this.chkNoBlockRule.UseVisualStyleBackColor = true;
-            // 
-            // chkOEnableServiceDetection
-            // 
-            this.chkOEnableServiceDetection.Checked = settings.EnableServiceDetection;
-            this.chkOEnableServiceDetection.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkOEnableServiceDetection.DataBindings.Add(new System.Windows.Forms.Binding("Checked", settings, "EnableServiceDetection", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.chkOEnableServiceDetection.FlatAppearance.MouseOverBackColor = System.Drawing.Color.PowderBlue;
-            resources.ApplyResources(this.chkOEnableServiceDetection, "chkOEnableServiceDetection");
-            this.chkOEnableServiceDetection.Name = "chkOEnableServiceDetection";
-            this.chkOEnableServiceDetection.UseVisualStyleBackColor = true;
-            // 
-            // chkAnimate
-            // 
-            this.chkAnimate.Checked = settings.UseAnimation;
-            this.chkAnimate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkAnimate.DataBindings.Add(new System.Windows.Forms.Binding("Checked", settings, "UseAnimation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.chkAnimate.FlatAppearance.MouseOverBackColor = System.Drawing.Color.PowderBlue;
-            resources.ApplyResources(this.chkAnimate, "chkAnimate");
-            this.chkAnimate.Name = "chkAnimate";
-            this.chkAnimate.UseVisualStyleBackColor = true;
-            // 
-            // ddlEnableFor
-            // 
-            this.ddlEnableFor.BackColor = System.Drawing.Color.PowderBlue;
-            this.ddlEnableFor.DataBindings.Add(new System.Windows.Forms.Binding("SelectedIndex", settings, "EnableFor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.ddlEnableFor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            resources.ApplyResources(this.ddlEnableFor, "ddlEnableFor");
-            this.ddlEnableFor.Items.AddRange(new object[] {
-            resources.GetString("ddlEnableFor.Items"),
-            resources.GetString("ddlEnableFor.Items1")});
-            this.ddlEnableFor.Name = "ddlEnableFor";
-            // 
-            // lblNoBlockRule
-            // 
-            resources.ApplyResources(this.lblNoBlockRule, "lblNoBlockRule");
-            this.lblNoBlockRule.Name = "lblNoBlockRule";
             // 
             // InstallForm
             // 

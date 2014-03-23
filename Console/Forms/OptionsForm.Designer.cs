@@ -140,7 +140,7 @@ namespace WindowsFirewallNotifierConsole
             // btnOptions
             // 
             resources.ApplyResources(btnOptions, "btnOptions");
-            btnOptions.BackColor = System.Drawing.Color.White;
+            btnOptions.BackColor = System.Drawing.SystemColors.ButtonFace;
             btnOptions.FlatAppearance.BorderColor = System.Drawing.Color.DarkOrange;
             btnOptions.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Moccasin;
             btnOptions.Name = "btnOptions";
@@ -151,7 +151,7 @@ namespace WindowsFirewallNotifierConsole
             // btnDonate
             // 
             resources.ApplyResources(btnDonate, "btnDonate");
-            btnDonate.BackColor = System.Drawing.Color.White;
+            btnDonate.BackColor = System.Drawing.SystemColors.ButtonFace;
             btnDonate.FlatAppearance.BorderColor = System.Drawing.Color.DeepSkyBlue;
             btnDonate.FlatAppearance.MouseOverBackColor = System.Drawing.Color.SkyBlue;
             btnDonate.Name = "btnDonate";
@@ -162,7 +162,7 @@ namespace WindowsFirewallNotifierConsole
             // btnUpdate
             // 
             resources.ApplyResources(this.btnUpdate, "btnUpdate");
-            this.btnUpdate.BackColor = System.Drawing.Color.White;
+            this.btnUpdate.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.btnUpdate.FlatAppearance.BorderColor = System.Drawing.Color.DeepSkyBlue;
             this.btnUpdate.FlatAppearance.MouseOverBackColor = System.Drawing.Color.SkyBlue;
             this.btnUpdate.Name = "btnUpdate";
@@ -173,7 +173,7 @@ namespace WindowsFirewallNotifierConsole
             // btnTConnections
             // 
             resources.ApplyResources(this.btnTConnections, "btnTConnections");
-            this.btnTConnections.BackColor = System.Drawing.Color.White;
+            this.btnTConnections.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.btnTConnections.FlatAppearance.BorderColor = System.Drawing.Color.LimeGreen;
             this.btnTConnections.FlatAppearance.MouseOverBackColor = System.Drawing.Color.SkyBlue;
             this.btnTConnections.Name = "btnTConnections";
@@ -184,7 +184,7 @@ namespace WindowsFirewallNotifierConsole
             // btnTRules
             // 
             resources.ApplyResources(this.btnTRules, "btnTRules");
-            this.btnTRules.BackColor = System.Drawing.Color.White;
+            this.btnTRules.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.btnTRules.FlatAppearance.BorderColor = System.Drawing.Color.LimeGreen;
             this.btnTRules.FlatAppearance.MouseOverBackColor = System.Drawing.Color.SkyBlue;
             this.btnTRules.Name = "btnTRules";
@@ -195,7 +195,7 @@ namespace WindowsFirewallNotifierConsole
             // btnTLog
             // 
             resources.ApplyResources(this.btnTLog, "btnTLog");
-            this.btnTLog.BackColor = System.Drawing.Color.White;
+            this.btnTLog.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.btnTLog.FlatAppearance.BorderColor = System.Drawing.Color.LimeGreen;
             this.btnTLog.FlatAppearance.MouseOverBackColor = System.Drawing.Color.SkyBlue;
             this.btnTLog.Name = "btnTLog";
@@ -305,7 +305,7 @@ namespace WindowsFirewallNotifierConsole
             // toolStripConnections
             // 
             resources.ApplyResources(this.toolStripConnections, "toolStripConnections");
-            this.toolStripConnections.BackColor = System.Drawing.Color.White;
+            this.toolStripConnections.BackColor = System.Drawing.SystemColors.MenuBar;
             this.toolStripConnections.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnConnTrack,
             this.btnConnStop,
@@ -379,7 +379,6 @@ namespace WindowsFirewallNotifierConsole
             // tabRules
             // 
             resources.ApplyResources(this.tabRules, "tabRules");
-            this.tabRules.BackColor = System.Drawing.Color.White;
             this.tabRules.Controls.Add(this.gridRules);
             this.tabRules.Controls.Add(this.toolStripRules);
             this.tabRules.Controls.Add(this.lblRules);
@@ -391,7 +390,7 @@ namespace WindowsFirewallNotifierConsole
             this.gridRules.AllowUserToAddRows = false;
             this.gridRules.AllowUserToDeleteRows = false;
             this.gridRules.AllowUserToResizeRows = false;
-            this.gridRules.BackgroundColor = System.Drawing.Color.White;
+            this.gridRules.BackgroundColor = System.Drawing.SystemColors.Window;
             this.gridRules.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.gridRules.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.gridRules.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
@@ -510,6 +509,7 @@ namespace WindowsFirewallNotifierConsole
             // toolStripRules
             // 
             resources.ApplyResources(this.toolStripRules, "toolStripRules");
+            this.toolStripRules.BackColor = System.Drawing.SystemColors.MenuBar;
             this.toolStripRules.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnRDelete,
             this.toolStripSeparator2,
@@ -627,7 +627,6 @@ namespace WindowsFirewallNotifierConsole
             // tabExceptions
             // 
             resources.ApplyResources(this.tabExceptions, "tabExceptions");
-            this.tabExceptions.BackColor = System.Drawing.Color.White;
             this.tabExceptions.Controls.Add(this.gridExceptions);
             this.tabExceptions.Controls.Add(this.toolStripExceptions);
             this.tabExceptions.Controls.Add(this.lblExceptions);
@@ -638,7 +637,7 @@ namespace WindowsFirewallNotifierConsole
             resources.ApplyResources(this.gridExceptions, "gridExceptions");
             this.gridExceptions.AllowUserToResizeRows = false;
             this.gridExceptions.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.gridExceptions.BackgroundColor = System.Drawing.Color.White;
+            this.gridExceptions.BackgroundColor = System.Drawing.SystemColors.Window;
             this.gridExceptions.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.gridExceptions.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.gridExceptions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
@@ -696,7 +695,7 @@ namespace WindowsFirewallNotifierConsole
             // toolStripExceptions
             // 
             resources.ApplyResources(this.toolStripExceptions, "toolStripExceptions");
-            this.toolStripExceptions.BackColor = System.Drawing.Color.White;
+            this.toolStripExceptions.BackColor = System.Drawing.SystemColors.MenuBar;
             this.toolStripExceptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnERemove,
             this.toolStripSeparator1,
@@ -723,7 +722,6 @@ namespace WindowsFirewallNotifierConsole
             // tabLog
             // 
             resources.ApplyResources(this.tabLog, "tabLog");
-            this.tabLog.BackColor = System.Drawing.Color.White;
             this.tabLog.Controls.Add(this.gridLog);
             this.tabLog.Controls.Add(this.toolStripLog);
             this.tabLog.Controls.Add(this.lblLog);
@@ -736,7 +734,7 @@ namespace WindowsFirewallNotifierConsole
             this.gridLog.AllowUserToDeleteRows = false;
             this.gridLog.AllowUserToResizeRows = false;
             this.gridLog.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.gridLog.BackgroundColor = System.Drawing.Color.White;
+            this.gridLog.BackgroundColor = System.Drawing.SystemColors.Window;
             this.gridLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.gridLog.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.gridLog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
@@ -808,7 +806,7 @@ namespace WindowsFirewallNotifierConsole
             // toolStripLog
             // 
             resources.ApplyResources(this.toolStripLog, "toolStripLog");
-            this.toolStripLog.BackColor = System.Drawing.Color.White;
+            this.toolStripLog.BackColor = System.Drawing.SystemColors.MenuBar;
             this.toolStripLog.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnLLocate,
             this.toolStripSeparator4,
@@ -841,7 +839,7 @@ namespace WindowsFirewallNotifierConsole
             // pnlOverTabTop
             // 
             resources.ApplyResources(this.pnlOverTabTop, "pnlOverTabTop");
-            this.pnlOverTabTop.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.pnlOverTabTop.BackColor = System.Drawing.SystemColors.MenuBar;
             this.pnlOverTabTop.Controls.Add(this.btnUpdate);
             this.pnlOverTabTop.Controls.Add(this.btnTExceptions);
             this.pnlOverTabTop.Controls.Add(this.btnTLog);
@@ -854,7 +852,7 @@ namespace WindowsFirewallNotifierConsole
             // btnTExceptions
             // 
             resources.ApplyResources(this.btnTExceptions, "btnTExceptions");
-            this.btnTExceptions.BackColor = System.Drawing.Color.White;
+            this.btnTExceptions.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.btnTExceptions.FlatAppearance.BorderColor = System.Drawing.Color.LimeGreen;
             this.btnTExceptions.FlatAppearance.MouseOverBackColor = System.Drawing.Color.SkyBlue;
             this.btnTExceptions.Name = "btnTExceptions";

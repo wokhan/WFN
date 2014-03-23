@@ -117,126 +117,452 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="&gt;&gt;lblPath.ZOrder" xml:space="preserve">
-    <value>12</value>
-  </data>
-  <data name="&gt;&gt;chkLPortRule.Name" xml:space="preserve">
-    <value>chkLPortRule</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="pnlMain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>410, 190</value>
-  </data>
-  <data name="btnPrev.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
-  </data>
-  <data name="btnAlwaysBlock.Location" type="System.Drawing.Point, System.Drawing">
-    <value>219, 104</value>
-  </data>
+  <metadata name="pnlMain.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="chkCurrentProfile.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="btnOptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        R0lGODlhEAAQAIQfAB1XlLu7u+Tk5DOCytTU1MrKyrSztNzc3PT09Pj4+J+2zMTExV2u6qWlpZauvZqa
-        mqurq+rq6vz8/KmyuO7u75STk/Hx8b3AwqKoruDg4J+foOfn6NDPztrZ2MzMzP///yH/C05FVFNDQVBF
-        Mi4wAwEBAAAh+QQBAAAfACwAAAAAEAAQAAAItgA/FOjwoaDBBBc8LLBgsIEHAgYLBpAgAMKHBAkuQvDA
-        sKAHCgksfrgQoKCEBxAyfghAIQIHAhMNRHzQQMIHDgcEbBBA4WHEkw0SBNgpIAKBBxFNPmCZocKDCimT
-        fkBgoEMHDAKkGqRQgAAHBQwcaP0QYUHRBgAGhJUqYEEGoxcIpF1rMAMBoiIXzBX7oacGAxY0RAwwd8JK
-        qgUe2Iw4Ye4FAwgQaOiYFEPaCxYMQB77AcOFDwEBADs=
-</value>
+  <data name="btnPrev.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Left</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="lblPath.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
+  <data name="btnPrev.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
-  <data name="lblApp.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
-  <data name="chkTRule.Size" type="System.Drawing.Size, System.Drawing">
-    <value>244, 19</value>
-  </data>
-  <data name="&gt;&gt;btnOptions.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pictureBox1.Name" xml:space="preserve">
-    <value>pictureBox1</value>
-  </data>
-  <data name="&gt;&gt;chkLPortRule.Parent" xml:space="preserve">
-    <value>pnlHeader</value>
-  </data>
-  <data name="btnPrev.Size" type="System.Drawing.Size, System.Drawing">
-    <value>22, 22</value>
-  </data>
-  <data name="&gt;&gt;btnNext.Name" xml:space="preserve">
-    <value>btnNext</value>
-  </data>
-  <data name="&gt;&gt;chkServiceRule.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnMin.TabIndex" type="System.Int32, mscorlib">
-    <value>24</value>
-  </data>
-  <data name="chkPortRule.TabIndex" type="System.Int32, mscorlib">
-    <value>24</value>
-  </data>
-  <data name="btnOptions.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+  <data name="btnPrev.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
-  <data name="chkTemp.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;btnAlwaysBlock.Parent" xml:space="preserve">
-    <value>pnlMain</value>
-  </data>
-  <data name="chkTemp.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="chkPortRule.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="lblPath.Location" type="System.Drawing.Point, System.Drawing">
-    <value>57, 42</value>
-  </data>
-  <data name="pnlMain.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="btnClose.Font" type="System.Drawing.Font, System.Drawing">
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnPrev.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
-  </data>
-  <data name="lblTitle.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 8.25pt, style=Bold</value>
-  </data>
-  <data name="&gt;&gt;pnlMain.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnMin.Parent" xml:space="preserve">
-    <value>pnlHeader</value>
-  </data>
-  <data name="lblApp.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt</value>
-  </data>
-  <data name="btnOptions.TabIndex" type="System.Int32, mscorlib">
-    <value>31</value>
-  </data>
-  <data name="btnNext.TabIndex" type="System.Int32, mscorlib">
-    <value>23</value>
-  </data>
-  <data name="&gt;&gt;chkServiceRule.Parent" xml:space="preserve">
-    <value>pnlHeader</value>
   </data>
   <data name="btnPrev.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 8.25pt</value>
+  <data name="btnPrev.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
   </data>
-  <data name="btnAlwaysAllow.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+  <data name="btnPrev.Size" type="System.Drawing.Size, System.Drawing">
+    <value>22, 247</value>
+  </data>
+  <data name="btnPrev.TabIndex" type="System.Int32, mscorlib">
+    <value>24</value>
+  </data>
+  <data name="btnPrev.Text" xml:space="preserve">
+    <value>&lt;</value>
+  </data>
+  <data name="&gt;&gt;btnPrev.Name" xml:space="preserve">
+    <value>btnPrev</value>
+  </data>
+  <data name="&gt;&gt;btnPrev.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnPrev.Parent" xml:space="preserve">
+    <value>pnlMain</value>
+  </data>
+  <data name="&gt;&gt;btnPrev.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="btnNext.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="btnNext.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="btnNext.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnNext.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
+  </data>
+  <data name="btnNext.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnNext.Location" type="System.Drawing.Point, System.Drawing">
+    <value>448, 0</value>
+  </data>
+  <data name="btnNext.Size" type="System.Drawing.Size, System.Drawing">
+    <value>22, 247</value>
+  </data>
+  <data name="btnNext.TabIndex" type="System.Int32, mscorlib">
+    <value>23</value>
+  </data>
+  <data name="btnNext.Text" xml:space="preserve">
+    <value>&gt;</value>
+  </data>
+  <data name="&gt;&gt;btnNext.Name" xml:space="preserve">
+    <value>btnNext</value>
+  </data>
+  <data name="&gt;&gt;btnNext.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnNext.Parent" xml:space="preserve">
+    <value>pnlMain</value>
+  </data>
+  <data name="&gt;&gt;btnNext.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="btnAdvanced.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnAdvanced.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 7.5pt</value>
+  </data>
+  <data name="btnAdvanced.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8AAAC8ElEQVRYR8XS3UsUURgG8AML
+        QhBaW5IhCFHhf2ARSxFIGIVdFAgbgVdCJWUfRpi5EUtlJSihUmBBJqwRXvgVCIGyaFmLRjdaZGlqqfmF
+        xapJvj1nmRnOjO/s7lBsFz+Y885z5jmzO4KI/it2mEjsMJHYYSKZB2cy/zU3MzN1mha/T+90qhiSLDPV
+        INRAB8hsZK52mhYrBdudyAICvzJTuaAfZEbKhcg9tdO0WMzf5kQlECxDIRTAIdDvPwJ5XzcIbjB1mhY/
+        vRmxpEMAvgExOkDPZoAX5LwBTkAKmDpNi/mj6bG4oQeIMQapYN1zD9wPuz5MdX2cpeDQHD19M8IfYPbI
+        1ngkwX0gizLg8gLli1p5GOXkbwqhjjnA9OG0eB0DsgjCmqxSLt9clq/mVTSjjjnA94NbovFAmnadDwRN
+        kAMBmAcXGHtQTpZykuX7rjQMsweYPJAqpcBj8MI6TSUQnASZyYQ87ZrV3TdArz6z5dPZvkaj03SAiezN
+        0noIA8E8fNKupXzQc7Ze9g/Q+NQcjU8vUNvbUbVcPkMcr2rnD/B1/yZdKxAjD9TcGihvl+UTMws0NDpJ
+        wb5BOlXbHinXMxfqu/kDjO9164qBGCHYAWrWoL+5Xv763XtqedFD1U+a5V4j53sW4g8w5tkopcIYkI0f
+        kAt6PsKuvC7QIveYsiWBXv4AX/ZscEEnUBQzcBlkPgLlv+zK1ZyusK6TP8DI7pR0CEJIswykeQ4ekDkD
+        ysN25daszlvZZnOAXclWxUCaHG1mQPmKTXnYmlWpnabFcFaylQt6YUa7Nu5F+c+X1BxH7TQtuDBkgEed
+        Rfvg1JwdtdO04MJWKF/9m3JJ7TQtOEW+u6KkvEbUNbZGffPbtfXCV/FAlNyqFpf8VeLi9Qpx/todca6s
+        XBRdvSmKSm+wz2eHqjjKl+IpP1vqZ5/PDlWx3tyad4odqmL97NweJ9ihKtZ/zu1xgh2qYn1w3B4n2KEK
+        5cKuXH5w3B4n2GHikPgDmVqLD6a/vEsAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="btnAdvanced.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
   </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>Windows Firewall Notifier</value>
+  <data name="btnAdvanced.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnAdvanced.Location" type="System.Drawing.Point, System.Drawing">
+    <value>26, 111</value>
+  </data>
+  <data name="btnAdvanced.Size" type="System.Drawing.Size, System.Drawing">
+    <value>418, 21</value>
+  </data>
+  <data name="btnAdvanced.TabIndex" type="System.Int32, mscorlib">
+    <value>36</value>
+  </data>
+  <data name="btnAdvanced.Text" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
+  <data name="&gt;&gt;btnAdvanced.Name" xml:space="preserve">
+    <value>btnAdvanced</value>
+  </data>
+  <data name="&gt;&gt;btnAdvanced.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnAdvanced.Parent" xml:space="preserve">
+    <value>pnlMain</value>
+  </data>
+  <data name="&gt;&gt;btnAdvanced.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="btnOptions.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnOptions.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 7.5pt</value>
+  </data>
+  <data name="btnOptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8AAACw0lEQVRYR8XOT0hUURTHcUF4
+        IAiuhNkODLhy5TaIoGgxYAgu2gTB0ERESERhmEkgGLRIgiSL/lmvzBGDIKQp6S9mKbgKhEAIZjsgDAiu
+        bt8jvse5l/ME0cHFZ4Z37u/c+2txzh2q7Z+R2ZW9akePkoeVy7TfAmNwyj9EsLKm/RTIoQFdQJRg5U1e
+        gZuzy5Y8ehGpmRiHM6yjFTor353BbJtXYLiyHMqjBocNTKGE6s4si5z3ooinqEPuKcB7wytwY+a3lkcN
+        7gDJfQWk73gFht780ibhmmAN6TtegevTS1oRrglipO94BQZfL2kR6nAZNlFBWZFvmVv5RBHpO16Ba/HP
+        0DycYQ45WDsyl3Nrr44Iad4rcPXlotaOBlxgEmHWIrlwdwMdSHNegSsvfiS6UIELrCKCzopuYyY5yYd3
+        jCLNeQUuP//ejRguQz8klxjAJuRM/uVbn0s+vEOs4AT8AgPPvsVwGbbQBsmJflg5mScZyW/Cyolxr8Cl
+        J19juAx/IJlEFVZO5jone1ZOxF6Bi4+/xHAZ/kIyiUVYOZnrnOxZOeEXuPDo8zhchi20QXJiEFZO5klG
+        8rJn5YRf4PzDBVHEKpyhD0kuQhX6XL5lnmQkr8+1GN1egXMPPmljcIFVtELnjqC886/nkpN8eEcFXdjO
+        eQVKEx+1DjTgApMIsxbJhbtyXzvSnFfg7P0PWoQ6nGEOOYQ7QuZybu3Nw8t7Bc7cm9eKcLtooIKyIt8y
+        t/KijgjpO16B03ffazFcExSRvuMV6L/zTluDa4IJpO94BU7dfqsVUIM7QHKf3Ju+4xUojs6GCqihjin0
+        og8LcLuoogTZ2diZyT1yn/eGV+DkrRlLJ1qDmXyvwxnGobMR+lBQs5RX4PjI9F6U4QIN5GDlTV6BY8Ov
+        9iJCDU4Zg5XN5BU4OhTvVR49SjusXCavwOFxLf8BDIFlL6Wo8rYAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="btnOptions.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="btnOptions.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnOptions.Location" type="System.Drawing.Point, System.Drawing">
+    <value>351, -5</value>
+  </data>
+  <data name="btnOptions.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 40</value>
+  </data>
+  <data name="btnOptions.TabIndex" type="System.Int32, mscorlib">
+    <value>34</value>
+  </data>
+  <data name="btnOptions.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="&gt;&gt;btnOptions.Name" xml:space="preserve">
+    <value>btnOptions</value>
+  </data>
+  <data name="&gt;&gt;btnOptions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnOptions.Parent" xml:space="preserve">
+    <value>pnlMain</value>
+  </data>
+  <data name="&gt;&gt;btnOptions.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="btnMin.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnMin.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8AAABmUlEQVRYR8XXy0oCYRjG8a8D
+        FRFEEARBi6BFi6BFixZBi6BFEETQHWRmZzvbcTpn2R206BIqO9r5YNlkZmrQrgswEFq5CZ6+gZBw3tko
+        8yo8MAzC7/+pC0cAyOjIm5xLXGxFOoQr0i5c4TZlM9yKjVALnKFmON+asB5sxFqwAauv9VgJ1GE5UIul
+        lxos+qux4K+C8lyJebUCc2o5Zp/KMOMrxbSvBFOPxXA8FMHhLcSktwAT9/nK+F2eGLvN1Qf84TARh8Qh
+        cYze5BAB5p78P46R62xFF8CIY1hOF8CJ26+y9AGcuP2SCmDEhy40MimAEx88JwI48YEzIoAT7/cQAZx4
+        3ykRwIn3nhABRvhHzKO9OaXX+5ebxHuOiQCjk/8gntYo3HZEBBh97HFE0xqF2w6JAKPvPBDbwTc+U5oa
+        3Sbx7gMiwMwfXDJupQI4caubCODEu/aJAE7cQgVw4pY9IoAT79wlAjhxOoARJwM4cTJA4tpDAwsup/9b
+        LnHtiYUD15ZwExcSFxIXElfMPLmc0KYLyNTIm3yD+AVKrQ/BMtja6AAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="btnMin.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnMin.Location" type="System.Drawing.Point, System.Drawing">
+    <value>399, -5</value>
+  </data>
+  <data name="btnMin.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 40</value>
+  </data>
+  <data name="btnMin.TabIndex" type="System.Int32, mscorlib">
+    <value>32</value>
+  </data>
+  <data name="btnMin.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;btnMin.Name" xml:space="preserve">
+    <value>btnMin</value>
+  </data>
+  <data name="&gt;&gt;btnMin.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnMin.Parent" xml:space="preserve">
+    <value>pnlMain</value>
+  </data>
+  <data name="&gt;&gt;btnMin.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <metadata name="lblTitle.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
+  <data name="lblTitle.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="lblTitle.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 8.25pt, style=Bold</value>
+  </data>
+  <data name="lblTitle.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblTitle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>-1, -1</value>
+  </data>
+  <data name="lblTitle.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>30, 0, 30, 0</value>
+  </data>
+  <data name="lblTitle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>472, 27</value>
+  </data>
+  <data name="lblTitle.TabIndex" type="System.Int32, mscorlib">
+    <value>28</value>
+  </data>
+  <data name="lblTitle.Text" xml:space="preserve">
+    <value>Windows firewall has blocked an outgoing connection.</value>
+  </data>
+  <data name="lblTitle.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;lblTitle.Name" xml:space="preserve">
+    <value>lblTitle</value>
+  </data>
+  <data name="&gt;&gt;lblTitle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblTitle.Parent" xml:space="preserve">
+    <value>pnlMain</value>
+  </data>
+  <data name="&gt;&gt;lblTitle.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="lblConn.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 9pt</value>
+  </data>
+  <data name="lblConn.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblConn.Location" type="System.Drawing.Point, System.Drawing">
+    <value>358, 5</value>
+  </data>
+  <data name="lblConn.Size" type="System.Drawing.Size, System.Drawing">
+    <value>56, 30</value>
+  </data>
+  <data name="lblConn.TabIndex" type="System.Int32, mscorlib">
+    <value>37</value>
+  </data>
+  <data name="lblConn.Text" xml:space="preserve">
+    <value>X/Y</value>
+  </data>
+  <data name="lblConn.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="&gt;&gt;lblConn.Name" xml:space="preserve">
+    <value>lblConn</value>
+  </data>
+  <data name="&gt;&gt;lblConn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblConn.Parent" xml:space="preserve">
+    <value>pnlInfos</value>
+  </data>
+  <data name="&gt;&gt;lblConn.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="pictureBox1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="pictureBox1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 4</value>
+  </data>
+  <data name="pictureBox1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="pictureBox1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 32</value>
+  </data>
+  <data name="pictureBox1.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
+    <value>Zoom</value>
+  </data>
+  <data name="pictureBox1.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;pictureBox1.Name" xml:space="preserve">
+    <value>pictureBox1</value>
+  </data>
+  <data name="&gt;&gt;pictureBox1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pictureBox1.Parent" xml:space="preserve">
+    <value>pnlInfos</value>
+  </data>
+  <data name="&gt;&gt;pictureBox1.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lblApp.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 12pt</value>
+  </data>
+  <data name="lblApp.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblApp.Location" type="System.Drawing.Point, System.Drawing">
+    <value>40, 5</value>
+  </data>
+  <data name="lblApp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>315, 30</value>
+  </data>
+  <data name="lblApp.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="lblApp.Text" xml:space="preserve">
+    <value>Application Name</value>
+  </data>
+  <data name="lblApp.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;lblApp.Name" xml:space="preserve">
+    <value>lblApp</value>
+  </data>
+  <data name="&gt;&gt;lblApp.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblApp.Parent" xml:space="preserve">
+    <value>pnlInfos</value>
+  </data>
+  <data name="&gt;&gt;lblApp.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="pnlInfos.Location" type="System.Drawing.Point, System.Drawing">
+    <value>26, 27</value>
+  </data>
+  <data name="pnlInfos.Size" type="System.Drawing.Size, System.Drawing">
+    <value>417, 40</value>
+  </data>
+  <data name="pnlInfos.TabIndex" type="System.Int32, mscorlib">
+    <value>35</value>
+  </data>
+  <data name="&gt;&gt;pnlInfos.Name" xml:space="preserve">
+    <value>pnlInfos</value>
+  </data>
+  <data name="&gt;&gt;pnlInfos.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlInfos.Parent" xml:space="preserve">
+    <value>pnlMain</value>
+  </data>
+  <data name="&gt;&gt;pnlInfos.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="btnClose.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnClose.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
+        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJNSURBVFhHxZfLS1RhGMaPKRUSSBAEQYugRQuhRYsW
+        QYugRRBE4H+Qmd1MzcquJ29l2V/RXuxqpWbezSY1dREhQRRFFyKvpGY+fZ/Y8Pq9z8x8LuY4hwcO5xnm
+        9zvnPeebmQDAqoYejDLxnTsjeUHdyOGgbvhQeHv4IG4NHUDt0H7UvtmHm4N7cWNwD2oGdqO6fxeq+nei
+        8nUuKmI7cD22HeGrbbjWtxVX+7bgysvNuNy7CZd6N+JiTw7KuzegvCsbF7rW43znuvBcx9qgrD1LCyzB
+        kUY4DBwGjrNtmUQgvWcu4Sh9sSZUAhHCUWKiBKKEF7dmaAEGH/hRb9+4+GLw2Le7Sy1WBC9+zgTImS84
+        m3vmsrObL/xMi0U6AuyyL2BeRV521vvAi5qJQKKZ/8Wcipw561PBTzcRgWQ33DxmVOTMWZ8MfuoZEUh1
+        t//BtIqcOesTwU8+JQI+j9ocJlXkzFnP4CeeEAHf53wWYypy5qx34ccbiYAP/P/MZ/BTRc6c9RJe+JgI
+        +MLtzH/ju4q84Vgv4YWPiIAvfBpfVSSc9S782EMi4AOfwmcVCWc9gxcwgVTwSXxUkXDWJ4IXPCACyeAT
+        +KAi4axPBj96nwgkgo/jvYqEsz4VPJ8JMPgYRlUknPU+8Px7RMCF2xXuF94ti4TbFc7tfeFHGoiAC7fL
+        a+uXKvPBbxfjwu3y2vypIt6vBM4FHLjPV6q7vPrCqUCUcCpg4PZPQyRwE/2z3MDtP5Yo4DZxbnzHwAMD
+        Dww8TOeZmwQ2SmC1Qg9GFwT/AChjt+S70FGTAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="btnClose.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="btnClose.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnClose.Location" type="System.Drawing.Point, System.Drawing">
+    <value>308, 68</value>
+  </data>
+  <data name="btnClose.Size" type="System.Drawing.Size, System.Drawing">
+    <value>135, 37</value>
+  </data>
+  <data name="btnClose.TabIndex" type="System.Int32, mscorlib">
+    <value>21</value>
+  </data>
+  <data name="btnClose.Text" xml:space="preserve">
+    <value>Skip all</value>
+  </data>
+  <data name="&gt;&gt;btnClose.Name" xml:space="preserve">
+    <value>btnClose</value>
+  </data>
+  <data name="&gt;&gt;btnClose.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnClose.Parent" xml:space="preserve">
+    <value>pnlMain</value>
+  </data>
+  <data name="&gt;&gt;btnClose.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="btnAlwaysBlock.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
   </data>
   <data name="btnAlwaysBlock.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -256,539 +582,38 @@
         O40g02c16j5JC6aGPxhteLNS90muh+FmfBw+yPsJ8/jqpZFGCv8AAAAASUVORK5CYII=
 </value>
   </data>
-  <data name="btnAlwaysAllow.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
-  </data>
-  <data name="chkCurrentProfile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>249, 17</value>
-  </data>
-  <data name="lblPath.Size" type="System.Drawing.Size, System.Drawing">
-    <value>348, 15</value>
-  </data>
-  <data name="&gt;&gt;chkTRule.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;chkPortRule.Name" xml:space="preserve">
-    <value>chkPortRule</value>
-  </data>
-  <data name="&gt;&gt;btnNext.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnAlwaysBlock.Name" xml:space="preserve">
-    <value>btnAlwaysBlock</value>
-  </data>
-  <data name="&gt;&gt;btnClose.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;chkCurrentProfile.Parent" xml:space="preserve">
-    <value>pnlMain</value>
-  </data>
-  <data name="&gt;&gt;chkServiceRule.ZOrder" xml:space="preserve">
-    <value>10</value>
-  </data>
-  <data name="&gt;&gt;chkPath.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="lblTitle.Location" type="System.Drawing.Point, System.Drawing">
-    <value>-1, -1</value>
-  </data>
-  <data name="btnClose.Location" type="System.Drawing.Point, System.Drawing">
-    <value>387, -1</value>
-  </data>
-  <data name="chkCurrentProfile.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="btnMin.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="chkPortRule.Text" xml:space="preserve">
-    <value>Target port: {0}</value>
-  </data>
-  <data name="&gt;&gt;lblConn.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;pnlHeader.Parent" xml:space="preserve">
-    <value>pnlMain</value>
-  </data>
-  <data name="chkCurrentProfile.Text" xml:space="preserve">
-    <value>Create a rule for the current profile ({0}) only</value>
-  </data>
-  <data name="lblApp.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;chkCurrentProfile.Name" xml:space="preserve">
-    <value>chkCurrentProfile</value>
-  </data>
-  <data name="&gt;&gt;pnlHeader.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="lblTitle.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
-  </data>
-  <data name="&gt;&gt;lblPath.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="chkServiceRule.TabIndex" type="System.Int32, mscorlib">
-    <value>25</value>
-  </data>
-  <data name="pictureBox1.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
-    <value>Zoom</value>
-  </data>
-  <data name="chkTemp.Location" type="System.Drawing.Point, System.Drawing">
-    <value>62, 166</value>
-  </data>
-  <data name="btnPrev.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="&gt;&gt;btnPrev.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="chkTRule.Location" type="System.Drawing.Point, System.Drawing">
-    <value>161, 77</value>
-  </data>
-  <data name="&gt;&gt;chkPortRule.Parent" xml:space="preserve">
-    <value>pnlHeader</value>
-  </data>
-  <data name="&gt;&gt;chkTemp.Name" xml:space="preserve">
-    <value>chkTemp</value>
-  </data>
-  <data name="btnAlwaysAllow.Location" type="System.Drawing.Point, System.Drawing">
-    <value>45, 104</value>
-  </data>
-  <data name="chkPath.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="&gt;&gt;btnAlwaysAllow.Parent" xml:space="preserve">
-    <value>pnlMain</value>
-  </data>
-  <data name="btnMin.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="&gt;&gt;chkServiceRule.Name" xml:space="preserve">
-    <value>chkServiceRule</value>
-  </data>
-  <data name="&gt;&gt;btnOptions.Parent" xml:space="preserve">
-    <value>pnlHeader</value>
-  </data>
-  <data name="btnAlwaysAllow.Size" type="System.Drawing.Size, System.Drawing">
-    <value>145, 37</value>
-  </data>
-  <data name="&gt;&gt;lblApp.Parent" xml:space="preserve">
-    <value>pnlHeader</value>
-  </data>
-  <data name="&gt;&gt;btnPrev.Parent" xml:space="preserve">
-    <value>pnlHeader</value>
-  </data>
-  <data name="chkServiceRule.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;btnAlwaysAllow.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnPrev.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="lblTitle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>410, 22</value>
-  </data>
-  <data name="&gt;&gt;chkLPortRule.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="chkTRule.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="pictureBox1.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
-  <data name="chkPath.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;lblConn.Parent" xml:space="preserve">
-    <value>pnlHeader</value>
-  </data>
-  <data name="&gt;&gt;lblConn.Name" xml:space="preserve">
-    <value>lblConn</value>
-  </data>
-  <data name="&gt;&gt;chkTemp.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="pnlHeader.Location" type="System.Drawing.Point, System.Drawing">
-    <value>-1, -1</value>
-  </data>
-  <data name="pnlMain.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="&gt;&gt;btnClose.Name" xml:space="preserve">
-    <value>btnClose</value>
-  </data>
-  <data name="lblTitle.Text" xml:space="preserve">
-    <value>Windows firewall has blocked an outgoing connection.</value>
-  </data>
-  <data name="btnPrev.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;lblTitle.Name" xml:space="preserve">
-    <value>lblTitle</value>
-  </data>
-  <data name="chkTemp.Text" xml:space="preserve">
-    <value>Only apply this choice now and ask again the next time</value>
-  </data>
-  <data name="&gt;&gt;btnPrev.Name" xml:space="preserve">
-    <value>btnPrev</value>
-  </data>
-  <data name="lblConn.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleCenter</value>
-  </data>
-  <data name="btnClose.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="chkCurrentProfile.TabIndex" type="System.Int32, mscorlib">
-    <value>24</value>
-  </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
-  </data>
-  <data name="&gt;&gt;btnOptions.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
-    <value>Manual</value>
+  <data name="btnAlwaysBlock.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="btnAlwaysBlock.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>MainForm</value>
-  </data>
-  <data name="chkPortRule.Location" type="System.Drawing.Point, System.Drawing">
-    <value>43, 77</value>
-  </data>
-  <data name="&gt;&gt;pictureBox1.Parent" xml:space="preserve">
-    <value>pnlHeader</value>
-  </data>
-  <data name="&gt;&gt;chkPath.Name" xml:space="preserve">
-    <value>chkPath</value>
-  </data>
-  <data name="&gt;&gt;btnMin.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="btnMin.Location" type="System.Drawing.Point, System.Drawing">
-    <value>366, -1</value>
-  </data>
-  <data name="&gt;&gt;chkTRule.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnMin.Name" xml:space="preserve">
-    <value>btnMin</value>
-  </data>
-  <data name="chkTRule.TabIndex" type="System.Int32, mscorlib">
-    <value>28</value>
-  </data>
-  <data name="pnlHeader.Size" type="System.Drawing.Size, System.Drawing">
-    <value>410, 99</value>
-  </data>
-  <data name="btnOptions.Location" type="System.Drawing.Point, System.Drawing">
-    <value>341, -1</value>
-  </data>
-  <data name="lblPath.Text" xml:space="preserve">
-    <value>Path: {0}</value>
-  </data>
-  <data name="lblConn.Text" xml:space="preserve">
-    <value>./.</value>
-  </data>
-  <data name="chkLPortRule.TabIndex" type="System.Int32, mscorlib">
-    <value>25</value>
-  </data>
-  <data name="btnAlwaysBlock.Text" xml:space="preserve">
-    <value>Block</value>
-  </data>
-  <data name="chkTemp.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="chkServiceRule.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="&gt;&gt;chkTRule.Name" xml:space="preserve">
-    <value>chkTRule</value>
-  </data>
-  <data name="&gt;&gt;btnAlwaysBlock.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="chkLPortRule.Location" type="System.Drawing.Point, System.Drawing">
-    <value>43, 59</value>
-  </data>
-  <data name="btnClose.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
+  <data name="btnAlwaysBlock.Location" type="System.Drawing.Point, System.Drawing">
+    <value>167, 68</value>
   </data>
   <data name="btnAlwaysBlock.Size" type="System.Drawing.Size, System.Drawing">
-    <value>145, 37</value>
-  </data>
-  <data name="btnPrev.Location" type="System.Drawing.Point, System.Drawing">
-    <value>366, 20</value>
-  </data>
-  <data name="chkServiceRule.Size" type="System.Drawing.Size, System.Drawing">
-    <value>244, 19</value>
-  </data>
-  <data name="pnlHeader.TabIndex" type="System.Int32, mscorlib">
-    <value>21</value>
-  </data>
-  <data name="chkLPortRule.Text" xml:space="preserve">
-    <value>Local port: {0}</value>
-  </data>
-  <data name="chkPortRule.Size" type="System.Drawing.Size, System.Drawing">
-    <value>110, 19</value>
-  </data>
-  <data name="lblTitle.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnAlwaysAllow.Text" xml:space="preserve">
-    <value>Allow</value>
-  </data>
-  <data name="chkTRule.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;chkCurrentProfile.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblApp.ZOrder" xml:space="preserve">
-    <value>14</value>
-  </data>
-  <data name="&gt;&gt;btnClose.Parent" xml:space="preserve">
-    <value>pnlHeader</value>
+    <value>135, 37</value>
   </data>
   <data name="btnAlwaysBlock.TabIndex" type="System.Int32, mscorlib">
     <value>20</value>
   </data>
-  <data name="&gt;&gt;lblTitle.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnAlwaysBlock.Text" xml:space="preserve">
+    <value>Block</value>
   </data>
-  <data name="&gt;&gt;lblApp.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;btnAlwaysBlock.Name" xml:space="preserve">
+    <value>btnAlwaysBlock</value>
   </data>
-  <data name="chkTRule.Text" xml:space="preserve">
-    <value>Target: {0}</value>
-  </data>
-  <data name="&gt;&gt;chkPath.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblApp.Name" xml:space="preserve">
-    <value>lblApp</value>
-  </data>
-  <data name="btnOptions.Size" type="System.Drawing.Size, System.Drawing">
-    <value>22, 22</value>
-  </data>
-  <data name="btnNext.Location" type="System.Drawing.Point, System.Drawing">
-    <value>387, 20</value>
-  </data>
-  <data name="&gt;&gt;lblConn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="lblTitle.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="&gt;&gt;btnClose.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnAlwaysBlock.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;lblPath.Name" xml:space="preserve">
-    <value>lblPath</value>
-  </data>
-  <data name="&gt;&gt;chkPath.Parent" xml:space="preserve">
-    <value>pnlHeader</value>
-  </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="chkPath.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;btnNext.Parent" xml:space="preserve">
-    <value>pnlHeader</value>
-  </data>
-  <data name="chkLPortRule.Size" type="System.Drawing.Size, System.Drawing">
-    <value>110, 19</value>
-  </data>
-  <data name="chkServiceRule.Location" type="System.Drawing.Point, System.Drawing">
-    <value>161, 59</value>
-  </data>
-  <data name="&gt;&gt;lblPath.Parent" xml:space="preserve">
-    <value>pnlHeader</value>
-  </data>
-  <data name="lblApp.Location" type="System.Drawing.Point, System.Drawing">
-    <value>40, 26</value>
-  </data>
-  <data name="chkCurrentProfile.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnMin.Text" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="chkPath.Size" type="System.Drawing.Size, System.Drawing">
-    <value>13, 17</value>
-  </data>
-  <data name="&gt;&gt;pnlMain.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="btnNext.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;pnlMain.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;btnNext.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="lblConn.TabIndex" type="System.Int32, mscorlib">
-    <value>29</value>
-  </data>
-  <data name="&gt;&gt;pnlHeader.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="chkPath.TabIndex" type="System.Int32, mscorlib">
-    <value>30</value>
-  </data>
-  <data name="&gt;&gt;chkTemp.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;btnAlwaysAllow.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="lblConn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>318, 21</value>
-  </data>
-  <data name="&gt;&gt;pictureBox1.ZOrder" xml:space="preserve">
-    <value>13</value>
-  </data>
-  <data name="chkLPortRule.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="pictureBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>32, 32</value>
-  </data>
-  <data name="chkPortRule.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnNext.Size" type="System.Drawing.Size, System.Drawing">
-    <value>22, 22</value>
-  </data>
-  <data name="lblConn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>45, 22</value>
-  </data>
-  <data name="&gt;&gt;pnlMain.Name" xml:space="preserve">
+  <data name="&gt;&gt;btnAlwaysBlock.Parent" xml:space="preserve">
     <value>pnlMain</value>
   </data>
-  <data name="btnAlwaysBlock.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="&gt;&gt;lblTitle.ZOrder" xml:space="preserve">
-    <value>11</value>
-  </data>
-  <data name="&gt;&gt;chkTRule.Parent" xml:space="preserve">
-    <value>pnlHeader</value>
-  </data>
-  <data name="chkCurrentProfile.Location" type="System.Drawing.Point, System.Drawing">
-    <value>62, 145</value>
-  </data>
-  <data name="btnPrev.TabIndex" type="System.Int32, mscorlib">
-    <value>24</value>
-  </data>
-  <data name="&gt;&gt;chkPortRule.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;btnAlwaysBlock.ZOrder" xml:space="preserve">
+    <value>8</value>
   </data>
   <data name="btnAlwaysAllow.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
-  </data>
-  <data name="pictureBox1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 25</value>
-  </data>
-  <data name="btnMin.Size" type="System.Drawing.Size, System.Drawing">
-    <value>22, 22</value>
-  </data>
-  <data name="chkTemp.TabIndex" type="System.Int32, mscorlib">
-    <value>23</value>
-  </data>
-  <data name="&gt;&gt;pnlHeader.Name" xml:space="preserve">
-    <value>pnlHeader</value>
-  </data>
-  <data name="lblApp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>272, 15</value>
-  </data>
-  <data name="btnMin.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>410, 190</value>
-  </data>
-  <data name="&gt;&gt;lblTitle.Parent" xml:space="preserve">
-    <value>pnlHeader</value>
-  </data>
-  <data name="btnAlwaysBlock.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="btnNext.Text" xml:space="preserve">
-    <value>&gt;</value>
-  </data>
-  <data name="&gt;&gt;pictureBox1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="lblPath.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="chkPath.Location" type="System.Drawing.Point, System.Drawing">
-    <value>43, 41</value>
-  </data>
-  <data name="&gt;&gt;chkTemp.Parent" xml:space="preserve">
-    <value>pnlMain</value>
-  </data>
-  <data name="btnClose.Size" type="System.Drawing.Size, System.Drawing">
-    <value>22, 22</value>
-  </data>
-  <data name="btnNext.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
-  </data>
-  <data name="chkServiceRule.Text" xml:space="preserve">
-    <value>Service: {0}</value>
-  </data>
-  <data name="btnPrev.Text" xml:space="preserve">
-    <value>&lt;</value>
-  </data>
-  <data name="btnClose.Text" xml:space="preserve">
-    <value>X</value>
-  </data>
-  <data name="&gt;&gt;btnMin.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="chkTemp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>307, 17</value>
-  </data>
-  <data name="pnlHeader.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="btnClose.TabIndex" type="System.Int32, mscorlib">
-    <value>21</value>
-  </data>
-  <data name="&gt;&gt;btnAlwaysBlock.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;chkLPortRule.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnNext.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="pictureBox1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnMin.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Marlett, 8.25pt, style=Bold</value>
-  </data>
-  <data name="lblApp.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
-  </data>
-  <data name="&gt;&gt;chkCurrentProfile.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="pnlMain.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
   </data>
   <data name="btnAlwaysAllow.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -808,37 +633,352 @@
         Aa71pudNX0glAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="&gt;&gt;chkPortRule.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="btnOptions.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;btnAlwaysAllow.Name" xml:space="preserve">
-    <value>btnAlwaysAllow</value>
+  <data name="btnAlwaysAllow.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="btnAlwaysAllow.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;btnOptions.Name" xml:space="preserve">
-    <value>btnOptions</value>
+  <data name="btnAlwaysAllow.Location" type="System.Drawing.Point, System.Drawing">
+    <value>26, 68</value>
   </data>
-  <data name="btnNext.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
+  <data name="btnAlwaysAllow.Size" type="System.Drawing.Size, System.Drawing">
+    <value>135, 37</value>
   </data>
-  <metadata name="lblTitle.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>False</value>
-  </metadata>
-  <metadata name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>fr</value>
-  </metadata>
-  <metadata name="pnlMain.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>False</value>
-  </metadata>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <data name="btnAlwaysAllow.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="btnAlwaysAllow.Text" xml:space="preserve">
+    <value>Allow</value>
+  </data>
+  <data name="&gt;&gt;btnAlwaysAllow.Name" xml:space="preserve">
+    <value>btnAlwaysAllow</value>
+  </data>
+  <data name="&gt;&gt;btnAlwaysAllow.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnAlwaysAllow.Parent" xml:space="preserve">
+    <value>pnlMain</value>
+  </data>
+  <data name="&gt;&gt;btnAlwaysAllow.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="pnlHeader.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="chkCurrentProfile.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
-  </metadata>
+  </data>
+  <data name="chkCurrentProfile.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="chkCurrentProfile.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkCurrentProfile.Location" type="System.Drawing.Point, System.Drawing">
+    <value>29, 66</value>
+  </data>
+  <data name="chkCurrentProfile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>249, 17</value>
+  </data>
+  <data name="chkCurrentProfile.TabIndex" type="System.Int32, mscorlib">
+    <value>32</value>
+  </data>
+  <data name="chkCurrentProfile.Text" xml:space="preserve">
+    <value>Create a rule for the current profile ({0}) only</value>
+  </data>
+  <data name="&gt;&gt;chkCurrentProfile.Name" xml:space="preserve">
+    <value>chkCurrentProfile</value>
+  </data>
+  <data name="&gt;&gt;chkCurrentProfile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkCurrentProfile.Parent" xml:space="preserve">
+    <value>pnlHeader</value>
+  </data>
+  <data name="&gt;&gt;chkCurrentProfile.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="chkTemp.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkTemp.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="chkTemp.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkTemp.Location" type="System.Drawing.Point, System.Drawing">
+    <value>29, 87</value>
+  </data>
+  <data name="chkTemp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>307, 17</value>
+  </data>
+  <data name="chkTemp.TabIndex" type="System.Int32, mscorlib">
+    <value>31</value>
+  </data>
+  <data name="chkTemp.Text" xml:space="preserve">
+    <value>Only apply this choice now and ask again the next time</value>
+  </data>
+  <data name="&gt;&gt;chkTemp.Name" xml:space="preserve">
+    <value>chkTemp</value>
+  </data>
+  <data name="&gt;&gt;chkTemp.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkTemp.Parent" xml:space="preserve">
+    <value>pnlHeader</value>
+  </data>
+  <data name="&gt;&gt;chkTemp.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <metadata name="chkPath.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </metadata>
+  <data name="chkPath.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="chkPath.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="chkPath.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkPath.Location" type="System.Drawing.Point, System.Drawing">
+    <value>29, 5</value>
+  </data>
+  <data name="chkPath.Size" type="System.Drawing.Size, System.Drawing">
+    <value>13, 17</value>
+  </data>
+  <data name="chkPath.TabIndex" type="System.Int32, mscorlib">
+    <value>30</value>
+  </data>
+  <data name="&gt;&gt;chkPath.Name" xml:space="preserve">
+    <value>chkPath</value>
+  </data>
+  <data name="&gt;&gt;chkPath.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkPath.Parent" xml:space="preserve">
+    <value>pnlHeader</value>
+  </data>
+  <data name="&gt;&gt;chkPath.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="chkTRule.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="chkTRule.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkTRule.Location" type="System.Drawing.Point, System.Drawing">
+    <value>147, 41</value>
+  </data>
+  <data name="chkTRule.Size" type="System.Drawing.Size, System.Drawing">
+    <value>244, 19</value>
+  </data>
+  <data name="chkTRule.TabIndex" type="System.Int32, mscorlib">
+    <value>28</value>
+  </data>
+  <data name="chkTRule.Text" xml:space="preserve">
+    <value>Target: {0}</value>
+  </data>
+  <data name="&gt;&gt;chkTRule.Name" xml:space="preserve">
+    <value>chkTRule</value>
+  </data>
+  <data name="&gt;&gt;chkTRule.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkTRule.Parent" xml:space="preserve">
+    <value>pnlHeader</value>
+  </data>
+  <data name="&gt;&gt;chkTRule.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="chkPortRule.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="chkPortRule.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkPortRule.Location" type="System.Drawing.Point, System.Drawing">
+    <value>29, 41</value>
+  </data>
+  <data name="chkPortRule.Size" type="System.Drawing.Size, System.Drawing">
+    <value>110, 19</value>
+  </data>
+  <data name="chkPortRule.TabIndex" type="System.Int32, mscorlib">
+    <value>24</value>
+  </data>
+  <data name="chkPortRule.Text" xml:space="preserve">
+    <value>Target port: {0}</value>
+  </data>
+  <data name="&gt;&gt;chkPortRule.Name" xml:space="preserve">
+    <value>chkPortRule</value>
+  </data>
+  <data name="&gt;&gt;chkPortRule.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkPortRule.Parent" xml:space="preserve">
+    <value>pnlHeader</value>
+  </data>
+  <data name="&gt;&gt;chkPortRule.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="chkLPortRule.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="chkLPortRule.Location" type="System.Drawing.Point, System.Drawing">
+    <value>29, 23</value>
+  </data>
+  <data name="chkLPortRule.Size" type="System.Drawing.Size, System.Drawing">
+    <value>110, 19</value>
+  </data>
+  <data name="chkLPortRule.TabIndex" type="System.Int32, mscorlib">
+    <value>25</value>
+  </data>
+  <data name="chkLPortRule.Text" xml:space="preserve">
+    <value>Local port: {0}</value>
+  </data>
+  <data name="&gt;&gt;chkLPortRule.Name" xml:space="preserve">
+    <value>chkLPortRule</value>
+  </data>
+  <data name="&gt;&gt;chkLPortRule.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkLPortRule.Parent" xml:space="preserve">
+    <value>pnlHeader</value>
+  </data>
+  <data name="&gt;&gt;chkLPortRule.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="chkServiceRule.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="chkServiceRule.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkServiceRule.Location" type="System.Drawing.Point, System.Drawing">
+    <value>147, 23</value>
+  </data>
+  <data name="chkServiceRule.Size" type="System.Drawing.Size, System.Drawing">
+    <value>244, 19</value>
+  </data>
+  <data name="chkServiceRule.TabIndex" type="System.Int32, mscorlib">
+    <value>25</value>
+  </data>
+  <data name="chkServiceRule.Text" xml:space="preserve">
+    <value>Service: {0}</value>
+  </data>
+  <data name="&gt;&gt;chkServiceRule.Name" xml:space="preserve">
+    <value>chkServiceRule</value>
+  </data>
+  <data name="&gt;&gt;chkServiceRule.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkServiceRule.Parent" xml:space="preserve">
+    <value>pnlHeader</value>
+  </data>
+  <data name="&gt;&gt;chkServiceRule.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="lblPath.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblPath.Location" type="System.Drawing.Point, System.Drawing">
+    <value>43, 6</value>
+  </data>
+  <data name="lblPath.Size" type="System.Drawing.Size, System.Drawing">
+    <value>348, 15</value>
+  </data>
+  <data name="lblPath.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="lblPath.Text" xml:space="preserve">
+    <value>Path: {0}</value>
+  </data>
+  <data name="&gt;&gt;lblPath.Name" xml:space="preserve">
+    <value>lblPath</value>
+  </data>
+  <data name="&gt;&gt;lblPath.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblPath.Parent" xml:space="preserve">
+    <value>pnlHeader</value>
+  </data>
+  <data name="&gt;&gt;lblPath.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="pnlHeader.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1, 138</value>
+  </data>
+  <data name="pnlHeader.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="pnlHeader.Size" type="System.Drawing.Size, System.Drawing">
+    <value>469, 110</value>
+  </data>
+  <data name="pnlHeader.TabIndex" type="System.Int32, mscorlib">
+    <value>21</value>
+  </data>
+  <data name="&gt;&gt;pnlHeader.Name" xml:space="preserve">
+    <value>pnlHeader</value>
+  </data>
+  <data name="&gt;&gt;pnlHeader.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlHeader.Parent" xml:space="preserve">
+    <value>pnlMain</value>
+  </data>
+  <data name="&gt;&gt;pnlHeader.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="pnlMain.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="pnlMain.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="pnlMain.Size" type="System.Drawing.Size, System.Drawing">
+    <value>472, 249</value>
+  </data>
+  <data name="pnlMain.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;pnlMain.Name" xml:space="preserve">
+    <value>pnlMain</value>
+  </data>
+  <data name="&gt;&gt;pnlMain.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlMain.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pnlMain.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>472, 249</value>
+  </data>
+  <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 8.25pt</value>
+  </data>
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>Manual</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Windows Firewall Notifier</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>MainForm</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

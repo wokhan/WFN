@@ -286,19 +286,19 @@ Aucune règle de pare-feu ne sera créée ou supprimée lors de la modification 
   <data name="btnConnTrack.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKtSURBVDhPZZJLSJRhFIa/v9JxIkGLjCiiXA2Rtik3tqjA
-        amFBi9pELbp4ScdmxibH6+RooRC0CIroQtgiiMDMnEz9Z9JfncacUSfTpKBNLQy1rwvThejtnG9S/uqD
-        l9nM8573P+cVF2L5tubYXn/z2B7ZNJorz47kSm80R3ojG6W330bKlHXGalljZMgqI11WGinSQ3L3Wvyu
-        oLCJ5tg+nWA0je7E+ZFtOBfNgW84CzXh9agNr0NdeC1qnq5CVSgdnoFUePqtOGNYcLp3CZxBTRe+sV3x
-        BJyLxsgW+CJZaBzehEvP81A/lAlPKI3g5QQvQ4UJdgUXobhTiwuOzZMVPJyNapp6Y/Ig+L3+2Ifq0Aq4
-        +y1qsrsveQF2BDSU9Qgp+Js5dkMkG/XPbKgMrUTLy0PKgN8rGaDJqXD2CgWXP1lM0clAJ4NuMuCFNUQ2
-        K9hLkSsG03Br8oCCf+Kb+p2a6yTQCrsuzDBKH7ABbXserg2vgXtgKW5O7FfgD3xW4jcx1wFnwAJ7j0jA
-        jwVOKgM+1dAGBVeHMlBuJOH6i3xCeP7cgoBfmJJ+OHqsKGH4kUBRwoDurE6VoU7l6tNwbXw3/f0r4phe
-        EOeZ+NCOsi4rigku9v8xUCUx3ZmXdXU8j+Z/whe8I70lszhiM3cptgVFBCr4oUABG6iGKThx51NBgSux
-        HTRvlizekJHE6Mwdip2Cgg4T3C5wpI0MuJ48mWG+M2/6cmw7vuM9aRojs7dR2vU/fKJN4PB9MlDdNjWs
-        lLZ8MbpVwdHZFtgJLjTFLiSYouM4G7SSgUe3xs31dAQ1uAJJ8A1mwtGd/BfMk+fhY61KceE2knRzPbkk
-        drpzIZ/pH5hjm2AcbRW6cAWTbc6A5i8LaJK7zfXkhnFJ+Ews3jYvjL+ZY7PIwF9wT9h+A1FOe4fe72Zr
-        AAAAAElFTkSuQmCC
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKqSURBVDhPZZJbSNNhGMa/f6VzkaBFRhRRXo1Iuylv7KIC
+        qwsLuqib6KaDh9rWNltOpw4PhULQRVBEB8IuggjMzGW6Q/pX58xNXaZJQTd1Yah9HVgHoqf3/Zbyrz54
+        2M1+z/v83/cRFxPFlpbEfn/L+D7ZPFYofaOkeIH0xTZLn24h5co6fa2s0XNktZ4tq/QM6SG5e01+V1hY
+        REviQJBgNI/txoXRHTgfL0DDSB5qohtRG92Auuh61AytQXUkG56BTHj6zTinm3C2dxmcYS0o6sf3JFNw
+        IZpi29AQy0PTyBZcfl6E+uFceCJZBK8keAUqDbArvARlXVpScGyerOCRfHhp6s2pw+D3+mMfvJFVcPeb
+        1GR3X/oi7AhpsAeEFPzNHLsxlo/6ZxZURVaj9eURZcDvlQzR5Ew4e4WCK54upehkECSDHjaghTXGtirY
+        R5ErB7Nwe+qQgn/im/qdnu8i0AxbUBhhWB+yAW17Aa6NroN7YDluTR5U4A98VuI3Od8JZ8gEW0Ck4CcC
+        p5QBn2p4k4K9kRxU6Gm48aKYEJ4/vyjgF6alH46AGacZfixQljKgO6tT5ahTufo0XJ/YS3//iiRmFsV5
+        Jj90wN5tRjnB5f4/Bqokhjvzsq5NFNH8T/iCd6S3ZJZEYvYexTahjEAFPxIoYQPVMAWn7nwmLHA1sYvm
+        zZHFGzKSGJu9S7EzUNJpgDsEjraTAdeTJzPMd+ZNX0nsxHe8J81gdO4OrN3/wyfbyeABGahuGxpmpS1f
+        im9XcHyuFTaCSw2xSwmm6DjBBm1k4AmYk8Z6OsIaXKE0NAzmwtGT/hfMkxfg421KSeHW04LGenJJbHTn
+        Uj7TPzDHNsA41iaCwhVOtzhDmt8e0iR3m+vJDeOS8JlYvG1eGH8zx2aRgb/kvrD8BjUXe3yWT+HcAAAA
+        AElFTkSuQmCC
 </value>
   </data>
   <data name="btnConnTrack.Size" type="System.Drawing.Size, System.Drawing">
@@ -310,20 +310,20 @@ Aucune règle de pare-feu ne sera créée ou supprimée lors de la modification 
   <data name="btnConnStop.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAALwSURBVDhPTZJLTFNREIZPEaEoJqIBg7oRFzYudIHBBa5c
-        GGPUGPcCFgqUR4FCoWBpUVAh6tKNO2OM4REKIhWF29LcFlqwLQ+NBYXy8JG4MNdAiwv1d85piZ5kkpPJ
-        fP/MmfOz+3MXNV1zlxxds+eVzpl8pS2Ur9iCeYotcFyxeTQUOYpVzlYscpbSImcozbJaMVOY3KkOo4tp
-        WNfcZYlgdM6cxZ3QGXQETsE6fQzWqRzYKKz+w2iezIDJq0aTZxfMnjQ0yqlocCejzqWS2K3Zc7E4nE9w
-        LjpDeXg4fwH3Qqdh8R/EDV8m7r7R4EEwF5aJfTDJKQI2upKgH1HFGB97u7OFOg5EzOBnfSMI88ReNHp3
-        Y21jWuS6F7SocjIB1zpVMIwxhfE33w7moT1wAmZfNhyrbaL429YiCaSj0aOme1jk7B8M0I8xGp0EJBIY
-        JQG+sPbASdyc1qBpcj+GVppF8dfYvIBNcjLdZ0Wub7EC5a/ZNoyq51yAts1hvjCTdw8GIw2i+EssKOB6
-        dxI+R4Mi17NQhrIRFodfMVQIAf5VU0fQ6j+Eeupoj9SI4k+xKQHXuRjWo36R6w7roHMk4JcM5XEB+mf6
-        KosvC0Z5B/qXK0TxWtQL4ziNS0tbpTs/z8LFKBlmqKQp9CQkBIRJfAfQQn9d62boWyql0t9YiboFbJAY
-        InTnuafvi6AdSsAvGEq5gHAYwWZvOmqoY89HLRVvYTkqCbia3ru0KVHuJ568K0DRYAImoYJBEuD2NNPy
-        mshh1dSxmwT+YBPLsTEBV9J7l6KjJLApBArtcVhHQtcGSEB4O2HPaur4OHwVv/Adb3/0ClhPy5pXekXu
-        0cwVFPaL0VHCBewkYJbSYv+8nQSTOw0dk0fR4s4Uy+LbbpQy0Tqeg8phtejM4WKahCLGTPJOadvb3J41
-        5DR9ojOH+cJ01PH6QBz8D4bWziRmdKVo6pwqh8GpUri3uT25w7hJ+Dfx4NvmC+Nv5mPzIAFHaR/T/AUW
-        kIN6Gc+5rQAAAABJRU5ErkJggg==
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAALuSURBVDhPTZJLTFNREIZPEaUoJqIBg7oRFzYudIHBBa5c
+        GGPUGPcIFgqUR4FCS8HSSkCFqEs37owxhkcoiFSU3pbmUmjBtjw0FhTKw0fiwlwDLS7U3zmnJXqSSU4m
+        8/0zZ87P7s9d0nTNXXZ2zV5QOmcKFHuYIpSv2IMnFLusochVbHKOYpWzlRY5U2mW1YqFwuRNcxo9TMO6
+        5q5IBKNz5hzuhM+iI3gatunjsE3lwk5hCxxB82QmTD41msZ3wzKeDrOchkZvKuo9Kom1zZ6PJ+ACgvPQ
+        Gc7Hw/mLuBc+A2vgEG76s3D3jQYPQnmwTuyHSd4lYKMnBRUjqjjjY293tlLHgagF/KxvhGCZ2Aezbw/W
+        NqZFrntBi2o3E3CdWwWDiymMv/l2KB/twZOw+HPgXL0lir9tLZJABszjarpHRM7xwQC9i9HoJCCRwCgX
+        oIW1B0+hbVqDpskDGFppFsVf4/MCNsmpdJ8Vub7FSlS8Ztswqp9zAdo2h/nCTL69GIw2iuIv8ZCAG7wp
+        +BwLiVzPQjnKR1gCfsVQKQT4V00dRWvgMBqooyNaK4o/xacEXO9hWI8FRK47ooPOmYRfMlQkBOif6aus
+        /mwY5R3oX64UxWsxH4xjNC4tbZXu/DyLlKB0mKGKptCTkBAQJvEfRAv9dZ2XoW+pjEp/YyXmFbBBYojS
+        neeevi+GdigJv2Ao4wLCYQRbfBmopY49H7VUvIXlmCTgGnrv0qZEuZ948u46igeTMAkVDpIAt6eFltdE
+        Dquhjt0k8AebWI67BFxF712KjZLAphAociRgHQkVDpCA8HbSnjXU8XHkGn7hO97+6BWwnpY1r/SK3KOZ
+        qyjqF6OjlAs4SMDiSo//83YKTN50dEweQ4s3SyyLb9ssZaF1LBdVw2rRmcMlNAlFnJnkndK2t7k9a8lp
+        +mRnDvOF6ajjjYEE+B8MrYNJzOjZpal3q5wGt0rh3ub25A7jJuHfxINvmy+Mv5mPzYMEnGV9TPMX+kqD
+        b7OE7soAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="btnConnStop.Size" type="System.Drawing.Size, System.Drawing">
@@ -333,16 +333,16 @@ Aucune règle de pare-feu ne sera créée ou supprimée lors de la modification 
     <value>Mettre en pause</value>
   </data>
   <data name="slow5SecondsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>141, 22</value>
+    <value>152, 22</value>
   </data>
   <data name="slow5SecondsToolStripMenuItem.Text" xml:space="preserve">
     <value>Lent (5s)</value>
   </data>
   <data name="normal2sToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>141, 22</value>
+    <value>152, 22</value>
   </data>
   <data name="fast1sToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>141, 22</value>
+    <value>152, 22</value>
   </data>
   <data name="fast1sToolStripMenuItem.Text" xml:space="preserve">
     <value>Rapide (0.5s)</value>
@@ -350,19 +350,19 @@ Aucune règle de pare-feu ne sera créée ou supprimée lors de la modification 
   <data name="stripConnUpdSpeed.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKxSURBVDhPfZL7S5NRHMZfuvwY9Hf4HzQLKcjol4IiEAJD
-        ChGMrMw2LzlNFlGwoU0sS9OtsbkuYtu8VMxLs13dZnmZU6fT6ebc5u63d/p09rYFSvbAh/O+33Oe7/uc
-        9xzqoLhcHKmV6s5wpIYH9TLD0zqpvp4tM1zl9ltO5pb8W7V9hqJ6uXGsQzVHqyzrmLB5MPLThd7vdnA/
-        mhx1ffqK3NL94vTpbzR/tqaNK9sIp2hsR1Mwr/pB7wGxdAZL3jBeq+fBlmpfXpPLj+ZsFMWWaE9zB8zp
-        5e0I4pk9xIjD7PSDPzhNGmWwk6ARpXfhj6fRPW5DjUTbxBjLX5mOP3w3qTOu+BBJ78IXSyOUzMBE3p8r
-        rQgmMkwtS5DUN4IJNMl1yWqxroCq6p28IPwyg0AizUT1EnaSNHTLXvD6jaROM7U82SQq6xru9mgEVGXX
-        OE9pcZKuNDyRJEPWoLG70SjXIrELJlGe7NzsZhD3ezRT1O2uMdG4zQ1vLIWNUILBF6cxsbCJEoESApUZ
-        fOUU+Io/TK8FsBaMgy35sUWVd6pF6rkNuMkXs8UsLtJg3hNE1+gM2oYseMFghnDYgul1P1YCUVSLNV6q
-        rH2YJ9MtYZOYHaToCMTg8EexuhODm+zRcwBXOAEDOc6KTvUUVdo6Utz8Qc+YlvwRLPr+zzpJJdYsoLRt
-        REAVcUePlQgUWqXVCSeJbCOX4TCWSSKrK4DK9qHE9dbBAuasrzwbKCwTDqcm7B4mwfxWGLOe0F/mtkIk
-        VZR5bpBN4vKT/keMMa/ix/LSEr4iJdPa8csdxDKzjRgz2rwRfJ114U63Gueb5B37rmdeZ7lS1rlGybeb
-        wqEU75MObeTvPleYUPVWjYst7xeLGiS3cksPF4vTe4rFFt1jccQthRxRLRkvsWrenMhN50RRvwHsDobk
-        Tov4RQAAAABJRU5ErkJggg==
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKwSURBVDhPfZL7S5NRHMZfuvwY9Hf4HzQLKcjol4IiEAJD
+        ChGMrMw2LzlLFlGwoS0sS9OtsUsXsc1bxbw029Vtlpc53XQ63Zzb3P32Tp/O3rZAyR74cN73e87zfZ/z
+        nkPtF5eLQ/VS3SmO1HCvUWZ40iDVN7JlhsvcPsvx/JJ/q15uKGlUGMc6VHP0gGUNEzYvRn660fvdDu5H
+        k7NBrq/KL90rjlx/reWzNWNc3kIkTWMrloZ5JQB6F4hnsljyRfBaPQ+2VPvyikJxOG+jKLZEe5Lbb844
+        tqJIZHcRJw6zKwD+4DRplMV2kkaM3kEgkUH3uA11Em0LY6x8ZTp6/92kzrjsRzSzA388g3AqCxN5f6ay
+        IpTMMrUcIVJfDyXBletStWJdEVXTO3lO+GUGwWSGieojbKdo6Bw+8PqMpE4ztQK5JAPWVdzu0Qio6q5x
+        nsriIl1peKMphpxBY/egWaFFcgdMogK5udmNEO72aKaom11jonGbB754GuvhJIM/QWNiYQNlAhUEA2bw
+        VVPgK/8wvRrEaigBtuTHJlXZqRap59bhIV/MFXO4SYN5bwhdozNoH7LgOYMZwmELptcCWA7GUCvW+KiK
+        F8M8mW4JG8TsJEVnMA5nIIaV7Tg8ZI/efbgjSRjIcVZ1qqeo8raR0ocf9IxpKRDFov//rJFUYs0CyttH
+        BFQJd/RImUCpVVldcJHINnIZDsJBElndQVQLB5NX2waLmLO+9LS/uEI4nJ6we5kE85sRzHrDf5nbDJNU
+        Mea5STaJi4/7HjDGgkofKcrL+Mq0TGvHL08IDmYbcWa0+aL4OuvGrW41zrYoOvZcz4JOc6WsM82Sb9eF
+        Q2neJx3ayd99pjSh5q0a51vfL5Y0SW7klx4sFqf3BIstusPiiFuLOaJ6Ml5g1b05lp/Oi6J+A94Ght5l
+        6g1AAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="stripConnUpdSpeed.Size" type="System.Drawing.Size, System.Drawing">
@@ -413,17 +413,17 @@ Aucune règle de pare-feu ne sera créée ou supprimée lors de la modification 
   <data name="btnRDelete.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        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
+        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
 </value>
   </data>
   <data name="btnRDelete.Size" type="System.Drawing.Size, System.Drawing">
@@ -435,14 +435,14 @@ Aucune règle de pare-feu ne sera créée ou supprimée lors de la modification 
   <data name="btnRLocate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGpSURBVDhPldA/SBtxFAfwZ61FkeKgWIciiFgKHRQ3UXCp
-        dJF2UkSlmTWhiwY9kILGQWwV5y5uIqV4iP/jEIeSCOUuoYoeyUlMa2tTOYy/3CW/qLmvh39ALOr1wQce
-        vPeFx6NsbMKDHxOJ67Kx8U+ITubTfcWVkTSiI/jXaNnlyu3F1b4k1Pe4jkf6NVMV6qEIz28yt/qLL6NW
-        OOxiCPcAkV6L+xzfdJtX/U0nEbdqKq6Ki3Coi0HpBg+9hS61Q5c77mRYe/JMjeMiLLexjNwKLdCKTHgI
-        mciwxXOrY2tufBcOTnc/OolLLcxYfwW+ZZ0dGwN2R+8X+wCuDuqUkl6y5NcG8I0uYGfAephgC1cFnYxA
-        LUv4apAOdgDKO2DbaQsPORkZqy+Y5q1E+ttrYNMBbHTawqU2Rsz7lMUXSmH4G2EG3yArN9uSkpoYHS4W
-        sN+zhTjyVeM4UI+Mv84Ww1/LSJt7xPZmHkJbKYex9gy6r8oebzmjvSni0c+EP3NFSCyX4HDJpvnHSYpO
-        54R/fnmAfTEXf2fz7BPz0rQzRU/iInl/iZT4H3GRPGf315IVH9w4wwAAAABJRU5ErkJggg==
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGoSURBVDhPldBPaJJhHAfwZzVjsUGHRe2wgjEWQYfpMQx2
+        CXaJdUoiR56d0aUMX4iI7DBshecuOzXGGL6I/X0v7hA6GGpkqOgr6rI/Fi/aoy+PWr7fHqeBGObbDz7w
+        g+f3hd/zI62C1419b6VXq/DkKXLrY2RYseQqQ24Vf/NMdUcGF5PvVCHfQy+WcSmaLJiREs720xKuyW6U
+        h9MOivQtIHObcx5gcaf2p+/3M+OUtdSNmU44ZqdIraD+7jpqkWuoRa3/pPK5qM9o64QjV2kjaoEStqCR
+        foBG5iHnHqjJ39X3wvdf+TUHD1+h6u4i6gm+duExkPcMV3gEJt+vETVykVbfXkA9bgeyd/nBBF2YLPBw
+        2EQrQSNYzAqkbgJJhy4s5qBElc5RRZoF21sCPtiA+LIu7VsRKk3T0osTUEML0GKX0Ype0qX9XVJ+eZR+
+        9o/jR3AezbAZjdB5XdSQiRIlcIQWfaNQ3pyGunMGteCcPtIpSorPSD23RfA1cAyV18dRfqXT84kqyW2O
+        pD9uH8IX8TC++Q36iQZGshvkZEkk0ieRVP5HSSTu37dAkfjuDIy6AAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="btnRLocate.Size" type="System.Drawing.Size, System.Drawing">
@@ -473,16 +473,16 @@ Aucune règle de pare-feu ne sera créée ou supprimée lors de la modification 
   <data name="btnRRefresh.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHvSURBVDhPlZPNaxNRFMWPay2C4EIFP+pOkRYkupDiTvAf
-        ULoTF/nqxKY2QaPSoJGStE1rgxYStXRqly79WAqi7l0KbrRLN1m09DGdd68n02ccY6R44Md99913znww
-        g36SVQzJClJ2Ffetjwp7j5x340js96qPo67dETdP0PCCgzbROMbHJmdvGXxZm9gf+vggPnLOSnMLI0ET
-        33WZhl0In+Nzp8oyUjvmZzgWtPBNWzzwPzxFMgrQx1jRJW70YJZgzAI2+80cScgiTpkGNrTBDYeZhdhH
-        mJEnSEgDQ1zX4/Mui52AOVzXOpsYto756NYoqWEgnMV7neOsB6kjC6mirFVuOEwVWzqDYefvzK/YGt6R
-        N12qeM36SqaRgDxgQIVmh6kwoPw7YFdJmY8wRXMMO4W6G3fFcwfkDo6QQ1wf7qx5oX2QezhtbvJNl2h2
-        mBJf4i3U5DYSWsAw61VSkLsYZb0kJYww4JwUMRCl2yJ8HtRezDi2TBEbwQTW7SRe2gI/60lkObsmBVxQ
-        YE8UoOM4HuT4FeZp7IPx8CPM45O9gTWbx4LkMSE5HIzMv8SNi0Ea6+rR9DftbQ9fwjF8tB6aMoYzzvan
-        NINBm8Eaa5tonO0Mvto05nmhk+74vyUp/s5JpG0SD8k0+yxDzrpxTMBPmmG78aDGB3sAAAAASUVORK5C
-        YII=
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHuSURBVDhPlZPNaxNRFMWPay2C4EIFP3eKtCDRhRR3gv+A
+        4k5c5KsTm9oEjUqDRkoSO9EGLSRq6dQuXfqxFETduxTcaJdusmh5JZ13ryfTZxxjpHjgx3333XfOfDCD
+        YZJljMoSUnYZd22ACnuPnHHjSOx3aoCDrt0SN4/Q8IKDDtE4JsA6Z28ZfEFb2B0G+CABcs5Kcxvj3Ra+
+        6yIN2xA+x+delUWktszPcKjbxjdt88D/8BTJKEAfY0kXuDGAWcCGaWB92MyRhMzjuGliTZvccJg6xD5C
+        XZ4gIU2Mcu3H533mewFzuKo+mxjWRyO6NUpqGAkf4L3OcTaA+MhCqihrlRsOU4XROsacvze/aGt4R970
+        qeI16yuZRQJyjwEVmh2mwoDy74BtJWU+wgzNMewMfDfui+f2yC0cIPu43t9b80K7IHdwwlznmy7R7DAl
+        vsQbqMlNJLSAMdZLpCC3cZn1vJQwzoDTUsRIlG6LCHhQBzGTMKaIte4UVu00XtoCP+tpZDm7IgWcVWBH
+        FKCTONzN8SvM0ziEDQ8/wjw+2WtYsXk8lDymJIe9kfmXuHGum8aqejT9TWfTw5dwAh+th5ZM4KSz/SnN
+        4KjNYIW1QzTOZgZfbRoNXuiYO/5vSYq/cxJpm8R9Mss+y5BTbhwT8BN8WbvklfAoGAAAAABJRU5ErkJg
+        gg==
 </value>
   </data>
   <data name="btnRRefresh.Size" type="System.Drawing.Size, System.Drawing">
@@ -569,17 +569,17 @@ Aucune règle de pare-feu ne sera créée ou supprimée lors de la modification 
   <data name="btnERemove.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         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
-        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
+        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
 </value>
   </data>
   <data name="btnERemove.Size" type="System.Drawing.Size, System.Drawing">
@@ -591,14 +591,14 @@ Aucune règle de pare-feu ne sera créée ou supprimée lors de la modification 
   <data name="btnELocate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGpSURBVDhPldA/SBtxFAfwZ61FkeKgWIciiFgKHRQ3UXCp
-        dJF2UkSlmTWhiwY9kILGQWwV5y5uIqV4iP/jEIeSCOUuoYoeyUlMa2tTOYy/3CW/qLmvh39ALOr1wQce
-        vPeFx6NsbMKDHxOJ67Kx8U+ITubTfcWVkTSiI/jXaNnlyu3F1b4k1Pe4jkf6NVMV6qEIz28yt/qLL6NW
-        OOxiCPcAkV6L+xzfdJtX/U0nEbdqKq6Ki3Coi0HpBg+9hS61Q5c77mRYe/JMjeMiLLexjNwKLdCKTHgI
-        mciwxXOrY2tufBcOTnc/OolLLcxYfwW+ZZ0dGwN2R+8X+wCuDuqUkl6y5NcG8I0uYGfAephgC1cFnYxA
-        LUv4apAOdgDKO2DbaQsPORkZqy+Y5q1E+ttrYNMBbHTawqU2Rsz7lMUXSmH4G2EG3yArN9uSkpoYHS4W
-        sN+zhTjyVeM4UI+Mv84Ww1/LSJt7xPZmHkJbKYex9gy6r8oebzmjvSni0c+EP3NFSCyX4HDJpvnHSYpO
-        54R/fnmAfTEXf2fz7BPz0rQzRU/iInl/iZT4H3GRPGf315IVH9w4wwAAAABJRU5ErkJggg==
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGoSURBVDhPldBPaJJhHAfwZzVjsUGHRe2wgjEWQYfpMQx2
+        CXaJdUoiR56d0aUMX4iI7DBshecuOzXGGL6I/X0v7hA6GGpkqOgr6rI/Fi/aoy+PWr7fHqeBGObbDz7w
+        g+f3hd/zI62C1419b6VXq/DkKXLrY2RYseQqQ24Vf/NMdUcGF5PvVCHfQy+WcSmaLJiREs720xKuyW6U
+        h9MOivQtIHObcx5gcaf2p+/3M+OUtdSNmU44ZqdIraD+7jpqkWuoRa3/pPK5qM9o64QjV2kjaoEStqCR
+        foBG5iHnHqjJ39X3wvdf+TUHD1+h6u4i6gm+duExkPcMV3gEJt+vETVykVbfXkA9bgeyd/nBBF2YLPBw
+        2EQrQSNYzAqkbgJJhy4s5qBElc5RRZoF21sCPtiA+LIu7VsRKk3T0osTUEML0GKX0Ype0qX9XVJ+eZR+
+        9o/jR3AezbAZjdB5XdSQiRIlcIQWfaNQ3pyGunMGteCcPtIpSorPSD23RfA1cAyV18dRfqXT84kqyW2O
+        pD9uH8IX8TC++Q36iQZGshvkZEkk0ieRVP5HSSTu37dAkfjuDIy6AAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="btnELocate.Size" type="System.Drawing.Size, System.Drawing">
@@ -625,14 +625,14 @@ Aucune règle de pare-feu ne sera créée ou supprimée lors de la modification 
   <data name="btnLLocate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGpSURBVDhPldA/SBtxFAfwZ61FkeKgWIciiFgKHRQ3UXCp
-        dJF2UkSlmTWhiwY9kILGQWwV5y5uIqV4iP/jEIeSCOUuoYoeyUlMa2tTOYy/3CW/qLmvh39ALOr1wQce
-        vPeFx6NsbMKDHxOJ67Kx8U+ITubTfcWVkTSiI/jXaNnlyu3F1b4k1Pe4jkf6NVMV6qEIz28yt/qLL6NW
-        OOxiCPcAkV6L+xzfdJtX/U0nEbdqKq6Ki3Coi0HpBg+9hS61Q5c77mRYe/JMjeMiLLexjNwKLdCKTHgI
-        mciwxXOrY2tufBcOTnc/OolLLcxYfwW+ZZ0dGwN2R+8X+wCuDuqUkl6y5NcG8I0uYGfAephgC1cFnYxA
-        LUv4apAOdgDKO2DbaQsPORkZqy+Y5q1E+ttrYNMBbHTawqU2Rsz7lMUXSmH4G2EG3yArN9uSkpoYHS4W
-        sN+zhTjyVeM4UI+Mv84Ww1/LSJt7xPZmHkJbKYex9gy6r8oebzmjvSni0c+EP3NFSCyX4HDJpvnHSYpO
-        54R/fnmAfTEXf2fz7BPz0rQzRU/iInl/iZT4H3GRPGf315IVH9w4wwAAAABJRU5ErkJggg==
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGoSURBVDhPldBPaJJhHAfwZzVjsUGHRe2wgjEWQYfpMQx2
+        CXaJdUoiR56d0aUMX4iI7DBshecuOzXGGL6I/X0v7hA6GGpkqOgr6rI/Fi/aoy+PWr7fHqeBGObbDz7w
+        g+f3hd/zI62C1419b6VXq/DkKXLrY2RYseQqQ24Vf/NMdUcGF5PvVCHfQy+WcSmaLJiREs720xKuyW6U
+        h9MOivQtIHObcx5gcaf2p+/3M+OUtdSNmU44ZqdIraD+7jpqkWuoRa3/pPK5qM9o64QjV2kjaoEStqCR
+        foBG5iHnHqjJ39X3wvdf+TUHD1+h6u4i6gm+duExkPcMV3gEJt+vETVykVbfXkA9bgeyd/nBBF2YLPBw
+        2EQrQSNYzAqkbgJJhy4s5qBElc5RRZoF21sCPtiA+LIu7VsRKk3T0osTUEML0GKX0Ype0qX9XVJ+eZR+
+        9o/jR3AezbAZjdB5XdSQiRIlcIQWfaNQ3pyGunMGteCcPtIpSorPSD23RfA1cAyV18dRfqXT84kqyW2O
+        pD9uH8IX8TC++Q36iQZGshvkZEkk0ieRVP5HSSTu37dAkfjuDIy6AAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="btnLLocate.Size" type="System.Drawing.Size, System.Drawing">
