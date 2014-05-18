@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.Panel pnlMain;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             System.Windows.Forms.Label lblTitle;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             System.Windows.Forms.CheckBox chkPath;
+            this.pnlMain = new System.Windows.Forms.Panel();
             this.btnPrev = new System.Windows.Forms.Button();
             this.btnNext = new System.Windows.Forms.Button();
             this.btnAdvanced = new System.Windows.Forms.Button();
@@ -52,32 +52,48 @@
             this.chkLPortRule = new System.Windows.Forms.CheckBox();
             this.chkServiceRule = new System.Windows.Forms.CheckBox();
             this.lblPath = new System.Windows.Forms.Label();
-            pnlMain = new System.Windows.Forms.Panel();
             lblTitle = new System.Windows.Forms.Label();
             chkPath = new System.Windows.Forms.CheckBox();
-            pnlMain.SuspendLayout();
+            this.pnlMain.SuspendLayout();
             this.pnlInfos.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.pnlHeader.SuspendLayout();
             this.SuspendLayout();
             // 
+            // lblTitle
+            // 
+            lblTitle.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            lblTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(lblTitle, "lblTitle");
+            lblTitle.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            lblTitle.Name = "lblTitle";
+            // 
+            // chkPath
+            // 
+            chkPath.Checked = true;
+            chkPath.CheckState = System.Windows.Forms.CheckState.Checked;
+            resources.ApplyResources(chkPath, "chkPath");
+            chkPath.Name = "chkPath";
+            chkPath.TabStop = false;
+            chkPath.UseVisualStyleBackColor = true;
+            // 
             // pnlMain
             // 
-            pnlMain.BackColor = System.Drawing.SystemColors.Window;
-            pnlMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            pnlMain.Controls.Add(this.btnPrev);
-            pnlMain.Controls.Add(this.btnNext);
-            pnlMain.Controls.Add(this.btnAdvanced);
-            pnlMain.Controls.Add(this.btnOptions);
-            pnlMain.Controls.Add(this.btnMin);
-            pnlMain.Controls.Add(lblTitle);
-            pnlMain.Controls.Add(this.pnlInfos);
-            pnlMain.Controls.Add(this.btnClose);
-            pnlMain.Controls.Add(this.btnAlwaysBlock);
-            pnlMain.Controls.Add(this.btnAlwaysAllow);
-            pnlMain.Controls.Add(this.pnlHeader);
-            resources.ApplyResources(pnlMain, "pnlMain");
-            pnlMain.Name = "pnlMain";
+            this.pnlMain.BackColor = System.Drawing.SystemColors.Window;
+            this.pnlMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlMain.Controls.Add(this.btnPrev);
+            this.pnlMain.Controls.Add(this.btnNext);
+            this.pnlMain.Controls.Add(this.btnAdvanced);
+            this.pnlMain.Controls.Add(this.btnOptions);
+            this.pnlMain.Controls.Add(this.btnMin);
+            this.pnlMain.Controls.Add(lblTitle);
+            this.pnlMain.Controls.Add(this.pnlInfos);
+            this.pnlMain.Controls.Add(this.btnClose);
+            this.pnlMain.Controls.Add(this.btnAlwaysBlock);
+            this.pnlMain.Controls.Add(this.btnAlwaysAllow);
+            this.pnlMain.Controls.Add(this.pnlHeader);
+            resources.ApplyResources(this.pnlMain, "pnlMain");
+            this.pnlMain.Name = "pnlMain";
             // 
             // btnPrev
             // 
@@ -140,14 +156,6 @@
             this.btnMin.TabStop = false;
             this.btnMin.UseVisualStyleBackColor = false;
             this.btnMin.Click += new System.EventHandler(this.btnMin_Click);
-            // 
-            // lblTitle
-            // 
-            resources.ApplyResources(lblTitle, "lblTitle");
-            lblTitle.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            lblTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            lblTitle.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            lblTitle.Name = "lblTitle";
             // 
             // pnlInfos
             // 
@@ -239,15 +247,6 @@
             this.chkTemp.TabStop = false;
             this.chkTemp.UseVisualStyleBackColor = true;
             // 
-            // chkPath
-            // 
-            chkPath.Checked = true;
-            chkPath.CheckState = System.Windows.Forms.CheckState.Checked;
-            resources.ApplyResources(chkPath, "chkPath");
-            chkPath.Name = "chkPath";
-            chkPath.TabStop = false;
-            chkPath.UseVisualStyleBackColor = true;
-            // 
             // chkTRule
             // 
             this.chkTRule.AutoEllipsis = true;
@@ -289,14 +288,14 @@
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(pnlMain);
+            this.Controls.Add(this.pnlMain);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Opacity = 0.9D;
             this.TopMost = true;
-            pnlMain.ResumeLayout(false);
+            this.pnlMain.ResumeLayout(false);
             this.pnlInfos.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.pnlHeader.ResumeLayout(false);
@@ -327,6 +326,7 @@
         private System.Windows.Forms.CheckBox chkCurrentProfile;
         private System.Windows.Forms.CheckBox chkTemp;
         private System.Windows.Forms.Label lblConn;
+        private System.Windows.Forms.Panel pnlMain;
 
     }
 }

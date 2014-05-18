@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using WindowsFirewallNotifier;
 using WindowsFirewallNotifierConsole.Extensions;
 using WindowsFirewallNotifierConsole.Properties;
@@ -949,8 +950,9 @@ namespace WindowsFirewallNotifierConsole
             try
             {
                 WebClient wc = new WebClient();
-                string updateStr = wc.DownloadString("http://wokhan.online.fr/progs/" + Resources.FILENAME_VERSION);
-                if (Version.Parse(updateStr) > Version.Parse(Application.ProductVersion))
+                XDocument xdoc = XDocument.Load("https://wfn.svn.codeplex.com/svn/Console/version.xml");
+
+                if (Version.Parse(xdoc.Element("versioninfo").Element("version").Value) > Version.Parse(Application.ProductVersion))
                 {
                     btnUpdate.Visible = true;
                 }
@@ -960,7 +962,8 @@ namespace WindowsFirewallNotifierConsole
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            new UpdateForm().ShowDialog();
+            Process.Start("http://wfn.codeplex.com/releases");
+            //new UpdateForm().ShowDialog();
         }
     }
 

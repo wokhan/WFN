@@ -117,68 +117,69 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="FW_DIR_BOTH" xml:space="preserve">
-    <value>Entrée/Sortie</value>
+  <data name="lblTitle.Text" xml:space="preserve">
+    <value>Sélection des services</value>
   </data>
-  <data name="FW_DIR_IN" xml:space="preserve">
-    <value>Entrée</value>
+  <data name="lblDesc.Text" xml:space="preserve">
+    <value>Windows Firewall Notifier n'a pas pu déterminer quel service est à l'origine de la demande de connexion.
+Veuillez sélectionner les services que vous souhaitez prendre en compte, ou choisissez la première option pour créer une règle d'application au lieu d'une règle de service.
+Si vous n'êtes pas sûr de ce qu'il faut faire, cocher tous les services est la meilleure option (et celle par défaut).</value>
   </data>
-  <data name="FW_DIR_OUT" xml:space="preserve">
-    <value>Sortie</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnCancel.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
+        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAMHSURBVFhHxdRbSFNxHAdwIRB6KTO7SsrC3FsUlhUV
+        hlRaQysqyi5kGEZmQfgy6CXKXqKeoodIGERRDz4kXYwouhH0IGUPRmUPXbztuHnWZrs4t2/frbb2O/uf
+        NHE4+Dyc/+/8fr/vOWzLAjCl/l6ctE5EAZUYzsYvNUC0sXgs06maHKQRFJ6QnSykmiGIAJGGJWam0THS
+        CP/hJhWRamacCBA+WqRipQ+ECQqRnVSzZYBQ3WKjSvIRJoGDsknsEAECtZZUZRQiTKLbJPaIAD8PFCZY
+        SCNkwGlK7hIBfHsXJTwjZNAyiu8SATw782NshAx7RPF9IoC+Y2FMB8HMcPNB+B1n4NlvTa/v5iu+0hSn
+        71yUXpfKSQYY2raghGBm+FIDb/v9ibj64alflazpNVaMfn73pwoEWi+LXoXrJAO4q+bbCWaCDxy8LZoU
+        cfVBP1KKoT3FCHd3ilq467VyRgo3yQAu27w2ghm9YQOigZ98/EhSROtF+ONbcRbjba5VzjCwiACDW+Z1
+        E/7F01SFqN8HjIZN+S6eUPYqbBIBtIq5/YSx6KdsiA7/AEZCabwXjit7TOwTAZyb52iEsWjbFyP8vgMI
+        BoSIsweuQyuVPSZkgIGNed2Ef3FWWzDS+QrwDytFvn/G4MEVyl6FShGgvzyvjWBmYGsBRt68AGKvP0V0
+        yCmuR79+glazXDnDQH4J+zbMthPM+FrOA15d0M/Vw9W4BVH+L6SeBx63KmekcFN8bzJAb1luCcGM99o5
+        wONO0s8eSdYGj1ciyp9kohZ4eEv0KjhIBuhZnxvTQVDpqyiE/94NBF/eh6tpV1rdeXg9gk/vIPj8Lvp3
+        LU2rG5SRIcC6WTE2Qoa1U3yfCPB9bU7CE0KGjNIyiu8SAb6tyUkoII2QAXZK7pIBVs9MtY5ChEl0k8Qe
+        EeDrqplG5eQmTAIHZZPYIQJ8KZ2hUkRdhAnyUyOpZo8rQMw0qqMeUi0x00IFpJoZN94ACdlko6vUTcaF
+        Pmqn2BPnk2qG8L8BVHLJajgbNxFgaiDrFxITO8vyVJd4AAAAAElFTkSuQmCC
+</value>
   </data>
-  <data name="FW_PROFILE_ALL" xml:space="preserve">
-    <value>Tout</value>
+  <data name="btnCancel.Text" xml:space="preserve">
+    <value>Annuler</value>
   </data>
-  <data name="FW_PROFILE_DOMAIN" xml:space="preserve">
-    <value>Domaine</value>
+  <data name="btnOK.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
+        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAMJSURBVFhHxdbbSxRhGAbwt7QNJYIMgigMw5CgC2Ev
+        AikkKZKkiOiqWzOz7Gy5pdn5ZP0DQbAQCN2VlVmWpXnIai01AmGhi4iCBbFYyhTt6Zl1Z5n5ZmdmV3dx
+        4IFh5uL3fHP4eAXAnCZ2cuvTbmaX3BzaKY1D26VxcJvcGNwq1wc2y7WBTXL140amSK58WC+X+71yqb9Q
+        LgbW5V4IrPWef79Gzr1bLQ3vVknD25Vytm+51Pctk7o3S+VM7xI53btYfD2LxNedLbXdWXKqa6GcfO1R
+        C7jiWcR3EPcTDxEHcRAHcRAH8XbiPuJ5bnhN5wJzAQc8g3gV8RBxEIcNDuIgDuIg3kQ83w6v6cw0F7DB
+        C4gPE0eSOIiD+DhxXzz8REeGUsCKlxIPzwIHcRAHcT9xjxE//mq+uYCCFxMfTxEO4iB+z4gfeznPXMCA
+        5xEPpRhnMkG8TsePtisFojhT1JEmHMRBvFDDj7yYtmMFonhZmnEQb9Pww88tBSKbTCDNOIiDeImlAHFv
+        qnDtcMC13D3UphQg7ksF/g9TkTjgID5S/UwpQLx5tvgUJmJxwEEcB59KnqkA8aATPokxW7yhd/q+MS44
+        DrTKFlMB4j+cVj6BcCQqXtuVHbtnjAuOqieyx1SAeMjpsf/FaCxG3HhdTwI4qlqUAsSDTu98DCFT6nty
+        LNe0JIhjf4uUmgoQb3b64H7ju2uSwFH5WPkIifvscP2dh/HVNkniI5WPpu1YAeJeJ1z/1X7hiyVJ4iDu
+        3/dQKUBcm+ECTri+vf5EMJYZ4CBeXKEWIK7NcGVuuL7DjWJ4pnirhlc0KwWI6wNkuxuewCZjh08SL9Tw
+        vQ+UAlFcGyBziYfSgIO4T8ctBaK4Pr1uID6eYrzJiJffVwtYR+cS4iMpwv3EPUbcUkDB9ek1n/jnWeB/
+        iFerK49bIA6uT68ZxMuJf0sSv0M81w63FLDBI9MrcW2G8zBlxG8TD8bBw8RbiVcTX0E88qvZ4ZYCLngk
+        xIW4EBfiQjyHeAFxIS7EhbgkgmsxFZibQP4Dzfzv72adSWYAAAAASUVORK5CYII=
+</value>
   </data>
-  <data name="FW_PROFILE_PRIVATE" xml:space="preserve">
-    <value>Privé</value>
+  <data name="rbServicesRule.Size" type="System.Drawing.Size, System.Drawing">
+    <value>327, 17</value>
   </data>
-  <data name="FW_PROFILE_PUBLIC" xml:space="preserve">
-    <value>Public</value>
+  <data name="rbServicesRule.Text" xml:space="preserve">
+    <value>Créer une règle pour chaque service sélectionné (recommandé).</value>
   </data>
-  <data name="FW_RULE_ALLOW" xml:space="preserve">
-    <value>Autoriser</value>
+  <data name="rbAppRule.Size" type="System.Drawing.Size, System.Drawing">
+    <value>329, 17</value>
   </data>
-  <data name="FW_RULE_BLOCK" xml:space="preserve">
-    <value>Bloquer</value>
+  <data name="rbAppRule.Text" xml:space="preserve">
+    <value>Créer une règle d'application et ignorer les services (déconseillé).</value>
   </data>
-  <data name="MSG_ALLOW" xml:space="preserve">
-    <value>Autoriser : une règle de pare-feu va être créée pour cet exécutable,
-sauf si vous cochez la case ci-dessous.</value>
-  </data>
-  <data name="MSG_BLOCK" xml:space="preserve">
-    <value>Ignorer : ajoute cette application à la liste des exclusions pour éviter que d'autres notifications ne soient affichées, ou crée une règle de pare-feu pour bloquer les futures connexions selon l'option que vous avez choisie.</value>
-  </data>
-  <data name="MSG_DLG_ERR_TITLE" xml:space="preserve">
-    <value>Windows Firewall Notifier - Erreur</value>
-  </data>
-  <data name="MSG_DLG_TITLE" xml:space="preserve">
-    <value>Windows Firewall Notifier</value>
-  </data>
-  <data name="MSG_RULE_CREATED" xml:space="preserve">
-    <value>La règle correspondante a été créée.</value>
-  </data>
-  <data name="MSG_RULE_DELETE" xml:space="preserve">
-    <value>Vous êtes sur le point de supprimer une règle du pare-feu.
-Souhaitez-vous continuer ?</value>
-  </data>
-  <data name="MSG_RULE_FAILED" xml:space="preserve">
-    <value>Le règle correspondante n'a pas été créée.</value>
-  </data>
-  <data name="MSG_RULE_RM_FAILED" xml:space="preserve">
-    <value>La règle temporaire n'a pas pu être supprimée.
-Les connexions sortantes de l'application sont toujours autorisées.
-Pouvez-vous vérifier la configuration du pare-feu Windows pour une règle nommée {0} ?</value>
-  </data>
-  <data name="MSG_RULE_TMP_FAILED" xml:space="preserve">
-    <value>Impossible d'autoriser temporairement cette application.</value>
-  </data>
-  <data name="RULE_NAME_FORMAT" xml:space="preserve">
-    <value>Règle personnalisée - {0}</value>
-  </data>
-  <data name="SERVICES_UNDEF" xml:space="preserve">
-    <value>Plusieurs instances trouvées.</value>
+  <data name="columnHeader1.Text" xml:space="preserve">
+    <value>Nom du service</value>
   </data>
 </root>

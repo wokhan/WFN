@@ -36,7 +36,7 @@ namespace WindowsFirewallNotifierConsole
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            Process.Start("http://wokhan.online.fr/progs/WFN.zip");
+            Process.Start("http://wfn.codeplex.com/releases");
         }
     }
 }
