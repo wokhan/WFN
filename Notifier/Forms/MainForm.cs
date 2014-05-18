@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
+using WindowsFirewallNotifier.Forms;
 using WindowsFirewallNotifier.Properties;
 
 namespace WindowsFirewallNotifier
@@ -26,6 +27,10 @@ namespace WindowsFirewallNotifier
             public string TargetPort;
             public int Protocol;
             public string ResolvedHost;
+
+            public string[] PossibleServices;
+            public string[] PossibleServicesDesc;
+
         }
 
         private ToolTip ttip = new ToolTip();
@@ -56,7 +61,7 @@ namespace WindowsFirewallNotifier
 
                     string[] allres = res.lpData.Split(new string[] { "#$#" }, StringSplitOptions.None);
 
-                    addItem(int.Parse(allres[0]), allres[1], allres[2], allres[3], allres[4], allres[5], true);
+                    addItem(int.Parse(allres[0]), allres[1], allres[2], allres[3], allres[4], allres[5], allres[6], true);
                 }
 
                 base.WndProc(ref m);
@@ -75,11 +80,11 @@ namespace WindowsFirewallNotifier
         /// <param name="target"></param>
         /// <param name="protocol"></param>
         /// <param name="targetPort"></param>
-        public MainForm(int pid, string path, string target, string protocol, string targetPort, string localPort)
+        public MainForm(int pid, string threadid, string path, string target, string protocol, string targetPort, string localPort)
         {
             initExclusions();
 
-            if (!addItem(pid, path, target, protocol, targetPort, localPort, false))
+            if (!addItem(pid, threadid, path, target, protocol, targetPort, localPort, false))
             {
                 this.Close();
                 this.Dispose();
@@ -102,21 +107,23 @@ namespace WindowsFirewallNotifier
 
             chkCurrentProfile.Text = String.Format(chkCurrentProfile.Text, FirewallHelper.GetCurrentProfileAsText());
 
-            this.Left = Screen.PrimaryScreen.WorkingArea.Width - this.Width - 5;
 
             this.Icon = Resources.ICON_SHIELD;
             this.Top = Screen.PrimaryScreen.WorkingArea.Bottom - this.Height;
-            
+
             if (Settings.Default.UseAnimation)
             {
-                this.Left = Screen.PrimaryScreen.WorkingArea.Right + this.Width;
+                this.Left = Screen.PrimaryScreen.WorkingArea.Right;
+                this.Width = 0;
                 this.Shown += new EventHandler(MainForm_Shown);
                 this.FormClosing += MainForm_FormClosing;
             }
-            /*else
+            else
             {
-                this.Top = Screen.PrimaryScreen.WorkingArea.Bottom - this.Height;
-            }*/
+                this.Left = Screen.PrimaryScreen.WorkingArea.Width - this.Width - 5;
+            }
+
+            pnlMain.Height = this.Height;
 
             lblPath.MouseMove += new MouseEventHandler(lbl_MouseMove);
             lblPath.MouseLeave += new EventHandler(lbl_MouseLeave);
@@ -132,7 +139,7 @@ namespace WindowsFirewallNotifier
         void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             animateLeft(false);
-            
+
         }
 
         /// <summary>
@@ -165,7 +172,7 @@ namespace WindowsFirewallNotifier
         /// <param name="target"></param>
         /// <param name="protocol"></param>
         /// <param name="targetPort"></param>
-        public bool addItem(int pid, string path, string target, string protocol, string targetPort, string localport, bool updateCount)
+        public bool addItem(int pid, string threadid, string path, string target, string protocol, string targetPort, string localport, bool updateCount)
         {
             try
             {
@@ -176,8 +183,9 @@ namespace WindowsFirewallNotifier
 
                 if (!this.conns.Any(c => c.CurrentPath == path && (int.Parse(localport) >= 49152 || c.LocalPort == localport))) //&& c.TargetPort == targetPort))
                 {
-                    string svc = null;
-                    string svcdsc = null;
+                    string[] svc = new string[0];
+                    string[] svcdsc = new string[0];
+                    bool unsure = false;
                     string app = null;
 
                     if (path == "System")
@@ -195,15 +203,16 @@ namespace WindowsFirewallNotifier
                             app = String.Empty;
                         }
 
-                        if (Settings.Default.EnableServiceDetection)
+                        //if (Settings.Default.EnableServiceDetection)
                         {
-                            ProcessHelper.GetService(pid, (NetFwTypeLib.NET_FW_IP_PROTOCOL_)Enum.Parse(typeof(NetFwTypeLib.NET_FW_IP_PROTOCOL_), protocol), targetPort, localport, out svc, out svcdsc);
+                            ProcessHelper.GetService(pid, threadid, (NetFwTypeLib.NET_FW_IP_PROTOCOL_)Enum.Parse(typeof(NetFwTypeLib.NET_FW_IP_PROTOCOL_), protocol), targetPort, localport, out svc, out svcdsc, out unsure);
                         }
                     }
 
                     if (exclusions != null)
                     {
-                        var exclusion = exclusions.FirstOrDefault(e => e.StartsWith(svc ?? path, StringComparison.CurrentCultureIgnoreCase));
+                        // WARNING: check for regressions
+                        var exclusion = exclusions.FirstOrDefault(e => e.StartsWith(/*svc ??*/path, StringComparison.CurrentCultureIgnoreCase) || svc != null && svc.All(s => e.StartsWith(s, StringComparison.CurrentCultureIgnoreCase)));
                         if (exclusion != null)
                         {
                             string[] esplit = exclusion.Split(';');
@@ -217,10 +226,10 @@ namespace WindowsFirewallNotifier
                         }
                     }
 
-
+                    // WARNING: check for regressions
                     if (FirewallHelper.GetRules()
                                       .Any(r => r.Action == NetFwTypeLib.NET_FW_ACTION_.NET_FW_ACTION_BLOCK &&
-                                                FirewallHelper.RuleMatches(r, path, svc, protocol, localport, targetPort)))
+                                          (!unsure && FirewallHelper.RuleMatches(r, path, svc != null && svc.Length > 0 ? svc[0] : null, protocol, localport, targetPort))))
                     {
                         return false;
                     }
@@ -229,11 +238,13 @@ namespace WindowsFirewallNotifier
                     {
                         CurrentProd = app,
                         CurrentPath = path,
-                        CurrentService = svc,
-                        CurrentServiceDesc = svcdsc,
+                        CurrentService = !unsure ? svc.FirstOrDefault() : null,
+                        PossibleServices = unsure ? svc : null,
+                        CurrentServiceDesc = !unsure ? svcdsc.FirstOrDefault() : null,
+                        PossibleServicesDesc = unsure ? svcdsc : null,
                         Protocol = int.Parse(protocol),
                         TargetPort = targetPort,
-                        RuleName = String.Format(WindowsFirewallNotifier.Properties.Resources.RULE_NAME_FORMAT, String.IsNullOrEmpty(svcdsc) ? app : svcdsc),
+                        RuleName = String.Format(WindowsFirewallNotifier.Properties.Resources.RULE_NAME_FORMAT, unsure || String.IsNullOrEmpty(svcdsc.FirstOrDefault()) ? app : svcdsc.FirstOrDefault()),
                         Target = target,
                         LocalPort = localport
                     });
@@ -307,46 +318,32 @@ namespace WindowsFirewallNotifier
             chkLPortRule.Checked = false;
             chkTRule.Checked = false;
 
-            if (String.IsNullOrEmpty(activeConn.CurrentService))
+            if (!String.IsNullOrEmpty(activeConn.CurrentService))
             {
-                chkServiceRule.Enabled = false;
-                chkServiceRule.Checked = false;
-                chkServiceRule.Text = String.Format(defSvcText, "-");
+                chkServiceRule.Enabled = true;
+                chkServiceRule.Checked = true;
+                chkServiceRule.ForeColor = Control.DefaultForeColor;
+                chkServiceRule.Text = String.Format(defSvcText, activeConn.CurrentService + (String.IsNullOrEmpty(activeConn.CurrentServiceDesc) ? String.Empty : " (" + activeConn.CurrentServiceDesc + ")"));
+            }
+            else if (activeConn.PossibleServices != null && activeConn.PossibleServices.Length > 0)
+            {
+                chkServiceRule.Enabled = true;
+                chkServiceRule.Checked = true;
+                chkServiceRule.Text = String.Format(defSvcText, Resources.SERVICES_UNDEF);
+                chkServiceRule.ForeColor = Color.Red;
             }
             else
             {
-                if (activeConn.CurrentService.StartsWith("*"))
-                {
-                    chkServiceRule.Enabled = false;
-                    chkServiceRule.Checked = false;
-                }
-                else
-                {
-                    chkServiceRule.Enabled = true;
-                    chkServiceRule.Checked = true;
-                }
-
-                chkServiceRule.Text = String.Format(defSvcText, activeConn.CurrentService + (String.IsNullOrEmpty(activeConn.CurrentServiceDesc) ? String.Empty : " (" + activeConn.CurrentServiceDesc + ")"));
+                chkServiceRule.Enabled = false;
+                chkServiceRule.Checked = false;
+                chkServiceRule.ForeColor = Control.DefaultForeColor;
+                chkServiceRule.Text = String.Format(defSvcText, "-");
             }
 
             if (this.WindowState == FormWindowState.Minimized)
             {
                 this.WindowState = FormWindowState.Normal;
             }
-
-            #region Windows 8 specific
-
-            //var xml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText01);
-
-            //var launchAttribute = xml.CreateAttribute("launch");
-            //launchAttribute.Value = "Test";
-            //xml.GetElementsByTagName("toast").First().Attributes.SetNamedItem(launchAttribute);
-            //xml.SelectSingleNode("//text").InnerText = "Windows firewall has blocked an outgoing connection.";
-
-            //ToastNotification notification = new ToastNotification(xml);
-            //ToastNotificationManager.CreateToastNotifier().Show(notification);
-
-            #endregion
         }
 
         /// <summary>
@@ -358,7 +355,7 @@ namespace WindowsFirewallNotifier
             {
                 CreateParams cp = base.CreateParams;
                 // CS_DROPSHADOW
-                cp.ClassStyle |= 0x00020000;
+                //cp.ClassStyle |= 0x00020000;
                 return cp;
             }
         }
@@ -396,19 +393,27 @@ namespace WindowsFirewallNotifier
 
         private void animateLeft(bool show)
         {
-            int targetLeft = Screen.PrimaryScreen.WorkingArea.Right + (show ? -this.Width : this.Width);
-            int startLeft = this.Left;
+            int startLeft = show ? Screen.PrimaryScreen.WorkingArea.Right : this.Left;
+            int startWidth = show ? 0 : this.Width;
+            int targetWidth = show ? pnlMain.Width + 3 : 0;
+            int targetLeft = show ? Screen.PrimaryScreen.WorkingArea.Right - targetWidth : Screen.PrimaryScreen.WorkingArea.Right;
+            double startOpacity = show ? 0 : 1;
+            double targetOpacity = show ? 1 : 0;
             int i = 1;
 
             while (i < 20)
             {
+                this.Opacity = CommonHelper.easeInOut(i, startOpacity, targetOpacity - startOpacity, 20);
+                this.Width = (int)CommonHelper.easeInOut(i, startWidth, targetWidth - startWidth, 20);
                 this.Left = (int)CommonHelper.easeInOut(i++, startLeft, targetLeft - startLeft, 20);
+
                 Application.DoEvents();
+                this.Invalidate();
 
                 // I know, should rely on a timer for animations, feel free to change that one...
                 Thread.Sleep(20);
-                
             }
+
         }
 
         /// <summary>
@@ -450,13 +455,39 @@ namespace WindowsFirewallNotifier
         private void btnAllow_Click(object sender, EventArgs e)
         {
             bool success = false;
+
+            string[] services = null;
+            bool createAppRule = false;
+            if (chkServiceRule.Checked)
+            {
+                if (activeConn.PossibleServices != null && activeConn.PossibleServices.Length > 0)
+                {
+                    ServicesForm sf = new ServicesForm(activeConn);
+                    sf.ShowDialog();
+                    if (sf.DialogResult == System.Windows.Forms.DialogResult.OK)
+                    {
+                        services = sf.CreateAppRule ? null : sf.SelectedServices;
+                        sf.Dispose();
+                    }
+                    else
+                    {
+                        sf.Dispose();
+                        return;
+                    }
+                }
+                else
+                {
+                    services = new[] { activeConn.CurrentService };
+                }
+            }
+
             if (chkTemp.Checked)
             {
-                success = FirewallHelper.AddTempRuleIndirect(activeConn.CurrentPath, activeConn.RuleName, activeConn.CurrentPath, chkServiceRule.Checked ? activeConn.CurrentService : null, activeConn.Protocol, chkTRule.Checked ? activeConn.Target : null, chkPortRule.Checked ? activeConn.TargetPort : null, chkLPortRule.Checked ? activeConn.LocalPort : null, chkCurrentProfile.Checked);
+                success = FirewallHelper.AddTempRuleIndirect(activeConn.RuleName, activeConn.CurrentPath, services, activeConn.Protocol, chkTRule.Checked ? activeConn.Target : null, chkPortRule.Checked ? activeConn.TargetPort : null, chkLPortRule.Checked ? activeConn.LocalPort : null, chkCurrentProfile.Checked);
             }
             else
             {
-                success = FirewallHelper.AddAllowRuleIndirect(activeConn.RuleName, activeConn.CurrentPath, chkServiceRule.Checked ? activeConn.CurrentService : null, activeConn.Protocol, chkTRule.Checked ? activeConn.Target : null, chkPortRule.Checked ? activeConn.TargetPort : null, chkLPortRule.Checked ? activeConn.LocalPort : null, chkCurrentProfile.Checked);
+                success = FirewallHelper.AddAllowRuleIndirect(activeConn.RuleName, activeConn.CurrentPath, services, activeConn.Protocol, chkTRule.Checked ? activeConn.Target : null, chkPortRule.Checked ? activeConn.TargetPort : null, chkLPortRule.Checked ? activeConn.LocalPort : null, chkCurrentProfile.Checked);
             }
 
             if (success)
@@ -495,12 +526,37 @@ namespace WindowsFirewallNotifier
         private void btnIgnore_Click(object sender, EventArgs e)
         {
             bool success = false;
+
+            string[] services = null;
+            if (chkServiceRule.Checked)
+            {
+                if (activeConn.PossibleServices != null && activeConn.PossibleServices.Length > 0)
+                {
+                    ServicesForm sf = new ServicesForm(activeConn);
+                    sf.ShowDialog();
+                    if (sf.DialogResult == System.Windows.Forms.DialogResult.OK)
+                    {
+                        services = sf.CreateAppRule ? null : sf.SelectedServices;
+                        sf.Dispose();
+                    }
+                    else
+                    {
+                        sf.Dispose();
+                        return;
+                    }
+                }
+                else
+                {
+                    services = new[] { activeConn.CurrentService };
+                }
+            }
+
             if (!chkTemp.Checked)
             {
                 if (Settings.Default.UseBlockRules)
                 {
                     //Process.Start(new ProcessStartInfo(Application.ExecutablePath, ) { Verb = "runas" });
-                    success = FirewallHelper.AddBlockRuleIndirect(activeConn.RuleName, activeConn.CurrentPath, chkServiceRule.Checked ? activeConn.CurrentService : null, activeConn.Protocol, chkTRule.Checked ? activeConn.Target : null, chkPortRule.Checked ? activeConn.TargetPort : null, chkLPortRule.Checked ? activeConn.LocalPort : null, chkCurrentProfile.Checked);
+                    success = FirewallHelper.AddBlockRuleIndirect(activeConn.RuleName, activeConn.CurrentPath, services, activeConn.Protocol, chkTRule.Checked ? activeConn.Target : null, chkPortRule.Checked ? activeConn.TargetPort : null, chkLPortRule.Checked ? activeConn.LocalPort : null, chkCurrentProfile.Checked);
                     if (!success)
                     {
                         MessageBox.Show(Resources.MSG_RULE_FAILED, Resources.MSG_DLG_ERR_TITLE, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -551,7 +607,7 @@ namespace WindowsFirewallNotifier
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnClose_Click(object sender, EventArgs e)
+        /*private void btnClose_Click(object sender, EventArgs e)
         {
             if (conns.Count > 1)
             {
@@ -570,7 +626,7 @@ namespace WindowsFirewallNotifier
             {
                 this.Close();
             }
-        }
+        }*/
 
         /// <summary>
         /// Quits
@@ -614,7 +670,7 @@ namespace WindowsFirewallNotifier
         }
 
 
-       
+
 
         private int exHeight = -1;
         private void btnAdvanced_Click(object sender, EventArgs e)
@@ -625,6 +681,7 @@ namespace WindowsFirewallNotifier
             {
                 exHeight = this.Height;
                 targetHeight = this.Height + pnlHeader.Height;
+                pnlMain.Height = targetHeight;
             }
             else
             {
@@ -640,15 +697,16 @@ namespace WindowsFirewallNotifier
                 //this.Height += (targetHeight - localexHeight) / 20;// (int)QuadEaseInOut(targetHeight, exHeight, 2, 20);
                 this.Height = (int)CommonHelper.easeInOut(i, localexHeight, targetHeight - localexHeight, 20);
                 this.Top = (int)CommonHelper.easeInOut(i, startTop, targetTop - startTop, 20); ;
-                
+
                 Application.DoEvents();
 
                 // I know, should rely on a timer for animations, feel free to change that one (yep, that one is a dup :-P)...
                 Thread.Sleep(10);
-                
+
                 i++;
             }
 
+            pnlMain.Height = targetHeight;
         }
 
     }

@@ -117,873 +117,189 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="&gt;&gt;connRemoteAddr.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="connState.Width" type="System.Int32, mscorlib">
-    <value>94</value>
-  </data>
-  <data name="connLocalAddr.Text" xml:space="preserve">
-    <value>Local address</value>
-  </data>
-  <data name="&gt;&gt;toolStripRules.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlOverTabTop.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;btnERemove.Name" xml:space="preserve">
-    <value>btnERemove</value>
-  </data>
-  <data name="showAllToolStripMenuItem.Text" xml:space="preserve">
-    <value>Show all</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="btnLEvents.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="colRIcon.HeaderText" xml:space="preserve">
-    <value />
-  </data>
-  <data name="&gt;&gt;tabExceptions.Parent" xml:space="preserve">
-    <value>tabPanel</value>
-  </data>
-  <data name="&gt;&gt;gridRules.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="colRDirection.HeaderText" xml:space="preserve">
-    <value>Dir.</value>
-  </data>
-  <data name="lblConnections.Text" xml:space="preserve">
-    <value>This screen displays all active connections on this computer, updated every second (by default).
-Closed connections (in orange) will remain displayed a few seconds before disappearing.</value>
-  </data>
-  <data name="btnRRefresh.Text" xml:space="preserve">
-    <value>Refresh</value>
-  </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>833, 462</value>
-  </data>
-  <data name="&gt;&gt;colExcPath.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="colExcIcon.Width" type="System.Int32, mscorlib">
-    <value>22</value>
-  </data>
-  <data name="btnUpdate.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="tabExceptions.Size" type="System.Drawing.Size, System.Drawing">
-    <value>839, 425</value>
-  </data>
-  <data name="&gt;&gt;connOwner.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;normal2sToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="gridExceptions.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="lblExceptions.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
-  </data>
-  <data name="btnConnStop.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAvJJREFUOE9NkktMU1EQhk8RoSgmogGDuhEXNi50gcEFrFwYY9QY9wIWCpRHgUJL
-        wdJKQIWoSzfujDGGRyiIVBRuS3MptGBbHhoLCuXhI3FhroEWF+rvnNMSPckkJ5P5/pkz52f35y9puuYv
-        O7vmLiidswVKWyhfsQfzFHvgpGL3aihyFJucrVjlLKVFzlCaZbVioTB5Up1GN9OwrvkrEsHonD2HO6EC
-        dATOwDZzArbpHNgpbP6jaJ7KgMmrRtPEHlgm0mCWU9HoSUa9WyWx9rnzsTicT3AuOkN5eLhwEfdCZ2H1
-        H8ZNXybuvtHgQTAX1skDMMkpAja6k1A5oooxPvZOZyt1HIhYwM/GZhCWyf0we/difXNG5LoXtah2MQHX
-        uVQwjDGF8TffDuahPXAKFl82nGu3RPG37SUSSId5Qk33sMg5PhigH2M0OglIJDBKAnxh7YHTaJvRoGnq
-        IIZWm0Xx19iCgE1yMt3nRK5vqRIVr9kOjOohLkDb5jBfmMm7D4ORRlH8JRYUcIMnCZ+jQZHrWSxH+QiL
-        w68YKp9zAf5V08fQ6j+CBuroiNSK4k+xaQHXuxk2on6R6w7roHMm4JcMFXEB+mf6KqsvC0Z5F/pXKkXx
-        etQL4ziNS0tbozs/z8IlKB1mqKIp9CQkBIRJfIfQQn9d52HoWy6j0t9YjXoEbJAYInTnuafvi6EdSsAv
-        GMq4gHAYwRZvOmqpY89HLRVvYyUqCbiG3ru8JVHuJ568K0TxYAImoaJBEuD2tNDymshhNdSxmwT+YAsr
-        sTEBV9F7l6OjJLAlBIoccVhHQoUDJCC8nbBnDXV8HL6GX/iOtz96BaynZS0ovSL3aPYqivrF6CglgesO
-        ErC40mL/vJ0EkycNHVPH0eLJFMvi2zZLmWgdz0HVsFp05nAJTUIRYyZ5t7TjbW7PWnKaPtGZw3xhOup4
-        YyAO/gdD62ASM7pTNPUuldPgUinc29ye3GHcJPybePBt84XxN/OxeZCAs6yPaf4CPeaDi1AsxuYAAAAA
-        SUVORK5CYII=
-</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator6.Name" xml:space="preserve">
-    <value>toolStripSeparator6</value>
-  </data>
-  <data name="btnDonate.Location" type="System.Drawing.Point, System.Drawing">
-    <value>719, 5</value>
-  </data>
-  <data name="btnRLocate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAa5JREFUOE+V0E9Ik3EYB/DH0jCCOhTaIYqIIuiQsJNM8BJ1iTwllZHnOetSg70Q
-        HTYPohWevXRTkdiL2N+XYB1iE+TdWtqa2yvbaplTXnz97X1599P2fnvRBaLMvT7wgQee5wsPD1XyI0H8
-        HNF2quRfjiL7qpnqFV8YNJEdxF5Dp6srtYsr/hKUZ9iJZ/yqpQhupITLu1lJ/8lq1A6nHzKkHwOZJzbf
-        Fv7dZ/3vd9vM+BQr1X9+O5zwMKT6UP76ALp8D3qsZ1+GvRcLtfVuh+N3GY91Q412g6cD9skDtmBNG/bc
-        +Cas/s099xKXbzNj5gbKSfvs/AsgN1RffhhcCehkytdY6UsHynMeYPGp/TDBEa4IOhlRF9PCbTDjPUDq
-        EfDD6whPeBkZn64wVboAc/YWMN8LzN13hMt3GDHpDCu+bYER6YQV70IldtMRU77OaO3dUbY0dQzr4avY
-        iLrBI+2OGBEXI3X6CCuEGqF+PAvj8yXo4YvOSOcYFcapnJ0kLE+fgPbhFNbeO/TmeImyEw3pX68P4Y94
-        GCtTTc6JTSYtjlFrUSTpt0jaQRRFCv4DOxmSMzjWKhYAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="&gt;&gt;tabExceptions.Name" xml:space="preserve">
-    <value>tabExceptions</value>
-  </data>
-  <data name="&gt;&gt;btnTConnections.Name" xml:space="preserve">
-    <value>btnTConnections</value>
-  </data>
-  <data name="toolStripLog.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 25</value>
-  </data>
-  <data name="&gt;&gt;btnRDelete.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="lblConnections.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 384</value>
-  </data>
-  <data name="&gt;&gt;colRIcon.Name" xml:space="preserve">
-    <value>colRIcon</value>
-  </data>
-  <data name="&gt;&gt;btnDonate.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="colRSvc.Width" type="System.Int32, mscorlib">
-    <value>67</value>
-  </data>
-  <data name="btnTRules.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="colExcPath.HeaderText" xml:space="preserve">
-    <value>Path</value>
-  </data>
-  <data name="&gt;&gt;toolStripConnections.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="colREnabled.Width" type="System.Int32, mscorlib">
-    <value>55</value>
-  </data>
-  <data name="&gt;&gt;toolStripLog.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;fast1sToolStripMenuItem.Name" xml:space="preserve">
-    <value>fast1sToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator7.Name" xml:space="preserve">
-    <value>toolStripSeparator7</value>
-  </data>
-  <data name="btnOptions.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;btnTRules.Name" xml:space="preserve">
-    <value>btnTRules</value>
-  </data>
-  <data name="&gt;&gt;connCreaTime.Name" xml:space="preserve">
-    <value>connCreaTime</value>
-  </data>
-  <data name="btnTExceptions.TabIndex" type="System.Int32, mscorlib">
-    <value>22</value>
-  </data>
-  <data name="&gt;&gt;tabLog.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="colPath.HeaderText" xml:space="preserve">
-    <value>Path</value>
-  </data>
-  <data name="btnERemove.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAmVJREFUOE+FkU1ME0EYhidED2C329IWqCCIoUE9CvSPAgHDT5BQhUYhgh4qEAIc
-        jBw0ED0YE8JVEw4aD2I8efHEQQ/e7NGDxkSD/dt2Sym0S2WhUPo6O7uJSIi+yZP5Jvu8k8ksOZrCTJ2+
-        MG0bKMzY5jBdv1CYss3SfQsekSJNOT75Sdv4/ljtKl1xGNlfs5+fsH3cm6xr09Q/UU7d9dcu5fzn8C+y
-        o1V7dL2t1dT8Gqme3x6pAeNmNbaHq9T5mH36unVva/iMhxUl3+n6TL9FlnyVkAYrkRmwQrpxFpl+M5sz
-        XgukoVpkrlVA8lVRKrHpswYw3nCSbHqtixQobPQaIb94iP0fn7F1rwcbHcXYefsU+eAXSBNObF4xM4+5
-        Xms3SfaZA6m+ciisd+ohv16EknwijJ2VZTYXdmWkx5xIdRuZx9ze8ick1lMWT/aUgdFtQbLLAvndc1ZS
-        cpBeR3rWi2QHT51y1VN5RYROXlzrtEDFDNFTjOzSvFalN4iHkBq5hESbTnNUxMvmZRJrNwfEdlqixJt1
-        kBamWKmQEpELvGdzfvUr1gYvIN7KM4+57SZ67dbSRQoUBGcJsi8XcJBKYOP+EAQPfYOVNzhIRLE26oTg
-        0jGP0VLaRQS3qZ5KsuAxQmg2INZRAdF7HlF7CaLOUxBaTRCvXkTUzdPDqMPgP6GNnGD/OuwwzEVcBkTc
-        FAeHSGMJIi7+yJ7OKrmY09jMikpASFHYwT+j4D/kwnbDLa32d0JNujvBBv33kF2PI+R+2rkPoUbOranH
-        55vbxIUdXH/Qrn8QtHOPKXeDTZxL+3wohPwGPlrXuA65JtwAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="&gt;&gt;gridExceptions.Parent" xml:space="preserve">
-    <value>tabExceptions</value>
-  </data>
-  <data name="colExcIcon.HeaderText" xml:space="preserve">
-    <value />
-  </data>
-  <data name="btnTConnections.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
-    <value>ImageBeforeText</value>
-  </data>
-  <data name="&gt;&gt;btnConnTrack.Name" xml:space="preserve">
-    <value>btnConnTrack</value>
-  </data>
-  <data name="&gt;&gt;showAllToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblExceptions.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnERemove.Text" xml:space="preserve">
-    <value>Remove</value>
-  </data>
-  <data name="btnConnFindR.Visible" type="System.Boolean, mscorlib">
+  <metadata name="btnOptions.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
+  </metadata>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="btnOptions.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
   </data>
-  <data name="btnOpenConsole.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <data name="&gt;&gt;tabLog.Name" xml:space="preserve">
-    <value>tabLog</value>
-  </data>
-  <data name="&gt;&gt;colRProfile.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnLEvents.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAA4AAAAPCAYAAADUFP50AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAXVJREFUOE9jgIGEphX/ScFgTf39/f8DA0P+T1xx4v/5e28JYu+Imf8Zps6YBdad
-        mLUIU+PdV/+P7Ir6f3aH4v9T5/ahagSBxsZGrDaeOL4crOnSIbX/R7YFgA2Ca0S2sWf5sf8zN52D451r
-        XcGaPFyZwfT89evA4hg2di44DDf1zNVL/+8dVfz/6obq/55G/v8frsv9P74/Gyj/BtNGkEaYbctXxf1/
-        eob3/9VDgmAb35wT/b9viQiqjenp6RAbZ++G++/U8cP/Dy1u/r9vThoYgwLpyL5OTBtBnKypu8D+BBmw
-        MCj9/wqHoP+z/VL+9y7YBxaHYQw/gjSCTDyYnPX/Wmvr/5vR0f+vZGT83+wXAncJVhuTe7f8z5297/9a
-        bX2whh/374PppZzcYHEYxrARpBFk4g43b7CNIAzSCDIIr42xHev/J0/a/r8hY/r/eVrGYJtmyar9z4rr
-        BovDMNxGWKiCNIJMRDYdhY9sIwyAOMTjmf8BgboZ0DlO3PUAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="tabConnections.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 26</value>
-  </data>
-  <data name="&gt;&gt;btnConnStop.Name" xml:space="preserve">
-    <value>btnConnStop</value>
-  </data>
-  <data name="&gt;&gt;connRemotePort.Name" xml:space="preserve">
-    <value>connRemotePort</value>
-  </data>
-  <data name="&gt;&gt;colRAction.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;colPath.Name" xml:space="preserve">
-    <value>colPath</value>
-  </data>
-  <data name="&gt;&gt;toolStripLog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnTConnections.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+  <data name="btnOptions.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
-  <data name="&gt;&gt;pnlOverTabTop.Name" xml:space="preserve">
-    <value>pnlOverTabTop</value>
-  </data>
-  <data name="btnUpdate.Location" type="System.Drawing.Point, System.Drawing">
-    <value>472, 5</value>
-  </data>
-  <data name="btnConnTrack.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnOptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAq5JREFUOE9lkktIlGEUhr+/0nEiQYuMKKJcDZG2KTe6qMBqYUGL2kQFXbyPzYxN
-        jtfBS6EQtAiK6ELYIojAzJxMnX/SX53GnFEn06SgTS0Mta8L04Xo7ZxvUv7qg5fZzPOe9z/nFReiebaW
-        6D5fy/he2TyWI+tHs6U3kiW94c3SO2gjpcs6Y62sMdJklZEqK40k6SG5+yw+V0DYREt0v59gNI/twvnR
-        HJyLZKFhJAM1oY2oDW1AXWg9ap6uQVUwFZ7BZHgGrDhrWHCmbxmcAc0vGsd3x+JwNprC29AQzkDTyBZc
-        ep6L+uF0eIIpBK8keAUqTLArsATFXVpMcGyerOCRTFTT1BtTh8Dv9cd+VAdXwT1gUZPd/YmLsEPXUNYr
-        pOBv5tiN4UzUP7OhMrgarS8PKwN+r6ROk5Ph7BMKLn+ylKKTgZ8MesiAF9YY3qpgL0WuGErBramDCv6J
-        b+p3er6LQCvsfmGGUdrBBrTtBbg2tA7uweW4OXlAgT/wWYnf5HwnnLoF9l4Rhx8LFD9gAz7V8CYFVwfT
-        UG4k4PqLPEJ4/vyigF+Ylj44eq0oYfiRQGHcgO6sTpWmTuXq13BtYg/9/StimFkU55n80IGybiuKCC7y
-        /TFQJTHdmZd1dSKX5n/CF7wjvSWzGKKzdym2BYUEKvihQD4bqIYpOH7n0wGBK9GdNG+OLN6QkcTY7B2K
-        nYT8ThPcIXCsnQy4njyZYb4zb/pydAe+4z1pBqNzt1Ha/T98ql3g6H0yUN02NayUtnwxsl3BkblW2Aku
-        MMUuIJii4yQZHGkjA49ujZnr6QhocOkJaBhKh6Mn8S+YJy/AJ9qUYsJtJPjN9eSS2OnOBXymf2CObYJx
-        vE34hSuQaHPqmq9M1yR3m+vJDeOS8JlYvG1eGH8zx2aRgS//nrD9Bnike5hY+IODAAAAAElFTkSuQmCC
+        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
+        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAIySURBVDhPhZFLbxJRGIa/FStjf4H/w5UiNLFqJI2L
+        tl57Sbsw6aJJoy64NG2Nl0SqpYAmRkUtgh3EC5ABTNNSQrVC01oN0vTiEGunBVpGYCgX6ec5Y+LCBbN4
+        cibne5/3O8nAgCsGBibWqH356YN+IiromfqQXIzkNdQDcqEk7L1bSOL3nQJy9ciIyC79QIMrWtExURVc
+        c3xkxyMrWKohitUaFupA5+V9RJq/Sjy4Yp/lZxJb0mC3WJFFrO5j4MsGUg/6xyPp8PIW/ir9xoxYkSVX
+        rklP738eSUPfs3BqOsFjdq+KqUJZFoEs8S0mse9pOAW9T0KpyfhPqZXPlWTZKVbx7TyHvY9DKbj8cCod
+        /LqB24USbghFWeh2d3QdqQc9DyZ57yKHm/kScllRFp7kmLlVpB50WAKsObgkyUnSzGX/sr4r4lqmgGv0
+        /0piUZrz+TKa/J+RekQOqroswYot9A2jXAZjyYx0JrZzUgE96R1lnmCPLGO39X210xJQQfuYHy6MsprW
+        EW+sfYwVeu4HhS5rIK91zuJUYpNsFnH41Rx2mP1FgkBzJN9MPUm+aGLh3D2f4uxdb0PbiLehxeg5dPqG
+        29Rq9NRsM3F8NB1HzU23reWO5+D5UZ/iEnH+l/9BCqD51ms4dd11vGmIWei2+qm8enKYUZy5/QbajF7o
+        NAfqy2Q7NA1OHDimdww2DjhFtcFxVGVwgNrgpMXy8okhBogISt2Lw0qdXU0g33Y4orXDH0kKyyWpXec/
+        AAAAAElFTkSuQmCC
 </value>
-  </data>
-  <data name="colREnabled.HeaderText" xml:space="preserve">
-    <value>Enabled</value>
-  </data>
-  <data name="&gt;&gt;pnlOverTabTop.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="gridRules.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="&gt;&gt;imgLstConn.Name" xml:space="preserve">
-    <value>imgLstConn</value>
   </data>
   <data name="btnOptions.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
   </data>
-  <data name="btnRRefresh.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator1.Name" xml:space="preserve">
-    <value>toolStripSeparator1</value>
-  </data>
-  <data name="connRemoteAddr.Text" xml:space="preserve">
-    <value>Remote address</value>
-  </data>
-  <data name="btnUpdate.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="stripConnUpdSpeed.Size" type="System.Drawing.Size, System.Drawing">
-    <value>97, 22</value>
-  </data>
-  <data name="btnTRules.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
-    <value>ImageBeforeText</value>
-  </data>
-  <data name="colExcLocalPort.HeaderText" xml:space="preserve">
-    <value>Local port</value>
-  </data>
-  <data name="&gt;&gt;lblLog.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="showAllToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>256, 22</value>
-  </data>
-  <data name="gridExceptions.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="btnRLocate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>62, 22</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator8.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnUpdate.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="lblRules.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="btnOptions.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="lstConnections.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+  <data name="btnOptions.Location" type="System.Drawing.Point, System.Drawing">
+    <value>607, 5</value>
   </data>
-  <data name="lblConnections.Size" type="System.Drawing.Size, System.Drawing">
-    <value>829, 38</value>
-  </data>
-  <data name="&gt;&gt;connLocalAddr.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnDonate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>111, 29</value>
-  </data>
-  <data name="&gt;&gt;tabConnections.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;toolStripConnections.Name" xml:space="preserve">
-    <value>toolStripConnections</value>
-  </data>
-  <data name="lstConnections.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="tabPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>847, 455</value>
-  </data>
-  <data name="colDate.Width" type="System.Int32, mscorlib">
-    <value>56</value>
-  </data>
-  <data name="toolStripLabel1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAALFSURBVDhPjZLdT5JRHMfPf9FNW5fdunVRW63U1loX
-        vWzl2nRYbtlm5tKmpiBqtdKLphOzxqZOUB4EE8zJSyaBgYRA4tsMliagkBIvJu8I/vo9IGZzbp3ts3PO
-        c76/zznPeR7CFE2TBrGRNL0zk8YhUw5TZGxtEJsm2EMmM0tkHMM5E9dONOI6C3N0/iD7AgzXNQ+bQ5R+
-        GfTfPfDV7oVJ6wb0aKyAQjdLbCo6UlAnNNS1jlpgyb0FO7sA0eQuhBIpiGAfTCRBa9uApnemVP3gdMEh
-        QS315RTuHl90BYBuqV0siifBF0mk8Ud3UJQC9Tc3YNb1RGg4hpAspJKne8vT2mAbdwoj0Z0kFiXAE4rv
-        4w3HYRP7dvkcVPF1VdUDepKFPOr7PKOxusGPu20GM8GNYOwQPjzJsPEHlPVoJJU8LW6cgZT3alb1K550
-        8dpWdJ/1PbLjX+EEjM7Y4R5Xpa7onSRZSClXZZbPO8G1HYVVXxjs/jA4AxEsyuDAMf2MXufjq5a8+Sgp
-        6/5EspDi1x8622QWcGB42RtMh90Y9oRi+DoxcP1GQSAMNk8QmEI93O0av3OfqyJZCIOjzCnmKMOyOQes
-        YXgd8Ufj6QsNIf4IXiTC01rhdpsMbrRKS6++GCbXWiRpSMGrUXK9RVrD6JCB1LwCTjxJLIU/w17z4RcQ
-        6KxQ2D4GL99boKJXE85jU0UIyW8UEro4bbrULHp85dlQoKpPDVzVAginbMCdmIcy7jjgGlT362Bk9idQ
-        BjuUd6tjWFx4kRbgkdKCy0/FJJ9NnTxXP/D8TC1/HJk6XcOX4/xhPlt4s6RL6W9TLIDU4gZq2gEPutVx
-        lNz6R0AbMUzyGihyniUgudjT8wxUHoMj99GSkVk3CAwOqOhRLx0puHBAkHlOj6lcBkfhpSWSGTf061cl
-        /y34KxGeLe5UKDqUi4JBk/P4HxgaqT+JtQOMAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="&gt;&gt;btnDonate.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="toolStripExceptions.Text" xml:space="preserve">
-    <value>toolStrip2</value>
-  </data>
-  <data name="toolStripSeparator7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 25</value>
-  </data>
-  <data name="tabExceptions.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="btnRDelete.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="btnTExceptions.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
-    <value>ImageBeforeText</value>
-  </data>
-  <data name="colRIcon.Width" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="btnTExceptions.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="&gt;&gt;toolStripExceptions.Parent" xml:space="preserve">
-    <value>tabExceptions</value>
-  </data>
-  <data name="btnELocate.Text" xml:space="preserve">
-    <value>Locate</value>
-  </data>
-  <data name="colExcTargetPort.HeaderText" xml:space="preserve">
-    <value>Remote port</value>
-  </data>
-  <data name="gridRules.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 28</value>
-  </data>
-  <data name="btnOptions.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Right</value>
-  </data>
-  <data name="btnConnStop.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="btnTLog.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="btnTConnections.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnTRules.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="colRAction.Width" type="System.Int32, mscorlib">
-    <value>65</value>
-  </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
-  </data>
-  <data name="tabExceptions.Text" xml:space="preserve">
-    <value>Exceptions</value>
-  </data>
-  <data name="tabRules.Text" xml:space="preserve">
-    <value>Rules</value>
-  </data>
-  <data name="&gt;&gt;connLocalPort.Name" xml:space="preserve">
-    <value>connLocalPort</value>
-  </data>
-  <data name="btnRRefresh.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAe9JREFUOE+Vk81rE1EUxY9rLYLgQgU/d4q0INGFFHeC/4DSnbjIVxObkgSNSoNG
-        StJmahu0kKilU7t06cdSEHXvUnCjXbrJoqW+ad69nkyfcRojxQM/7rvvvnPmgxkMkqxgWJaRsCu4b31U
-        2GfIBTcOxX6v+jjq2m1x8wQNLzhoE41ifGxw9pbBV7SJ/R0fH8RH1llpbmE0aOK7LtGwC53n+NytsoTE
-        tvkZjgUtfNMWD/wPTxEPA/QxlnWRG32YRfw089gYNHPEIQs4bRpY1wY3HKYOsfOYkSeISQPDXHvReY+F
-        bkAdN9RjE8F6mAtvjZIahjqzeK91zvoQD2lIFWWtcsNhqtjUGYw4f3d+1dbwjrzpUcVr1lcyjRjkAQMq
-        NDtMhQHlPwG7Ssp8hCmaI9gpeG7cE88dkDs4Qg5xfbi75oX2Qe7hjMnzTZdodpgSX+It1OQ2YlrACOs1
-        UpC7GGO9LCWMMuC8FDEUptsifB7UfswENk0R68Ek1mweL22Bn3Ueac6uSwEXFdgTBugEjgdZfoU5Ggdg
-        MvjRyeGTvYlVm8MjyWFSsjgYmn+LG5eCJNY0Q9PftLcy+NIZx0ebQVPGcdbZdkpTOGlTWGVtE42ylcJX
-        m8QcL3TKHf+3JMHfOY6kjeMhmWafZsg5N44I+AW6yLwAZ/SnKAAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="btnTLog.Text" xml:space="preserve">
-    <value>   Log</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator4.Name" xml:space="preserve">
-    <value>toolStripSeparator4</value>
-  </data>
-  <data name="btnTRules.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="btnOptions.Size" type="System.Drawing.Size, System.Drawing">
     <value>106, 29</value>
   </data>
-  <data name="toolStripLog.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="btnOptions.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
   </data>
-  <data name="normal2sToolStripMenuItem.Text" xml:space="preserve">
-    <value>Normal (1s)</value>
+  <data name="btnOptions.Text" xml:space="preserve">
+    <value>Notif. settings</value>
   </data>
-  <data name="&gt;&gt;wSHRulesOnlyToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnTRules.TabIndex" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="connRemotePort.Text" xml:space="preserve">
-    <value>Remote port</value>
-  </data>
-  <data name="tabConnections.Text" xml:space="preserve">
-    <value>Connections</value>
-  </data>
-  <data name="colRIcon.MinimumWidth" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator4.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="slow5SecondsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Slow (5s)</value>
-  </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblLog.Name" xml:space="preserve">
-    <value>lblLog</value>
-  </data>
-  <data name="btnUpdate.TabIndex" type="System.Int32, mscorlib">
-    <value>23</value>
-  </data>
-  <data name="btnTRules.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="&gt;&gt;connState.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnTRules.Location" type="System.Drawing.Point, System.Drawing">
-    <value>117, 5</value>
-  </data>
-  <data name="&gt;&gt;btnTRules.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="normal2sToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>136, 22</value>
-  </data>
-  <data name="lblRules.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="colRLocalport.Width" type="System.Int32, mscorlib">
-    <value>75</value>
-  </data>
-  <data name="&gt;&gt;toolStripRules.Name" xml:space="preserve">
-    <value>toolStripRules</value>
-  </data>
-  <data name="&gt;&gt;lblConnections.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="btnUpdate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>111, 29</value>
-  </data>
-  <data name="btnTConnections.Text" xml:space="preserve">
-    <value>  Connections</value>
-  </data>
-  <data name="&gt;&gt;btnDonate.Name" xml:space="preserve">
-    <value>btnDonate</value>
-  </data>
-  <data name="toolStripSeparator6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 25</value>
-  </data>
-  <data name="tabPanel.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;btnOptions.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="lblConnections.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="&gt;&gt;gridLog.Name" xml:space="preserve">
-    <value>gridLog</value>
-  </data>
-  <data name="&gt;&gt;colExcLocalPort.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnDonate.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
+  <data name="btnOptions.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
     <value>ImageBeforeText</value>
-  </data>
-  <data name="&gt;&gt;tabRules.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="btnTRules.Text" xml:space="preserve">
-    <value>  Rules</value>
-  </data>
-  <data name="toolStripSeparator4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 25</value>
-  </data>
-  <data name="btnLLocate.Text" xml:space="preserve">
-    <value>Locate</value>
-  </data>
-  <data name="colExcTarget.HeaderText" xml:space="preserve">
-    <value>Target</value>
-  </data>
-  <data name="stripConnUpdSpeed.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAArNJREFUOE99kv1PUlEcxu96+bGtv8P/IKy52rL1S221Nrc2m6s5N1tWZuBL4sts
-        LTeYRlmWphADsXIGKlbDlzBeRMDyBVFQFAUREHnxAhd9OtygLZc922fn3u85z/c+555DHRSfjyOVMv0Z
-        nsz4oFpufFIlM1Rz5car/D7LycySf6uyx5hXrZgcbRucYwYsaxi3eTH8w43ub3bwP5icVT2GkszSv8Xr
-        Mdxo+GRNTi5vIZxgsBVNwLwSALMPxJIpLPnCeK2ZB1eme3lNoTiasVEUV6o7XddvTjq2IthN7SNGHGZX
-        AILBadIohW2aQZTZQ2A3ic4xGyqkujrWWPzKdPzhuwn95LIfkeQe/LEkduIpmMh7s8qKEJ1ia2lCpL4e
-        olHfq4+XS/Q5VFn3xAXR5xkE6SQb1UfYjjPQO3xo6pskdYatZUknGbCu4m6XVkiVdow1qSwu0pWBNxJn
-        SRu0dg9qFTrQe2ATZUnPzW6EcL9LO0Xd7hgVj9k88MUSWN+hWfy7DMYXNlAgVEE4YIZANQWB8jfTq0Gs
-        hnbBlX7fpIrbNWLN3Do85IvpYho3aTDvDaFjZAatQxY8YzFDpLZgei2A5WAU5RKtjyp6rm6S65ewQcxO
-        UnQGY3AGoljZjsFD9ug9gDtMw0iOs6RdM0UVtgzn1783sKalQASL/v+zRlJJtAsobB0WUnn8kWMFQqVO
-        ZXXBRSLbyGU4DAdJZHUHUfpCTV9vGcxhz/rK0/7cIpE6MW73sgnmN8OY9e78YW5zh6SKss818glcftz3
-        iDVmld+gKCwQKBNynR0/PSE42G3E2NHmi+DLrBt3OjU4X6do++t6ZnWWL+Ocq5V+vSkaSjR91KOV/N1m
-        pQllbzW42Ni7mFcjvZVZerg4vO5THK74HocnaczliSvJeIlT8eZEZjojivoF/SaG6ydjHh8AAAAASUVO
-        RK5CYII=
-</value>
-  </data>
-  <data name="&gt;&gt;gridLog.Parent" xml:space="preserve">
-    <value>tabLog</value>
-  </data>
-  <data name="btnTExceptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABIAAAAQCAYAAAAbBi9cAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAMQSURBVDhPjdBbTJN3HMbx33AXGpNlu1lMNEt2N930
-        brczxITEsJsFd+PFvFrQhSW4Q9REzKZixNoBVWvFrgKW4iy1lBakB+kJerKnl7ctho6D2HDQuaibJhO3
-        Zw8FMrlw8eKT/3vzfN//+wqaZVnLCgO10aXyWTltryn2jmQuW+Lz8kvsLs3ItcikmP2KdL7k1aElBtHe
-        s9f844oqBUv0XuW14YIs6Q7mxBxQ/yfUSjo6TwaphF7UOfse+JLq4vV4Sd8dzjOUZ0h9jdCSc3RBDHxe
-        nO/5DOH0KPrSs7/2jOSr6JWhN2k9Q1s43Em1vNVlngvQCh46vkAsV8RgtvTCGR9LWofzR7sC6p6rfnU7
-        A+9QBa0T/CR1NMhYhPI0hzPyAicEaN2APyNNGJ2+D29mCgPxPJyxwuPeSGHq+nAuddU/GuwYUroY2io4
-        K59yuEAoayL9ZsC4A7BW4ZlqwcTcQ6Qm7yNamII/O47BxBj6ojl0+RVc8WVMHbey7wo08gZOSQ0a5S4B
-        x6ltK+CuBQKH8CTbhenZBUw8eAZ1chZD6TtwRVXYQgravSmLyZt+r92X4T/SUCMdl334UWZwjKGTbwGW
-        asB3EE/SZkyV5pArPUJYGYdzRIE1mHne4Un2/uxOvm9iZDmkpVPlkKBB6ukBvmFMtw3o/xKPEx0oTs8g
-        UVyAM5yG1Z9c7PTe9hv64x8abybE6E4KP43jk/QDHaMjsomUcqh1O9C+C/P2w0hkFYTGZuFiyOKJPzUO
-        xBovuqJiWGHypDj+dsV3ZR9TkYCGt4HvKzCprYLD48eN2Dh6A7dhdseet7kixovOiKzS941wXL/G51TC
-        QYa+pv2CCc3uv7r7h/5u92XR7Y2g82YUesewR2cPy7mXCOrWqGfg93KkTp7igOTvnK42G+1e94WB9G8m
-        V3jR6AqDw1SzLbSxxRaSVcK3/ucr0dAjKpEWtfLB+OlquWTzVJxxJGt0tuCg7kbojxZbMN/cE9xGsmpt
-        aL80UBNv8hEJQ7ISEo0jKa22wMaz1sBerTVgoE9IlgXkX5zsqbu276DGAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="gridLog.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 28</value>
-  </data>
-  <data name="btnUpdate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 25</value>
-  </data>
-  <data name="btnOpenConsole.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="&gt;&gt;lblRules.Parent" xml:space="preserve">
-    <value>tabRules</value>
-  </data>
-  <data name="colIcon.Width" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="lblLog.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnLLocate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAa5JREFUOE+V0E9Ik3EYB/DH0jCCOhTaIYqIIuiQsJNM8BJ1iTwllZHnOetSg70Q
-        HTYPohWevXRTkdiL2N+XYB1iE+TdWtqa2yvbaplTXnz97X1599P2fnvRBaLMvT7wgQee5wsPD1XyI0H8
-        HNF2quRfjiL7qpnqFV8YNJEdxF5Dp6srtYsr/hKUZ9iJZ/yqpQhupITLu1lJ/8lq1A6nHzKkHwOZJzbf
-        Fv7dZ/3vd9vM+BQr1X9+O5zwMKT6UP76ALp8D3qsZ1+GvRcLtfVuh+N3GY91Q412g6cD9skDtmBNG/bc
-        +Cas/s099xKXbzNj5gbKSfvs/AsgN1RffhhcCehkytdY6UsHynMeYPGp/TDBEa4IOhlRF9PCbTDjPUDq
-        EfDD6whPeBkZn64wVboAc/YWMN8LzN13hMt3GDHpDCu+bYER6YQV70IldtMRU77OaO3dUbY0dQzr4avY
-        iLrBI+2OGBEXI3X6CCuEGqF+PAvj8yXo4YvOSOcYFcapnJ0kLE+fgPbhFNbeO/TmeImyEw3pX68P4Y94
-        GCtTTc6JTSYtjlFrUSTpt0jaQRRFCv4DOxmSMzjWKhYAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
-    <value>790, 500</value>
-  </data>
-  <data name="btnTConnections.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnConnFindR.Text" xml:space="preserve">
-    <value>Find rule</value>
-  </data>
-  <data name="&gt;&gt;btnTExceptions.Parent" xml:space="preserve">
-    <value>pnlOverTabTop</value>
-  </data>
-  <data name="btnLEvents.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <data name="&gt;&gt;colRName.Name" xml:space="preserve">
-    <value>colRName</value>
-  </data>
-  <data name="&gt;&gt;colExcTarget.Name" xml:space="preserve">
-    <value>colExcTarget</value>
-  </data>
-  <data name="btnRShow.Text" xml:space="preserve">
-    <value>Show all</value>
-  </data>
-  <data name="btnTConnections.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
-  </data>
-  <data name="wSHRulesOnlyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>256, 22</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator8.Name" xml:space="preserve">
-    <value>toolStripSeparator8</value>
-  </data>
-  <data name="&gt;&gt;lblExceptions.Parent" xml:space="preserve">
-    <value>tabExceptions</value>
-  </data>
-  <data name="&gt;&gt;showAllToolStripMenuItem.Name" xml:space="preserve">
-    <value>showAllToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;lblExceptions.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;colRDirection.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabLog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;colRTarget.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnOpenConsole.Name" xml:space="preserve">
-    <value>btnOpenConsole</value>
-  </data>
-  <data name="&gt;&gt;tabRules.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="toolStripConnections.Size" type="System.Drawing.Size, System.Drawing">
-    <value>829, 25</value>
-  </data>
-  <data name="&gt;&gt;wFNRulesOnlyToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="tabPanel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Bottom, Left, Right</value>
-  </data>
-  <data name="&gt;&gt;colProtocol.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="toolStripLabel1.Text" xml:space="preserve">
-    <value>Filter:</value>
-  </data>
-  <data name="&gt;&gt;lblRules.Name" xml:space="preserve">
-    <value>lblRules</value>
-  </data>
-  <data name="&gt;&gt;tabPanel.Name" xml:space="preserve">
-    <value>tabPanel</value>
-  </data>
-  <data name="colRLocalport.HeaderText" xml:space="preserve">
-    <value>Loc. port</value>
   </data>
   <data name="&gt;&gt;btnOptions.Name" xml:space="preserve">
     <value>btnOptions</value>
   </data>
-  <data name="stripConnUpdSpeed.Text" xml:space="preserve">
-    <value>Update rate</value>
-  </data>
-  <data name="&gt;&gt;btnTRules.Parent" xml:space="preserve">
-    <value>pnlOverTabTop</value>
-  </data>
-  <data name="&gt;&gt;btnTExceptions.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnOptions.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btnTConnections.Parent" xml:space="preserve">
+  <data name="&gt;&gt;btnOptions.Parent" xml:space="preserve">
     <value>pnlOverTabTop</value>
+  </data>
+  <data name="&gt;&gt;btnOptions.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <metadata name="btnDonate.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
+  <data name="btnDonate.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
+  <data name="btnDonate.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnDonate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
+        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAIxSURBVDhPjZHfa1JhHMbfP8D/aARdxboJuol1UXQx
+        KAiiIGgbRRtdBKsxWARFjlhtYjaIJkmrbFbanEWy5TLTTdOz/DV1vkePevzxdJ53rQuvduCBh+f7+Zxz
+        ccTNxa+2G8+/zI46Q+kR55o8TMjSoSusYr/jXkcoUUCqqCNZlEgWpOrZvbqK2q2NN3aydOiKa46gFozn
+        0f90ez1wZ9j7H+50xdWF1XoiV7WmHlrtjgr7Vr6Ky08CKuz9dzp0xZWnARn7U0Gn24XRaquYnQ7yVQMz
+        y99V2Lkd3MnSoSsuzX2S0Z2yAmpNE3rDRN2C+KWmuR92bryRIUuHrrj4+IOMZEpoWGDVaFlwF96IhjFn
+        EJPusAo7N97IkKVDV1ywr8j130X15nKtAdloIZ6tYMEfw/lHKyrs3HgjQ5YOXTH80CvDyYJ1NLGrN1CU
+        BgyzjU2thOEH71TYufFGhiwduuLc/bcylMihVGv+/+/sa9Z29t6yCnv/nQ5dcWbmtQzEdpCr1pEuSRV2
+        v7WdnvaosPff6dAVQ9Me+TGqQavUsF2sqhR0A6vxLE7cfqHCzu3gTpYOXXFycqnujWSQ2pX4lasgXdbx
+        7PNPDE0t4ciYQ4WdG29kyNKhK47fWtTmfJvIVPT9t+/V8OrbFsZdfky5Qyrs3HgjQ5YOXXFs3GU/dfcl
+        7O834AlvK/DNRgq+aAa+H/9idW68kSFLh64YnHDZjl53zA6MzqcHRubloWKxdAYnXLa/GJNUepJ+pYAA
+        AAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="btnDonate.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="btnDonate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnDonate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>719, 5</value>
+  </data>
+  <data name="btnDonate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>111, 29</value>
+  </data>
+  <data name="btnDonate.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="btnDonate.Text" xml:space="preserve">
+    <value>   About...</value>
+  </data>
+  <data name="btnDonate.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
+    <value>ImageBeforeText</value>
+  </data>
+  <data name="&gt;&gt;btnDonate.Name" xml:space="preserve">
+    <value>btnDonate</value>
+  </data>
+  <data name="&gt;&gt;btnDonate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnDonate.Parent" xml:space="preserve">
+    <value>pnlOverTabTop</value>
+  </data>
+  <data name="&gt;&gt;btnDonate.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="btnUpdate.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
+  <data name="btnUpdate.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnUpdate.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 8.25pt, style=Bold</value>
+  </data>
+  <data name="btnUpdate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1
+        MAAA6mAAADqYAAAXb5JfxUYAAAAJcEhZcwAACw4AAAsOAUC+4UEAAAKASURBVDhPbc1LTBNRFAbgS2KM
+        iB1KbZERLCi0aoIbITS0RW0tIiotJBCUVkWNAQRjlIRogtGFceVj6dK4cOMGN8aEhTEmRtm4wJ2rQmcE
+        +qDlaQemHP87046aOMk3c+495z/DVvvs7Fd/DcvdcDB1CAYdbGvEuYtuHhzLDTuL4DDq/q1hp94HPssz
+        PKu91i9Va0Ho3Ryo86uDde0YJJxf4TsFkjrgEHG+Aof4LM/oC8J2Db9Qrh14CgRx5ep+UsIVpEREQp3D
+        nZTvHdXC+VyhCGHbOL6TaxE7rYUhUk3Ki1uUfX6d1vqqcOZ3dsLMM8w+WI3YncBYuquSLfVUBZe6q6gg
+        02Gh1fEu0h5VpZU7AcoEbUYfZGRsme5KxpLnKkpSITG0GBLTQFzylEArjy7rC/Asj/dQsq1U6+V9TAXF
+        fcmzFdv5gsco6G8Jv4mWH4b19IZCS3e7KBEQ/plBLgktLH66vBgmgAoWjpdQ5v4FfYGSpfRoBy34TEYf
+        NuNt5SOJ9j1FbC5gbZhvtU0DGXxmSvTW08bn95T9MEHxzlqa91v+9FttKjyZO2kV2E//7jGYAxVI4+Ms
+        lL53nlJDAZK9Jtxb9Z4uCz/AxeQTFia3WI7IxyzLQFysaQelbncSLcYp932K5oMOkjyC1st7C9vwI8Yk
+        bxmTPGWj+FJBrKmYFi42kzr9hbLvXpMc2Esxt2D0IR7zmGukljLGZt1mrhG88AZI4zKR3FZDkk/UauPe
+        bY5AEGrBWMBmm81sxlX6EqLwbcYlULRhJ0UbSwjndfgEm1DPZws57TXTXMqiTQLnAiu4YR0GYBK+Au97
+        QOQ1z/xvQUExnMnXleDN1wZ9gZn9BqQO/mFSLqJfAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="btnUpdate.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="btnUpdate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnUpdate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>491, 5</value>
+  </data>
+  <data name="btnUpdate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>111, 29</value>
+  </data>
+  <data name="btnUpdate.TabIndex" type="System.Int32, mscorlib">
+    <value>23</value>
   </data>
   <data name="btnUpdate.Text" xml:space="preserve">
     <value>  Update</value>
   </data>
-  <data name="activeRulesOnlyToolStripMenuItem.Text" xml:space="preserve">
-    <value>Active rules</value>
-  </data>
-  <data name="&gt;&gt;txtFilter.Name" xml:space="preserve">
-    <value>txtFilter</value>
-  </data>
-  <data name="&gt;&gt;btnTExceptions.Name" xml:space="preserve">
-    <value>btnTExceptions</value>
-  </data>
-  <data name="&gt;&gt;connOwner.Name" xml:space="preserve">
-    <value>connOwner</value>
-  </data>
-  <data name="btnRLocate.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="lblRules.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
-  </data>
-  <data name="lblLog.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 38</value>
-  </data>
-  <data name="toolStripRules.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 25</value>
-  </data>
-  <data name="btnTExceptions.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="btnTLog.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
+  <data name="btnUpdate.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
     <value>ImageBeforeText</value>
   </data>
-  <data name="btnOptions.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
-  </data>
-  <data name="tabLog.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 26</value>
-  </data>
-  <data name="pnlOverTabTop.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
-  <data name="&gt;&gt;lblConnections.Name" xml:space="preserve">
-    <value>lblConnections</value>
-  </data>
-  <data name="btnTLog.Size" type="System.Drawing.Size, System.Drawing">
-    <value>106, 29</value>
-  </data>
-  <data name="lblConnections.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Bottom</value>
-  </data>
-  <data name="lblLog.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 25</value>
-  </data>
-  <data name="&gt;&gt;txtFilter.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="gridExceptions.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 332</value>
-  </data>
-  <data name="btnTLog.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="tabPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>-7, 12</value>
-  </data>
-  <data name="&gt;&gt;colDate.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblRules.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripExceptions.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnConnFindR.Size" type="System.Drawing.Size, System.Drawing">
-    <value>57, 22</value>
-  </data>
-  <data name="gridRules.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="connOwner.Width" type="System.Int32, mscorlib">
-    <value>84</value>
-  </data>
-  <data name="btnTExceptions.Text" xml:space="preserve">
-    <value>  Exceptions</value>
-  </data>
-  <data name="btnConnFindR.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="gridExceptions.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 28</value>
-  </data>
-  <data name="btnELocate.Enabled" type="System.Boolean, mscorlib">
+  <data name="btnUpdate.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
-  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 25</value>
+  <data name="&gt;&gt;btnUpdate.Name" xml:space="preserve">
+    <value>btnUpdate</value>
   </data>
-  <data name="pnlOverTabTop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 37</value>
+  <data name="&gt;&gt;btnUpdate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;lblLog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;btnUpdate.Parent" xml:space="preserve">
+    <value>pnlOverTabTop</value>
   </data>
-  <data name="gridLog.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 356</value>
+  <data name="&gt;&gt;btnUpdate.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
-  <data name="colRDirection.Width" type="System.Int32, mscorlib">
-    <value>60</value>
+  <data name="btnTConnections.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
   </data>
   <data name="btnTConnections.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1005,122 +321,41 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
         0JHuhFDlcKZP704JZLT9EE5vJWhu0cRXm2Pccj/BlSUAAAAASUVORK5CYII=
 </value>
   </data>
-  <data name="btnOptions.Text" xml:space="preserve">
-    <value>Notif. settings</value>
+  <data name="btnTConnections.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
-  <data name="pnlOverTabTop.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+  <data name="btnTConnections.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="tabRules.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
+  <data name="btnTConnections.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 5</value>
   </data>
-  <data name="colRName.HeaderText" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="&gt;&gt;colExcTargetPort.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnOptions.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="btnTConnections.Size" type="System.Drawing.Size, System.Drawing">
     <value>106, 29</value>
   </data>
-  <data name="connCreaTime.Text" xml:space="preserve">
-    <value>Creation time</value>
+  <data name="btnTConnections.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
   </data>
-  <data name="lblLog.Text" xml:space="preserve">
-    <value>This page displays a list of the latest blocked outgoing connections (for performance reasons, the list has been limited to 500 items). If you need a complete list, please use the Windows events log viewer.</value>
+  <data name="btnTConnections.Text" xml:space="preserve">
+    <value>  Connections</value>
   </data>
-  <data name="colRPath.HeaderText" xml:space="preserve">
-    <value>Path</value>
+  <data name="btnTConnections.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
+    <value>ImageBeforeText</value>
   </data>
-  <data name="btnERemove.Size" type="System.Drawing.Size, System.Drawing">
-    <value>70, 22</value>
+  <data name="&gt;&gt;btnTConnections.Name" xml:space="preserve">
+    <value>btnTConnections</value>
   </data>
-  <data name="gridLog.RowHeadersWidth" type="System.Int32, mscorlib">
-    <value>16</value>
+  <data name="&gt;&gt;btnTConnections.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;toolStripSeparator6.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="toolStripExceptions.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 25</value>
-  </data>
-  <data name="pnlOverTabTop.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="wFNRulesOnlyToolStripMenuItem.Text" xml:space="preserve">
-    <value>WFN rules</value>
-  </data>
-  <data name="&gt;&gt;connState.Name" xml:space="preserve">
-    <value>connState</value>
-  </data>
-  <data name="lblExceptions.Text" xml:space="preserve">
-    <value>The Exceptions tab lists all programs you decided to always block when not using the "Create a blocking rule instead of an exceptions list" setting (see Notifications Settings).
-Those "exceptions" are used by Windows Firewall Notifier to filter which notifications have still to be shown; this list can be modified if needed.
-No firewall rule is created nor removed when you update this list.</value>
-  </data>
-  <data name="&gt;&gt;colTarget.Name" xml:space="preserve">
-    <value>colTarget</value>
-  </data>
-  <data name="&gt;&gt;btnRRefresh.Name" xml:space="preserve">
-    <value>btnRRefresh</value>
-  </data>
-  <data name="&gt;&gt;toolStripConnections.Parent" xml:space="preserve">
-    <value>tabConnections</value>
-  </data>
-  <data name="&gt;&gt;btnConnFindR.Name" xml:space="preserve">
-    <value>btnConnFindR</value>
-  </data>
-  <data name="&gt;&gt;gridExceptions.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="colTarget.HeaderText" xml:space="preserve">
-    <value>Target</value>
-  </data>
-  <data name="&gt;&gt;colTarget.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;colExcLocalPort.Name" xml:space="preserve">
-    <value>colExcLocalPort</value>
-  </data>
-  <data name="&gt;&gt;connRemoteAddr.Name" xml:space="preserve">
-    <value>connRemoteAddr</value>
-  </data>
-  <data name="btnLEvents.Text" xml:space="preserve">
-    <value>Events log viewer</value>
-  </data>
-  <data name="btnDonate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAIxSURBVDhPjZHfa1JhHMbfP8D/aARdxboJuol1UXQx
-        KAiiIGgbRRtdBKsxWARFjlhtYjaIJkmrbFbanEWy5TLTTdOz/DV1vkePevzxdJ53rQuvduCBh+f7+Zxz
-        ccTNxa+2G8+/zI46Q+kR55o8TMjSoSusYr/jXkcoUUCqqCNZlEgWpOrZvbqK2q2NN3aydOiKa46gFozn
-        0f90ez1wZ9j7H+50xdWF1XoiV7WmHlrtjgr7Vr6Ky08CKuz9dzp0xZWnARn7U0Gn24XRaquYnQ7yVQMz
-        y99V2Lkd3MnSoSsuzX2S0Z2yAmpNE3rDRN2C+KWmuR92bryRIUuHrrj4+IOMZEpoWGDVaFlwF96IhjFn
-        EJPusAo7N97IkKVDV1ywr8j130X15nKtAdloIZ6tYMEfw/lHKyrs3HgjQ5YOXTH80CvDyYJ1NLGrN1CU
-        BgyzjU2thOEH71TYufFGhiwduuLc/bcylMihVGv+/+/sa9Z29t6yCnv/nQ5dcWbmtQzEdpCr1pEuSRV2
-        v7WdnvaosPff6dAVQ9Me+TGqQavUsF2sqhR0A6vxLE7cfqHCzu3gTpYOXXFycqnujWSQ2pX4lasgXdbx
-        7PNPDE0t4ciYQ4WdG29kyNKhK47fWtTmfJvIVPT9t+/V8OrbFsZdfky5Qyrs3HgjQ5YOXXFs3GU/dfcl
-        7O834AlvK/DNRgq+aAa+H/9idW68kSFLh64YnHDZjl53zA6MzqcHRubloWKxdAYnXLa/GJNUepJ+pYAA
-        AAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="tabLog.Size" type="System.Drawing.Size, System.Drawing">
-    <value>839, 425</value>
-  </data>
-  <data name="&gt;&gt;btnDonate.Parent" xml:space="preserve">
+  <data name="&gt;&gt;btnTConnections.Parent" xml:space="preserve">
     <value>pnlOverTabTop</value>
   </data>
-  <data name="&gt;&gt;lstConnections.Name" xml:space="preserve">
-    <value>lstConnections</value>
+  <data name="&gt;&gt;btnTConnections.ZOrder" xml:space="preserve">
+    <value>4</value>
   </data>
-  <data name="&gt;&gt;btnLLocate.Name" xml:space="preserve">
-    <value>btnLLocate</value>
-  </data>
-  <data name="&gt;&gt;btnTLog.Parent" xml:space="preserve">
-    <value>pnlOverTabTop</value>
-  </data>
-  <data name="btnDonate.Text" xml:space="preserve">
-    <value>   About...</value>
+  <data name="btnTRules.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
   </data>
   <data name="btnTRules.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1138,417 +373,949 @@ No firewall rule is created nor removed when you update this list.</value>
         vJPUeuUIxzvBTvkmSJcJRX4DHw3maOtC7BAAAAAASUVORK5CYII=
 </value>
   </data>
-  <data name="&gt;&gt;colRName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnTRules.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
-  <data name="toolStripRules.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
+  <data name="btnTRules.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;btnOptions.Parent" xml:space="preserve">
-    <value>pnlOverTabTop</value>
+  <data name="btnTRules.Location" type="System.Drawing.Point, System.Drawing">
+    <value>117, 5</value>
   </data>
-  <data name="btnConnTrack.Size" type="System.Drawing.Size, System.Drawing">
-    <value>97, 22</value>
+  <data name="btnTRules.Size" type="System.Drawing.Size, System.Drawing">
+    <value>106, 29</value>
   </data>
-  <data name="btnConnTrack.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
+  <data name="btnTRules.TabIndex" type="System.Int32, mscorlib">
+    <value>20</value>
   </data>
-  <data name="btnOpenConsole.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAYtJREFUOE9jwAfWrl/3v7BuNhj3ztv+f/2WXf+hUrjB9q07/hu11/8PWF/5P3bH
-        3P8Bcy79d2j99N+gah3YEKgyTADSKLXK/H/H06b/V75d/t958+1//01fwRhkiEvhjP8N8/qwG8Df7f5f
-        4brM/1v/V/0HgdPPv/2PuPcfrDl1xwGwoc41Yf/X71iJasD8pYv/M1ZZ/xdfFQ5WBNIIshmk2W7+//8p
-        W1b/z/0r9d91v/3/pgUTUDWDnCTgufi/Zurp/xY9V8C2WZ74B8YgPwctXgDWDHKZWkHkf4ZuD7P/F4rC
-        /28Ktv2Pj709yQscYKDwALnOOHXqf4YKEw2woq3eev/xsddGu4NdBDJAIWolJNRjtFX/d4T5gBUkG2rj
-        ZYM0g5wPoi8dP/SfAeQcmLPwsafbqP/X7lwL1giKTnAggfwEcxY+NkgzyJ+bViMlklInK7iz8LGLNaX+
-        nz+yDzV6YKaDTMbHBnkBqgUBMrQU/q8JtAYrwsfGqjlcWfY/KMRBNCE2VAsUMDAAAKRLlH+ucUEpAAAA
-        AElFTkSuQmCC
-</value>
+  <data name="btnTRules.Text" xml:space="preserve">
+    <value>  Rules</value>
   </data>
-  <data name="&gt;&gt;btnOpenConsole.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnTRules.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
+    <value>ImageBeforeText</value>
   </data>
-  <data name="&gt;&gt;tabPanel.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="btnDonate.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Right</value>
-  </data>
-  <data name="btnDonate.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="btnConnStop.Text" xml:space="preserve">
-    <value>Stop tracking</value>
-  </data>
-  <data name="colRPath.MinimumWidth" type="System.Int32, mscorlib">
-    <value>170</value>
-  </data>
-  <data name="tabConnections.Size" type="System.Drawing.Size, System.Drawing">
-    <value>839, 425</value>
-  </data>
-  <data name="&gt;&gt;toolStripRules.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="connLocalPort.Width" type="System.Int32, mscorlib">
-    <value>59</value>
-  </data>
-  <data name="toolStripSeparator8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 25</value>
-  </data>
-  <data name="tabPanel.ItemSize" type="System.Drawing.Size, System.Drawing">
-    <value>96, 22</value>
-  </data>
-  <data name="slow5SecondsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>136, 22</value>
-  </data>
-  <data name="&gt;&gt;wFNRulesOnlyToolStripMenuItem.Name" xml:space="preserve">
-    <value>wFNRulesOnlyToolStripMenuItem</value>
+  <data name="&gt;&gt;btnTRules.Name" xml:space="preserve">
+    <value>btnTRules</value>
   </data>
   <data name="&gt;&gt;btnTRules.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;tabConnections.Parent" xml:space="preserve">
-    <value>tabPanel</value>
+  <data name="&gt;&gt;btnTRules.Parent" xml:space="preserve">
+    <value>pnlOverTabTop</value>
   </data>
-  <data name="colProtocol.Width" type="System.Int32, mscorlib">
-    <value>50</value>
+  <data name="&gt;&gt;btnTRules.ZOrder" xml:space="preserve">
+    <value>3</value>
   </data>
-  <data name="btnERemove.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="&gt;&gt;toolStripConnections.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;connCreaTime.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="lblLog.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Bottom</value>
-  </data>
-  <data name="&gt;&gt;colREnabled.Name" xml:space="preserve">
-    <value>colREnabled</value>
-  </data>
-  <data name="&gt;&gt;colRSvc.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="colPort.Width" type="System.Int32, mscorlib">
-    <value>53</value>
-  </data>
-  <data name="colTarget.Width" type="System.Int32, mscorlib">
-    <value>64</value>
-  </data>
-  <data name="fast1sToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>136, 22</value>
-  </data>
-  <data name="txtFilter.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 25</value>
-  </data>
-  <data name="&gt;&gt;colProtocol.Name" xml:space="preserve">
-    <value>colProtocol</value>
-  </data>
-  <data name="lblExceptions.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 62</value>
-  </data>
-  <data name="&gt;&gt;colIcon.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewImageColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnConnTrack.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripLabel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnRShow.Size" type="System.Drawing.Size, System.Drawing">
-    <value>80, 22</value>
-  </data>
-  <data name="&gt;&gt;lstConnections.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="colIcon.HeaderText" xml:space="preserve">
-    <value />
-  </data>
-  <data name="&gt;&gt;btnRRefresh.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnUpdate.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+  <data name="btnTLog.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
-  <data name="connOwner.Text" xml:space="preserve">
-    <value>Owner</value>
+  <data name="btnTLog.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAYAAAAmlE46AAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
+        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAGBSURBVDhP7ZNLLwNRGIbn3/VvsBTUrpl0IaG1shFC
+        FFFUUwuUpGlLQ3rXDkNFDVrTC63QMXrMoImW1zfj8gOsLCzO6skz8z7JOZzVHeOH1g70+filFszfsUxV
+        Z9J9m8mPYEUGlm+8snRFYwZbTMmac0PU++ajvCE2SQSJIAgSQSJIBIkgESSajEQ4/SJIbHLWhbg6vC7C
+        nZQRlhQI1884f3hDWQdkDfSRDjJXTybzpEsY2TxEnzumchbbrMfuTWIscARvqohgro5EUYVQYciWGeKF
+        ewSPa/Cli5gM5TDoS8Jic3m4/plIzbEqwLUjwS9eI1ZQkbt5wYXaQYHOyW0Le6UHhEj2xM8w6s9gYDpQ
+        o6mJz8aEjNBpA1madUbzPhvfvxp1amxgKVWCw29ONRuVXzQq/41/q7F3Ltr8aSRRIPGc/lSmPkOWlLZ5
+        8Q323dgzu9vkuifCPL+c0se38tqKUGXbkkLPSGdivcX2ay2WLGksLDWYwaYikmb3pfWu8SD/ATA34Fdn
+        o+IJAAAAAElFTkSuQmCC
+</value>
   </data>
-  <data name="btnDonate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="btnTLog.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="btnTLog.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;gridRules.Parent" xml:space="preserve">
-    <value>tabRules</value>
-  </data>
-  <data name="&gt;&gt;lblConnections.Parent" xml:space="preserve">
-    <value>tabConnections</value>
-  </data>
-  <data name="&gt;&gt;connRemotePort.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="lblLog.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 384</value>
-  </data>
-  <data name="btnTExceptions.Location" type="System.Drawing.Point, System.Drawing">
-    <value>229, 5</value>
-  </data>
-  <data name="&gt;&gt;timerTrk.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;colExcIcon.Name" xml:space="preserve">
-    <value>colExcIcon</value>
-  </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>OptionsForm</value>
-  </data>
-  <data name="&gt;&gt;tabPanel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="toolStripSeparator3.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;tabRules.Parent" xml:space="preserve">
-    <value>tabPanel</value>
-  </data>
-  <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 8.25pt</value>
-  </data>
-  <data name="colRPort.HeaderText" xml:space="preserve">
-    <value>Rem. port</value>
-  </data>
-  <data name="tabExceptions.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="lblRules.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Bottom</value>
-  </data>
-  <data name="connLocalAddr.Width" type="System.Int32, mscorlib">
-    <value>107</value>
-  </data>
-  <data name="&gt;&gt;colPort.Name" xml:space="preserve">
-    <value>colPort</value>
-  </data>
-  <data name="&gt;&gt;colRAction.Name" xml:space="preserve">
-    <value>colRAction</value>
-  </data>
-  <data name="tabConnections.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 3, 5, 3</value>
-  </data>
-  <data name="connLocalPort.Text" xml:space="preserve">
-    <value>Local port</value>
   </data>
   <data name="btnTLog.Location" type="System.Drawing.Point, System.Drawing">
     <value>341, 5</value>
   </data>
-  <data name="&gt;&gt;slow5SecondsToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="connProtocol.Text" xml:space="preserve">
-    <value>Protocol</value>
-  </data>
-  <data name="&gt;&gt;colRTarget.Name" xml:space="preserve">
-    <value>colRTarget</value>
-  </data>
-  <data name="toolStripLog.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="btnLLocate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>62, 22</value>
-  </data>
-  <data name="lblLog.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="lblExceptions.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;btnUpdate.Name" xml:space="preserve">
-    <value>btnUpdate</value>
-  </data>
-  <data name="&gt;&gt;tabLog.Parent" xml:space="preserve">
-    <value>tabPanel</value>
-  </data>
-  <data name="&gt;&gt;toolStripLabel1.Name" xml:space="preserve">
-    <value>toolStripLabel1</value>
-  </data>
-  <data name="toolStripRules.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;connProtocol.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="gridLog.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripExceptions.Name" xml:space="preserve">
-    <value>toolStripExceptions</value>
-  </data>
-  <data name="&gt;&gt;btnLLocate.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="tabLog.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="&gt;&gt;tabPanel.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="gridLog.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="colRName.MinimumWidth" type="System.Int32, mscorlib">
-    <value>200</value>
-  </data>
-  <data name="&gt;&gt;colExcIcon.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewImageColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="lblRules.Text" xml:space="preserve">
-    <value>The grid above lists all Windows firewall rules. The ones prefixed by "Custom rules" have been created by Windows Firewall Notifier. You can not manually create rules, but you can remove useless ones if required.</value>
-  </data>
-  <data name="btnELocate.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="btnERemove.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
-    <value>toolStripSeparator2</value>
-  </data>
-  <data name="toolStripRules.Text" xml:space="preserve">
-    <value>toolStrip1</value>
-  </data>
-  <data name="&gt;&gt;gridExceptions.Name" xml:space="preserve">
-    <value>gridExceptions</value>
-  </data>
-  <data name="tabRules.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;tabConnections.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;connLocalAddr.Name" xml:space="preserve">
-    <value>connLocalAddr</value>
-  </data>
-  <data name="&gt;&gt;lblExceptions.Name" xml:space="preserve">
-    <value>lblExceptions</value>
-  </data>
-  <data name="pnlOverTabTop.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
-  </data>
-  <data name="&gt;&gt;colRLocalport.Name" xml:space="preserve">
-    <value>colRLocalport</value>
-  </data>
-  <data name="btnOptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAIySURBVDhPhZFLbxJRGIa/FStjf4H/w5UiNLFqJI2L
-        tl57Sbsw6aJJoy64NG2Nl0SqpYAmRkUtgh3EC5ABTNNSQrVC01oN0vTiEGunBVpGYCgX6ec5Y+LCBbN4
-        cibne5/3O8nAgCsGBibWqH356YN+IiromfqQXIzkNdQDcqEk7L1bSOL3nQJy9ciIyC79QIMrWtExURVc
-        c3xkxyMrWKohitUaFupA5+V9RJq/Sjy4Yp/lZxJb0mC3WJFFrO5j4MsGUg/6xyPp8PIW/ir9xoxYkSVX
-        rklP738eSUPfs3BqOsFjdq+KqUJZFoEs8S0mse9pOAW9T0KpyfhPqZXPlWTZKVbx7TyHvY9DKbj8cCod
-        /LqB24USbghFWeh2d3QdqQc9DyZ57yKHm/kScllRFp7kmLlVpB50WAKsObgkyUnSzGX/sr4r4lqmgGv0
-        /0piUZrz+TKa/J+RekQOqroswYot9A2jXAZjyYx0JrZzUgE96R1lnmCPLGO39X210xJQQfuYHy6MsprW
-        EW+sfYwVeu4HhS5rIK91zuJUYpNsFnH41Rx2mP1FgkBzJN9MPUm+aGLh3D2f4uxdb0PbiLehxeg5dPqG
-        29Rq9NRsM3F8NB1HzU23reWO5+D5UZ/iEnH+l/9BCqD51ms4dd11vGmIWei2+qm8enKYUZy5/QbajF7o
-        NAfqy2Q7NA1OHDimdww2DjhFtcFxVGVwgNrgpMXy8okhBogISt2Lw0qdXU0g33Y4orXDH0kKyyWpXec/
-        AAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="&gt;&gt;toolStripLog.Parent" xml:space="preserve">
-    <value>tabLog</value>
-  </data>
-  <data name="toolStripConnections.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 3</value>
-  </data>
-  <data name="btnUpdate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1
-        MAAA6mAAADqYAAAXb5JfxUYAAAAJcEhZcwAACw4AAAsOAUC+4UEAAAKASURBVDhPbc1LTBNRFAbgS2KM
-        iB1KbZERLCi0aoIbITS0RW0tIiotJBCUVkWNAQRjlIRogtGFceVj6dK4cOMGN8aEhTEmRtm4wJ2rQmcE
-        +qDlaQemHP87046aOMk3c+495z/DVvvs7Fd/DcvdcDB1CAYdbGvEuYtuHhzLDTuL4DDq/q1hp94HPssz
-        PKu91i9Va0Ho3Ryo86uDde0YJJxf4TsFkjrgEHG+Aof4LM/oC8J2Db9Qrh14CgRx5ep+UsIVpEREQp3D
-        nZTvHdXC+VyhCGHbOL6TaxE7rYUhUk3Ki1uUfX6d1vqqcOZ3dsLMM8w+WI3YncBYuquSLfVUBZe6q6gg
-        02Gh1fEu0h5VpZU7AcoEbUYfZGRsme5KxpLnKkpSITG0GBLTQFzylEArjy7rC/Asj/dQsq1U6+V9TAXF
-        fcmzFdv5gsco6G8Jv4mWH4b19IZCS3e7KBEQ/plBLgktLH66vBgmgAoWjpdQ5v4FfYGSpfRoBy34TEYf
-        NuNt5SOJ9j1FbC5gbZhvtU0DGXxmSvTW08bn95T9MEHxzlqa91v+9FttKjyZO2kV2E//7jGYAxVI4+Ms
-        lL53nlJDAZK9Jtxb9Z4uCz/AxeQTFia3WI7IxyzLQFysaQelbncSLcYp932K5oMOkjyC1st7C9vwI8Yk
-        bxmTPGWj+FJBrKmYFi42kzr9hbLvXpMc2Esxt2D0IR7zmGukljLGZt1mrhG88AZI4zKR3FZDkk/UauPe
-        bY5AEGrBWMBmm81sxlX6EqLwbcYlULRhJ0UbSwjndfgEm1DPZws57TXTXMqiTQLnAiu4YR0GYBK+Au97
-        QOQ1z/xvQUExnMnXleDN1wZ9gZn9BqQO/mFSLqJfAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="tabLog.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="colRProfile.HeaderText" xml:space="preserve">
-    <value>Profile</value>
-  </data>
-  <data name="&gt;&gt;btnOptions.ZOrder" xml:space="preserve">
-    <value>5</value>
+  <data name="btnTLog.Size" type="System.Drawing.Size, System.Drawing">
+    <value>106, 29</value>
   </data>
   <data name="btnTLog.TabIndex" type="System.Int32, mscorlib">
     <value>21</value>
   </data>
-  <data name="toolStripLabel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>52, 22</value>
+  <data name="btnTLog.Text" xml:space="preserve">
+    <value>   Log</value>
   </data>
-  <data name="btnTExceptions.Size" type="System.Drawing.Size, System.Drawing">
-    <value>106, 29</value>
-  </data>
-  <data name="&gt;&gt;btnRShow.Name" xml:space="preserve">
-    <value>btnRShow</value>
-  </data>
-  <data name="connProtocol.Width" type="System.Int32, mscorlib">
-    <value>52</value>
-  </data>
-  <data name="&gt;&gt;wSHRulesOnlyToolStripMenuItem.Name" xml:space="preserve">
-    <value>wSHRulesOnlyToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;colRPath.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="wSHRulesOnlyToolStripMenuItem.Text" xml:space="preserve">
-    <value>WSH rules (Windows hidden rules)</value>
-  </data>
-  <data name="&gt;&gt;btnELocate.Name" xml:space="preserve">
-    <value>btnELocate</value>
-  </data>
-  <data name="&gt;&gt;colExcTargetPort.Name" xml:space="preserve">
-    <value>colExcTargetPort</value>
-  </data>
-  <data name="btnOptions.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="colPort.HeaderText" xml:space="preserve">
-    <value>Port</value>
-  </data>
-  <data name="tabLog.Text" xml:space="preserve">
-    <value>Log</value>
-  </data>
-  <data name="&gt;&gt;btnRLocate.Name" xml:space="preserve">
-    <value>btnRLocate</value>
-  </data>
-  <data name="&gt;&gt;colPath.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;colRSvc.Name" xml:space="preserve">
-    <value>colRSvc</value>
-  </data>
-  <data name="lblConnections.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="imgLstConn.ImageSize" type="System.Drawing.Size, System.Drawing">
-    <value>18, 18</value>
+  <data name="btnTLog.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
+    <value>ImageBeforeText</value>
   </data>
   <data name="&gt;&gt;btnTLog.Name" xml:space="preserve">
     <value>btnTLog</value>
   </data>
-  <data name="&gt;&gt;colRPort.Name" xml:space="preserve">
-    <value>colRPort</value>
+  <data name="&gt;&gt;btnTLog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnTLog.Parent" xml:space="preserve">
+    <value>pnlOverTabTop</value>
+  </data>
+  <data name="&gt;&gt;btnTLog.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="lblRules.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="lblRules.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblRules.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 384</value>
+  </data>
+  <data name="lblRules.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="lblRules.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 38</value>
+  </data>
+  <data name="lblRules.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="lblRules.Text" xml:space="preserve">
+    <value>The grid above lists all Windows firewall rules. The ones prefixed by "Custom rules" have been created by Windows Firewall Notifier. You can not manually create rules, but you can remove useless ones if required.</value>
+  </data>
+  <data name="&gt;&gt;lblRules.Name" xml:space="preserve">
+    <value>lblRules</value>
+  </data>
+  <data name="&gt;&gt;lblRules.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblRules.Parent" xml:space="preserve">
+    <value>tabRules</value>
+  </data>
+  <data name="&gt;&gt;lblRules.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="lblExceptions.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="lblExceptions.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblExceptions.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 360</value>
+  </data>
+  <data name="lblExceptions.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="lblExceptions.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 62</value>
+  </data>
+  <data name="lblExceptions.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="lblExceptions.Text" xml:space="preserve">
+    <value>The Exceptions tab lists all programs you decided to always block when not using the "Create a blocking rule instead of an exceptions list" setting (see Notifications Settings).
+Those "exceptions" are used by Windows Firewall Notifier to filter which notifications have still to be shown; this list can be modified if needed.
+No firewall rule is created nor removed when you update this list.</value>
+  </data>
+  <data name="&gt;&gt;lblExceptions.Name" xml:space="preserve">
+    <value>lblExceptions</value>
+  </data>
+  <data name="&gt;&gt;lblExceptions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblExceptions.Parent" xml:space="preserve">
+    <value>tabExceptions</value>
+  </data>
+  <data name="&gt;&gt;lblExceptions.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="lblLog.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="lblLog.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblLog.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 384</value>
+  </data>
+  <data name="lblLog.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="lblLog.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="lblLog.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 38</value>
+  </data>
+  <data name="lblLog.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="lblLog.Text" xml:space="preserve">
+    <value>This page displays a list of the latest blocked outgoing connections (for performance reasons, the list has been limited to 500 items). If you need a complete list, please use the Windows events log viewer.</value>
+  </data>
+  <data name="&gt;&gt;lblLog.Name" xml:space="preserve">
+    <value>lblLog</value>
+  </data>
+  <data name="&gt;&gt;lblLog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblLog.Parent" xml:space="preserve">
+    <value>tabLog</value>
+  </data>
+  <data name="&gt;&gt;lblLog.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="tabPanel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="&gt;&gt;tabConnections.Name" xml:space="preserve">
+    <value>tabConnections</value>
+  </data>
+  <data name="&gt;&gt;tabConnections.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabConnections.Parent" xml:space="preserve">
+    <value>tabPanel</value>
+  </data>
+  <data name="&gt;&gt;tabConnections.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tabRules.Name" xml:space="preserve">
+    <value>tabRules</value>
+  </data>
+  <data name="&gt;&gt;tabRules.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabRules.Parent" xml:space="preserve">
+    <value>tabPanel</value>
+  </data>
+  <data name="&gt;&gt;tabRules.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;tabExceptions.Name" xml:space="preserve">
+    <value>tabExceptions</value>
+  </data>
+  <data name="&gt;&gt;tabExceptions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabExceptions.Parent" xml:space="preserve">
+    <value>tabPanel</value>
+  </data>
+  <data name="&gt;&gt;tabExceptions.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;tabLog.Name" xml:space="preserve">
+    <value>tabLog</value>
+  </data>
+  <data name="&gt;&gt;tabLog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabLog.Parent" xml:space="preserve">
+    <value>tabPanel</value>
+  </data>
+  <data name="&gt;&gt;tabLog.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="tabPanel.ItemSize" type="System.Drawing.Size, System.Drawing">
+    <value>96, 22</value>
+  </data>
+  <data name="tabPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>-7, 12</value>
+  </data>
+  <data name="tabPanel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="tabPanel.Padding" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="tabPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>847, 455</value>
+  </data>
+  <data name="tabPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;tabPanel.Name" xml:space="preserve">
+    <value>tabPanel</value>
+  </data>
+  <data name="&gt;&gt;tabPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;tabPanel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <metadata name="toolStripConnections.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>623, 17</value>
+  </metadata>
+  <data name="&gt;&gt;lstConnections.Name" xml:space="preserve">
+    <value>lstConnections</value>
+  </data>
+  <data name="&gt;&gt;lstConnections.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ListView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lstConnections.Parent" xml:space="preserve">
+    <value>tabConnections</value>
+  </data>
+  <data name="&gt;&gt;lstConnections.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;toolStripConnections.Name" xml:space="preserve">
+    <value>toolStripConnections</value>
+  </data>
+  <data name="&gt;&gt;toolStripConnections.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripConnections.Parent" xml:space="preserve">
+    <value>tabConnections</value>
+  </data>
+  <data name="&gt;&gt;toolStripConnections.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;lblConnections.Name" xml:space="preserve">
+    <value>lblConnections</value>
+  </data>
+  <data name="&gt;&gt;lblConnections.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblConnections.Parent" xml:space="preserve">
+    <value>tabConnections</value>
+  </data>
+  <data name="&gt;&gt;lblConnections.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="tabConnections.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 26</value>
+  </data>
+  <data name="tabConnections.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 3, 5, 3</value>
+  </data>
+  <data name="tabConnections.Size" type="System.Drawing.Size, System.Drawing">
+    <value>839, 425</value>
+  </data>
+  <data name="tabConnections.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="tabConnections.Text" xml:space="preserve">
+    <value>Connections</value>
+  </data>
+  <data name="&gt;&gt;tabConnections.Name" xml:space="preserve">
+    <value>tabConnections</value>
+  </data>
+  <data name="&gt;&gt;tabConnections.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabConnections.Parent" xml:space="preserve">
+    <value>tabPanel</value>
+  </data>
+  <data name="&gt;&gt;tabConnections.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="connOwner.Text" xml:space="preserve">
+    <value>Owner</value>
+  </data>
+  <data name="connOwner.Width" type="System.Int32, mscorlib">
+    <value>84</value>
+  </data>
+  <data name="connProtocol.Text" xml:space="preserve">
+    <value>Protocol</value>
+  </data>
+  <data name="connProtocol.Width" type="System.Int32, mscorlib">
+    <value>52</value>
+  </data>
+  <data name="connLocalAddr.Text" xml:space="preserve">
+    <value>Local address</value>
+  </data>
+  <data name="connLocalAddr.Width" type="System.Int32, mscorlib">
+    <value>107</value>
+  </data>
+  <data name="connLocalPort.Text" xml:space="preserve">
+    <value>Local port</value>
+  </data>
+  <data name="connLocalPort.Width" type="System.Int32, mscorlib">
+    <value>59</value>
+  </data>
+  <data name="connRemoteAddr.Text" xml:space="preserve">
+    <value>Remote address</value>
+  </data>
+  <data name="connRemoteAddr.Width" type="System.Int32, mscorlib">
+    <value>106</value>
+  </data>
+  <data name="connRemotePort.Text" xml:space="preserve">
+    <value>Remote port</value>
+  </data>
+  <data name="connRemotePort.Width" type="System.Int32, mscorlib">
+    <value>75</value>
+  </data>
+  <data name="connState.Text" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="connState.Width" type="System.Int32, mscorlib">
+    <value>94</value>
+  </data>
+  <data name="connCreaTime.Text" xml:space="preserve">
+    <value>Creation time</value>
+  </data>
+  <data name="connCreaTime.Width" type="System.Int32, mscorlib">
+    <value>115</value>
+  </data>
+  <data name="lstConnections.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="lstConnections.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 28</value>
+  </data>
+  <data name="lstConnections.Size" type="System.Drawing.Size, System.Drawing">
+    <value>829, 356</value>
+  </data>
+  <metadata name="imgLstConn.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>789, 17</value>
+  </metadata>
+  <data name="imgLstConn.ImageSize" type="System.Drawing.Size, System.Drawing">
+    <value>18, 18</value>
+  </data>
+  <data name="lstConnections.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;lstConnections.Name" xml:space="preserve">
+    <value>lstConnections</value>
+  </data>
+  <data name="&gt;&gt;lstConnections.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ListView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lstConnections.Parent" xml:space="preserve">
+    <value>tabConnections</value>
+  </data>
+  <data name="&gt;&gt;lstConnections.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="toolStripConnections.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>623, 17</value>
+  </metadata>
+  <data name="toolStripConnections.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 3</value>
+  </data>
+  <data name="toolStripConnections.Size" type="System.Drawing.Size, System.Drawing">
+    <value>829, 25</value>
+  </data>
+  <data name="toolStripConnections.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="toolStripConnections.Text" xml:space="preserve">
+    <value>toolStrip1</value>
+  </data>
+  <data name="&gt;&gt;toolStripConnections.Name" xml:space="preserve">
+    <value>toolStripConnections</value>
+  </data>
+  <data name="&gt;&gt;toolStripConnections.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripConnections.Parent" xml:space="preserve">
+    <value>tabConnections</value>
+  </data>
+  <data name="&gt;&gt;toolStripConnections.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="btnConnTrack.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="btnConnTrack.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKqSURBVDhPZZJbSNNhGMa/f6VzkaBFRhRRXo1Iuylv7KIC
+        qwsLuqib6KaDh9rWNltOpw4PhULQRVBEB8IuggjMzGW6Q/pX58xNXaZJQTd1Yah9HVgHoqf3/Zbyrz54
+        2M1+z/v83/cRFxPFlpbEfn/L+D7ZPFYofaOkeIH0xTZLn24h5co6fa2s0XNktZ4tq/QM6SG5e01+V1hY
+        REviQJBgNI/txoXRHTgfL0DDSB5qohtRG92Auuh61AytQXUkG56BTHj6zTinm3C2dxmcYS0o6sf3JFNw
+        IZpi29AQy0PTyBZcfl6E+uFceCJZBK8keAUqDbArvARlXVpScGyerOCRfHhp6s2pw+D3+mMfvJFVcPeb
+        1GR3X/oi7AhpsAeEFPzNHLsxlo/6ZxZURVaj9eURZcDvlQzR5Ew4e4WCK54upehkECSDHjaghTXGtirY
+        R5ErB7Nwe+qQgn/im/qdnu8i0AxbUBhhWB+yAW17Aa6NroN7YDluTR5U4A98VuI3Od8JZ8gEW0Ck4CcC
+        p5QBn2p4k4K9kRxU6Gm48aKYEJ4/vyjgF6alH46AGacZfixQljKgO6tT5ahTufo0XJ/YS3//iiRmFsV5
+        Jj90wN5tRjnB5f4/Bqokhjvzsq5NFNH8T/iCd6S3ZJZEYvYexTahjEAFPxIoYQPVMAWn7nwmLHA1sYvm
+        zZHFGzKSGJu9S7EzUNJpgDsEjraTAdeTJzPMd+ZNX0nsxHe8J81gdO4OrN3/wyfbyeABGahuGxpmpS1f
+        im9XcHyuFTaCSw2xSwmm6DjBBm1k4AmYk8Z6OsIaXKE0NAzmwtGT/hfMkxfg421KSeHW04LGenJJbHTn
+        Uj7TPzDHNsA41iaCwhVOtzhDmt8e0iR3m+vJDeOS8JlYvG1eGH8zx2aRgb/kvrD8BjUXe3yWT+HcAAAA
+        AElFTkSuQmCC
+</value>
+  </data>
+  <data name="btnConnTrack.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="btnConnTrack.Size" type="System.Drawing.Size, System.Drawing">
+    <value>97, 22</value>
+  </data>
+  <data name="btnConnTrack.Text" xml:space="preserve">
+    <value>Start tracking</value>
+  </data>
+  <data name="btnConnStop.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAALuSURBVDhPTZJLTFNREIZPEaUoJqIBg7oRFzYudIHBBa5c
+        GGPUGPcIFgqUR4FCS8HSSkCFqEs37owxhkcoiFSU3pbmUmjBtjw0FhTKw0fiwlwDLS7U3zmnJXqSSU4m
+        8/0zZ87P7s9d0nTNXXZ2zV5QOmcKFHuYIpSv2IMnFLusochVbHKOYpWzlRY5U2mW1YqFwuRNcxo9TMO6
+        5q5IBKNz5hzuhM+iI3gatunjsE3lwk5hCxxB82QmTD41msZ3wzKeDrOchkZvKuo9Kom1zZ6PJ+ACgvPQ
+        Gc7Hw/mLuBc+A2vgEG76s3D3jQYPQnmwTuyHSd4lYKMnBRUjqjjjY293tlLHgagF/KxvhGCZ2Aezbw/W
+        NqZFrntBi2o3E3CdWwWDiymMv/l2KB/twZOw+HPgXL0lir9tLZJABszjarpHRM7xwQC9i9HoJCCRwCgX
+        oIW1B0+hbVqDpskDGFppFsVf4/MCNsmpdJ8Vub7FSlS8Ztswqp9zAdo2h/nCTL69GIw2iuIv8ZCAG7wp
+        +BwLiVzPQjnKR1gCfsVQKQT4V00dRWvgMBqooyNaK4o/xacEXO9hWI8FRK47ooPOmYRfMlQkBOif6aus
+        /mwY5R3oX64UxWsxH4xjNC4tbZXu/DyLlKB0mKGKptCTkBAQJvEfRAv9dZ2XoW+pjEp/YyXmFbBBYojS
+        neeevi+GdigJv2Ao4wLCYQRbfBmopY49H7VUvIXlmCTgGnrv0qZEuZ948u46igeTMAkVDpIAt6eFltdE
+        Dquhjt0k8AebWI67BFxF712KjZLAphAociRgHQkVDpCA8HbSnjXU8XHkGn7hO97+6BWwnpY1r/SK3KOZ
+        qyjqF6OjlAs4SMDiSo//83YKTN50dEweQ4s3SyyLb9ssZaF1LBdVw2rRmcMlNAlFnJnkndK2t7k9a8lp
+        +mRnDvOF6ajjjYEE+B8MrYNJzOjZpal3q5wGt0rh3ub25A7jJuHfxINvmy+Mv5mPzYMEnGV9TPMX+kqD
+        b7OE7soAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="btnConnStop.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="btnConnStop.Size" type="System.Drawing.Size, System.Drawing">
+    <value>97, 22</value>
+  </data>
+  <data name="btnConnStop.Text" xml:space="preserve">
+    <value>Stop tracking</value>
+  </data>
+  <data name="stripConnUpdSpeed.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKwSURBVDhPfZL7S5NRHMZfuvwY9Hf4HzQLKcjol4IiEAJD
+        ChGMrMw2LzlLFlGwoS0sS9OtsUsXsc1bxbw029Vtlpc53XQ63Zzb3P32Tp/O3rZAyR74cN73e87zfZ/z
+        nkPtF5eLQ/VS3SmO1HCvUWZ40iDVN7JlhsvcPsvx/JJ/q15uKGlUGMc6VHP0gGUNEzYvRn660fvdDu5H
+        k7NBrq/KL90rjlx/reWzNWNc3kIkTWMrloZ5JQB6F4hnsljyRfBaPQ+2VPvyikJxOG+jKLZEe5Lbb844
+        tqJIZHcRJw6zKwD+4DRplMV2kkaM3kEgkUH3uA11Em0LY6x8ZTp6/92kzrjsRzSzA388g3AqCxN5f6ay
+        IpTMMrUcIVJfDyXBletStWJdEVXTO3lO+GUGwWSGieojbKdo6Bw+8PqMpE4ztQK5JAPWVdzu0Qio6q5x
+        nsriIl1peKMphpxBY/egWaFFcgdMogK5udmNEO72aKaom11jonGbB754GuvhJIM/QWNiYQNlAhUEA2bw
+        VVPgK/8wvRrEaigBtuTHJlXZqRap59bhIV/MFXO4SYN5bwhdozNoH7LgOYMZwmELptcCWA7GUCvW+KiK
+        F8M8mW4JG8TsJEVnMA5nIIaV7Tg8ZI/efbgjSRjIcVZ1qqeo8raR0ocf9IxpKRDFov//rJFUYs0CyttH
+        BFQJd/RImUCpVVldcJHINnIZDsJBElndQVQLB5NX2waLmLO+9LS/uEI4nJ6we5kE85sRzHrDf5nbDJNU
+        Mea5STaJi4/7HjDGgkofKcrL+Mq0TGvHL08IDmYbcWa0+aL4OuvGrW41zrYoOvZcz4JOc6WsM82Sb9eF
+        Q2neJx3ayd99pjSh5q0a51vfL5Y0SW7klx4sFqf3BIstusPiiFuLOaJ6Ml5g1b05lp/Oi6J+A94Ght5l
+        6g1AAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="stripConnUpdSpeed.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="stripConnUpdSpeed.Size" type="System.Drawing.Size, System.Drawing">
+    <value>97, 22</value>
+  </data>
+  <data name="stripConnUpdSpeed.Text" xml:space="preserve">
+    <value>Update rate</value>
+  </data>
+  <data name="slow5SecondsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>136, 22</value>
+  </data>
+  <data name="slow5SecondsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Slow (5s)</value>
+  </data>
+  <data name="normal2sToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>136, 22</value>
+  </data>
+  <data name="normal2sToolStripMenuItem.Text" xml:space="preserve">
+    <value>Normal (1s)</value>
+  </data>
+  <data name="fast1sToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>136, 22</value>
+  </data>
+  <data name="fast1sToolStripMenuItem.Text" xml:space="preserve">
+    <value>Fast (0.5s)</value>
+  </data>
+  <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>6, 25</value>
+  </data>
+  <data name="toolStripSeparator3.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="btnConnFindR.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="btnConnFindR.Size" type="System.Drawing.Size, System.Drawing">
+    <value>57, 22</value>
+  </data>
+  <data name="btnConnFindR.Text" xml:space="preserve">
+    <value>Find rule</value>
+  </data>
+  <data name="btnConnFindR.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="lblConnections.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="lblConnections.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblConnections.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 384</value>
+  </data>
+  <data name="lblConnections.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="lblConnections.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="lblConnections.Size" type="System.Drawing.Size, System.Drawing">
+    <value>829, 38</value>
+  </data>
+  <data name="lblConnections.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="lblConnections.Text" xml:space="preserve">
+    <value>This screen displays all active connections on this computer, updated every second (by default).
+Closed connections (in orange) will remain displayed a few seconds before disappearing.</value>
+  </data>
+  <data name="&gt;&gt;lblConnections.Name" xml:space="preserve">
+    <value>lblConnections</value>
+  </data>
+  <data name="&gt;&gt;lblConnections.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblConnections.Parent" xml:space="preserve">
+    <value>tabConnections</value>
+  </data>
+  <data name="&gt;&gt;lblConnections.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <metadata name="toolStripRules.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>122, 17</value>
+  </metadata>
+  <data name="&gt;&gt;gridRules.Name" xml:space="preserve">
+    <value>gridRules</value>
+  </data>
+  <data name="&gt;&gt;gridRules.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gridRules.Parent" xml:space="preserve">
+    <value>tabRules</value>
+  </data>
+  <data name="&gt;&gt;gridRules.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;toolStripRules.Name" xml:space="preserve">
+    <value>toolStripRules</value>
+  </data>
+  <data name="&gt;&gt;toolStripRules.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripRules.Parent" xml:space="preserve">
+    <value>tabRules</value>
+  </data>
+  <data name="&gt;&gt;toolStripRules.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tabRules.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 26</value>
+  </data>
+  <data name="tabRules.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabRules.Size" type="System.Drawing.Size, System.Drawing">
+    <value>839, 425</value>
+  </data>
+  <data name="tabRules.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="tabRules.Text" xml:space="preserve">
+    <value>Rules</value>
+  </data>
+  <data name="&gt;&gt;tabRules.Name" xml:space="preserve">
+    <value>tabRules</value>
+  </data>
+  <data name="&gt;&gt;tabRules.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabRules.Parent" xml:space="preserve">
+    <value>tabPanel</value>
+  </data>
+  <data name="&gt;&gt;tabRules.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <metadata name="colRName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colRIcon.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colRPath.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colRSvc.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colRDirection.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colRProfile.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colRAction.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colRLocalport.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colRTarget.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colRPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colREnabled.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="gridRules.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="gridRules.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 28</value>
+  </data>
+  <data name="gridRules.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>30, 30, 3, 3</value>
+  </data>
+  <data name="gridRules.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 356</value>
+  </data>
+  <data name="gridRules.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;gridRules.Name" xml:space="preserve">
+    <value>gridRules</value>
+  </data>
+  <data name="&gt;&gt;gridRules.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gridRules.Parent" xml:space="preserve">
+    <value>tabRules</value>
+  </data>
+  <data name="&gt;&gt;gridRules.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="colRName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colRName.HeaderText" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="colRName.MinimumWidth" type="System.Int32, mscorlib">
+    <value>200</value>
+  </data>
+  <metadata name="colRIcon.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colRIcon.HeaderText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="colRIcon.MinimumWidth" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <data name="colRIcon.Width" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <metadata name="colRPath.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colRPath.HeaderText" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="colRPath.MinimumWidth" type="System.Int32, mscorlib">
+    <value>170</value>
+  </data>
+  <metadata name="colRSvc.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colRSvc.HeaderText" xml:space="preserve">
+    <value>Service</value>
+  </data>
+  <data name="colRSvc.Width" type="System.Int32, mscorlib">
+    <value>67</value>
+  </data>
+  <metadata name="colRDirection.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colRDirection.HeaderText" xml:space="preserve">
+    <value>Dir.</value>
+  </data>
+  <data name="colRDirection.MinimumWidth" type="System.Int32, mscorlib">
+    <value>60</value>
+  </data>
+  <data name="colRDirection.Width" type="System.Int32, mscorlib">
+    <value>60</value>
+  </data>
+  <metadata name="colRProfile.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colRProfile.HeaderText" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="colRProfile.Width" type="System.Int32, mscorlib">
+    <value>65</value>
+  </data>
+  <metadata name="colRAction.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colRAction.HeaderText" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="colRAction.Width" type="System.Int32, mscorlib">
+    <value>65</value>
+  </data>
+  <metadata name="colRLocalport.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colRLocalport.HeaderText" xml:space="preserve">
+    <value>Loc. port</value>
+  </data>
+  <data name="colRLocalport.Width" type="System.Int32, mscorlib">
+    <value>75</value>
+  </data>
+  <metadata name="colRTarget.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colRTarget.HeaderText" xml:space="preserve">
+    <value>Target</value>
+  </data>
+  <metadata name="colRPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colRPort.HeaderText" xml:space="preserve">
+    <value>Rem. port</value>
+  </data>
+  <data name="colRPort.Width" type="System.Int32, mscorlib">
+    <value>80</value>
+  </data>
+  <metadata name="colREnabled.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colREnabled.HeaderText" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="colREnabled.Width" type="System.Int32, mscorlib">
+    <value>55</value>
+  </data>
+  <metadata name="toolStripRules.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>122, 17</value>
+  </metadata>
+  <data name="toolStripRules.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="toolStripRules.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 25</value>
+  </data>
+  <data name="toolStripRules.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="toolStripRules.Text" xml:space="preserve">
+    <value>toolStrip1</value>
+  </data>
+  <data name="&gt;&gt;toolStripRules.Name" xml:space="preserve">
+    <value>toolStripRules</value>
+  </data>
+  <data name="&gt;&gt;toolStripRules.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripRules.Parent" xml:space="preserve">
+    <value>tabRules</value>
+  </data>
+  <data name="&gt;&gt;toolStripRules.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="btnRDelete.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJlSURBVDhPhZFLTBNBHMYnRA9gt9vSFiggiKGpehToiwIB
+        wyNIqEITIaDGIBACHIwcNBA9GBPCVRMOGg9iPHnxxEEP3uzRg8ZEg31tu21paZdHoVD6OTu7iUiIfskv
+        85/s75tMZsnxFGbrtYUZy0Bh1jKPGetiYdoyR/cteEyKVOXk5KcsEwfjdWt0xVG279Qe5Cctn/an6ttU
+        9U/kU/fG6pZzY+fxL6SRyn263lZrSrZHaxZ2RmvBGKnBznC1Mp+wT3nN+5vDZ92sKHkrrZk+Q1byVkEa
+        rEJmwAzpxjlk+o1sznhMkIbqkLleAclbTanChtfsw0TDabLhMS9RIJPq1SP78hEOfn7B5v0epDqKsfvu
+        GfL+r5AmHdi4amQecz3mbpLoM/qSfeWQWe/UIvtmCXLysSB2V1fYXNjLIj3uQLJbzzzm9pY/JZGesmii
+        pwyMbhMSXSZk379gJTmH6XWk5zxIdPDUKVc8hddE6OTFeKcJCkaI7mJsLS+oVXqDaADJ0cuItWlUR0G8
+        YlwhkXajT2ynJUq0WQNpcZqVCkkROd8HNufXviE+eBHRVp55zG030Gu3li5RICM4SrD1ahGHyRhSD4Yg
+        uOkbrL7FYSyM+E0HBKeGeYyW0i4iuAxWKmUFtx5Csw6RjgqIngsI20oQdpyB0GqAeO0Swi6eHkYdBv8Z
+        beQU+9dBu24+5NQh5KLYOYQaSxBy8sf2dFbIRRz6ZlaUA0KKgnb+OQX/IRe06W6ptb8TaNLc9TdofwRs
+        Whwj98vGfQw0ci5VPTnfXQYuaOf6/TbtQ7+Ne0K552/inOrnIyHkNwbA16Y93oWPAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="btnRDelete.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="btnRDelete.Size" type="System.Drawing.Size, System.Drawing">
+    <value>70, 22</value>
+  </data>
+  <data name="btnRDelete.Text" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>6, 25</value>
+  </data>
+  <data name="btnRLocate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGoSURBVDhPldBPaJJhHAfwZzVjsUGHRe2wgjEWQYfpMQx2
+        CXaJdUoiR56d0aUMX4iI7DBshecuOzXGGL6I/X0v7hA6GGpkqOgr6rI/Fi/aoy+PWr7fHqeBGObbDz7w
+        g+f3hd/zI62C1419b6VXq/DkKXLrY2RYseQqQ24Vf/NMdUcGF5PvVCHfQy+WcSmaLJiREs720xKuyW6U
+        h9MOivQtIHObcx5gcaf2p+/3M+OUtdSNmU44ZqdIraD+7jpqkWuoRa3/pPK5qM9o64QjV2kjaoEStqCR
+        foBG5iHnHqjJ39X3wvdf+TUHD1+h6u4i6gm+duExkPcMV3gEJt+vETVykVbfXkA9bgeyd/nBBF2YLPBw
+        2EQrQSNYzAqkbgJJhy4s5qBElc5RRZoF21sCPtiA+LIu7VsRKk3T0osTUEML0GKX0Ype0qX9XVJ+eZR+
+        9o/jR3AezbAZjdB5XdSQiRIlcIQWfaNQ3pyGunMGteCcPtIpSorPSD23RfA1cAyV18dRfqXT84kqyW2O
+        pD9uH8IX8TC++Q36iQZGshvkZEkk0ieRVP5HSSTu37dAkfjuDIy6AAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="btnRLocate.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="btnRLocate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>62, 22</value>
+  </data>
+  <data name="btnRLocate.Text" xml:space="preserve">
+    <value>Locate</value>
+  </data>
+  <data name="toolStripSeparator6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>6, 25</value>
+  </data>
+  <data name="btnOpenConsole.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGLSURBVDhPY8AH1q5f97+wbjYY987b/n/9ll3/oVK4wfat
+        O/4btdf/D1hf+T92x9z/AXMu/Xdo/fTfoGod2BCoMkwA0ii1yvx/x9Om/1e+Xf7fefPtf/9NX8EYZIhL
+        4Yz/DfP6sBvA3+3+X+G6zP9b/1f9B4HTz7/9j7j3H6w5dccBsKHONWH/1+9YiWrA/KWL/zNWWf8XXxUO
+        VgTSCLIZpNlu/v//KVtW/8/9K/Xfdb/9/6YFE1A1g5wk4Ln4v2bq6f8WPVfAtlme+AfGID8HLV4A1gxy
+        mVpB5H+Gbg+z/xeKwv9vCrb9j4+9PckLHGCg8AC5zjh16n+GChMNsKKt3nr/8bHXRruDXQQyQCFqJSTU
+        Y7RV/3eE+YAVJBtq42WDNIOcD6IvHT/0nwHkHJiz8LGn26j/1+5cC9YIik5wIIH8BHMWPjZIM8ifm1Yj
+        JZJSJyu4s/CxizWl/p8/sg81emCmg0zGxwZ5AaoFATK0FP6vCbQGK8LHxqo5XFn2PyjEQTQhNlQLFDAw
+        AACkS5R/rnFBKQAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="btnOpenConsole.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="btnOpenConsole.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="btnOpenConsole.Size" type="System.Drawing.Size, System.Drawing">
+    <value>153, 22</value>
+  </data>
+  <data name="btnOpenConsole.Text" xml:space="preserve">
+    <value>Open advanced console</value>
+  </data>
+  <data name="btnRRefresh.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHuSURBVDhPlZPNaxNRFMWPay2C4EIFP3eKtCDRhRR3gv+A
+        4k5c5KsTm9oEjUqDRkoSO9EGLSRq6dQuXfqxFETduxTcaJdusmh5JZ13ryfTZxxjpHjgx3333XfOfDCD
+        YZJljMoSUnYZd22ACnuPnHHjSOx3aoCDrt0SN4/Q8IKDDtE4JsA6Z28ZfEFb2B0G+CABcs5Kcxvj3Ra+
+        6yIN2xA+x+delUWktszPcKjbxjdt88D/8BTJKEAfY0kXuDGAWcCGaWB92MyRhMzjuGliTZvccJg6xD5C
+        XZ4gIU2Mcu3H533mewFzuKo+mxjWRyO6NUpqGAkf4L3OcTaA+MhCqihrlRsOU4XROsacvze/aGt4R970
+        qeI16yuZRQJyjwEVmh2mwoDy74BtJWU+wgzNMewMfDfui+f2yC0cIPu43t9b80K7IHdwwlznmy7R7DAl
+        vsQbqMlNJLSAMdZLpCC3cZn1vJQwzoDTUsRIlG6LCHhQBzGTMKaIte4UVu00XtoCP+tpZDm7IgWcVWBH
+        FKCTONzN8SvM0ziEDQ8/wjw+2WtYsXk8lDymJIe9kfmXuHGum8aqejT9TWfTw5dwAh+th5ZM4KSz/SnN
+        4KjNYIW1QzTOZgZfbRoNXuiYO/5vSYq/cxJpm8R9Mss+y5BTbhwT8BN8WbvklfAoGAAAAABJRU5ErkJg
+        gg==
+</value>
+  </data>
+  <data name="btnRRefresh.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="btnRRefresh.Size" type="System.Drawing.Size, System.Drawing">
+    <value>66, 22</value>
+  </data>
+  <data name="btnRRefresh.Text" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="toolStripSeparator8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>6, 25</value>
   </data>
   <data name="btnRShow.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1565,508 +1332,980 @@ No firewall rule is created nor removed when you update this list.</value>
         Qx/Y3oHI9d3OCDikFfIMfLfFgijb41xgu+7NOwiRdAP36hfk2F8w3nftd3BpBwAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="lstConnections.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 28</value>
+  <data name="btnRShow.Size" type="System.Drawing.Size, System.Drawing">
+    <value>80, 22</value>
   </data>
-  <data name="connRemotePort.Width" type="System.Int32, mscorlib">
-    <value>75</value>
+  <data name="btnRShow.Text" xml:space="preserve">
+    <value>Show all</value>
   </data>
-  <data name="&gt;&gt;normal2sToolStripMenuItem.Name" xml:space="preserve">
-    <value>normal2sToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;btnTLog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnOptions.Location" type="System.Drawing.Point, System.Drawing">
-    <value>607, 5</value>
-  </data>
-  <data name="tabConnections.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;btnRLocate.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="colRSvc.HeaderText" xml:space="preserve">
-    <value>Service</value>
-  </data>
-  <data name="&gt;&gt;colRIcon.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewImageColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnELocate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAa5JREFUOE+V0E9Ik3EYB/DH0jCCOhTaIYqIIuiQsJNM8BJ1iTwllZHnOetSg70Q
-        HTYPohWevXRTkdiL2N+XYB1iE+TdWtqa2yvbaplTXnz97X1599P2fnvRBaLMvT7wgQee5wsPD1XyI0H8
-        HNF2quRfjiL7qpnqFV8YNJEdxF5Dp6srtYsr/hKUZ9iJZ/yqpQhupITLu1lJ/8lq1A6nHzKkHwOZJzbf
-        Fv7dZ/3vd9vM+BQr1X9+O5zwMKT6UP76ALp8D3qsZ1+GvRcLtfVuh+N3GY91Q412g6cD9skDtmBNG/bc
-        +Cas/s099xKXbzNj5gbKSfvs/AsgN1RffhhcCehkytdY6UsHynMeYPGp/TDBEa4IOhlRF9PCbTDjPUDq
-        EfDD6whPeBkZn64wVboAc/YWMN8LzN13hMt3GDHpDCu+bYER6YQV70IldtMRU77OaO3dUbY0dQzr4avY
-        iLrBI+2OGBEXI3X6CCuEGqF+PAvj8yXo4YvOSOcYFcapnJ0kLE+fgPbhFNbeO/TmeImyEw3pX68P4Y94
-        GCtTTc6JTSYtjlFrUSTpt0jaQRRFCv4DOxmSMzjWKhYAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="colRTarget.HeaderText" xml:space="preserve">
-    <value>Target</value>
-  </data>
-  <data name="&gt;&gt;colRPort.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;colExcPath.Name" xml:space="preserve">
-    <value>colExcPath</value>
-  </data>
-  <data name="&gt;&gt;activeRulesOnlyToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gridLog.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="btnTLog.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAYAAAAmlE46AAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAGBSURBVDhP7ZNLLwNRGIbn3/VvsBTUrpl0IaG1shFC
-        FFFUUwuUpGlLQ3rXDkNFDVrTC63QMXrMoImW1zfj8gOsLCzO6skz8z7JOZzVHeOH1g70+filFszfsUxV
-        Z9J9m8mPYEUGlm+8snRFYwZbTMmac0PU++ajvCE2SQSJIAgSQSJIBIkgESSajEQ4/SJIbHLWhbg6vC7C
-        nZQRlhQI1884f3hDWQdkDfSRDjJXTybzpEsY2TxEnzumchbbrMfuTWIscARvqohgro5EUYVQYciWGeKF
-        ewSPa/Cli5gM5TDoS8Jic3m4/plIzbEqwLUjwS9eI1ZQkbt5wYXaQYHOyW0Le6UHhEj2xM8w6s9gYDpQ
-        o6mJz8aEjNBpA1madUbzPhvfvxp1amxgKVWCw29ONRuVXzQq/41/q7F3Ltr8aSRRIPGc/lSmPkOWlLZ5
-        8Q323dgzu9vkuifCPL+c0se38tqKUGXbkkLPSGdivcX2ay2WLGksLDWYwaYikmb3pfWu8SD/ATA34Fdn
-        o+IJAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="connCreaTime.Width" type="System.Int32, mscorlib">
-    <value>115</value>
-  </data>
-  <data name="btnRDelete.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAmVJREFUOE+FkU1ME0EYhidED2C329IWqCCIoUE9CvSPAgHDT5BQhUYhgh4qEAIc
-        jBw0ED0YE8JVEw4aD2I8efHEQQ/e7NGDxkSD/dt2Sym0S2WhUPo6O7uJSIi+yZP5Jvu8k8ksOZrCTJ2+
-        MG0bKMzY5jBdv1CYss3SfQsekSJNOT75Sdv4/ljtKl1xGNlfs5+fsH3cm6xr09Q/UU7d9dcu5fzn8C+y
-        o1V7dL2t1dT8Gqme3x6pAeNmNbaHq9T5mH36unVva/iMhxUl3+n6TL9FlnyVkAYrkRmwQrpxFpl+M5sz
-        XgukoVpkrlVA8lVRKrHpswYw3nCSbHqtixQobPQaIb94iP0fn7F1rwcbHcXYefsU+eAXSBNObF4xM4+5
-        Xms3SfaZA6m+ciisd+ohv16EknwijJ2VZTYXdmWkx5xIdRuZx9ze8ick1lMWT/aUgdFtQbLLAvndc1ZS
-        cpBeR3rWi2QHT51y1VN5RYROXlzrtEDFDNFTjOzSvFalN4iHkBq5hESbTnNUxMvmZRJrNwfEdlqixJt1
-        kBamWKmQEpELvGdzfvUr1gYvIN7KM4+57SZ67dbSRQoUBGcJsi8XcJBKYOP+EAQPfYOVNzhIRLE26oTg
-        0jGP0VLaRQS3qZ5KsuAxQmg2INZRAdF7HlF7CaLOUxBaTRCvXkTUzdPDqMPgP6GNnGD/OuwwzEVcBkTc
-        FAeHSGMJIi7+yJ7OKrmY09jMikpASFHYwT+j4D/kwnbDLa32d0JNujvBBv33kF2PI+R+2rkPoUbOranH
-        55vbxIUdXH/Qrn8QtHOPKXeDTZxL+3wohPwGPlrXuA65JtwAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="lblConnections.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
-  </data>
-  <data name="&gt;&gt;btnTLog.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="btnDonate.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="btnTExceptions.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;gridRules.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="lblExceptions.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 360</value>
-  </data>
-  <data name="toolStripConnections.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;tabExceptions.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripRules.Parent" xml:space="preserve">
-    <value>tabRules</value>
-  </data>
-  <data name="colExcIcon.MinimumWidth" type="System.Int32, mscorlib">
-    <value>22</value>
-  </data>
-  <data name="&gt;&gt;colREnabled.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewCheckBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="gridRules.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 356</value>
-  </data>
-  <data name="&gt;&gt;gridLog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnLLocate.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="lblConnections.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;lblLog.Parent" xml:space="preserve">
-    <value>tabLog</value>
-  </data>
-  <data name="lblExceptions.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Bottom</value>
-  </data>
-  <data name="fast1sToolStripMenuItem.Text" xml:space="preserve">
-    <value>Fast (0.5s)</value>
-  </data>
-  <data name="&gt;&gt;btnERemove.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="lstConnections.Size" type="System.Drawing.Size, System.Drawing">
-    <value>829, 356</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator7.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;activeRulesOnlyToolStripMenuItem.Name" xml:space="preserve">
-    <value>activeRulesOnlyToolStripMenuItem</value>
-  </data>
-  <data name="tabRules.Size" type="System.Drawing.Size, System.Drawing">
-    <value>839, 425</value>
-  </data>
-  <data name="btnOpenConsole.Text" xml:space="preserve">
-    <value>Open advanced console</value>
-  </data>
-  <data name="colDate.HeaderText" xml:space="preserve">
-    <value>Date</value>
-  </data>
-  <data name="btnTConnections.Size" type="System.Drawing.Size, System.Drawing">
-    <value>106, 29</value>
-  </data>
-  <data name="&gt;&gt;colIcon.Name" xml:space="preserve">
-    <value>colIcon</value>
-  </data>
-  <data name="&gt;&gt;connProtocol.Name" xml:space="preserve">
-    <value>connProtocol</value>
-  </data>
-  <data name="&gt;&gt;timerTrk.Name" xml:space="preserve">
-    <value>timerTrk</value>
-  </data>
-  <data name="toolStripConnections.Text" xml:space="preserve">
-    <value>toolStrip1</value>
-  </data>
-  <data name="colRDirection.MinimumWidth" type="System.Int32, mscorlib">
-    <value>60</value>
-  </data>
-  <data name="&gt;&gt;colDate.Name" xml:space="preserve">
-    <value>colDate</value>
-  </data>
-  <data name="btnConnTrack.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="btnDonate.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
-  <data name="&gt;&gt;fast1sToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnUpdate.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
-    <value>ImageBeforeText</value>
-  </data>
-  <data name="btnRRefresh.Size" type="System.Drawing.Size, System.Drawing">
-    <value>66, 22</value>
-  </data>
-  <data name="toolStripExceptions.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;lblConnections.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;colRProfile.Name" xml:space="preserve">
-    <value>colRProfile</value>
-  </data>
-  <data name="&gt;&gt;colExcTarget.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lstConnections.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ListView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="tabPanel.Padding" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="btnOptions.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
-    <value>ImageBeforeText</value>
-  </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>Windows Firewall Notifier</value>
-  </data>
-  <data name="&gt;&gt;colRDirection.Name" xml:space="preserve">
-    <value>colRDirection</value>
-  </data>
-  <data name="&gt;&gt;tabConnections.Name" xml:space="preserve">
-    <value>tabConnections</value>
-  </data>
-  <data name="&gt;&gt;pnlOverTabTop.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="connState.Text" xml:space="preserve">
-    <value>State</value>
-  </data>
-  <data name="lblExceptions.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="colProtocol.HeaderText" xml:space="preserve">
-    <value>Protocol</value>
-  </data>
-  <data name="&gt;&gt;btnELocate.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnTConnections.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;lstConnections.Parent" xml:space="preserve">
-    <value>tabConnections</value>
-  </data>
-  <data name="&gt;&gt;btnTExceptions.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="btnLEvents.Size" type="System.Drawing.Size, System.Drawing">
-    <value>116, 22</value>
-  </data>
-  <data name="lblLog.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
-  </data>
-  <data name="&gt;&gt;toolStripLog.Name" xml:space="preserve">
-    <value>toolStripLog</value>
-  </data>
-  <data name="lblRules.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 384</value>
-  </data>
-  <data name="&gt;&gt;toolStripExceptions.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;connLocalPort.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="gridRules.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>30, 30, 3, 3</value>
-  </data>
-  <data name="stripConnUpdSpeed.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="colRAction.HeaderText" xml:space="preserve">
-    <value>Action</value>
-  </data>
-  <data name="btnConnTrack.Text" xml:space="preserve">
-    <value>Start tracking</value>
-  </data>
-  <data name="colRProfile.Width" type="System.Int32, mscorlib">
-    <value>65</value>
-  </data>
-  <data name="btnRDelete.Size" type="System.Drawing.Size, System.Drawing">
-    <value>70, 22</value>
-  </data>
-  <data name="btnTConnections.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 5</value>
-  </data>
-  <data name="&gt;&gt;btnConnStop.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="tabExceptions.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 26</value>
-  </data>
-  <data name="btnConnStop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>97, 22</value>
-  </data>
-  <data name="btnOpenConsole.Size" type="System.Drawing.Size, System.Drawing">
-    <value>153, 22</value>
-  </data>
-  <data name="btnRDelete.Text" xml:space="preserve">
-    <value>Remove</value>
-  </data>
-  <data name="&gt;&gt;btnTConnections.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;colRLocalport.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gridRules.Name" xml:space="preserve">
-    <value>gridRules</value>
-  </data>
-  <data name="&gt;&gt;slow5SecondsToolStripMenuItem.Name" xml:space="preserve">
-    <value>slow5SecondsToolStripMenuItem</value>
-  </data>
-  <data name="colIcon.MinimumWidth" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="&gt;&gt;imgLstConn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ImageList, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="wFNRulesOnlyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="showAllToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>256, 22</value>
   </data>
-  <data name="toolStripExceptions.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
-  </data>
-  <data name="&gt;&gt;btnRDelete.Name" xml:space="preserve">
-    <value>btnRDelete</value>
-  </data>
-  <data name="btnRLocate.Text" xml:space="preserve">
-    <value>Locate</value>
-  </data>
-  <data name="btnTLog.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="&gt;&gt;tabRules.Name" xml:space="preserve">
-    <value>tabRules</value>
-  </data>
-  <data name="&gt;&gt;btnUpdate.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnUpdate.Parent" xml:space="preserve">
-    <value>pnlOverTabTop</value>
-  </data>
-  <data name="&gt;&gt;btnConnFindR.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;stripConnUpdSpeed.Name" xml:space="preserve">
-    <value>stripConnUpdSpeed</value>
-  </data>
-  <data name="connRemoteAddr.Width" type="System.Int32, mscorlib">
-    <value>106</value>
-  </data>
-  <data name="&gt;&gt;btnRShow.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripDropDownButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="lblRules.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 38</value>
-  </data>
-  <data name="&gt;&gt;gridExceptions.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="btnELocate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>62, 22</value>
-  </data>
-  <data name="&gt;&gt;btnLEvents.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabExceptions.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator3.Name" xml:space="preserve">
-    <value>toolStripSeparator3</value>
-  </data>
-  <data name="tabPanel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="&gt;&gt;colRPath.Name" xml:space="preserve">
-    <value>colRPath</value>
+  <data name="showAllToolStripMenuItem.Text" xml:space="preserve">
+    <value>Show all</value>
   </data>
   <data name="activeRulesOnlyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>256, 22</value>
   </data>
-  <data name="&gt;&gt;stripConnUpdSpeed.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripDropDownButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="activeRulesOnlyToolStripMenuItem.Text" xml:space="preserve">
+    <value>Active rules</value>
   </data>
-  <data name="colRPort.Width" type="System.Int32, mscorlib">
-    <value>80</value>
+  <data name="wFNRulesOnlyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>256, 22</value>
   </data>
-  <data name="&gt;&gt;lblRules.ZOrder" xml:space="preserve">
-    <value>2</value>
+  <data name="wFNRulesOnlyToolStripMenuItem.Text" xml:space="preserve">
+    <value>WFN rules</value>
   </data>
-  <data name="tabRules.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 26</value>
+  <data name="wSHRulesOnlyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>256, 22</value>
   </data>
-  <data name="&gt;&gt;btnLEvents.Name" xml:space="preserve">
-    <value>btnLEvents</value>
+  <data name="wSHRulesOnlyToolStripMenuItem.Text" xml:space="preserve">
+    <value>WSH rules (Windows hidden rules)</value>
   </data>
-  <data name="&gt;&gt;colPort.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="toolStripSeparator7.Size" type="System.Drawing.Size, System.Drawing">
+    <value>6, 25</value>
   </data>
-  <metadata name="colRProfile.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colTarget.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colExcTarget.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="toolStripLog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>407, 17</value>
-  </metadata>
-  <metadata name="colExcPath.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colExcTargetPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="timerTrk.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>526, 17</value>
-  </metadata>
-  <metadata name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>fr</value>
-  </metadata>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colPath.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="imgLstConn.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>789, 17</value>
-  </metadata>
-  <metadata name="colExcIcon.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="toolStripConnections.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>623, 17</value>
-  </metadata>
-  <metadata name="colRIcon.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
+  <data name="txtFilter.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 25</value>
+  </data>
+  <data name="toolStripLabel1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
+        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAALFSURBVDhPjZLdT5JRHMfPf9FNW5fdunVRW63U1loX
+        vWzl2nRYbtlm5tKmpiBqtdKLphOzxqZOUB4EE8zJSyaBgYRA4tsMliagkBIvJu8I/vo9IGZzbp3ts3PO
+        c76/zznPeR7CFE2TBrGRNL0zk8YhUw5TZGxtEJsm2EMmM0tkHMM5E9dONOI6C3N0/iD7AgzXNQ+bQ5R+
+        GfTfPfDV7oVJ6wb0aKyAQjdLbCo6UlAnNNS1jlpgyb0FO7sA0eQuhBIpiGAfTCRBa9uApnemVP3gdMEh
+        QS315RTuHl90BYBuqV0siifBF0mk8Ud3UJQC9Tc3YNb1RGg4hpAspJKne8vT2mAbdwoj0Z0kFiXAE4rv
+        4w3HYRP7dvkcVPF1VdUDepKFPOr7PKOxusGPu20GM8GNYOwQPjzJsPEHlPVoJJU8LW6cgZT3alb1K550
+        8dpWdJ/1PbLjX+EEjM7Y4R5Xpa7onSRZSClXZZbPO8G1HYVVXxjs/jA4AxEsyuDAMf2MXufjq5a8+Sgp
+        6/5EspDi1x8622QWcGB42RtMh90Y9oRi+DoxcP1GQSAMNk8QmEI93O0av3OfqyJZCIOjzCnmKMOyOQes
+        YXgd8Ufj6QsNIf4IXiTC01rhdpsMbrRKS6++GCbXWiRpSMGrUXK9RVrD6JCB1LwCTjxJLIU/w17z4RcQ
+        6KxQ2D4GL99boKJXE85jU0UIyW8UEro4bbrULHp85dlQoKpPDVzVAginbMCdmIcy7jjgGlT362Bk9idQ
+        BjuUd6tjWFx4kRbgkdKCy0/FJJ9NnTxXP/D8TC1/HJk6XcOX4/xhPlt4s6RL6W9TLIDU4gZq2gEPutVx
+        lNz6R0AbMUzyGihyniUgudjT8wxUHoMj99GSkVk3CAwOqOhRLx0puHBAkHlOj6lcBkfhpSWSGTf061cl
+        /y34KxGeLe5UKDqUi4JBk/P4HxgaqT+JtQOMAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="toolStripLabel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>52, 22</value>
+  </data>
+  <data name="toolStripLabel1.Text" xml:space="preserve">
+    <value>Filter:</value>
+  </data>
   <metadata name="toolStripExceptions.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>250, 17</value>
   </metadata>
-  <metadata name="colProtocol.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <data name="&gt;&gt;gridExceptions.Name" xml:space="preserve">
+    <value>gridExceptions</value>
+  </data>
+  <data name="&gt;&gt;gridExceptions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gridExceptions.Parent" xml:space="preserve">
+    <value>tabExceptions</value>
+  </data>
+  <data name="&gt;&gt;gridExceptions.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;toolStripExceptions.Name" xml:space="preserve">
+    <value>toolStripExceptions</value>
+  </data>
+  <data name="&gt;&gt;toolStripExceptions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripExceptions.Parent" xml:space="preserve">
+    <value>tabExceptions</value>
+  </data>
+  <data name="&gt;&gt;toolStripExceptions.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tabExceptions.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 26</value>
+  </data>
+  <data name="tabExceptions.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabExceptions.Size" type="System.Drawing.Size, System.Drawing">
+    <value>839, 425</value>
+  </data>
+  <data name="tabExceptions.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="tabExceptions.Text" xml:space="preserve">
+    <value>Exceptions</value>
+  </data>
+  <data name="&gt;&gt;tabExceptions.Name" xml:space="preserve">
+    <value>tabExceptions</value>
+  </data>
+  <data name="&gt;&gt;tabExceptions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabExceptions.Parent" xml:space="preserve">
+    <value>tabPanel</value>
+  </data>
+  <data name="&gt;&gt;tabExceptions.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <metadata name="colExcIcon.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="btnDonate.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>False</value>
-  </metadata>
-  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>44</value>
-  </metadata>
-  <metadata name="colDate.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colRLocalport.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colRSvc.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colRTarget.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="toolStripRules.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>122, 17</value>
-  </metadata>
-  <metadata name="colRPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colRName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colRDirection.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colRAction.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colIcon.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="colExcPath.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <metadata name="colExcLocalPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="btnOptions.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="colExcTarget.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colExcTargetPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="gridExceptions.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="gridExceptions.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 28</value>
+  </data>
+  <data name="gridExceptions.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 332</value>
+  </data>
+  <data name="gridExceptions.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;gridExceptions.Name" xml:space="preserve">
+    <value>gridExceptions</value>
+  </data>
+  <data name="&gt;&gt;gridExceptions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gridExceptions.Parent" xml:space="preserve">
+    <value>tabExceptions</value>
+  </data>
+  <data name="&gt;&gt;gridExceptions.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="colExcIcon.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colExcIcon.HeaderText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="colExcIcon.MinimumWidth" type="System.Int32, mscorlib">
+    <value>22</value>
+  </data>
+  <data name="colExcIcon.Width" type="System.Int32, mscorlib">
+    <value>22</value>
+  </data>
+  <metadata name="colExcPath.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colExcPath.HeaderText" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <metadata name="colExcLocalPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colExcLocalPort.HeaderText" xml:space="preserve">
+    <value>Local port</value>
+  </data>
+  <metadata name="colExcTarget.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colExcTarget.HeaderText" xml:space="preserve">
+    <value>Target</value>
+  </data>
+  <metadata name="colExcTargetPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colExcTargetPort.HeaderText" xml:space="preserve">
+    <value>Remote port</value>
+  </data>
+  <metadata name="toolStripExceptions.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>250, 17</value>
+  </metadata>
+  <data name="toolStripExceptions.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="toolStripExceptions.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 25</value>
+  </data>
+  <data name="toolStripExceptions.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="toolStripExceptions.Text" xml:space="preserve">
+    <value>toolStrip2</value>
+  </data>
+  <data name="&gt;&gt;toolStripExceptions.Name" xml:space="preserve">
+    <value>toolStripExceptions</value>
+  </data>
+  <data name="&gt;&gt;toolStripExceptions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripExceptions.Parent" xml:space="preserve">
+    <value>tabExceptions</value>
+  </data>
+  <data name="&gt;&gt;toolStripExceptions.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="btnERemove.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
+  </data>
+  <data name="btnERemove.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJlSURBVDhPhZFLTBNBHMYnRA9gt9vSFiggiKGpehToiwIB
+        wyNIqEITIaDGIBACHIwcNBA9GBPCVRMOGg9iPHnxxEEP3uzRg8ZEg31tu21paZdHoVD6OTu7iUiIfskv
+        85/s75tMZsnxFGbrtYUZy0Bh1jKPGetiYdoyR/cteEyKVOXk5KcsEwfjdWt0xVG279Qe5Cctn/an6ttU
+        9U/kU/fG6pZzY+fxL6SRyn263lZrSrZHaxZ2RmvBGKnBznC1Mp+wT3nN+5vDZ92sKHkrrZk+Q1byVkEa
+        rEJmwAzpxjlk+o1sznhMkIbqkLleAclbTanChtfsw0TDabLhMS9RIJPq1SP78hEOfn7B5v0epDqKsfvu
+        GfL+r5AmHdi4amQecz3mbpLoM/qSfeWQWe/UIvtmCXLysSB2V1fYXNjLIj3uQLJbzzzm9pY/JZGesmii
+        pwyMbhMSXSZk379gJTmH6XWk5zxIdPDUKVc8hddE6OTFeKcJCkaI7mJsLS+oVXqDaADJ0cuItWlUR0G8
+        YlwhkXajT2ynJUq0WQNpcZqVCkkROd8HNufXviE+eBHRVp55zG030Gu3li5RICM4SrD1ahGHyRhSD4Yg
+        uOkbrL7FYSyM+E0HBKeGeYyW0i4iuAxWKmUFtx5Csw6RjgqIngsI20oQdpyB0GqAeO0Swi6eHkYdBv8Z
+        beQU+9dBu24+5NQh5KLYOYQaSxBy8sf2dFbIRRz6ZlaUA0KKgnb+OQX/IRe06W6ptb8TaNLc9TdofwRs
+        Whwj98vGfQw0ci5VPTnfXQYuaOf6/TbtQ7+Ne0K552/inOrnIyHkNwbA16Y93oWPAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="btnERemove.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="btnERemove.Size" type="System.Drawing.Size, System.Drawing">
+    <value>70, 22</value>
+  </data>
+  <data name="btnERemove.Text" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>6, 25</value>
+  </data>
+  <data name="btnELocate.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="btnELocate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGoSURBVDhPldBPaJJhHAfwZzVjsUGHRe2wgjEWQYfpMQx2
+        CXaJdUoiR56d0aUMX4iI7DBshecuOzXGGL6I/X0v7hA6GGpkqOgr6rI/Fi/aoy+PWr7fHqeBGObbDz7w
+        g+f3hd/zI62C1419b6VXq/DkKXLrY2RYseQqQ24Vf/NMdUcGF5PvVCHfQy+WcSmaLJiREs720xKuyW6U
+        h9MOivQtIHObcx5gcaf2p+/3M+OUtdSNmU44ZqdIraD+7jpqkWuoRa3/pPK5qM9o64QjV2kjaoEStqCR
+        foBG5iHnHqjJ39X3wvdf+TUHD1+h6u4i6gm+duExkPcMV3gEJt+vETVykVbfXkA9bgeyd/nBBF2YLPBw
+        2EQrQSNYzAqkbgJJhy4s5qBElc5RRZoF21sCPtiA+LIu7VsRKk3T0osTUEML0GKX0Ype0qX9XVJ+eZR+
+        9o/jR3AezbAZjdB5XdSQiRIlcIQWfaNQ3pyGunMGteCcPtIpSorPSD23RfA1cAyV18dRfqXT84kqyW2O
+        pD9uH8IX8TC++Q36iQZGshvkZEkk0ieRVP5HSSTu37dAkfjuDIy6AAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="btnELocate.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="btnELocate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>62, 22</value>
+  </data>
+  <data name="btnELocate.Text" xml:space="preserve">
+    <value>Locate</value>
+  </data>
+  <metadata name="toolStripLog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>407, 17</value>
   </metadata>
-  <metadata name="colREnabled.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <data name="&gt;&gt;gridLog.Name" xml:space="preserve">
+    <value>gridLog</value>
+  </data>
+  <data name="&gt;&gt;gridLog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gridLog.Parent" xml:space="preserve">
+    <value>tabLog</value>
+  </data>
+  <data name="&gt;&gt;gridLog.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;toolStripLog.Name" xml:space="preserve">
+    <value>toolStripLog</value>
+  </data>
+  <data name="&gt;&gt;toolStripLog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripLog.Parent" xml:space="preserve">
+    <value>tabLog</value>
+  </data>
+  <data name="&gt;&gt;toolStripLog.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tabLog.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 26</value>
+  </data>
+  <data name="tabLog.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabLog.Size" type="System.Drawing.Size, System.Drawing">
+    <value>839, 425</value>
+  </data>
+  <data name="tabLog.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tabLog.Text" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="&gt;&gt;tabLog.Name" xml:space="preserve">
+    <value>tabLog</value>
+  </data>
+  <data name="&gt;&gt;tabLog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabLog.Parent" xml:space="preserve">
+    <value>tabPanel</value>
+  </data>
+  <data name="&gt;&gt;tabLog.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <metadata name="colDate.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="colRPath.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="colIcon.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="colPath.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colTarget.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colProtocol.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="gridLog.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="gridLog.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 28</value>
+  </data>
+  <data name="gridLog.RowHeadersWidth" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="gridLog.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 356</value>
+  </data>
+  <data name="gridLog.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;gridLog.Name" xml:space="preserve">
+    <value>gridLog</value>
+  </data>
+  <data name="&gt;&gt;gridLog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gridLog.Parent" xml:space="preserve">
+    <value>tabLog</value>
+  </data>
+  <data name="&gt;&gt;gridLog.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="colDate.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colDate.HeaderText" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="colDate.Width" type="System.Int32, mscorlib">
+    <value>56</value>
+  </data>
+  <metadata name="colIcon.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colIcon.HeaderText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="colIcon.MinimumWidth" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <data name="colIcon.Width" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <metadata name="colPath.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colPath.HeaderText" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <metadata name="colTarget.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colTarget.HeaderText" xml:space="preserve">
+    <value>Target</value>
+  </data>
+  <data name="colTarget.Width" type="System.Int32, mscorlib">
+    <value>64</value>
+  </data>
+  <metadata name="colProtocol.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colProtocol.HeaderText" xml:space="preserve">
+    <value>Protocol</value>
+  </data>
+  <data name="colProtocol.Width" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
+  <metadata name="colPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colPort.HeaderText" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="colPort.Width" type="System.Int32, mscorlib">
+    <value>53</value>
+  </data>
+  <metadata name="toolStripLog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>407, 17</value>
+  </metadata>
+  <data name="toolStripLog.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="toolStripLog.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 25</value>
+  </data>
+  <data name="toolStripLog.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;toolStripLog.Name" xml:space="preserve">
+    <value>toolStripLog</value>
+  </data>
+  <data name="&gt;&gt;toolStripLog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripLog.Parent" xml:space="preserve">
+    <value>tabLog</value>
+  </data>
+  <data name="&gt;&gt;toolStripLog.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="btnLLocate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGoSURBVDhPldBPaJJhHAfwZzVjsUGHRe2wgjEWQYfpMQx2
+        CXaJdUoiR56d0aUMX4iI7DBshecuOzXGGL6I/X0v7hA6GGpkqOgr6rI/Fi/aoy+PWr7fHqeBGObbDz7w
+        g+f3hd/zI62C1419b6VXq/DkKXLrY2RYseQqQ24Vf/NMdUcGF5PvVCHfQy+WcSmaLJiREs720xKuyW6U
+        h9MOivQtIHObcx5gcaf2p+/3M+OUtdSNmU44ZqdIraD+7jpqkWuoRa3/pPK5qM9o64QjV2kjaoEStqCR
+        foBG5iHnHqjJ39X3wvdf+TUHD1+h6u4i6gm+duExkPcMV3gEJt+vETVykVbfXkA9bgeyd/nBBF2YLPBw
+        2EQrQSNYzAqkbgJJhy4s5qBElc5RRZoF21sCPtiA+LIu7VsRKk3T0osTUEML0GKX0Ype0qX9XVJ+eZR+
+        9o/jR3AezbAZjdB5XdSQiRIlcIQWfaNQ3pyGunMGteCcPtIpSorPSD23RfA1cAyV18dRfqXT84kqyW2O
+        pD9uH8IX8TC++Q36iQZGshvkZEkk0ieRVP5HSSTu37dAkfjuDIy6AAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="btnLLocate.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="btnLLocate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>62, 22</value>
+  </data>
+  <data name="btnLLocate.Text" xml:space="preserve">
+    <value>Locate</value>
+  </data>
+  <data name="toolStripSeparator4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>6, 25</value>
+  </data>
+  <data name="btnLEvents.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA4AAAAPCAYAAADUFP50AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAF1SURBVDhPY4CBhKYV/0nBYE39/f3/AwND/k9cceL/+Xtv
+        CWLviJn/GabOmAXWnZi1CFPj3Vf/j+yK+n92h+L/U+f2oWoEgcbGRqw2nji+HKzp0iG1/0e2BYANgmtE
+        trFn+bH/Mzedg+Oda13BmjxcmcH0/PXrwOIYNnYuOAw39czVS//vHVX8/+qG6v+eRv7/H67L/T++Pxso
+        /wbTRpBGmG3LV8X9f3qG9//VQ4JgG9+cE/2/b4kIqo3p6ekQG2fvhvvv1PHD/w8tbv6/b04aGIMC6ci+
+        TkwbQZysqbvA/gQZsDAo/f8Kh6D/s/1S/vcu2AcWh2EMP4I0gkw8mJz1/1pr6/+b0dH/r2Rk/N/sFwJ3
+        CVYbk3u3/M+dve//Wm19sIYf9++D6aWc3GBxGMawEaQRZOION2+wjSAM0ggyCK+NsR3r/ydP2v6/IWP6
+        /3laxmCbZsmq/c+K6waLwzDcRliogjSCTEQ2HYWPbCMMgDjE45n/AYG6GdA5Ttz1AAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="btnLEvents.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="btnLEvents.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="btnLEvents.Size" type="System.Drawing.Size, System.Drawing">
+    <value>116, 22</value>
+  </data>
+  <data name="btnLEvents.Text" xml:space="preserve">
+    <value>Events log viewer</value>
+  </data>
+  <metadata name="timerTrk.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>526, 17</value>
+  </metadata>
+  <data name="btnTExceptions.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnTExceptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABIAAAAQCAYAAAAbBi9cAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
+        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAMQSURBVDhPjdBbTJN3HMbx33AXGpNlu1lMNEt2N930
+        brczxITEsJsFd+PFvFrQhSW4Q9REzKZixNoBVWvFrgKW4iy1lBakB+kJerKnl7ctho6D2HDQuaibJhO3
+        Zw8FMrlw8eKT/3vzfN//+wqaZVnLCgO10aXyWTltryn2jmQuW+Lz8kvsLs3ItcikmP2KdL7k1aElBtHe
+        s9f844oqBUv0XuW14YIs6Q7mxBxQ/yfUSjo6TwaphF7UOfse+JLq4vV4Sd8dzjOUZ0h9jdCSc3RBDHxe
+        nO/5DOH0KPrSs7/2jOSr6JWhN2k9Q1s43Em1vNVlngvQCh46vkAsV8RgtvTCGR9LWofzR7sC6p6rfnU7
+        A+9QBa0T/CR1NMhYhPI0hzPyAicEaN2APyNNGJ2+D29mCgPxPJyxwuPeSGHq+nAuddU/GuwYUroY2io4
+        K59yuEAoayL9ZsC4A7BW4ZlqwcTcQ6Qm7yNamII/O47BxBj6ojl0+RVc8WVMHbey7wo08gZOSQ0a5S4B
+        x6ltK+CuBQKH8CTbhenZBUw8eAZ1chZD6TtwRVXYQgravSmLyZt+r92X4T/SUCMdl334UWZwjKGTbwGW
+        asB3EE/SZkyV5pArPUJYGYdzRIE1mHne4Un2/uxOvm9iZDmkpVPlkKBB6ukBvmFMtw3o/xKPEx0oTs8g
+        UVyAM5yG1Z9c7PTe9hv64x8abybE6E4KP43jk/QDHaMjsomUcqh1O9C+C/P2w0hkFYTGZuFiyOKJPzUO
+        xBovuqJiWGHypDj+dsV3ZR9TkYCGt4HvKzCprYLD48eN2Dh6A7dhdseet7kixovOiKzS941wXL/G51TC
+        QYa+pv2CCc3uv7r7h/5u92XR7Y2g82YUesewR2cPy7mXCOrWqGfg93KkTp7igOTvnK42G+1e94WB9G8m
+        V3jR6AqDw1SzLbSxxRaSVcK3/ucr0dAjKpEWtfLB+OlquWTzVJxxJGt0tuCg7kbojxZbMN/cE9xGsmpt
+        aL80UBNv8hEJQ7ISEo0jKa22wMaz1sBerTVgoE9IlgXkX5zsqbu276DGAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="btnTExceptions.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="btnTExceptions.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnTExceptions.Location" type="System.Drawing.Point, System.Drawing">
+    <value>229, 5</value>
+  </data>
+  <data name="btnTExceptions.Size" type="System.Drawing.Size, System.Drawing">
+    <value>106, 29</value>
+  </data>
+  <data name="btnTExceptions.TabIndex" type="System.Int32, mscorlib">
+    <value>22</value>
+  </data>
+  <data name="btnTExceptions.Text" xml:space="preserve">
+    <value>  Exceptions</value>
+  </data>
+  <data name="btnTExceptions.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
+    <value>ImageBeforeText</value>
+  </data>
+  <data name="&gt;&gt;btnTExceptions.Name" xml:space="preserve">
+    <value>btnTExceptions</value>
+  </data>
+  <data name="&gt;&gt;btnTExceptions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnTExceptions.Parent" xml:space="preserve">
+    <value>pnlOverTabTop</value>
+  </data>
+  <data name="&gt;&gt;btnTExceptions.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="pnlOverTabTop.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="pnlOverTabTop.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="pnlOverTabTop.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="pnlOverTabTop.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 37</value>
+  </data>
+  <data name="pnlOverTabTop.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="&gt;&gt;pnlOverTabTop.Name" xml:space="preserve">
+    <value>pnlOverTabTop</value>
+  </data>
+  <data name="&gt;&gt;pnlOverTabTop.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlOverTabTop.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pnlOverTabTop.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>44</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>833, 462</value>
+  </data>
+  <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 8.25pt</value>
+  </data>
+  <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>790, 500</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Windows Firewall Notifier</value>
+  </data>
+  <data name="&gt;&gt;connOwner.Name" xml:space="preserve">
+    <value>connOwner</value>
+  </data>
+  <data name="&gt;&gt;connOwner.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;connProtocol.Name" xml:space="preserve">
+    <value>connProtocol</value>
+  </data>
+  <data name="&gt;&gt;connProtocol.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;connLocalAddr.Name" xml:space="preserve">
+    <value>connLocalAddr</value>
+  </data>
+  <data name="&gt;&gt;connLocalAddr.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;connLocalPort.Name" xml:space="preserve">
+    <value>connLocalPort</value>
+  </data>
+  <data name="&gt;&gt;connLocalPort.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;connRemoteAddr.Name" xml:space="preserve">
+    <value>connRemoteAddr</value>
+  </data>
+  <data name="&gt;&gt;connRemoteAddr.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;connRemotePort.Name" xml:space="preserve">
+    <value>connRemotePort</value>
+  </data>
+  <data name="&gt;&gt;connRemotePort.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;connState.Name" xml:space="preserve">
+    <value>connState</value>
+  </data>
+  <data name="&gt;&gt;connState.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;connCreaTime.Name" xml:space="preserve">
+    <value>connCreaTime</value>
+  </data>
+  <data name="&gt;&gt;connCreaTime.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;imgLstConn.Name" xml:space="preserve">
+    <value>imgLstConn</value>
+  </data>
+  <data name="&gt;&gt;imgLstConn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ImageList, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnConnTrack.Name" xml:space="preserve">
+    <value>btnConnTrack</value>
+  </data>
+  <data name="&gt;&gt;btnConnTrack.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnConnStop.Name" xml:space="preserve">
+    <value>btnConnStop</value>
+  </data>
+  <data name="&gt;&gt;btnConnStop.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;stripConnUpdSpeed.Name" xml:space="preserve">
+    <value>stripConnUpdSpeed</value>
+  </data>
+  <data name="&gt;&gt;stripConnUpdSpeed.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripDropDownButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;slow5SecondsToolStripMenuItem.Name" xml:space="preserve">
+    <value>slow5SecondsToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;slow5SecondsToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;normal2sToolStripMenuItem.Name" xml:space="preserve">
+    <value>normal2sToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;normal2sToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;fast1sToolStripMenuItem.Name" xml:space="preserve">
+    <value>fast1sToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;fast1sToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator3.Name" xml:space="preserve">
+    <value>toolStripSeparator3</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnConnFindR.Name" xml:space="preserve">
+    <value>btnConnFindR</value>
+  </data>
+  <data name="&gt;&gt;btnConnFindR.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colRName.Name" xml:space="preserve">
+    <value>colRName</value>
+  </data>
+  <data name="&gt;&gt;colRName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colRIcon.Name" xml:space="preserve">
+    <value>colRIcon</value>
+  </data>
+  <data name="&gt;&gt;colRIcon.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewImageColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colRPath.Name" xml:space="preserve">
+    <value>colRPath</value>
+  </data>
+  <data name="&gt;&gt;colRPath.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colRSvc.Name" xml:space="preserve">
+    <value>colRSvc</value>
+  </data>
+  <data name="&gt;&gt;colRSvc.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colRDirection.Name" xml:space="preserve">
+    <value>colRDirection</value>
+  </data>
+  <data name="&gt;&gt;colRDirection.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colRProfile.Name" xml:space="preserve">
+    <value>colRProfile</value>
+  </data>
+  <data name="&gt;&gt;colRProfile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colRAction.Name" xml:space="preserve">
+    <value>colRAction</value>
+  </data>
+  <data name="&gt;&gt;colRAction.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colRLocalport.Name" xml:space="preserve">
+    <value>colRLocalport</value>
+  </data>
+  <data name="&gt;&gt;colRLocalport.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colRTarget.Name" xml:space="preserve">
+    <value>colRTarget</value>
+  </data>
+  <data name="&gt;&gt;colRTarget.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colRPort.Name" xml:space="preserve">
+    <value>colRPort</value>
+  </data>
+  <data name="&gt;&gt;colRPort.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colREnabled.Name" xml:space="preserve">
+    <value>colREnabled</value>
+  </data>
+  <data name="&gt;&gt;colREnabled.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewCheckBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnRDelete.Name" xml:space="preserve">
+    <value>btnRDelete</value>
+  </data>
+  <data name="&gt;&gt;btnRDelete.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
+    <value>toolStripSeparator2</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnRLocate.Name" xml:space="preserve">
+    <value>btnRLocate</value>
+  </data>
+  <data name="&gt;&gt;btnRLocate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator6.Name" xml:space="preserve">
+    <value>toolStripSeparator6</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator6.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnOpenConsole.Name" xml:space="preserve">
+    <value>btnOpenConsole</value>
+  </data>
+  <data name="&gt;&gt;btnOpenConsole.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnRRefresh.Name" xml:space="preserve">
+    <value>btnRRefresh</value>
+  </data>
+  <data name="&gt;&gt;btnRRefresh.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator8.Name" xml:space="preserve">
+    <value>toolStripSeparator8</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator8.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnRShow.Name" xml:space="preserve">
+    <value>btnRShow</value>
+  </data>
+  <data name="&gt;&gt;btnRShow.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripDropDownButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;showAllToolStripMenuItem.Name" xml:space="preserve">
+    <value>showAllToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;showAllToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;activeRulesOnlyToolStripMenuItem.Name" xml:space="preserve">
+    <value>activeRulesOnlyToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;activeRulesOnlyToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;wFNRulesOnlyToolStripMenuItem.Name" xml:space="preserve">
+    <value>wFNRulesOnlyToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;wFNRulesOnlyToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;wSHRulesOnlyToolStripMenuItem.Name" xml:space="preserve">
+    <value>wSHRulesOnlyToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;wSHRulesOnlyToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator7.Name" xml:space="preserve">
+    <value>toolStripSeparator7</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator7.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtFilter.Name" xml:space="preserve">
+    <value>txtFilter</value>
+  </data>
+  <data name="&gt;&gt;txtFilter.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripLabel1.Name" xml:space="preserve">
+    <value>toolStripLabel1</value>
+  </data>
+  <data name="&gt;&gt;toolStripLabel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colExcIcon.Name" xml:space="preserve">
+    <value>colExcIcon</value>
+  </data>
+  <data name="&gt;&gt;colExcIcon.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewImageColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colExcPath.Name" xml:space="preserve">
+    <value>colExcPath</value>
+  </data>
+  <data name="&gt;&gt;colExcPath.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colExcLocalPort.Name" xml:space="preserve">
+    <value>colExcLocalPort</value>
+  </data>
+  <data name="&gt;&gt;colExcLocalPort.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colExcTarget.Name" xml:space="preserve">
+    <value>colExcTarget</value>
+  </data>
+  <data name="&gt;&gt;colExcTarget.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colExcTargetPort.Name" xml:space="preserve">
+    <value>colExcTargetPort</value>
+  </data>
+  <data name="&gt;&gt;colExcTargetPort.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnERemove.Name" xml:space="preserve">
+    <value>btnERemove</value>
+  </data>
+  <data name="&gt;&gt;btnERemove.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator1.Name" xml:space="preserve">
+    <value>toolStripSeparator1</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnELocate.Name" xml:space="preserve">
+    <value>btnELocate</value>
+  </data>
+  <data name="&gt;&gt;btnELocate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colDate.Name" xml:space="preserve">
+    <value>colDate</value>
+  </data>
+  <data name="&gt;&gt;colDate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colIcon.Name" xml:space="preserve">
+    <value>colIcon</value>
+  </data>
+  <data name="&gt;&gt;colIcon.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewImageColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colPath.Name" xml:space="preserve">
+    <value>colPath</value>
+  </data>
+  <data name="&gt;&gt;colPath.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colTarget.Name" xml:space="preserve">
+    <value>colTarget</value>
+  </data>
+  <data name="&gt;&gt;colTarget.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colProtocol.Name" xml:space="preserve">
+    <value>colProtocol</value>
+  </data>
+  <data name="&gt;&gt;colProtocol.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colPort.Name" xml:space="preserve">
+    <value>colPort</value>
+  </data>
+  <data name="&gt;&gt;colPort.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnLLocate.Name" xml:space="preserve">
+    <value>btnLLocate</value>
+  </data>
+  <data name="&gt;&gt;btnLLocate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator4.Name" xml:space="preserve">
+    <value>toolStripSeparator4</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnLEvents.Name" xml:space="preserve">
+    <value>btnLEvents</value>
+  </data>
+  <data name="&gt;&gt;btnLEvents.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;timerTrk.Name" xml:space="preserve">
+    <value>timerTrk</value>
+  </data>
+  <data name="&gt;&gt;timerTrk.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>OptionsForm</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

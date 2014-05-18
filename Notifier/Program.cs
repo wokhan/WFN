@@ -80,7 +80,7 @@ namespace WindowsFirewallNotifier
 
             if (argv.Length == 0 || argv[1].Contains("$"))
             {
-                argv = new string[] { "-pid", "0", "-ip", "127.0.0.1", "-port", "0", "-protocol", "0", "-localport", "0", "-path", "N/A" };
+                argv = new string[] { "-pid", "860", "-threadid", "0", "-ip", "127.0.0.1", "-port", "0", "-protocol", "0", "-localport", "0", "-path", "N/A" };
             }
 
             Dictionary<string, string> pars = parseParameters(argv);
@@ -106,7 +106,9 @@ namespace WindowsFirewallNotifier
                     SessID = (uint)CommonHelper.WTSGetActiveConsoleSessionId();
                     if (SessID == 0xFFFFFFFF)
                     {
-                        throw new Exception("No active session found. Aborting.");
+                        Exception e = new Exception("No active session found. Aborting.");
+                        LogHelper.Error("FATAL ERROR", e);
+                        throw e;
                     }
                     /*else
                     {
@@ -122,15 +124,20 @@ namespace WindowsFirewallNotifier
                 {
                     if (!CommonHelper.WTSQueryUserToken(SessID, ref userToken))
                     {
-                        throw new Exception("Unable to retrieve the current user token. ErrCode = " + Marshal.GetLastWin32Error());
+                        Exception e = new Exception("Unable to retrieve the current user token. ErrCode = " + Marshal.GetLastWin32Error());
+                        LogHelper.Error("FATAL ERROR", e);
+                        throw e;
                     }
 
                     string argstr = String.Join(" ", argv.Select(a => a.Contains(" ") ? "\"" + a + "\"" : a).ToArray());
+                    LogHelper.Debug("Impersonating. Parameters: " + argstr);
                     Impersonation.LaunchProcessAsUser(Application.ExecutablePath, argstr, userToken);
                 }
                 else
                 {
-                    throw new Exception("WFN can not start in the SYSTEM session.");
+                    Exception e = new Exception("WFN can not start in the SYSTEM session.");
+                    LogHelper.Error("FATAL ERROR", e);
+                    throw e;
                 }
 
                 Environment.Exit(0);
@@ -143,37 +150,9 @@ namespace WindowsFirewallNotifier
             string currentProtocol = pars["-protocol"];
             string currentLocalPort = pars["-localport"];
             string currentPath = pars["-path"];
+            string threadid = pars["-threadid"];
             pars = null;
 
-            //            var notifications = System.Windows.UI.Notifications;
-
-            //// Get the toast notification manager for the current app.
-            //var notificationManager = notifications.ToastNotificationManager;
-
-            //// The getTemplateContent method returns a Windows.Data.Xml.Dom.XmlDocument object
-            //// that contains the toast notification XML content.
-            //var template = notifications.toastTemplateType.toastImageAndText01;
-            //var toastXml = notificationManager.getTemplateContent(notifications.ToastTemplateType[template]);
-
-            //// You can use the methods from the XML document to specify the required elements for the toast.
-            //var images = toastXml.getElementsByTagName("image");
-            //images[0].setAttribute("src", "images/toastImageAndText.png");
-
-            //var textNodes = toastXml.getElementsByTagName("text");
-            //textNodes.forEach(function (value, index) {
-            //    var textNumber = index + 1;
-            //    var text = "";
-            //    for (var j = 0; j < 10; j++) {
-            //        text += "Text input " + /*@static_cast(String)*/textNumber + " ";
-            //    }
-            //    value.appendChild(toastXml.createTextNode(text));
-            //});
-
-            //// Create a toast notification from the XML, then create a ToastNotifier object
-            //// to send the toast.
-            //var toast = new notifications.ToastNotification(toastXml);
-
-            //notificationManager.createToastNotifier().show(toast);
             Process prevInst = null;
             if (!firstInstance)
             {
@@ -191,7 +170,8 @@ namespace WindowsFirewallNotifier
 
             if (firstInstance)
             {
-                mainForm = new MainForm(pid, currentPath, currentTarget, currentProtocol, currentTargetPort, currentLocalPort);
+                LogHelper.Debug("Launching. Parameters: " + String.Join(" ", argv));
+                mainForm = new MainForm(pid, threadid, currentPath, currentTarget, currentProtocol, currentTargetPort, currentLocalPort);
                 if (!mainForm.IsDisposed)
                 {
                     mainForm.FormClosing += new FormClosingEventHandler(mainForm_FormClosing);
@@ -200,7 +180,7 @@ namespace WindowsFirewallNotifier
             }
             else
             {
-                string msg = pid + "#$#" + currentPath + "#$#" + currentTarget + "#$#" + currentProtocol + "#$#" + currentTargetPort + "#$#" + currentLocalPort;
+                string msg = pid + "#$#" + threadid + "#$#" + currentPath + "#$#" + currentTarget + "#$#" + currentProtocol + "#$#" + currentTargetPort + "#$#" + currentLocalPort;
 
                 COPYDATASTRUCT copyData;
                 copyData.dwData = IntPtr.Zero;

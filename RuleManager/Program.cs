@@ -13,8 +13,8 @@ namespace WindowsFirewallNotifier.RuleManager
     class Program
     {
         private static string path;
-        private static string tmpname;
-        
+        private static Dictionary<string, string> tmpnames;
+
         [STAThread]
         static void Main(string[] args)
         {
@@ -25,7 +25,8 @@ namespace WindowsFirewallNotifier.RuleManager
 
                 string rname = param[0];
                 path = param[1];
-                string service = param[2];
+                string sv = param[2];
+                string[] services = (sv != null ? sv.Split(',') : new string[] { });
                 int protocol = int.Parse(param[3]);
                 string target = param[4];
                 string targetPort = param[5];
@@ -37,16 +38,16 @@ namespace WindowsFirewallNotifier.RuleManager
                 switch (action)
                 {
                     case "A":
-                        ret = FirewallHelper.AddAllowRule(rname, path, service, protocol, target, targetPort, localPort, useCurrentProfile);
+                        ret = services.All(s => FirewallHelper.AddAllowRule(rname + (s != null ? "[" + s + "]" : ""), path, s, protocol, target, targetPort, localPort, useCurrentProfile));
                         break;
 
                     case "B":
-                        ret = FirewallHelper.AddBlockRule(rname, path, service, protocol, target, targetPort, localPort, useCurrentProfile);
+                        ret = services.All(s => FirewallHelper.AddBlockRule(rname + (s != null ? "[" + s + "]" : ""), path, s, protocol, target, targetPort, localPort, useCurrentProfile));
                         break;
 
                     case "T":
-                        tmpname = "[WFN Temp Rule] " + Guid.NewGuid().ToString();
-                        ret = FirewallHelper.AddTempRule(tmpname, path, service, protocol, target, targetPort, localPort, useCurrentProfile);
+                        tmpnames = services.ToDictionary(s => s, s => "[WFN Temp Rule] " + Guid.NewGuid().ToString());
+                        ret = services.All(s => FirewallHelper.AddTempRule(tmpnames[s], path, s, protocol, target, targetPort, localPort, useCurrentProfile));
                         keepOpen = true;
                         break;
                 }
@@ -80,11 +81,12 @@ namespace WindowsFirewallNotifier.RuleManager
 
         private static void ni_Click(object sender, EventArgs e)
         {
-            if (!FirewallHelper.RemoveRule(tmpname))
+
+            if (!tmpnames.All(kv => FirewallHelper.RemoveRule(kv.Value)))
             {
                 MessageBox.Show(Resources.MSG_RULE_RM_FAILED, Resources.MSG_DLG_ERR_TITLE, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
+            
             Environment.Exit(0);
         }
 

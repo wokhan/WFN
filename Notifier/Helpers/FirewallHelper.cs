@@ -310,9 +310,9 @@ namespace WindowsFirewallNotifier
         /// <param name="targetPort"></param>
         /// <param name="localport"></param>
         /// <returns></returns>
-        public static bool AddBlockRuleIndirect(string ruleName, string currentPath, string service, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
+        public static bool AddBlockRuleIndirect(string ruleName, string currentPath, string[] services, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
         {
-            string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, service, protocol, target, targetPort, localport, useCurrentProfile, "B")));
+            string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, services != null ? String.Join(",", services) : null, protocol, target, targetPort, localport, useCurrentProfile, "B")));
             return ProcessHelper.getProcessFeedback(WFNRuleManagerEXE, param, true, false);
         }
 
@@ -343,9 +343,9 @@ namespace WindowsFirewallNotifier
         /// <param name="targetPort"></param>
         /// <param name="localport"></param>
         /// <returns></returns>
-        public static bool AddAllowRuleIndirect(string ruleName, string currentPath, string service, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
+        public static bool AddAllowRuleIndirect(string ruleName, string currentPath, string[] services, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
         {
-            string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, service, protocol, target, targetPort, localport, useCurrentProfile, "A")));
+            string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, services != null ? String.Join(",", services) : null, protocol, target, targetPort, localport, useCurrentProfile, "A")));
             return ProcessHelper.getProcessFeedback(WFNRuleManagerEXE, param, true, false);
         }
 
@@ -486,9 +486,9 @@ namespace WindowsFirewallNotifier
             }
         }
 
-        public static bool AddTempRuleIndirect(string path, string ruleName, string currentPath, string service, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
+        public static bool AddTempRuleIndirect(string ruleName, string currentPath, string[] services, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
         {
-            string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, service, protocol, target, targetPort, localport, useCurrentProfile, "T") + "#$#" + path));
+            string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, services != null ? String.Join(",", services) : null, protocol, target, targetPort, localport, useCurrentProfile, "T")));
             return ProcessHelper.getProcessFeedback(WFNRuleManagerEXE, param, true, true);
         }
 
@@ -596,15 +596,13 @@ namespace WindowsFirewallNotifier
 
         public static bool RuleMatches(Rule r, string path, string svc, string protocol, string localport, string remoteport)
         {
-
-
             bool ret = r.Enabled &&
-                   (((r.Profiles & GetCurrentProfile()) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0)) &&
-                   (String.IsNullOrEmpty(r.ApplicationName) || StringComparer.CurrentCultureIgnoreCase.Compare(r.ApplicationName, path) == 0) &&
-                   ((String.IsNullOrEmpty(r.serviceName) && String.IsNullOrEmpty(svc)) || StringComparer.CurrentCultureIgnoreCase.Compare(svc, r.serviceName) == 0) &&
-                   (r.Protocol == (int)NetFwTypeLib.NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY || r.Protocol.ToString() == protocol) &&
-                   (String.IsNullOrEmpty(r.RemotePorts) || r.RemotePorts == "*" || r.RemotePorts.Contains(remoteport)) &&
-                   (String.IsNullOrEmpty(r.LocalPorts) || r.LocalPorts == "*" || r.LocalPorts.Contains(localport));
+                               (((r.Profiles & GetCurrentProfile()) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0)) &&
+                               (String.IsNullOrEmpty(r.ApplicationName) || StringComparer.CurrentCultureIgnoreCase.Compare(r.ApplicationName, path) == 0) &&
+                               ((String.IsNullOrEmpty(r.serviceName) && String.IsNullOrEmpty(svc)) || StringComparer.CurrentCultureIgnoreCase.Compare(svc, r.serviceName) == 0) &&
+                               (r.Protocol == (int)NetFwTypeLib.NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY || r.Protocol.ToString() == protocol) &&
+                               (String.IsNullOrEmpty(r.RemotePorts) || r.RemotePorts == "*" || r.RemotePorts.Contains(remoteport)) &&
+                               (String.IsNullOrEmpty(r.LocalPorts) || r.LocalPorts == "*" || r.LocalPorts.Contains(localport));
             string det;
             if (ret)
             {

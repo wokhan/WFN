@@ -183,4 +183,7 @@ to prevent any further notification, or creates a blocking rule for the Windows 
   <data name="RULE_NAME_FORMAT" xml:space="preserve">
     <value>Custom Rule - {0}</value>
   </data>
+  <data name="SERVICES_UNDEF" xml:space="preserve">
+    <value>Multiple matches found.</value>
+  </data>
 </root>

@@ -34,8 +34,8 @@ namespace WindowsFirewallNotifierConsole
             System.Windows.Forms.Button btnOptions;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptionsForm));
             System.Windows.Forms.Button btnDonate;
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.btnTConnections = new System.Windows.Forms.Button();
             this.btnTRules = new System.Windows.Forms.Button();
@@ -162,7 +162,7 @@ namespace WindowsFirewallNotifierConsole
             // btnUpdate
             // 
             resources.ApplyResources(this.btnUpdate, "btnUpdate");
-            this.btnUpdate.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.btnUpdate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
             this.btnUpdate.FlatAppearance.BorderColor = System.Drawing.Color.DeepSkyBlue;
             this.btnUpdate.FlatAppearance.MouseOverBackColor = System.Drawing.Color.SkyBlue;
             this.btnUpdate.Name = "btnUpdate";
@@ -172,10 +172,10 @@ namespace WindowsFirewallNotifierConsole
             // 
             // btnTConnections
             // 
-            resources.ApplyResources(this.btnTConnections, "btnTConnections");
             this.btnTConnections.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.btnTConnections.FlatAppearance.BorderColor = System.Drawing.Color.LimeGreen;
             this.btnTConnections.FlatAppearance.MouseOverBackColor = System.Drawing.Color.SkyBlue;
+            resources.ApplyResources(this.btnTConnections, "btnTConnections");
             this.btnTConnections.Name = "btnTConnections";
             this.btnTConnections.Tag = "";
             this.btnTConnections.UseVisualStyleBackColor = false;
@@ -183,10 +183,10 @@ namespace WindowsFirewallNotifierConsole
             // 
             // btnTRules
             // 
-            resources.ApplyResources(this.btnTRules, "btnTRules");
             this.btnTRules.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.btnTRules.FlatAppearance.BorderColor = System.Drawing.Color.LimeGreen;
             this.btnTRules.FlatAppearance.MouseOverBackColor = System.Drawing.Color.SkyBlue;
+            resources.ApplyResources(this.btnTRules, "btnTRules");
             this.btnTRules.Name = "btnTRules";
             this.btnTRules.Tag = "";
             this.btnTRules.UseVisualStyleBackColor = false;
@@ -194,10 +194,10 @@ namespace WindowsFirewallNotifierConsole
             // 
             // btnTLog
             // 
-            resources.ApplyResources(this.btnTLog, "btnTLog");
             this.btnTLog.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.btnTLog.FlatAppearance.BorderColor = System.Drawing.Color.LimeGreen;
             this.btnTLog.FlatAppearance.MouseOverBackColor = System.Drawing.Color.SkyBlue;
+            resources.ApplyResources(this.btnTLog, "btnTLog");
             this.btnTLog.Name = "btnTLog";
             this.btnTLog.Tag = "";
             this.btnTLog.UseVisualStyleBackColor = false;
@@ -205,20 +205,20 @@ namespace WindowsFirewallNotifierConsole
             // 
             // lblRules
             // 
-            resources.ApplyResources(this.lblRules, "lblRules");
             this.lblRules.BackColor = System.Drawing.SystemColors.Info;
+            resources.ApplyResources(this.lblRules, "lblRules");
             this.lblRules.Name = "lblRules";
             // 
             // lblExceptions
             // 
-            resources.ApplyResources(this.lblExceptions, "lblExceptions");
             this.lblExceptions.BackColor = System.Drawing.SystemColors.Info;
+            resources.ApplyResources(this.lblExceptions, "lblExceptions");
             this.lblExceptions.Name = "lblExceptions";
             // 
             // lblLog
             // 
-            resources.ApplyResources(this.lblLog, "lblLog");
             this.lblLog.BackColor = System.Drawing.SystemColors.Info;
+            resources.ApplyResources(this.lblLog, "lblLog");
             this.lblLog.Name = "lblLog";
             // 
             // tabPanel
@@ -235,16 +235,15 @@ namespace WindowsFirewallNotifierConsole
             // 
             // tabConnections
             // 
-            resources.ApplyResources(this.tabConnections, "tabConnections");
             this.tabConnections.Controls.Add(this.lstConnections);
             this.tabConnections.Controls.Add(this.toolStripConnections);
             this.tabConnections.Controls.Add(this.lblConnections);
+            resources.ApplyResources(this.tabConnections, "tabConnections");
             this.tabConnections.Name = "tabConnections";
             this.tabConnections.UseVisualStyleBackColor = true;
             // 
             // lstConnections
             // 
-            resources.ApplyResources(this.lstConnections, "lstConnections");
             this.lstConnections.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.lstConnections.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lstConnections.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -256,6 +255,7 @@ namespace WindowsFirewallNotifierConsole
             this.connRemotePort,
             this.connState,
             this.connCreaTime});
+            resources.ApplyResources(this.lstConnections, "lstConnections");
             this.lstConnections.FullRowSelect = true;
             this.lstConnections.GridLines = true;
             this.lstConnections.MultiSelect = false;
@@ -304,7 +304,6 @@ namespace WindowsFirewallNotifierConsole
             // 
             // toolStripConnections
             // 
-            resources.ApplyResources(this.toolStripConnections, "toolStripConnections");
             this.toolStripConnections.BackColor = System.Drawing.SystemColors.MenuBar;
             this.toolStripConnections.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnConnTrack,
@@ -312,6 +311,7 @@ namespace WindowsFirewallNotifierConsole
             this.stripConnUpdSpeed,
             this.toolStripSeparator3,
             this.btnConnFindR});
+            resources.ApplyResources(this.toolStripConnections, "toolStripConnections");
             this.toolStripConnections.Name = "toolStripConnections";
             // 
             // btnConnTrack
@@ -328,41 +328,41 @@ namespace WindowsFirewallNotifierConsole
             // 
             // stripConnUpdSpeed
             // 
-            resources.ApplyResources(this.stripConnUpdSpeed, "stripConnUpdSpeed");
             this.stripConnUpdSpeed.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.stripConnUpdSpeed.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.slow5SecondsToolStripMenuItem,
             this.normal2sToolStripMenuItem,
             this.fast1sToolStripMenuItem});
+            resources.ApplyResources(this.stripConnUpdSpeed, "stripConnUpdSpeed");
             this.stripConnUpdSpeed.Name = "stripConnUpdSpeed";
             // 
             // slow5SecondsToolStripMenuItem
             // 
-            resources.ApplyResources(this.slow5SecondsToolStripMenuItem, "slow5SecondsToolStripMenuItem");
             this.slow5SecondsToolStripMenuItem.CheckOnClick = true;
             this.slow5SecondsToolStripMenuItem.Name = "slow5SecondsToolStripMenuItem";
+            resources.ApplyResources(this.slow5SecondsToolStripMenuItem, "slow5SecondsToolStripMenuItem");
             this.slow5SecondsToolStripMenuItem.Click += new System.EventHandler(this.slow5SecondsToolStripMenuItem_Click);
             // 
             // normal2sToolStripMenuItem
             // 
-            resources.ApplyResources(this.normal2sToolStripMenuItem, "normal2sToolStripMenuItem");
             this.normal2sToolStripMenuItem.Checked = true;
             this.normal2sToolStripMenuItem.CheckOnClick = true;
             this.normal2sToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.normal2sToolStripMenuItem.Name = "normal2sToolStripMenuItem";
+            resources.ApplyResources(this.normal2sToolStripMenuItem, "normal2sToolStripMenuItem");
             this.normal2sToolStripMenuItem.Click += new System.EventHandler(this.normal2sToolStripMenuItem_Click);
             // 
             // fast1sToolStripMenuItem
             // 
-            resources.ApplyResources(this.fast1sToolStripMenuItem, "fast1sToolStripMenuItem");
             this.fast1sToolStripMenuItem.CheckOnClick = true;
             this.fast1sToolStripMenuItem.Name = "fast1sToolStripMenuItem";
+            resources.ApplyResources(this.fast1sToolStripMenuItem, "fast1sToolStripMenuItem");
             this.fast1sToolStripMenuItem.Click += new System.EventHandler(this.fast1sToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
-            resources.ApplyResources(this.toolStripSeparator3, "toolStripSeparator3");
             this.toolStripSeparator3.Name = "toolStripSeparator3";
+            resources.ApplyResources(this.toolStripSeparator3, "toolStripSeparator3");
             // 
             // btnConnFindR
             // 
@@ -372,21 +372,20 @@ namespace WindowsFirewallNotifierConsole
             // 
             // lblConnections
             // 
-            resources.ApplyResources(this.lblConnections, "lblConnections");
             this.lblConnections.BackColor = System.Drawing.SystemColors.Info;
+            resources.ApplyResources(this.lblConnections, "lblConnections");
             this.lblConnections.Name = "lblConnections";
             // 
             // tabRules
             // 
-            resources.ApplyResources(this.tabRules, "tabRules");
             this.tabRules.Controls.Add(this.gridRules);
             this.tabRules.Controls.Add(this.toolStripRules);
             this.tabRules.Controls.Add(this.lblRules);
+            resources.ApplyResources(this.tabRules, "tabRules");
             this.tabRules.Name = "tabRules";
             // 
             // gridRules
             // 
-            resources.ApplyResources(this.gridRules, "gridRules");
             this.gridRules.AllowUserToAddRows = false;
             this.gridRules.AllowUserToDeleteRows = false;
             this.gridRules.AllowUserToResizeRows = false;
@@ -406,6 +405,7 @@ namespace WindowsFirewallNotifierConsole
             this.colRTarget,
             this.colRPort,
             this.colREnabled});
+            resources.ApplyResources(this.gridRules, "gridRules");
             this.gridRules.MultiSelect = false;
             this.gridRules.Name = "gridRules";
             this.gridRules.ReadOnly = true;
@@ -508,7 +508,6 @@ namespace WindowsFirewallNotifierConsole
             // 
             // toolStripRules
             // 
-            resources.ApplyResources(this.toolStripRules, "toolStripRules");
             this.toolStripRules.BackColor = System.Drawing.SystemColors.MenuBar;
             this.toolStripRules.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnRDelete,
@@ -522,6 +521,7 @@ namespace WindowsFirewallNotifierConsole
             this.toolStripSeparator7,
             this.txtFilter,
             this.toolStripLabel1});
+            resources.ApplyResources(this.toolStripRules, "toolStripRules");
             this.toolStripRules.Name = "toolStripRules";
             // 
             // btnRDelete
@@ -532,8 +532,8 @@ namespace WindowsFirewallNotifierConsole
             // 
             // toolStripSeparator2
             // 
-            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
             this.toolStripSeparator2.Name = "toolStripSeparator2";
+            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
             // 
             // btnRLocate
             // 
@@ -543,8 +543,8 @@ namespace WindowsFirewallNotifierConsole
             // 
             // toolStripSeparator6
             // 
-            resources.ApplyResources(this.toolStripSeparator6, "toolStripSeparator6");
             this.toolStripSeparator6.Name = "toolStripSeparator6";
+            resources.ApplyResources(this.toolStripSeparator6, "toolStripSeparator6");
             // 
             // btnOpenConsole
             // 
@@ -554,87 +554,86 @@ namespace WindowsFirewallNotifierConsole
             // 
             // btnRRefresh
             // 
-            resources.ApplyResources(this.btnRRefresh, "btnRRefresh");
             this.btnRRefresh.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            resources.ApplyResources(this.btnRRefresh, "btnRRefresh");
             this.btnRRefresh.Name = "btnRRefresh";
             this.btnRRefresh.Click += new System.EventHandler(this.btnRRefresh_Click);
             // 
             // toolStripSeparator8
             // 
-            resources.ApplyResources(this.toolStripSeparator8, "toolStripSeparator8");
             this.toolStripSeparator8.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripSeparator8.Name = "toolStripSeparator8";
+            resources.ApplyResources(this.toolStripSeparator8, "toolStripSeparator8");
             // 
             // btnRShow
             // 
-            resources.ApplyResources(this.btnRShow, "btnRShow");
             this.btnRShow.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.btnRShow.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showAllToolStripMenuItem,
             this.activeRulesOnlyToolStripMenuItem,
             this.wFNRulesOnlyToolStripMenuItem,
             this.wSHRulesOnlyToolStripMenuItem});
+            resources.ApplyResources(this.btnRShow, "btnRShow");
             this.btnRShow.Name = "btnRShow";
             // 
             // showAllToolStripMenuItem
             // 
-            resources.ApplyResources(this.showAllToolStripMenuItem, "showAllToolStripMenuItem");
             this.showAllToolStripMenuItem.Checked = true;
             this.showAllToolStripMenuItem.CheckOnClick = true;
             this.showAllToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showAllToolStripMenuItem.Name = "showAllToolStripMenuItem";
+            resources.ApplyResources(this.showAllToolStripMenuItem, "showAllToolStripMenuItem");
             this.showAllToolStripMenuItem.Click += new System.EventHandler(this.showAllToolStripMenuItem_Click);
             // 
             // activeRulesOnlyToolStripMenuItem
             // 
-            resources.ApplyResources(this.activeRulesOnlyToolStripMenuItem, "activeRulesOnlyToolStripMenuItem");
             this.activeRulesOnlyToolStripMenuItem.CheckOnClick = true;
             this.activeRulesOnlyToolStripMenuItem.Name = "activeRulesOnlyToolStripMenuItem";
+            resources.ApplyResources(this.activeRulesOnlyToolStripMenuItem, "activeRulesOnlyToolStripMenuItem");
             this.activeRulesOnlyToolStripMenuItem.Click += new System.EventHandler(this.activeRulesOnlyToolStripMenuItem_Click);
             // 
             // wFNRulesOnlyToolStripMenuItem
             // 
-            resources.ApplyResources(this.wFNRulesOnlyToolStripMenuItem, "wFNRulesOnlyToolStripMenuItem");
             this.wFNRulesOnlyToolStripMenuItem.CheckOnClick = true;
             this.wFNRulesOnlyToolStripMenuItem.Name = "wFNRulesOnlyToolStripMenuItem";
+            resources.ApplyResources(this.wFNRulesOnlyToolStripMenuItem, "wFNRulesOnlyToolStripMenuItem");
             this.wFNRulesOnlyToolStripMenuItem.Click += new System.EventHandler(this.wFNRulesOnlyToolStripMenuItem_Click);
             // 
             // wSHRulesOnlyToolStripMenuItem
             // 
-            resources.ApplyResources(this.wSHRulesOnlyToolStripMenuItem, "wSHRulesOnlyToolStripMenuItem");
             this.wSHRulesOnlyToolStripMenuItem.CheckOnClick = true;
             this.wSHRulesOnlyToolStripMenuItem.Name = "wSHRulesOnlyToolStripMenuItem";
+            resources.ApplyResources(this.wSHRulesOnlyToolStripMenuItem, "wSHRulesOnlyToolStripMenuItem");
             this.wSHRulesOnlyToolStripMenuItem.Click += new System.EventHandler(this.wSHRulesOnlyToolStripMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
-            resources.ApplyResources(this.toolStripSeparator7, "toolStripSeparator7");
             this.toolStripSeparator7.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripSeparator7.Name = "toolStripSeparator7";
+            resources.ApplyResources(this.toolStripSeparator7, "toolStripSeparator7");
             // 
             // txtFilter
             // 
-            resources.ApplyResources(this.txtFilter, "txtFilter");
             this.txtFilter.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.txtFilter.Name = "txtFilter";
+            resources.ApplyResources(this.txtFilter, "txtFilter");
             // 
             // toolStripLabel1
             // 
-            resources.ApplyResources(this.toolStripLabel1, "toolStripLabel1");
             this.toolStripLabel1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            resources.ApplyResources(this.toolStripLabel1, "toolStripLabel1");
             this.toolStripLabel1.Name = "toolStripLabel1";
             // 
             // tabExceptions
             // 
-            resources.ApplyResources(this.tabExceptions, "tabExceptions");
             this.tabExceptions.Controls.Add(this.gridExceptions);
             this.tabExceptions.Controls.Add(this.toolStripExceptions);
             this.tabExceptions.Controls.Add(this.lblExceptions);
+            resources.ApplyResources(this.tabExceptions, "tabExceptions");
             this.tabExceptions.Name = "tabExceptions";
             // 
             // gridExceptions
             // 
-            resources.ApplyResources(this.gridExceptions, "gridExceptions");
             this.gridExceptions.AllowUserToResizeRows = false;
             this.gridExceptions.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridExceptions.BackgroundColor = System.Drawing.SystemColors.Window;
@@ -647,6 +646,7 @@ namespace WindowsFirewallNotifierConsole
             this.colExcLocalPort,
             this.colExcTarget,
             this.colExcTargetPort});
+            resources.ApplyResources(this.gridExceptions, "gridExceptions");
             this.gridExceptions.Name = "gridExceptions";
             this.gridExceptions.RowHeadersVisible = false;
             this.gridExceptions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -657,8 +657,8 @@ namespace WindowsFirewallNotifierConsole
             // 
             this.colExcIcon.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.colExcIcon.DataPropertyName = "Icon";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.colExcIcon.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.colExcIcon.DefaultCellStyle = dataGridViewCellStyle3;
             this.colExcIcon.FillWeight = 20.30457F;
             resources.ApplyResources(this.colExcIcon, "colExcIcon");
             this.colExcIcon.Name = "colExcIcon";
@@ -668,8 +668,8 @@ namespace WindowsFirewallNotifierConsole
             // colExcPath
             // 
             this.colExcPath.DataPropertyName = "Path";
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.colExcPath.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.colExcPath.DefaultCellStyle = dataGridViewCellStyle4;
             this.colExcPath.FillWeight = 179.6954F;
             resources.ApplyResources(this.colExcPath, "colExcPath");
             this.colExcPath.Name = "colExcPath";
@@ -694,12 +694,12 @@ namespace WindowsFirewallNotifierConsole
             // 
             // toolStripExceptions
             // 
-            resources.ApplyResources(this.toolStripExceptions, "toolStripExceptions");
             this.toolStripExceptions.BackColor = System.Drawing.SystemColors.MenuBar;
             this.toolStripExceptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnERemove,
             this.toolStripSeparator1,
             this.btnELocate});
+            resources.ApplyResources(this.toolStripExceptions, "toolStripExceptions");
             this.toolStripExceptions.Name = "toolStripExceptions";
             // 
             // btnERemove
@@ -710,8 +710,8 @@ namespace WindowsFirewallNotifierConsole
             // 
             // toolStripSeparator1
             // 
-            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
             this.toolStripSeparator1.Name = "toolStripSeparator1";
+            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
             // 
             // btnELocate
             // 
@@ -721,15 +721,14 @@ namespace WindowsFirewallNotifierConsole
             // 
             // tabLog
             // 
-            resources.ApplyResources(this.tabLog, "tabLog");
             this.tabLog.Controls.Add(this.gridLog);
             this.tabLog.Controls.Add(this.toolStripLog);
             this.tabLog.Controls.Add(this.lblLog);
+            resources.ApplyResources(this.tabLog, "tabLog");
             this.tabLog.Name = "tabLog";
             // 
             // gridLog
             // 
-            resources.ApplyResources(this.gridLog, "gridLog");
             this.gridLog.AllowUserToAddRows = false;
             this.gridLog.AllowUserToDeleteRows = false;
             this.gridLog.AllowUserToResizeRows = false;
@@ -745,6 +744,7 @@ namespace WindowsFirewallNotifierConsole
             this.colTarget,
             this.colProtocol,
             this.colPort});
+            resources.ApplyResources(this.gridLog, "gridLog");
             this.gridLog.MultiSelect = false;
             this.gridLog.Name = "gridLog";
             this.gridLog.ReadOnly = true;
@@ -805,12 +805,12 @@ namespace WindowsFirewallNotifierConsole
             // 
             // toolStripLog
             // 
-            resources.ApplyResources(this.toolStripLog, "toolStripLog");
             this.toolStripLog.BackColor = System.Drawing.SystemColors.MenuBar;
             this.toolStripLog.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnLLocate,
             this.toolStripSeparator4,
             this.btnLEvents});
+            resources.ApplyResources(this.toolStripLog, "toolStripLog");
             this.toolStripLog.Name = "toolStripLog";
             // 
             // btnLLocate
@@ -821,8 +821,8 @@ namespace WindowsFirewallNotifierConsole
             // 
             // toolStripSeparator4
             // 
-            resources.ApplyResources(this.toolStripSeparator4, "toolStripSeparator4");
             this.toolStripSeparator4.Name = "toolStripSeparator4";
+            resources.ApplyResources(this.toolStripSeparator4, "toolStripSeparator4");
             // 
             // btnLEvents
             // 
@@ -838,7 +838,6 @@ namespace WindowsFirewallNotifierConsole
             // 
             // pnlOverTabTop
             // 
-            resources.ApplyResources(this.pnlOverTabTop, "pnlOverTabTop");
             this.pnlOverTabTop.BackColor = System.Drawing.SystemColors.MenuBar;
             this.pnlOverTabTop.Controls.Add(this.btnUpdate);
             this.pnlOverTabTop.Controls.Add(this.btnTExceptions);
@@ -847,14 +846,15 @@ namespace WindowsFirewallNotifierConsole
             this.pnlOverTabTop.Controls.Add(this.btnTConnections);
             this.pnlOverTabTop.Controls.Add(btnOptions);
             this.pnlOverTabTop.Controls.Add(btnDonate);
+            resources.ApplyResources(this.pnlOverTabTop, "pnlOverTabTop");
             this.pnlOverTabTop.Name = "pnlOverTabTop";
             // 
             // btnTExceptions
             // 
-            resources.ApplyResources(this.btnTExceptions, "btnTExceptions");
             this.btnTExceptions.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.btnTExceptions.FlatAppearance.BorderColor = System.Drawing.Color.LimeGreen;
             this.btnTExceptions.FlatAppearance.MouseOverBackColor = System.Drawing.Color.SkyBlue;
+            resources.ApplyResources(this.btnTExceptions, "btnTExceptions");
             this.btnTExceptions.Name = "btnTExceptions";
             this.btnTExceptions.Tag = "";
             this.btnTExceptions.UseVisualStyleBackColor = false;

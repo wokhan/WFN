@@ -9,6 +9,7 @@ using System.Net.NetworkInformation;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
+using NetFwTypeLib;
 
 
 namespace WindowsFirewallNotifier
@@ -32,69 +33,116 @@ namespace WindowsFirewallNotifier
             return null;
         }
 
-        private static string[] filteredsvcs = new string[] { // offline
+        private static string[] filteredsvcs = new string[] { };/*// offline
                                                               "appinfo", "gpsvc", "shellhwdetection", "themes", "winmgmt", "sens",
                                                               //already ok
                                                               "dnscache", "nlasvc", "eventsystem", "ssdpsrv", "fdrespub", "ikeext", "EventLog", "dhcp",
                                                               // detected
                                                               "lanmanserver", "browser", "schedule" };
-
+        */
         // private static string[] prioSvcs = new string[] { "wuauserv", "BITS", "aelookupsvc", "CryptSvc", "dnscache", "LanmanWorkstation", "TapiSrv" };
 
         //private static string servicesParser = @"^\s*(?<protocol>[^\s]+)(?<localip>(?:\[[^\]]*\])|(?:[^(:|\r)]))*:{0}\s+(?<ip>[^:]+):(?<port>(?:\d*|\*))\s+[^\d]*{1}\r\n\s+(?<service>[^\r]+)\r\n\s*\[[^\]]*\]";
-        public static void GetService(int pid, NetFwTypeLib.NET_FW_IP_PROTOCOL_ protocol, string port, string localport, out string svc, out string svcdsc)
+        public static void GetService(int pid, string threadid, NetFwTypeLib.NET_FW_IP_PROTOCOL_ protocol, string port, string localport, out string[] svc, out string[] svcdsc, out bool unsure)
         {
             string[] svcs = GetAllServices(pid);
-
-            svc = null;
-            svcdsc = null;
+            
+            svc = new string[0];
+            svcdsc = new string[0];
+            unsure = false;
 
             if (svcs == null)
             {
                 return;
             }
 
+            LogHelper.Debug("GetService found the following services: " + String.Join(",", svcs));
+
             var ret = IpHlpApiHelper.GetOwner(protocol, int.Parse(localport));
             if (ret != null && !String.IsNullOrEmpty(ret.ModuleName))
             {
                 // Returns the owner only if it's indeed a service (hence contained in the previously retrieved list)
                 //if (svcs.Contains(ret.ModuleName))
-                svc = ret.ModuleName;
-                svcdsc = getServiceDesc(svc);
-
-                if (String.IsNullOrEmpty(svcdsc))
-                {
-                    svc = null;
-                    svcdsc = null;
-                }
+                svc = new[] { ret.ModuleName };
+                svcdsc = new[] { getServiceDesc(ret.ModuleName) };
 
                 return;
             }
 
+            // If it fails, tries to retrieve the module name from the calling thread id
+            // /!\ Unfortunately, retrieving the proper thread ID requires another log to be enabled and parsed.
+            // I don't want to get things too complicated since not that many users actually bother about services.
+            /*var p = Process.GetProcessById(pid);
+            int threadidint;
+            if (int.TryParse(threadid, out threadidint))
+            {
+                var thread = p.Threads.Cast<ProcessThread>().SingleOrDefault(t => t.Id == threadidint);
+                if (thread == null)
+                {
+                    LogHelper.Debug("The thread " + threadidint + " has not been found for PID " + pid);
+                }
+                else
+                {
+                    var thaddr = thread.StartAddress.ToInt64();
+                    var module = p.Modules.Cast<ProcessModule>().FirstOrDefault(m => thaddr >= (m.BaseAddress.ToInt64() + m.ModuleMemorySize));
+                    if (module == null)
+                    {
+                        LogHelper.Debug("The thread has been found, but no module matches.");
+                    }
+                    else
+                    {
+                        LogHelper.Debug("The thread has been found for module " + module.ModuleName);
+
+                        svc = module.ModuleName;
+                        svcdsc = getServiceDesc(svc);
+
+                        if (String.IsNullOrEmpty(svcdsc))
+                        {
+                            LogHelper.Debug("But no service description matches...");
+                            
+                            svc = null;
+                            svcdsc = null;
+                        }
+
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                LogHelper.Error("Unable to parse the Thread ID / value = " + threadid, null);
+            }*/
+
+
+            LogHelper.Error("Unable to retrieve the service name, falling back to previous method.", null);
+
+            // And if it still fails, fall backs to the most ugly way ever I am not able to get rid of :-P
             // Retrieves corresponding existing rules
+            int profile = FirewallHelper.GetCurrentProfile();
             var cRules = FirewallHelper.GetRules()
                                        .Where(r => r.Enabled &&
+                                                   (((r.Profiles & profile) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0)) &&
                                                    r.Action == NetFwTypeLib.NET_FW_ACTION_.NET_FW_ACTION_ALLOW &&
                                                    !String.IsNullOrEmpty(r.serviceName) && svcs.Contains(r.serviceName, StringComparer.CurrentCultureIgnoreCase) &&
                                                    (r.Protocol == (int)NetFwTypeLib.NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY || r.Protocol == (int)protocol) &&
                                                    (String.IsNullOrEmpty(r.RemotePorts) || r.RemotePorts == "*" || r.RemotePorts.Split(',').Contains(port)) &&
                                                    (String.IsNullOrEmpty(r.LocalPorts) || r.LocalPorts == "*" || r.LocalPorts.Split(',').Contains(localport)))
-                                       .Select(r => r.serviceName);
+                                       .Select(r => r.serviceName)
+                                       .Distinct()
+                                       .ToList();
 
             // Trying to guess the corresponding service if not found with the previous method and if not already filtered
-            svcs = svcs.Except(filteredsvcs, StringComparer.CurrentCultureIgnoreCase)
+            svcs = svcs//.Except(filteredsvcs, StringComparer.CurrentCultureIgnoreCase)
                        .Except(cRules, StringComparer.CurrentCultureIgnoreCase)
                        .ToArray();
+            
+            LogHelper.Debug("Excluding " + String.Join(",", cRules) + " // Remains " + String.Join(",", svcs));
 
-            if (svcs.Length == 1)
+            if (svcs.Length > 0)
             {
-                svc = svcs[0];
-                svcdsc = getServiceDesc(svc);
-            }
-            else if (svcs.Length > 1)
-            {
-                svc = "* " + String.Join(", ", svcs);
-                svcdsc = String.Empty;
+                unsure = true;
+                svc = svcs;
+                svcdsc = svcs.Select(s => getServiceDesc(s)).ToArray();
             }
 
             return;
@@ -217,7 +265,7 @@ namespace WindowsFirewallNotifier
             }
         }
 
-        
+
         /// <summary>
         /// 
         /// </summary>
