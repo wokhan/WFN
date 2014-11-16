@@ -17,7 +17,6 @@ namespace WindowsFirewallNotifierConsole
             rbEnable.Checked = InstallHelper.IsInstalled();
 
             chkAnimate.Checked = Settings.Default.UseAnimation;
-            chkDetails.Checked = Settings.Default.AlwaysShowDetails;
             chkNoBlockRule.Checked = Settings.Default.UseBlockRules;
             chkOEnableServiceDetection.Checked = Settings.Default.EnableServiceDetection;
             chkToTray.Checked = Settings.Default.MinimizeToTray;
@@ -52,7 +51,6 @@ namespace WindowsFirewallNotifierConsole
             }
 
             Settings.Default.UseAnimation = chkAnimate.Checked;
-            Settings.Default.AlwaysShowDetails = chkDetails.Checked;
             Settings.Default.UseBlockRules = chkNoBlockRule.Checked;
             Settings.Default.EnableServiceDetection = chkOEnableServiceDetection.Checked;
             Settings.Default.MinimizeToTray = chkToTray.Checked;

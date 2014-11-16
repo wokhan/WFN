@@ -34,8 +34,8 @@ namespace WindowsFirewallNotifierConsole
             System.Windows.Forms.Button btnOptions;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptionsForm));
             System.Windows.Forms.Button btnDonate;
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.btnTConnections = new System.Windows.Forms.Button();
             this.btnTRules = new System.Windows.Forms.Button();
@@ -658,8 +658,8 @@ namespace WindowsFirewallNotifierConsole
             // 
             this.colExcIcon.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.colExcIcon.DataPropertyName = "Icon";
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.colExcIcon.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.colExcIcon.DefaultCellStyle = dataGridViewCellStyle1;
             this.colExcIcon.FillWeight = 20.30457F;
             resources.ApplyResources(this.colExcIcon, "colExcIcon");
             this.colExcIcon.Name = "colExcIcon";
@@ -669,8 +669,8 @@ namespace WindowsFirewallNotifierConsole
             // colExcPath
             // 
             this.colExcPath.DataPropertyName = "Path";
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.colExcPath.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.colExcPath.DefaultCellStyle = dataGridViewCellStyle2;
             this.colExcPath.FillWeight = 179.6954F;
             resources.ApplyResources(this.colExcPath, "colExcPath");
             this.colExcPath.Name = "colExcPath";

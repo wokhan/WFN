@@ -118,23 +118,17 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="checkBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>402, 17</value>
+  <data name="chkToTray.Size" type="System.Drawing.Size, System.Drawing">
+    <value>400, 17</value>
   </data>
-  <data name="checkBox1.Text" xml:space="preserve">
-    <value>Réduire la fenêtre près de l'horloge plutôt que dans la barres des tâches.</value>
+  <data name="chkToTray.Text" xml:space="preserve">
+    <value>Réduire la console près de l'horloge plutôt que dans la barre des tâches.</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
     <value>83, 13</value>
   </data>
   <data name="label1.Text" xml:space="preserve">
     <value>Autres options</value>
-  </data>
-  <data name="chkDetails.Size" type="System.Drawing.Size, System.Drawing">
-    <value>340, 17</value>
-  </data>
-  <data name="chkDetails.Text" xml:space="preserve">
-    <value>Toujours afficher les détails dans les notifications par défaut.</value>
   </data>
   <data name="lblNoBlockRule.Text" xml:space="preserve">
     <value>Cette option permet de continuer à bloquer les applications même si vous désactivez les notifications, en créant des règles dans le pare-feu Windows.</value>
@@ -184,5 +178,8 @@ Veuillez vous assurer d'avoir lu la documentation avant de continuer.</value>
         yJ3t9Q4XLv+RU0gSUKjc2eFukf233AjNSAKKkKs2GZXc6J6WBGiUSwN0yuUBGuXygM9Dgxa5gP8tF3L7
         xKJDbuN6vwPEcUnIScjNcq5cQDYsoFJIB/UB+gCqeIAxnUvAigAAAABJRU5ErkJggg==
 </value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Windows Firewall Notifier - Paramètres</value>
   </data>
 </root>

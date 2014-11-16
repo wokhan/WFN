@@ -78,7 +78,11 @@ namespace WindowsFirewallNotifier
                 defTargetPort = resources.GetString(chkPortRule.Name + ".Text");
             }
 
-            if (!Settings.Default.AlwaysShowDetails)
+            if (Settings.Default.AlwaysShowDetails)
+            {
+                exHeight = btnAdvanced.Top + btnAdvanced.Height + 3;   
+            }
+            else
             {
                 this.Height = btnAdvanced.Top + btnAdvanced.Height + 3;
             }
@@ -181,7 +185,7 @@ namespace WindowsFirewallNotifier
                             app = String.Empty;
                         }
 
-                        //if (Settings.Default.EnableServiceDetection)
+                        if (Settings.Default.EnableServiceDetection)
                         {
                             ProcessHelper.GetService(pid, threadid, (NetFwTypeLib.NET_FW_IP_PROTOCOL_)Enum.Parse(typeof(NetFwTypeLib.NET_FW_IP_PROTOCOL_), protocol), targetPort, localport, out svc, out svcdsc, out unsure);
                         }
@@ -253,8 +257,7 @@ namespace WindowsFirewallNotifier
             int index = conns.IndexOf(activeConn);
 
             lblConn.Text = (index + 1) + "/" + conns.Count;
-            //lblClose.Text = Resources.
-
+            
             btnNext.Enabled = (index < (conns.Count - 1));
             btnPrev.Enabled = (index > 0);
 
@@ -333,19 +336,19 @@ namespace WindowsFirewallNotifier
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        protected override CreateParams CreateParams
-        {
-            get
-            {
-                CreateParams cp = base.CreateParams;
-                // CS_DROPSHADOW
-                //cp.ClassStyle |= 0x00020000;
-                return cp;
-            }
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //protected override CreateParams CreateParams
+        //{
+        //    get
+        //    {
+        //        CreateParams cp = base.CreateParams;
+        //        // CS_DROPSHADOW
+        //        //cp.ClassStyle |= 0x00020000;
+        //        return cp;
+        //    }
+        //}
 
         /// <summary>
         /// 
@@ -666,12 +669,18 @@ namespace WindowsFirewallNotifier
                 exHeight = this.Height;
                 targetHeight = this.Height + pnlHeader.Height;
                 pnlMain.Height = targetHeight;
+
+                Settings.Default.AlwaysShowDetails = true;
             }
             else
             {
                 targetHeight = exHeight;
                 exHeight = -1;
+
+                Settings.Default.AlwaysShowDetails = false;
             }
+
+            Settings.Default.Save();
 
             int targetTop = Screen.PrimaryScreen.WorkingArea.Bottom - targetHeight;
             int startTop = this.Top;
@@ -691,6 +700,7 @@ namespace WindowsFirewallNotifier
             }
 
             pnlMain.Height = targetHeight;
+
         }
 
         private void ctxtCopy_Click(object sender, EventArgs e)

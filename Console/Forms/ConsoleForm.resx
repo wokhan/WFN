@@ -161,7 +161,7 @@
     <value>17</value>
   </data>
   <data name="btnOptions.Text" xml:space="preserve">
-    <value>Notif. settings</value>
+    <value> Settings</value>
   </data>
   <data name="btnOptions.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
     <value>ImageBeforeText</value>
@@ -248,7 +248,7 @@
   <data name="btnUpdate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1
-        MAAA6mAAADqYAAAXb5JfxUYAAAAJcEhZcwAACw0AAAsNAe0HwCwAAAKASURBVDhPbc1LTBNRFAbgS2KM
+        MAAA6mAAADqYAAAXb5JfxUYAAAAJcEhZcwAACwwAAAsMAT9AIsgAAAKASURBVDhPbc1LTBNRFAbgS2KM
         iB1KbZERLCi0aoIbITS0RW0tIiotJBCUVkWNAQRjlIRogtGFceVj6dK4cOMGN8aEhTEmRtm4wJ2rQmcE
         +qDlaQemHP87046aOMk3c+495z/DVvvs7Fd/DcvdcDB1CAYdbGvEuYtuHhzLDTuL4DDq/q1hp94HPssz
         PKu91i9Va0Ho3Ryo86uDde0YJJxf4TsFkjrgEHG+Aof4LM/oC8J2Db9Qrh14CgRx5ep+UsIVpEREQp3D
@@ -562,150 +562,6 @@ No firewall rule is created nor removed when you update this list.</value>
   <data name="tabPanel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left, Right</value>
   </data>
-  <data name="&gt;&gt;tabConnections.Name" xml:space="preserve">
-    <value>tabConnections</value>
-  </data>
-  <data name="&gt;&gt;tabConnections.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabConnections.Parent" xml:space="preserve">
-    <value>tabPanel</value>
-  </data>
-  <data name="&gt;&gt;tabConnections.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;tabRules.Name" xml:space="preserve">
-    <value>tabRules</value>
-  </data>
-  <data name="&gt;&gt;tabRules.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabRules.Parent" xml:space="preserve">
-    <value>tabPanel</value>
-  </data>
-  <data name="&gt;&gt;tabRules.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;tabExceptions.Name" xml:space="preserve">
-    <value>tabExceptions</value>
-  </data>
-  <data name="&gt;&gt;tabExceptions.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabExceptions.Parent" xml:space="preserve">
-    <value>tabPanel</value>
-  </data>
-  <data name="&gt;&gt;tabExceptions.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;tabLog.Name" xml:space="preserve">
-    <value>tabLog</value>
-  </data>
-  <data name="&gt;&gt;tabLog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabLog.Parent" xml:space="preserve">
-    <value>tabPanel</value>
-  </data>
-  <data name="&gt;&gt;tabLog.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="tabPanel.ItemSize" type="System.Drawing.Size, System.Drawing">
-    <value>96, 22</value>
-  </data>
-  <data name="tabPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>-7, 12</value>
-  </data>
-  <data name="tabPanel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="tabPanel.Padding" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="tabPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>847, 455</value>
-  </data>
-  <data name="tabPanel.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;tabPanel.Name" xml:space="preserve">
-    <value>tabPanel</value>
-  </data>
-  <data name="&gt;&gt;tabPanel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabPanel.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;tabPanel.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <metadata name="toolStripConnections.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>623, 17</value>
-  </metadata>
-  <data name="&gt;&gt;lstConnections.Name" xml:space="preserve">
-    <value>lstConnections</value>
-  </data>
-  <data name="&gt;&gt;lstConnections.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ListView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lstConnections.Parent" xml:space="preserve">
-    <value>tabConnections</value>
-  </data>
-  <data name="&gt;&gt;lstConnections.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;toolStripConnections.Name" xml:space="preserve">
-    <value>toolStripConnections</value>
-  </data>
-  <data name="&gt;&gt;toolStripConnections.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripConnections.Parent" xml:space="preserve">
-    <value>tabConnections</value>
-  </data>
-  <data name="&gt;&gt;toolStripConnections.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;lblConnections.Name" xml:space="preserve">
-    <value>lblConnections</value>
-  </data>
-  <data name="&gt;&gt;lblConnections.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblConnections.Parent" xml:space="preserve">
-    <value>tabConnections</value>
-  </data>
-  <data name="&gt;&gt;lblConnections.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="tabConnections.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 26</value>
-  </data>
-  <data name="tabConnections.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 3, 5, 3</value>
-  </data>
-  <data name="tabConnections.Size" type="System.Drawing.Size, System.Drawing">
-    <value>839, 425</value>
-  </data>
-  <data name="tabConnections.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="tabConnections.Text" xml:space="preserve">
-    <value>Connections</value>
-  </data>
-  <data name="&gt;&gt;tabConnections.Name" xml:space="preserve">
-    <value>tabConnections</value>
-  </data>
-  <data name="&gt;&gt;tabConnections.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabConnections.Parent" xml:space="preserve">
-    <value>tabPanel</value>
-  </data>
-  <data name="&gt;&gt;tabConnections.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="connOwner.Text" xml:space="preserve">
     <value>Owner</value>
   </data>
@@ -787,6 +643,127 @@ No firewall rule is created nor removed when you update this list.</value>
   <metadata name="toolStripConnections.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>623, 17</value>
   </metadata>
+  <data name="btnConnTrack.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="btnConnTrack.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKpSURBVDhPZZJbSNNhGMa/f6VzkaBFRhRRXo1Iuylv7KIC
+        qwsLuqib6KbyVM622XIeh4dCIegiKKIDYRdBBGbm8rQt/atzts25bCYF3dSFofZ1YB2Int73W8q/+uBh
+        N/s97/N/30dcihVa2mIHPW2TB2RrNF+6J0iRPOkOb5Vu3ULKlg36elmnZ8kaPVNW62nSRXIOmjwOv7CI
+        ttghL8Foje7FxYlduBDJQ1MoB3XBzagPbkJDcCPqxtahJpAJ10g6XMNmnNdNODe4Ana/5hXuyX2JJJyP
+        lvAONIVz0BLahivPC9A4ng1XIIPg1QSvQpUBdviXoahHSwiOzZMVHMpFLU29NX0U/F5/HEJtYA2cwyY1
+        2TmUugTbfBoqBoQU/M0cuzmci8ZnFlQH1qL95TFlwO+V9NHkdNgHhYIrny6n6GTgJYN+NqCFNYe3K9hN
+        katGM3Bn+oiCf+Kb+p1Z6CHQDKtXGGGUP2ID2vYiXB/cAOfIStyOH1bgD3xW4hdf6IbdZ4J1QCThXoHT
+        yoBPNb5FwbWBLFTqKbj5opAQnr+wJOAXZqQHtgEzzjD8RKA0aUB3VqfKUqdyDGm4MbWf/v4VCcwuifPE
+        P3Shos+MMoLLPH8MVEkMd+ZlXZ8qoPmf8AXvSG/JLIHY3H2KbUIpgQp+LFDMBqphCk7e+axf4FpsD82b
+        J4s3ZCQRnbtHsdNQ3G2AuwSOd5IB15MnM8x35k1fje3Gd7wnzWJi/i7K+/6HizrJ4CEZqG4bGlZOW74c
+        2angyHw7rASXGGKXEEzRcYoNOsjA1WtOGOtp82tw+FLQNJoNW3/qXzBPXoRPdiglhFNP8RrrySWx0p1L
+        +Ez/wBzbAONEh/AKhz/VYvdpngqfJrnbXE9uGJeEz8TibfPC+Js5NosMPMUPhOU3Icd7dDmNLJgAAAAA
+        SUVORK5CYII=
+</value>
+  </data>
+  <data name="btnConnTrack.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="btnConnTrack.Size" type="System.Drawing.Size, System.Drawing">
+    <value>97, 22</value>
+  </data>
+  <data name="btnConnTrack.Text" xml:space="preserve">
+    <value>Start tracking</value>
+  </data>
+  <data name="btnConnStop.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAALtSURBVDhPTZJLTFNREIZPEaEoJqIBg7oRFzYudIHBBa5c
+        GGPUGPcIFsqbAoWWgqXViApRl27cGWMMj1AQqSDcluZSaMG2PDQWFMrDR+LCXAO9uFB/55yW6EkmOZnM
+        98+cOT97MHdR1zF3ydUxe15pn8lXHGGKUJ7iCB5XHLKOIkexy9mKTc5SWuQMpVnWKlYKszfVZfIwHeuY
+        uywRjPaZs7gbPoO24CnYp4/BPpUDB4U9cBjNkxkw+7RoGt8F63gaLHIqGr3JqPdoJOaYPafG4XyCc9Ee
+        zsOj+Qu4Hz4NW+Agbvgzce+NDg9DubBN7INZThGwyZMEw5BGZXzs7c426tgXtYKf9Y0QrBN7YfHtxtrG
+        tMh1LuhR7WYCrnNrYBxlCuNvvhPKw+3gCVj92XCt3hTF37YWSSAdlnEt3SMi5/xgRMUoo9FJQCKBES5A
+        C7sdPIlb0zo0Te7HwEqzKP6qzgvYLCfTfVbkehYrUf6abcOofsEFaNsc5gsz+/agP9ooir+oIQE3eJPw
+        ORYSua6FMpQNsTg8zFApBPhXTR1Ba+AQGqijM1orij+pUwKu9zCsxwIi1xkxwOBKwK8YyuMC9M/0VTZ/
+        FkzyDvQuV4ritZgPpjEal5a2Snd+nkeKUTLIUEVTVJCQEBAm8R9AC/11nZehZ6mUSn9jJeYVsFFiiNKd
+        5569L4J+IAG/ZCjlAsJhBFt96ailjl0f9VS8heWYJOAaeu/SpkS5n3j67hqK+hMwCRX0kwC3p5WW10QO
+        q6GOnSTwB5tYVkcFXEXvXYqNkMCmECh0xmEDCRX0kYDwdsKeNdTxSeQqfuE73v7oFnAFLWte6Ra5xzNX
+        UNgrRkcJF3CSgHU4Tf3n7SSYvWlomzyKFm+mWBbftkXKROtYDqoGtaIzh4tpEgqVmeWd0ra3uT1ryWkV
+        ic4c5gszUMfrfXHwPxh6J5OYyZOiq3drXEa3RuHe5vbkDuMm4d/Eg2+bL4y/mY/NgwRcpT1M9xfm+oNn
+        t1U7yQAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="btnConnStop.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="btnConnStop.Size" type="System.Drawing.Size, System.Drawing">
+    <value>97, 22</value>
+  </data>
+  <data name="btnConnStop.Text" xml:space="preserve">
+    <value>Stop tracking</value>
+  </data>
+  <data name="slow5SecondsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>136, 22</value>
+  </data>
+  <data name="slow5SecondsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Slow (5s)</value>
+  </data>
+  <data name="normal2sToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>136, 22</value>
+  </data>
+  <data name="normal2sToolStripMenuItem.Text" xml:space="preserve">
+    <value>Normal (1s)</value>
+  </data>
+  <data name="fast1sToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>136, 22</value>
+  </data>
+  <data name="fast1sToolStripMenuItem.Text" xml:space="preserve">
+    <value>Fast (0.5s)</value>
+  </data>
+  <data name="stripConnUpdSpeed.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKxSURBVDhPfZL7S1NhHMYPXX4M+jv8D5qFFGT0S0ERCIEh
+        hQhGVmablzyWLCJhQ1tYlualtbkuYpu3inlptqvbLC9zuul0ujm3uftxO9Ond6cZKNkDH95zvu/7fM/z
+        nvel9oumcahSpjslkBnuVcsNT6pk+mq+3HCZ7rEczy75tyq7DXnVCuNIc+8M22dZwZjNi6GfbnR8t4P+
+        aHJWdetLskv3StCtv0Z/tqaMixuIJFlsxJIwLwXA7gDxVBoLvgheqWfBl2lfXFEoDmdtFMWXak/SveaU
+        YyOKRHoHceIwuwIQ9U+SRmlsMixi7DYCiRTaRm2okGrrOGPxS9PR+2/HdcZFP6KpbfjjKYS30jCR9waV
+        FSEmzdUyhEh9NcSAfqfbKu/S5VBlHePnJF+mEGRSXFQfYXOLhc7hg7DHSOosV9slk6TPuozb7RoxVdo6
+        KlRZXKQrC290iyNj0Ng9qFVowWyDS7RLZm56LYS77ZoJ6mbrSOeozQNfPInVMMPhT7AYm1tDgVgFcZ8Z
+        ItUERMo/TC4HsRxKgC/9sU4Vt6g71TOr8JAvZooZ3KTBrDeE1uEpNA1Y8IzDDMmgBZMrASwGYyjv0vio
+        oueDQrluAWvE7CRFZzAOZyCGpc04PGSP3n24IwwM5DhLWtQTVGHjUP7DD3rOtBCIYt7/f1ZIqi7NHAqb
+        hsRUHj18pECs1KqsLrhIZBu5DAfhIIms7iBKG5XM1cb+HO6sLz3tzS2SDCbH7F4uwex6BNPe8F9m1sMk
+        VYx7rpGP4+LjngeccVf5jxSFBSJlUq6145cnBAe3jTg32nxRfJ1241abGmfrFM17rueuTtMy3pla6bfr
+        koGk8JMOTeTvNihNKHujxvn69/N5NdIb2aUHiyfoOMHjd97hCbrqcwWdlWS8wKt4fSw7nRVF/QbCdYbR
+        5OrbsQAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="stripConnUpdSpeed.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="stripConnUpdSpeed.Size" type="System.Drawing.Size, System.Drawing">
+    <value>97, 22</value>
+  </data>
+  <data name="stripConnUpdSpeed.Text" xml:space="preserve">
+    <value>Update rate</value>
+  </data>
+  <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>6, 25</value>
+  </data>
+  <data name="toolStripSeparator3.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="btnConnFindR.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="btnConnFindR.Size" type="System.Drawing.Size, System.Drawing">
+    <value>57, 22</value>
+  </data>
+  <data name="btnConnFindR.Text" xml:space="preserve">
+    <value>Find rule</value>
+  </data>
+  <data name="btnConnFindR.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="toolStripConnections.Location" type="System.Drawing.Point, System.Drawing">
     <value>5, 3</value>
   </data>
@@ -810,127 +787,6 @@ No firewall rule is created nor removed when you update this list.</value>
   </data>
   <data name="&gt;&gt;toolStripConnections.ZOrder" xml:space="preserve">
     <value>1</value>
-  </data>
-  <data name="btnConnTrack.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="btnConnTrack.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKqSURBVDhPZZJdSJNhGIbfr9K5SNAiI4ooj0aknZQndlCB
-        1YEFHdRJdNKP09psmy2nTpc/hULQQVBEP4QdBBGYmcvUbblPXTM3dZkmBZ3UgaH29sP6Ibp7nncpX/XC
-        zU523c/9Pc8tLiSKLS2Jvf6WsT2yebRQ+kZI8QLpi22UPt1CypV1+mrp1XNktZ4tq/QM6SG5+0x+V0hY
-        REtiX4BgNI/uxPmRbTgXL0DDcB680fWoja5DXXQtvE9XoTqSDc9AJjz9ZpzRTTjdtwTOkBYQZ8d2JVNw
-        IZpiW9AQy0PT8CZcel6E+qFceCJZBC8neBkqDbArtAjWLi0pODZPVvBwPmpo6o3Jg+D3+mMYNZEVcPeb
-        1GR3OH0BdgQ1lPcKKfibOXZjLB/1zyyoiqxE68tDyoDfKxmkyZlw9gkFVzxZTNHJIEAGPWxAC2uMbVaw
-        jyJXDmbh1uQBBf/EN/U7NddFoBn2gDDCsD1gA9r2PFwbXQP3wFLcnNivwB/4rMRvYq4TzqAJ9l6Rgh8L
-        nFAGfKqhDQquieSgQk/D9RfFhPD8uQUBvzAl/XD0mnGS4UcCpSkDurM6VY46lSus4dr4bvr7VyQxvSDO
-        M/GhA+XdZpQRXOb/Y6BKYrgzL+vqeBHN/4QveEd6S2ZJJGbuUmwTSglU8EOBEjZQDVNw6s6nQgJXEjto
-        3ixZvCEjidGZOxQ7AyWdBrhD4HA7GXA9eTLDfGfe9OXEdnzHe9I0RmZvw9b9P3y8nQzuk4HqtqFhNtry
-        xfhWBcdnW2En2GqIbSWYouMYG7SRgafHnDTW0xHS4AqmoWEwF46e9L9gnjwPH21TSgq3nhYw1pNLYqc7
-        W/lM/8Ac2wDjSJsICFco3eIMav7yoCa521xPbhiXhM/E4m3zwvibOTaLDPwl94TlNy14e3nzwsp8AAAA
-        AElFTkSuQmCC
-</value>
-  </data>
-  <data name="btnConnTrack.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="btnConnTrack.Size" type="System.Drawing.Size, System.Drawing">
-    <value>97, 22</value>
-  </data>
-  <data name="btnConnTrack.Text" xml:space="preserve">
-    <value>Start tracking</value>
-  </data>
-  <data name="btnConnStop.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAALuSURBVDhPTZJLTFNREIZPEaEoJqIBg7oRFzYudIHBBa5c
-        GGPUGPcIFgqUR4FCywVLiwEVoi7duDPGGB6hIFIfcFuaS6GAbXloLCiUh4/EhbkGWlyov3NOS/Qkk5xM
-        5vtnzpyf3Zu7qOucu+TqnD2vdszkq44QRTBPdQSOqw5FR5Gj2pVs1aZkqc1KhtqkaFWJwuJNdZk9TMc6
-        5y7LBKNj5ixuh86gPXAK9uljsE/lwEFhnzyMpokMWHxaNI7tgjSWBquSigZvMuo8Gpm1zp6LxeF8gnPR
-        EcrDg/kLuBs6DdvkQdzwZ+LOGx3uB3NhG98Hi5IiYLMnCWUvNTHGx97ubKOO/REJ/KxvBCGN74XVtxtr
-        G9Mi17WgR5WbCbjWrYFphKmMv/lWMA9tgROQ/NlwrbaK4m9biySQDuuYlu5hkXN+MME4wmh0EpBJYJgL
-        0MLaAidxc1qHxon9GFxpEsVfY/MCtijJdJ8Vud7FCpS/Ztswqp5xAdo2h/nCLL49GIg0iOIvsaCA671J
-        +BwNilz3Qhm9m8XhVwwVQoB/1dQRtEweQj11dEZqRPGn2JSA6zwM69FJkesKG2BwJeAXDOVxAfpn+iqb
-        PwtmZQf6litE8VrUB/MojUtLW6U7P0/DxSgZYqikKYwkJASESfwH0Ex/Xetl6F0qpdLfWIl6BWySGSJ0
-        57kn74ugH0zAzxlKuYBwGMGSLx011LH7o56Kt7AclQVcTe9d2pQp9xOP311D0UACJqGCARLg9pRoeY3k
-        sGrq2EUCf7CJ5diIgCvpvUvRYRLYFAKFzjhsIKGCfhIQ3k7Ys5o6PgpfxS98x9sfPQI20rLm1R6Rezhz
-        BYV9YnSUcAEnCUjDabF/3k6CxZuG9omjaPZmimXxbVvlTLSM5qBySCs6c7iYJqGIMYuyU972NrdnDTnN
-        mOjMYb4wA3W83h8H/4OhdzKZmT0pujq3xmVya1TubW5P7jBuEv5NPPi2+cL4m/nYPEjAVdrLdH8B8quD
-        bOe/cAsAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="btnConnStop.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="btnConnStop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>97, 22</value>
-  </data>
-  <data name="btnConnStop.Text" xml:space="preserve">
-    <value>Stop tracking</value>
-  </data>
-  <data name="stripConnUpdSpeed.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKxSURBVDhPfZL7T1JhHMbPuvzY1t/hfxDWXG3Z+qW2Wptb
-        m83VnJstKzPwksdytJYbTKVZlqYQA+niDPBSDS9hICBgeUEUFEVBFOQql4M+vZygTZc922fvOd/3fb7n
-        ec/7UgdF0zhSLdOf4ckMD2rlhmc1solartxwle61nMwu+beqewwFtQrjSJtyllFbVjFm82Lopxvd3+2g
-        P5qcNT0TZdml+8XrmbhBf7amjEubCCcZbEaTMC/7wewBsVQai74wXmvmwJXpXl5TKI5mbRTFlepO033m
-        lGMzgp30HmLEYXb5IeifIo3S2I4ziDK78O+k0DlqQ5VU18AaS1+Zjj98N643Lm0hktrFViyFUCINE3lv
-        UlkRjKfZWoYgqa8F46Dl+kSlRJ9HVXSPXxB9mUYgnmKj+gjbCQZ6hw/8XiOpM2wtRyaJ2rqCu11aIVXe
-        McpXWVykKwNvJMGSMWjtHtQrdIjvgk2UIzM3sx7E/S7tJHW7Y0Q8avPAF0tiLRRn2dphMDa/jiKhCkK1
-        GQLVJATKP0ytBLAS3AFX+mODKm3XiDWza/CQL2aKGdykwZw3iI7habQMWNDKYoZo0IKpVT+WAlFUSrQ+
-        quTFIF+uX8Q6MTtJ0RmIwemPYnk7Bg/Zo/cA7nAcBnKcZe2aSaq4eajw8YcJ1rToj2Bh6/+sklQS7TyK
-        W4aEVAE9fKxIqNSprC64SGQbuQyH4SCJrO4AylvV8evN/XnsWV953pdfIhpMjtm9bIK5jTBmvKG/zG6E
-        SKoo+1wnH8flp72PWGNOhU8UxUUCZVKus+OXJwgHu40YO9p8EXydceNOpwbnGxRt+65nTmdpGedcvfTb
-        TdFAkv9Jjxbyd5uUJlS81eBi4/uFgjrprezSw8XhdZ/icMX3ODxJYz5PXE3GS5yqNyey01lR1G/SpYbZ
-        1VE4RQAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="stripConnUpdSpeed.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="stripConnUpdSpeed.Size" type="System.Drawing.Size, System.Drawing">
-    <value>97, 22</value>
-  </data>
-  <data name="stripConnUpdSpeed.Text" xml:space="preserve">
-    <value>Update rate</value>
-  </data>
-  <data name="slow5SecondsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>136, 22</value>
-  </data>
-  <data name="slow5SecondsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Slow (5s)</value>
-  </data>
-  <data name="normal2sToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>136, 22</value>
-  </data>
-  <data name="normal2sToolStripMenuItem.Text" xml:space="preserve">
-    <value>Normal (1s)</value>
-  </data>
-  <data name="fast1sToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>136, 22</value>
-  </data>
-  <data name="fast1sToolStripMenuItem.Text" xml:space="preserve">
-    <value>Fast (0.5s)</value>
-  </data>
-  <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 25</value>
-  </data>
-  <data name="toolStripSeparator3.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="btnConnFindR.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="btnConnFindR.Size" type="System.Drawing.Size, System.Drawing">
-    <value>57, 22</value>
-  </data>
-  <data name="btnConnFindR.Text" xml:space="preserve">
-    <value>Find rule</value>
-  </data>
-  <data name="btnConnFindR.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
   </data>
   <data name="lblConnections.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Bottom</value>
@@ -969,118 +825,31 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="&gt;&gt;lblConnections.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <metadata name="toolStripRules.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>122, 17</value>
-  </metadata>
-  <data name="&gt;&gt;gridRules.Name" xml:space="preserve">
-    <value>gridRules</value>
-  </data>
-  <data name="&gt;&gt;gridRules.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gridRules.Parent" xml:space="preserve">
-    <value>tabRules</value>
-  </data>
-  <data name="&gt;&gt;gridRules.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;toolStripRules.Name" xml:space="preserve">
-    <value>toolStripRules</value>
-  </data>
-  <data name="&gt;&gt;toolStripRules.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripRules.Parent" xml:space="preserve">
-    <value>tabRules</value>
-  </data>
-  <data name="&gt;&gt;toolStripRules.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="tabRules.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="tabConnections.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 26</value>
   </data>
-  <data name="tabRules.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
+  <data name="tabConnections.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 3, 5, 3</value>
   </data>
-  <data name="tabRules.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="tabConnections.Size" type="System.Drawing.Size, System.Drawing">
     <value>839, 425</value>
   </data>
-  <data name="tabRules.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+  <data name="tabConnections.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
   </data>
-  <data name="tabRules.Text" xml:space="preserve">
-    <value>Rules</value>
+  <data name="tabConnections.Text" xml:space="preserve">
+    <value>Connections</value>
   </data>
-  <data name="&gt;&gt;tabRules.Name" xml:space="preserve">
-    <value>tabRules</value>
+  <data name="&gt;&gt;tabConnections.Name" xml:space="preserve">
+    <value>tabConnections</value>
   </data>
-  <data name="&gt;&gt;tabRules.Type" xml:space="preserve">
+  <data name="&gt;&gt;tabConnections.Type" xml:space="preserve">
     <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;tabRules.Parent" xml:space="preserve">
+  <data name="&gt;&gt;tabConnections.Parent" xml:space="preserve">
     <value>tabPanel</value>
   </data>
-  <data name="&gt;&gt;tabRules.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <metadata name="colRName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colRIcon.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colRPath.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colRSvc.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colRDirection.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colRProfile.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colRAction.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colRLocalport.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colRTarget.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colRPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colREnabled.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="gridRules.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="gridRules.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 28</value>
-  </data>
-  <data name="gridRules.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>30, 30, 3, 3</value>
-  </data>
-  <data name="gridRules.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 356</value>
-  </data>
-  <data name="gridRules.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;gridRules.Name" xml:space="preserve">
-    <value>gridRules</value>
-  </data>
-  <data name="&gt;&gt;gridRules.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gridRules.Parent" xml:space="preserve">
-    <value>tabRules</value>
-  </data>
-  <data name="&gt;&gt;gridRules.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;tabConnections.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="colRName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -1185,48 +954,50 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="colREnabled.Width" type="System.Int32, mscorlib">
     <value>55</value>
   </data>
+  <data name="gridRules.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="gridRules.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 28</value>
+  </data>
+  <data name="gridRules.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>30, 30, 3, 3</value>
+  </data>
+  <data name="gridRules.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 356</value>
+  </data>
+  <data name="gridRules.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;gridRules.Name" xml:space="preserve">
+    <value>gridRules</value>
+  </data>
+  <data name="&gt;&gt;gridRules.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gridRules.Parent" xml:space="preserve">
+    <value>tabRules</value>
+  </data>
+  <data name="&gt;&gt;gridRules.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <metadata name="toolStripRules.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>122, 17</value>
   </metadata>
-  <data name="toolStripRules.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
-  </data>
-  <data name="toolStripRules.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 25</value>
-  </data>
-  <data name="toolStripRules.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="toolStripRules.Text" xml:space="preserve">
-    <value>toolStrip1</value>
-  </data>
-  <data name="&gt;&gt;toolStripRules.Name" xml:space="preserve">
-    <value>toolStripRules</value>
-  </data>
-  <data name="&gt;&gt;toolStripRules.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripRules.Parent" xml:space="preserve">
-    <value>tabRules</value>
-  </data>
-  <data name="&gt;&gt;toolStripRules.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <data name="btnRDelete.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJmSURBVDhPhZFLTBNBHMYnRA9gt9vSFqggiKGpehToi1IC
-        hkeAUKFNBMVHgkAIcDBy0ED0YExIr5pw0HgQ48mLJw568GaPHjQmGuxr2y2lQBekUCj9nJ3dRCREv+SX
-        +U/2900ms+RoCtN12sKUZaAwbZnFlHW+MGmZoftmPCJFqnJ88hOWsf3R2mW64jBbt2v28+OWj3sTdS2q
-        +ifyqbsjtQu5kXP4F5lr5j263lJrSn4NV89tD9eAcb0a20NVynzMPu0z720OnXGzouQ/bc30lGYlfyUk
-        XyUyA2ZIV88i02dkc8ZrgjRYi0x/BSR/FaUS635zEGP1J8m61xygQGatW4/si4fY//EZm/e6sNZWjJ23
-        T5EPfYE07sB6j5F5zPWaO0mq1xhM95ZDZrVdi+zrAOTkkxHsLC2yubCbxcaoA+lOPfOY213+hMS7yhKp
-        rjIwOk1IdZiQffecleQcbKxiY8aLVBtPnXLFU3hFhHZeXGk3QcEI0V2MrYU5tUpvkAgjPXwJyRaN6iiI
-        l42LJN5qDIqttERJNGkgzU+yUiEtIhd8z+b88les+C4g4eGZx9xWA722pzRAgYzgKMHWy3kcpJNYuz8I
-        wU3fYOkNDpIxrNxwQHBqmMdoLu0ggstgpVJWcOshNOkQb6uA6D2PmK0EMccpCB4DxCsXEXPx9DDqMPhP
-        aCEn2L+O2HWzUacOURfFziHaUIKokz+yp7NCLu7QN7GiHBBSFLHzzyj4D7mITXdTrf2dcKPmTqhe+z1s
-        0+IIuZ827kO4gXOp6vH55jJwETvXF7JpH4Rs3GPK3VAj51Q/HwohvwHq5NedOOjYJgAAAABJRU5ErkJg
-        gg==
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJlSURBVDhPhZFLTBNBHMYnRA9gt9vSFqggiKGpehToiwIB
+        w0MklEcTIaIcEAgBDkYOGogejAnhqgkHjQcxnrx44qAHb/boQWOiwb623VJK2wUpFNp+zs5uIhKiX/LL
+        /Cf7+yaTWXI8hbk6bWHWMliYsyxg1rpUmLHM030zHpEiVTk5uWnL5OFE7TpdcRRprOYwN2X5eDBd16qq
+        fyKfuj9eu5Idv4B/kRw2H9B1TK0p+TVavbg7WgPGzWrsjlQp8wn7+ID5YHvknJsVJe9Za/qaLiN5KyEN
+        VSI9aIZ04zzSfUY2pz0mSMO1SA9UQPJWUSqR9Jp9mKw/TZIe8zIFMls9emRePMThj8/YvteNrfZi7L19
+        ipz/C6QpB5LXjcxjrsfcReK9Rl+itxwymx1aZF4vQ04uFsTe2iqbC/sZpCYcSHTpmcfcnvInJNJdFo13
+        l4HRZUK804TMu+esJCef2kRq3oN4O0+dcsVTeEWEDl7c6DBBwQjRXYydlUW1Sm8QDSAxegWxVo3qKIhX
+        jask0mb0iW20RIk2aSAtzbBSISEi63vP5tz6V2wMXUK0hWcec9sM9NotpcsUyAiOEuy8XEI+EcPW/WEI
+        bvoGa2+Qj4WxccsBwalhHqO5tJMILoOVShnBrYfQpEOkvQKi5yLCthKEHWcgtBgg9l9G2MXTw6jD4D+h
+        lZxi/zpo1y2EnDqEXBQ7h1BDCUJO/tiezgrZiEPfxIpyQEhR0M4/o+A/ZIM23W219ncCjZo7/nrt94BN
+        i2Nkf9q4D4EGzqWqJ+eby8AF7Vyf36Z94Ldxjyl3/Y2cU/18JIT8Br0F144PBPyWAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="btnRDelete.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
@@ -1244,14 +1015,14 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="btnRLocate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGrSURBVDhPldBPaJJxGAfwXzVjw8MORXXYBjEWQYfpMQy6
-        BF3GdppEjnk2o8sS9kIUZAdxbXju0iXGiNiL2N/3YofQIHw3ZjjRV5zL2my8aD9931dtvt9+poEYzncP
-        fOCB3/OF5/eQRi7gxW6g1KmRW3mG7PNB0q/UhE9D1of/+S+0R3qXKnnKkB6ik5ZelHWJsyHJXe6mJxbP
-        tKMsnHJTpBaA9H3G85e65dH/9d1+pz2Snrx7sRUWXRTJO6huzqMSu42K6DiSwubEdYuzFY7dojXRDjlq
-        Ry31GLX0E8bbU529K1vcweHOUzcLz1Ll801UE2zt3DKw4+8vtwRVelQhSuwGLX+6hmrcBWQesINxhqgS
-        x8JRKy2FLdA2HEDyHrDtNkQV3ZQowhUqC+PQvkwDX51AfM6Q5q0IFUZo4c05KJHr0Ddm0BCnDGl+lxTf
-        DtEfQTN+hSdRj9pQi1w1RIlYKZFDp2l+fQDyhzEoHy+hEp4wRhilJP+CVLMvCfZDwyi9P4viO4Nem8sk
-        u3Yi9e3VSezxp/AzaDKON2kks0rOF3gifOdJ6TgKPPH+AYlmkeVJHQU5AAAAAElFTkSuQmCC
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGlSURBVDhPldA9SFtRFAfwU7+odXBQbIdaKEURHNRRFLoI
+        XUo7VYqKzhpx0YAPRKFxkNiKs0uHQiml+BBt1bfEQZKCJIqKhuRJjN9peRhv7uUl1ry/V40gFvV54AcH
+        7vnDuYfS0VEXtkbjV6WjI2OIfH5IdxVfHTIRGcL/3E8yIzcX13sS0PtxlRnuNSxdqUNQqbjOWustykSJ
+        RMjBEOoGwj2S8xxfclqX/XX/wk7dCnY+vwj72xmCHUgutYL7m8ADzbcSci4wXt2WCb9nqUAjDF8jUqEP
+        SIUHJdeNjuW7WFb+nmx+dMjwOyZ+v0JyTa4d/QRsuu8WHQbXB7gMN7DEfD2SK+3ARp88mGIL1xUZ9tWw
+        uKca5mIzEOwC1h22CL+DkdAqmaG9gLnwBlhtA1ZabDm7FTHtKYv9LIHwvoS1+BbpwGtbzr5Lh7/y2d5E
+        AY48VTj21SHlrbVFeGsYGZN5bGc8B8bsM4i5cnBPmT1aKaOdL5SMfCccTBYiPlOMw2mbph4lKPLtQWj7
+        Rxb21Wz8mci1T801aeMrPY6ppO2qFL+PmEquU0kfkcxc5wWcAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="btnRLocate.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
@@ -1294,16 +1065,16 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="btnRRefresh.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHwSURBVDhPlZPNaxNRFMWPay2C4EIFP+pOkRYkupDiTvAf
-        UNyJi3w1salN0Kg0aKQktVNt0EKilk7t0qUfS0HUvUvBjXbpJov2tUzn3evJ9BnHGCk98OO+++47Zz6Y
-        QT/JEoZkESm7hHvWR5V9jpx140jsd6uPw67dEjeP0fCSgzbROMbHGmfvGHxRm9gb+vgoPvLOSnMLI0ET
-        P3SBhm0IX+BLp8oCUlvm5zgStPBdWzywE54hGQXoEyzqPDd6MPPYMB7W+s0cScgcTpgGVrXBDYepQ+xj
-        TMtTJKSBIa69+LzLXCdgBtfUYxPDepiNbo2SOgbCh/igM5z1IB6ykBoqWuOGw9SwrtMYdv7O/JKt4z15
-        26WGN6yvZQoJyH0GVGl2mCoDKn8CtpVU+AiTNMewk/DcuCue2ye3cYgc4PpgZ80L7YHcxUlzg2+6TLPD
-        lPkSb6Iut5DQIoZZL5Oi3MEV1gtSxggDzkgJA1G6LcHnQe3FjGHdlLAajGPFTuCVLfKznkCWs6tSxDkF
-        dkUBOoajQZ5fYYHGPmzk8DMs4LO9jmVbwCMpYFzy2B+Zf4sb54M0VjRH07+0N3P4Go7ik82hKaM45Wx/
-        SzMYtBkss7aJxtnM4JtNY5YXOu6O/1+S4u+cRNom8YBMsc8y5LQbxwT8Al5Ru9d9/2ddAAAAAElFTkSu
-        QmCC
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHvSURBVDhPlZPNaxNRFMWPay2C4EIFP3eKtCDRhRR3gv+A
+        4k5c5KsTm9oEjUqDptSkZqoNWkjU0qlduvRjKYi6dym40S7dZPFKyzTvXk+mzzjGSPHAj/vuu++c+WAG
+        gyTLGJYlpOwy7toAFfYeOePGkdjv1AAHXbslbh6h4QUHbaJxTIA1zt4y+II2sbsT4IMEyDkrzS2Mhk18
+        10UatqHzHJ+7VRaR2jI/w6GwhW/a4oH/4SmSUYA+xpIucKMPs4ANU8faoJkjCZnHcdOA0QY3HOY+xD7C
+        rDxBQhoY5tqPz3vMdwPquKo+mxjWx1x0a5TUMNR5gPda56wP8ZGFVFHWKjccpop1ncWI83fnF20N78ib
+        HlW8Zn0lM0hA7jGgQrPDVBhQ/h2wraTMR5iiOYadgu/GPfHcHrmFA2Qf1/u7a15oF+QOTpjrfNMlmh2m
+        xJd4AzW5iYQWMMJ6iRTkNi6znpcSRhlwWooYitJtEQEPaj9mHOumCBNOYNVO4qUt8LOeRJazK1LAWQV2
+        RAE6jsNhjl9hnsYBbHj40cnjk72GFZvHQ8ljQnLYG5l/iRvnwjRW1aPpb9qbHr50xvDRemjKGE4625/S
+        DI7aDFZY20TjbGbw1aYxxwsdc8f/LUnxd04ibZOYJjPssww55cYxAT8BJSu7vjcrbvUAAAAASUVORK5C
+        YII=
 </value>
   </data>
   <data name="btnRRefresh.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
@@ -1317,27 +1088,6 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   </data>
   <data name="toolStripSeparator8.Size" type="System.Drawing.Size, System.Drawing">
     <value>6, 25</value>
-  </data>
-  <data name="btnRShow.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAIkSURBVDhPjZHfS1NhHMbfy6CbbvonHOhtVFAERdEP
-        tZmrLbdSI+gi6KKbcGr0awQxBYks0rVm07ntzGZBdZFBijho1hprNbfpOTtnO6flMqLLp++7eWDGll58
-        +D7v833O83LOYcaxDDvlzbLTPpGZ/Tl2NigzWyjPzj9XWVf4O+ueJl4U7USpBnNbKbhGQdThz2YFvQSq
-        kAmx6lz6X0GvbUoFTZ1cZ1jbSewgvbTu1S3osQh5XHmlUagAa6iAc1OFDPnbraH8NtIJgns1C3pMfpke
-        ViEkfsE5/wNnAjIsQQUdQSVJxDsE0hV+/1vQ3z4h4fLLPLyffmIitoZAfA133xdhmpRgnszB4t+AWF3Q
-        1za+gkthGa7oKtyLqxilyfXYxxJuvdOoQATldCS60KAX2FufZXExJOHBQhEPI8Xy1OFnTrcgos2bRfv4
-        smzyiU38lZnRk7a2etK4IKxgYFbF4KwGJ02dwTmNfA1dgWW0PE2DLlTpwsb1V2asxZ2ynXiSQqc/izsz
-        ChzE7bcVHDP5smf1ZXDU9Y0KUspJT9pQ/dFZszvFjru+9h8ZScLsXYL9tYS+NxW45h7fUUaibAMVbPhr
-        5YJjI1/Y4UfxGweHP8PoTuDqdKYM19yjnUyZJp6tXTCaZIeGY+zA/cWb+4aiaH4cK8M1eSrtGnlm04L9
-        Qx/Y3oHI9d3OCDikFfIMfLfFgijb41xgu+7NOwiRdAP36hfk2F8w3nftd3BpBwAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="btnRShow.Size" type="System.Drawing.Size, System.Drawing">
-    <value>80, 22</value>
-  </data>
-  <data name="btnRShow.Text" xml:space="preserve">
-    <value>Show all</value>
   </data>
   <data name="showAllToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>256, 22</value>
@@ -1362,6 +1112,27 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   </data>
   <data name="wSHRulesOnlyToolStripMenuItem.Text" xml:space="preserve">
     <value>WSH rules (Windows hidden rules)</value>
+  </data>
+  <data name="btnRShow.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
+        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAIkSURBVDhPjZHfS1NhHMbfy6CbbvonHOhtVFAERdEP
+        tZmrLbdSI+gi6KKbcGr0awQxBYks0rVm07ntzGZBdZFBijho1hprNbfpOTtnO6flMqLLp++7eWDGll58
+        +D7v833O83LOYcaxDDvlzbLTPpGZ/Tl2NigzWyjPzj9XWVf4O+ueJl4U7USpBnNbKbhGQdThz2YFvQSq
+        kAmx6lz6X0GvbUoFTZ1cZ1jbSewgvbTu1S3osQh5XHmlUagAa6iAc1OFDPnbraH8NtIJgns1C3pMfpke
+        ViEkfsE5/wNnAjIsQQUdQSVJxDsE0hV+/1vQ3z4h4fLLPLyffmIitoZAfA133xdhmpRgnszB4t+AWF3Q
+        1za+gkthGa7oKtyLqxilyfXYxxJuvdOoQATldCS60KAX2FufZXExJOHBQhEPI8Xy1OFnTrcgos2bRfv4
+        smzyiU38lZnRk7a2etK4IKxgYFbF4KwGJ02dwTmNfA1dgWW0PE2DLlTpwsb1V2asxZ2ynXiSQqc/izsz
+        ChzE7bcVHDP5smf1ZXDU9Y0KUspJT9pQ/dFZszvFjru+9h8ZScLsXYL9tYS+NxW45h7fUUaibAMVbPhr
+        5YJjI1/Y4UfxGweHP8PoTuDqdKYM19yjnUyZJp6tXTCaZIeGY+zA/cWb+4aiaH4cK8M1eSrtGnlm04L9
+        Qx/Y3oHI9d3OCDikFfIMfLfFgijb41xgu+7NOwiRdAP36hfk2F8w3nftd3BpBwAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="btnRShow.Size" type="System.Drawing.Size, System.Drawing">
+    <value>80, 22</value>
+  </data>
+  <data name="btnRShow.Text" xml:space="preserve">
+    <value>Show all</value>
   </data>
   <data name="toolStripSeparator7.Size" type="System.Drawing.Size, System.Drawing">
     <value>6, 25</value>
@@ -1393,9 +1164,105 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="toolStripLabel1.Text" xml:space="preserve">
     <value>Filter:</value>
   </data>
-  <metadata name="toolStripExceptions.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>250, 17</value>
+  <data name="toolStripRules.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="toolStripRules.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 25</value>
+  </data>
+  <data name="toolStripRules.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="toolStripRules.Text" xml:space="preserve">
+    <value>toolStrip1</value>
+  </data>
+  <data name="&gt;&gt;toolStripRules.Name" xml:space="preserve">
+    <value>toolStripRules</value>
+  </data>
+  <data name="&gt;&gt;toolStripRules.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripRules.Parent" xml:space="preserve">
+    <value>tabRules</value>
+  </data>
+  <data name="&gt;&gt;toolStripRules.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tabRules.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 26</value>
+  </data>
+  <data name="tabRules.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabRules.Size" type="System.Drawing.Size, System.Drawing">
+    <value>839, 425</value>
+  </data>
+  <data name="tabRules.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="tabRules.Text" xml:space="preserve">
+    <value>Rules</value>
+  </data>
+  <data name="&gt;&gt;tabRules.Name" xml:space="preserve">
+    <value>tabRules</value>
+  </data>
+  <data name="&gt;&gt;tabRules.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabRules.Parent" xml:space="preserve">
+    <value>tabPanel</value>
+  </data>
+  <data name="&gt;&gt;tabRules.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <metadata name="colExcIcon.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
   </metadata>
+  <data name="colExcIcon.HeaderText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="colExcIcon.MinimumWidth" type="System.Int32, mscorlib">
+    <value>22</value>
+  </data>
+  <data name="colExcIcon.Width" type="System.Int32, mscorlib">
+    <value>22</value>
+  </data>
+  <metadata name="colExcPath.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colExcPath.HeaderText" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <metadata name="colExcLocalPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colExcLocalPort.HeaderText" xml:space="preserve">
+    <value>Local port</value>
+  </data>
+  <metadata name="colExcTarget.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colExcTarget.HeaderText" xml:space="preserve">
+    <value>Target</value>
+  </data>
+  <metadata name="colExcTargetPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colExcTargetPort.HeaderText" xml:space="preserve">
+    <value>Remote port</value>
+  </data>
+  <data name="gridExceptions.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="gridExceptions.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 28</value>
+  </data>
+  <data name="gridExceptions.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 332</value>
+  </data>
+  <data name="gridExceptions.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
   <data name="&gt;&gt;gridExceptions.Name" xml:space="preserve">
     <value>gridExceptions</value>
   </data>
@@ -1407,6 +1274,77 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   </data>
   <data name="&gt;&gt;gridExceptions.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <metadata name="toolStripExceptions.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>250, 17</value>
+  </metadata>
+  <data name="btnERemove.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="btnERemove.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJlSURBVDhPhZFLTBNBHMYnRA9gt9vSFqggiKGpehToiwIB
+        w0MklEcTIaIcEAgBDkYOGogejAnhqgkHjQcxnrx44qAHb/boQWOiwb623VJK2wUpFNp+zs5uIhKiX/LL
+        /Cf7+yaTWXI8hbk6bWHWMliYsyxg1rpUmLHM030zHpEiVTk5uWnL5OFE7TpdcRRprOYwN2X5eDBd16qq
+        fyKfuj9eu5Idv4B/kRw2H9B1TK0p+TVavbg7WgPGzWrsjlQp8wn7+ID5YHvknJsVJe9Za/qaLiN5KyEN
+        VSI9aIZ04zzSfUY2pz0mSMO1SA9UQPJWUSqR9Jp9mKw/TZIe8zIFMls9emRePMThj8/YvteNrfZi7L19
+        ipz/C6QpB5LXjcxjrsfcReK9Rl+itxwymx1aZF4vQ04uFsTe2iqbC/sZpCYcSHTpmcfcnvInJNJdFo13
+        l4HRZUK804TMu+esJCef2kRq3oN4O0+dcsVTeEWEDl7c6DBBwQjRXYydlUW1Sm8QDSAxegWxVo3qKIhX
+        jask0mb0iW20RIk2aSAtzbBSISEi63vP5tz6V2wMXUK0hWcec9sM9NotpcsUyAiOEuy8XEI+EcPW/WEI
+        bvoGa2+Qj4WxccsBwalhHqO5tJMILoOVShnBrYfQpEOkvQKi5yLCthKEHWcgtBgg9l9G2MXTw6jD4D+h
+        lZxi/zpo1y2EnDqEXBQ7h1BDCUJO/tiezgrZiEPfxIpyQEhR0M4/o+A/ZIM23W219ncCjZo7/nrt94BN
+        i2Nkf9q4D4EGzqWqJ+eby8AF7Vyf36Z94Ldxjyl3/Y2cU/18JIT8Br0F144PBPyWAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="btnERemove.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="btnERemove.Size" type="System.Drawing.Size, System.Drawing">
+    <value>70, 22</value>
+  </data>
+  <data name="btnERemove.Text" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>6, 25</value>
+  </data>
+  <data name="btnELocate.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="btnELocate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGlSURBVDhPldA9SFtRFAfwU7+odXBQbIdaKEURHNRRFLoI
+        XUo7VYqKzhpx0YAPRKFxkNiKs0uHQiml+BBt1bfEQZKCJIqKhuRJjN9peRhv7uUl1ry/V40gFvV54AcH
+        7vnDuYfS0VEXtkbjV6WjI2OIfH5IdxVfHTIRGcL/3E8yIzcX13sS0PtxlRnuNSxdqUNQqbjOWustykSJ
+        RMjBEOoGwj2S8xxfclqX/XX/wk7dCnY+vwj72xmCHUgutYL7m8ADzbcSci4wXt2WCb9nqUAjDF8jUqEP
+        SIUHJdeNjuW7WFb+nmx+dMjwOyZ+v0JyTa4d/QRsuu8WHQbXB7gMN7DEfD2SK+3ARp88mGIL1xUZ9tWw
+        uKca5mIzEOwC1h22CL+DkdAqmaG9gLnwBlhtA1ZabDm7FTHtKYv9LIHwvoS1+BbpwGtbzr5Lh7/y2d5E
+        AY48VTj21SHlrbVFeGsYGZN5bGc8B8bsM4i5cnBPmT1aKaOdL5SMfCccTBYiPlOMw2mbph4lKPLtQWj7
+        Rxb21Wz8mci1T801aeMrPY6ppO2qFL+PmEquU0kfkcxc5wWcAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="btnELocate.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="btnELocate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>62, 22</value>
+  </data>
+  <data name="btnELocate.Text" xml:space="preserve">
+    <value>Locate</value>
+  </data>
+  <data name="toolStripExceptions.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="toolStripExceptions.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 25</value>
+  </data>
+  <data name="toolStripExceptions.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="toolStripExceptions.Text" xml:space="preserve">
+    <value>toolStrip2</value>
   </data>
   <data name="&gt;&gt;toolStripExceptions.Name" xml:space="preserve">
     <value>toolStripExceptions</value>
@@ -1446,264 +1384,6 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   </data>
   <data name="&gt;&gt;tabExceptions.ZOrder" xml:space="preserve">
     <value>2</value>
-  </data>
-  <metadata name="colExcIcon.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colExcPath.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colExcLocalPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colExcTarget.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colExcTargetPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="gridExceptions.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="gridExceptions.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 28</value>
-  </data>
-  <data name="gridExceptions.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 332</value>
-  </data>
-  <data name="gridExceptions.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;gridExceptions.Name" xml:space="preserve">
-    <value>gridExceptions</value>
-  </data>
-  <data name="&gt;&gt;gridExceptions.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gridExceptions.Parent" xml:space="preserve">
-    <value>tabExceptions</value>
-  </data>
-  <data name="&gt;&gt;gridExceptions.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <metadata name="colExcIcon.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="colExcIcon.HeaderText" xml:space="preserve">
-    <value />
-  </data>
-  <data name="colExcIcon.MinimumWidth" type="System.Int32, mscorlib">
-    <value>22</value>
-  </data>
-  <data name="colExcIcon.Width" type="System.Int32, mscorlib">
-    <value>22</value>
-  </data>
-  <metadata name="colExcPath.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="colExcPath.HeaderText" xml:space="preserve">
-    <value>Path</value>
-  </data>
-  <metadata name="colExcLocalPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="colExcLocalPort.HeaderText" xml:space="preserve">
-    <value>Local port</value>
-  </data>
-  <metadata name="colExcTarget.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="colExcTarget.HeaderText" xml:space="preserve">
-    <value>Target</value>
-  </data>
-  <metadata name="colExcTargetPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="colExcTargetPort.HeaderText" xml:space="preserve">
-    <value>Remote port</value>
-  </data>
-  <metadata name="toolStripExceptions.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>250, 17</value>
-  </metadata>
-  <data name="toolStripExceptions.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
-  </data>
-  <data name="toolStripExceptions.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 25</value>
-  </data>
-  <data name="toolStripExceptions.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="toolStripExceptions.Text" xml:space="preserve">
-    <value>toolStrip2</value>
-  </data>
-  <data name="&gt;&gt;toolStripExceptions.Name" xml:space="preserve">
-    <value>toolStripExceptions</value>
-  </data>
-  <data name="&gt;&gt;toolStripExceptions.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripExceptions.Parent" xml:space="preserve">
-    <value>tabExceptions</value>
-  </data>
-  <data name="&gt;&gt;toolStripExceptions.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="btnERemove.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="btnERemove.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJmSURBVDhPhZFLTBNBHMYnRA9gt9vSFqggiKGpehToi1IC
-        hkeAUKFNBMVHgkAIcDBy0ED0YExIr5pw0HgQ48mLJw568GaPHjQmGuxr2y2lQBekUCj9nJ3dRCREv+SX
-        +U/2900ms+RoCtN12sKUZaAwbZnFlHW+MGmZoftmPCJFqnJ88hOWsf3R2mW64jBbt2v28+OWj3sTdS2q
-        +ifyqbsjtQu5kXP4F5lr5j263lJrSn4NV89tD9eAcb0a20NVynzMPu0z720OnXGzouQ/bc30lGYlfyUk
-        XyUyA2ZIV88i02dkc8ZrgjRYi0x/BSR/FaUS635zEGP1J8m61xygQGatW4/si4fY//EZm/e6sNZWjJ23
-        T5EPfYE07sB6j5F5zPWaO0mq1xhM95ZDZrVdi+zrAOTkkxHsLC2yubCbxcaoA+lOPfOY213+hMS7yhKp
-        rjIwOk1IdZiQffecleQcbKxiY8aLVBtPnXLFU3hFhHZeXGk3QcEI0V2MrYU5tUpvkAgjPXwJyRaN6iiI
-        l42LJN5qDIqttERJNGkgzU+yUiEtIhd8z+b88les+C4g4eGZx9xWA722pzRAgYzgKMHWy3kcpJNYuz8I
-        wU3fYOkNDpIxrNxwQHBqmMdoLu0ggstgpVJWcOshNOkQb6uA6D2PmK0EMccpCB4DxCsXEXPx9DDqMPhP
-        aCEn2L+O2HWzUacOURfFziHaUIKokz+yp7NCLu7QN7GiHBBSFLHzzyj4D7mITXdTrf2dcKPmTqhe+z1s
-        0+IIuZ827kO4gXOp6vH55jJwETvXF7JpH4Rs3GPK3VAj51Q/HwohvwHq5NedOOjYJgAAAABJRU5ErkJg
-        gg==
-</value>
-  </data>
-  <data name="btnERemove.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="btnERemove.Size" type="System.Drawing.Size, System.Drawing">
-    <value>70, 22</value>
-  </data>
-  <data name="btnERemove.Text" xml:space="preserve">
-    <value>Remove</value>
-  </data>
-  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 25</value>
-  </data>
-  <data name="btnELocate.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="btnELocate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGrSURBVDhPldBPaJJxGAfwXzVjw8MORXXYBjEWQYfpMQy6
-        BF3GdppEjnk2o8sS9kIUZAdxbXju0iXGiNiL2N/3YofQIHw3ZjjRV5zL2my8aD9931dtvt9+poEYzncP
-        fOCB3/OF5/eQRi7gxW6g1KmRW3mG7PNB0q/UhE9D1of/+S+0R3qXKnnKkB6ik5ZelHWJsyHJXe6mJxbP
-        tKMsnHJTpBaA9H3G85e65dH/9d1+pz2Snrx7sRUWXRTJO6huzqMSu42K6DiSwubEdYuzFY7dojXRDjlq
-        Ry31GLX0E8bbU529K1vcweHOUzcLz1Ll801UE2zt3DKw4+8vtwRVelQhSuwGLX+6hmrcBWQesINxhqgS
-        x8JRKy2FLdA2HEDyHrDtNkQV3ZQowhUqC+PQvkwDX51AfM6Q5q0IFUZo4c05KJHr0Ddm0BCnDGl+lxTf
-        DtEfQTN+hSdRj9pQi1w1RIlYKZFDp2l+fQDyhzEoHy+hEp4wRhilJP+CVLMvCfZDwyi9P4viO4Nem8sk
-        u3Yi9e3VSezxp/AzaDKON2kks0rOF3gifOdJ6TgKPPH+AYlmkeVJHQU5AAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="btnELocate.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="btnELocate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>62, 22</value>
-  </data>
-  <data name="btnELocate.Text" xml:space="preserve">
-    <value>Locate</value>
-  </data>
-  <metadata name="toolStripLog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>407, 17</value>
-  </metadata>
-  <data name="&gt;&gt;gridLog.Name" xml:space="preserve">
-    <value>gridLog</value>
-  </data>
-  <data name="&gt;&gt;gridLog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gridLog.Parent" xml:space="preserve">
-    <value>tabLog</value>
-  </data>
-  <data name="&gt;&gt;gridLog.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;toolStripLog.Name" xml:space="preserve">
-    <value>toolStripLog</value>
-  </data>
-  <data name="&gt;&gt;toolStripLog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripLog.Parent" xml:space="preserve">
-    <value>tabLog</value>
-  </data>
-  <data name="&gt;&gt;toolStripLog.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="tabLog.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 26</value>
-  </data>
-  <data name="tabLog.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="tabLog.Size" type="System.Drawing.Size, System.Drawing">
-    <value>839, 425</value>
-  </data>
-  <data name="tabLog.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="tabLog.Text" xml:space="preserve">
-    <value>Log</value>
-  </data>
-  <data name="&gt;&gt;tabLog.Name" xml:space="preserve">
-    <value>tabLog</value>
-  </data>
-  <data name="&gt;&gt;tabLog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabLog.Parent" xml:space="preserve">
-    <value>tabPanel</value>
-  </data>
-  <data name="&gt;&gt;tabLog.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <metadata name="colDate.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colIcon.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colPath.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colTarget.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colProtocol.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colPort.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="gridLog.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="gridLog.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 28</value>
-  </data>
-  <data name="gridLog.RowHeadersWidth" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
-  <data name="gridLog.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 356</value>
-  </data>
-  <data name="gridLog.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;gridLog.Name" xml:space="preserve">
-    <value>gridLog</value>
-  </data>
-  <data name="&gt;&gt;gridLog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gridLog.Parent" xml:space="preserve">
-    <value>tabLog</value>
-  </data>
-  <data name="&gt;&gt;gridLog.ZOrder" xml:space="preserve">
-    <value>0</value>
   </data>
   <metadata name="colDate.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1759,41 +1439,47 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="colPort.Width" type="System.Int32, mscorlib">
     <value>53</value>
   </data>
+  <data name="gridLog.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="gridLog.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 28</value>
+  </data>
+  <data name="gridLog.RowHeadersWidth" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="gridLog.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 356</value>
+  </data>
+  <data name="gridLog.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;gridLog.Name" xml:space="preserve">
+    <value>gridLog</value>
+  </data>
+  <data name="&gt;&gt;gridLog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gridLog.Parent" xml:space="preserve">
+    <value>tabLog</value>
+  </data>
+  <data name="&gt;&gt;gridLog.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <metadata name="toolStripLog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>407, 17</value>
   </metadata>
-  <data name="toolStripLog.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
-  </data>
-  <data name="toolStripLog.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 25</value>
-  </data>
-  <data name="toolStripLog.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;toolStripLog.Name" xml:space="preserve">
-    <value>toolStripLog</value>
-  </data>
-  <data name="&gt;&gt;toolStripLog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripLog.Parent" xml:space="preserve">
-    <value>tabLog</value>
-  </data>
-  <data name="&gt;&gt;toolStripLog.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <data name="btnLLocate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGrSURBVDhPldBPaJJxGAfwXzVjw8MORXXYBjEWQYfpMQy6
-        BF3GdppEjnk2o8sS9kIUZAdxbXju0iXGiNiL2N/3YofQIHw3ZjjRV5zL2my8aD9931dtvt9+poEYzncP
-        fOCB3/OF5/eQRi7gxW6g1KmRW3mG7PNB0q/UhE9D1of/+S+0R3qXKnnKkB6ik5ZelHWJsyHJXe6mJxbP
-        tKMsnHJTpBaA9H3G85e65dH/9d1+pz2Snrx7sRUWXRTJO6huzqMSu42K6DiSwubEdYuzFY7dojXRDjlq
-        Ry31GLX0E8bbU529K1vcweHOUzcLz1Ll801UE2zt3DKw4+8vtwRVelQhSuwGLX+6hmrcBWQesINxhqgS
-        x8JRKy2FLdA2HEDyHrDtNkQV3ZQowhUqC+PQvkwDX51AfM6Q5q0IFUZo4c05KJHr0Ddm0BCnDGl+lxTf
-        DtEfQTN+hSdRj9pQi1w1RIlYKZFDp2l+fQDyhzEoHy+hEp4wRhilJP+CVLMvCfZDwyi9P4viO4Nem8sk
-        u3Yi9e3VSezxp/AzaDKON2kks0rOF3gifOdJ6TgKPPH+AYlmkeVJHQU5AAAAAElFTkSuQmCC
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGlSURBVDhPldA9SFtRFAfwU7+odXBQbIdaKEURHNRRFLoI
+        XUo7VYqKzhpx0YAPRKFxkNiKs0uHQiml+BBt1bfEQZKCJIqKhuRJjN9peRhv7uUl1ry/V40gFvV54AcH
+        7vnDuYfS0VEXtkbjV6WjI2OIfH5IdxVfHTIRGcL/3E8yIzcX13sS0PtxlRnuNSxdqUNQqbjOWustykSJ
+        RMjBEOoGwj2S8xxfclqX/XX/wk7dCnY+vwj72xmCHUgutYL7m8ADzbcSci4wXt2WCb9nqUAjDF8jUqEP
+        SIUHJdeNjuW7WFb+nmx+dMjwOyZ+v0JyTa4d/QRsuu8WHQbXB7gMN7DEfD2SK+3ARp88mGIL1xUZ9tWw
+        uKca5mIzEOwC1h22CL+DkdAqmaG9gLnwBlhtA1ZabDm7FTHtKYv9LIHwvoS1+BbpwGtbzr5Lh7/y2d5E
+        AY48VTj21SHlrbVFeGsYGZN5bGc8B8bsM4i5cnBPmT1aKaOdL5SMfCccTBYiPlOMw2mbph4lKPLtQWj7
+        Rxb21Wz8mci1T801aeMrPY6ppO2qFL+PmEquU0kfkcxc5wWcAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="btnLLocate.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
@@ -1832,48 +1518,87 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   <data name="btnLEvents.Text" xml:space="preserve">
     <value>Events log viewer</value>
   </data>
+  <data name="toolStripLog.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="toolStripLog.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 25</value>
+  </data>
+  <data name="toolStripLog.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;toolStripLog.Name" xml:space="preserve">
+    <value>toolStripLog</value>
+  </data>
+  <data name="&gt;&gt;toolStripLog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripLog.Parent" xml:space="preserve">
+    <value>tabLog</value>
+  </data>
+  <data name="&gt;&gt;toolStripLog.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tabLog.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 26</value>
+  </data>
+  <data name="tabLog.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabLog.Size" type="System.Drawing.Size, System.Drawing">
+    <value>839, 425</value>
+  </data>
+  <data name="tabLog.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tabLog.Text" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="&gt;&gt;tabLog.Name" xml:space="preserve">
+    <value>tabLog</value>
+  </data>
+  <data name="&gt;&gt;tabLog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabLog.Parent" xml:space="preserve">
+    <value>tabPanel</value>
+  </data>
+  <data name="&gt;&gt;tabLog.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="tabPanel.ItemSize" type="System.Drawing.Size, System.Drawing">
+    <value>96, 22</value>
+  </data>
+  <data name="tabPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>-7, 12</value>
+  </data>
+  <data name="tabPanel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="tabPanel.Padding" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="tabPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>847, 455</value>
+  </data>
+  <data name="tabPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;tabPanel.Name" xml:space="preserve">
+    <value>tabPanel</value>
+  </data>
+  <data name="&gt;&gt;tabPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;tabPanel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <metadata name="timerTrk.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>526, 17</value>
   </metadata>
-  <data name="&gt;&gt;btnTExceptions.Name" xml:space="preserve">
-    <value>btnTExceptions</value>
-  </data>
-  <data name="&gt;&gt;btnTExceptions.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnTExceptions.Parent" xml:space="preserve">
-    <value>pnlOverTabTop</value>
-  </data>
-  <data name="&gt;&gt;btnTExceptions.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="pnlOverTabTop.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
-  </data>
-  <data name="pnlOverTabTop.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="pnlOverTabTop.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="pnlOverTabTop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>833, 37</value>
-  </data>
-  <data name="pnlOverTabTop.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
-  <data name="&gt;&gt;pnlOverTabTop.Name" xml:space="preserve">
-    <value>pnlOverTabTop</value>
-  </data>
-  <data name="&gt;&gt;pnlOverTabTop.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pnlOverTabTop.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pnlOverTabTop.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="btnTExceptions.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
@@ -1928,6 +1653,33 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
   </data>
   <data name="&gt;&gt;btnTExceptions.ZOrder" xml:space="preserve">
     <value>1</value>
+  </data>
+  <data name="pnlOverTabTop.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="pnlOverTabTop.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="pnlOverTabTop.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="pnlOverTabTop.Size" type="System.Drawing.Size, System.Drawing">
+    <value>833, 37</value>
+  </data>
+  <data name="pnlOverTabTop.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="&gt;&gt;pnlOverTabTop.Name" xml:space="preserve">
+    <value>pnlOverTabTop</value>
+  </data>
+  <data name="&gt;&gt;pnlOverTabTop.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlOverTabTop.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pnlOverTabTop.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <metadata name="trayIcon.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>906, 17</value>
