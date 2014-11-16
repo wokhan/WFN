@@ -276,7 +276,7 @@ namespace WindowsFirewallNotifier
             lblApp.Tag = lblApp.Text;
 
             lblPath.Text = String.Format(defPath, activeConn.CurrentPath);
-            lblPath.Tag = lblPath.Text;
+            lblPath.Tag = activeConn.CurrentPath;
 
             if (!String.IsNullOrEmpty(activeConn.ResolvedHost))
             {
@@ -286,14 +286,14 @@ namespace WindowsFirewallNotifier
             {
                 chkTRule.Text = String.Format(defTarget, activeConn.Target);
                 Dns.BeginGetHostEntry(activeConn.Target, GetHostEntryCallback, activeConn);
-                chkTRule.Tag = chkTRule.Text;
+                chkTRule.Tag = activeConn.Target;
             }
 
             chkPortRule.Text = String.Format(defTargetPort, activeConn.TargetPort);
-            chkPortRule.Tag = chkPortRule.Text;
+            chkPortRule.Tag = activeConn.TargetPort;
 
             chkLPortRule.Text = String.Format(defLPort, activeConn.LocalPort);
-            chkLPortRule.Tag = chkLPortRule.Text;
+            chkLPortRule.Tag = activeConn.LocalPort;
 
             chkTemp.Checked = false;
 
@@ -362,7 +362,7 @@ namespace WindowsFirewallNotifier
                     if (ar.AsyncState == activeConn)
                     {
                         chkTRule.Text = String.Format(defTarget, activeConn.Target + " (" + activeConn.ResolvedHost + ")");
-                        chkTRule.Tag = chkTRule.Text;
+                        chkTRule.Tag = activeConn.Target + " (" + activeConn.ResolvedHost + ")";
                     }
                 }
             }
