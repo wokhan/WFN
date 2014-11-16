@@ -33,7 +33,6 @@
             System.Windows.Forms.Label lblInstDesc;
             this.chkToTray = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.chkDetails = new System.Windows.Forms.CheckBox();
             this.lblNoBlockRule = new System.Windows.Forms.Label();
             this.chkNoBlockRule = new System.Windows.Forms.CheckBox();
             this.chkOEnableServiceDetection = new System.Windows.Forms.CheckBox();
@@ -49,10 +48,10 @@
             // 
             // pnlInsStep1
             // 
+            resources.ApplyResources(pnlInsStep1, "pnlInsStep1");
             pnlInsStep1.BackColor = System.Drawing.SystemColors.Window;
             pnlInsStep1.Controls.Add(this.chkToTray);
             pnlInsStep1.Controls.Add(this.label1);
-            pnlInsStep1.Controls.Add(this.chkDetails);
             pnlInsStep1.Controls.Add(this.lblNoBlockRule);
             pnlInsStep1.Controls.Add(this.chkNoBlockRule);
             pnlInsStep1.Controls.Add(this.chkOEnableServiceDetection);
@@ -61,7 +60,6 @@
             pnlInsStep1.Controls.Add(this.ddlEnableFor);
             pnlInsStep1.Controls.Add(this.rbEnable);
             pnlInsStep1.Controls.Add(lblInstDesc);
-            resources.ApplyResources(pnlInsStep1, "pnlInsStep1");
             pnlInsStep1.Name = "pnlInsStep1";
             // 
             // chkToTray
@@ -76,13 +74,6 @@
             resources.ApplyResources(this.label1, "label1");
             this.label1.Name = "label1";
             // 
-            // chkDetails
-            // 
-            resources.ApplyResources(this.chkDetails, "chkDetails");
-            this.chkDetails.FlatAppearance.MouseOverBackColor = System.Drawing.Color.PowderBlue;
-            this.chkDetails.Name = "chkDetails";
-            this.chkDetails.UseVisualStyleBackColor = true;
-            // 
             // lblNoBlockRule
             // 
             resources.ApplyResources(this.lblNoBlockRule, "lblNoBlockRule");
@@ -90,22 +81,22 @@
             // 
             // chkNoBlockRule
             // 
-            this.chkNoBlockRule.FlatAppearance.MouseOverBackColor = System.Drawing.Color.PowderBlue;
             resources.ApplyResources(this.chkNoBlockRule, "chkNoBlockRule");
+            this.chkNoBlockRule.FlatAppearance.MouseOverBackColor = System.Drawing.Color.PowderBlue;
             this.chkNoBlockRule.Name = "chkNoBlockRule";
             this.chkNoBlockRule.UseVisualStyleBackColor = true;
             // 
             // chkOEnableServiceDetection
             // 
-            this.chkOEnableServiceDetection.FlatAppearance.MouseOverBackColor = System.Drawing.Color.PowderBlue;
             resources.ApplyResources(this.chkOEnableServiceDetection, "chkOEnableServiceDetection");
+            this.chkOEnableServiceDetection.FlatAppearance.MouseOverBackColor = System.Drawing.Color.PowderBlue;
             this.chkOEnableServiceDetection.Name = "chkOEnableServiceDetection";
             this.chkOEnableServiceDetection.UseVisualStyleBackColor = true;
             // 
             // chkAnimate
             // 
-            this.chkAnimate.FlatAppearance.MouseOverBackColor = System.Drawing.Color.PowderBlue;
             resources.ApplyResources(this.chkAnimate, "chkAnimate");
+            this.chkAnimate.FlatAppearance.MouseOverBackColor = System.Drawing.Color.PowderBlue;
             this.chkAnimate.Name = "chkAnimate";
             this.chkAnimate.UseVisualStyleBackColor = true;
             // 
@@ -118,9 +109,9 @@
             // 
             // ddlEnableFor
             // 
+            resources.ApplyResources(this.ddlEnableFor, "ddlEnableFor");
             this.ddlEnableFor.BackColor = System.Drawing.Color.PowderBlue;
             this.ddlEnableFor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            resources.ApplyResources(this.ddlEnableFor, "ddlEnableFor");
             this.ddlEnableFor.Items.AddRange(new object[] {
             resources.GetString("ddlEnableFor.Items"),
             resources.GetString("ddlEnableFor.Items1")});
@@ -175,7 +166,6 @@
         private System.Windows.Forms.CheckBox chkOEnableServiceDetection;
         private System.Windows.Forms.CheckBox chkNoBlockRule;
         private System.Windows.Forms.Label lblNoBlockRule;
-        private System.Windows.Forms.CheckBox chkDetails;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox chkToTray;
 
