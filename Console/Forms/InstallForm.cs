@@ -15,6 +15,15 @@ namespace WindowsFirewallNotifierConsole
 
             rbEnable.CheckedChanged += new EventHandler(rbEnable_CheckedChanged);
             rbEnable.Checked = InstallHelper.IsInstalled();
+
+            chkAnimate.Checked = Settings.Default.UseAnimation;
+            chkDetails.Checked = Settings.Default.AlwaysShowDetails;
+            chkNoBlockRule.Checked = Settings.Default.UseBlockRules;
+            chkOEnableServiceDetection.Checked = Settings.Default.EnableServiceDetection;
+            chkToTray.Checked = Settings.Default.MinimizeToTray;
+
+            ddlEnableFor.SelectedIndex = Settings.Default.EnableFor;
+
         }
 
         private void rbEnable_CheckedChanged(object sender, EventArgs e)
@@ -41,7 +50,17 @@ namespace WindowsFirewallNotifierConsole
                     InstallHelper.RemoveProgram();
                 }
             }
-            
+
+            Settings.Default.UseAnimation = chkAnimate.Checked;
+            Settings.Default.AlwaysShowDetails = chkDetails.Checked;
+            Settings.Default.UseBlockRules = chkNoBlockRule.Checked;
+            Settings.Default.EnableServiceDetection = chkOEnableServiceDetection.Checked;
+            Settings.Default.MinimizeToTray = chkToTray.Checked;
+
+            Settings.Default.EnableFor = ddlEnableFor.SelectedIndex;
+
+
+
             Settings.Default.Save();
 
             this.Close();

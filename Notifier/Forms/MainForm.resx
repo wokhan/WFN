@@ -356,7 +356,7 @@
     <value>NoControl</value>
   </data>
   <data name="btnOptions.Location" type="System.Drawing.Point, System.Drawing">
-    <value>351, -5</value>
+    <value>353, -5</value>
   </data>
   <data name="btnOptions.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 40</value>
@@ -389,7 +389,7 @@
     <value>NoControl</value>
   </data>
   <data name="btnMin.Location" type="System.Drawing.Point, System.Drawing">
-    <value>406, -5</value>
+    <value>407, -5</value>
   </data>
   <data name="btnMin.Size" type="System.Drawing.Size, System.Drawing">
     <value>30, 31</value>
@@ -474,6 +474,24 @@
   </data>
   <data name="&gt;&gt;pictureBox1.ZOrder" xml:space="preserve">
     <value>1</value>
+  </data>
+  <metadata name="ctxtMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="ctxtCopy.Size" type="System.Drawing.Size, System.Drawing">
+    <value>102, 22</value>
+  </data>
+  <data name="ctxtCopy.Text" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="ctxtMenu.Size" type="System.Drawing.Size, System.Drawing">
+    <value>103, 26</value>
+  </data>
+  <data name="&gt;&gt;ctxtMenu.Name" xml:space="preserve">
+    <value>ctxtMenu</value>
+  </data>
+  <data name="&gt;&gt;ctxtMenu.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="lblApp.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 12pt</value>
@@ -936,7 +954,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;pnlMain.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -955,6 +973,12 @@
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Windows Firewall Notifier</value>
+  </data>
+  <data name="&gt;&gt;ctxtCopy.Name" xml:space="preserve">
+    <value>ctxtCopy</value>
+  </data>
+  <data name="&gt;&gt;ctxtCopy.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainForm</value>

@@ -48,31 +48,6 @@ namespace WindowsFirewallNotifier
         private string defSvcText;
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="m"></param>
-        protected override void WndProc(ref System.Windows.Forms.Message m)
-        {
-            try
-            {
-                if (m.Msg == 0x004A)
-                {
-                    Program.COPYDATASTRUCT res = (Program.COPYDATASTRUCT)m.GetLParam(typeof(Program.COPYDATASTRUCT));
-
-                    string[] allres = res.lpData.Split(new string[] { "#$#" }, StringSplitOptions.None);
-
-                    addItem(int.Parse(allres[0]), allres[1], allres[2], allres[3], allres[4], allres[5], allres[6], true);
-                }
-
-                base.WndProc(ref m);
-            }
-            catch (Exception e)
-            {
-                LogHelper.Error("WndProc failed.", e);
-            }
-        }
-
-        /// <summary>
         /// Initializes the form
         /// </summary>
         /// <param name="app"></param>
@@ -84,7 +59,7 @@ namespace WindowsFirewallNotifier
         {
             initExclusions();
 
-            if (!addItem(pid, threadid, path, target, protocol, targetPort, localPort, false))
+            if (!AddItem(pid, threadid, path, target, protocol, targetPort, localPort, false))
             {
                 this.Close();
                 this.Dispose();
@@ -103,7 +78,10 @@ namespace WindowsFirewallNotifier
                 defTargetPort = resources.GetString(chkPortRule.Name + ".Text");
             }
 
-            this.Height = btnAdvanced.Top + btnAdvanced.Height + 3;
+            if (!Settings.Default.AlwaysShowDetails)
+            {
+                this.Height = btnAdvanced.Top + btnAdvanced.Height + 3;
+            }
 
             chkCurrentProfile.Text = String.Format(chkCurrentProfile.Text, FirewallHelper.GetCurrentProfileAsText());
 
@@ -172,7 +150,7 @@ namespace WindowsFirewallNotifier
         /// <param name="target"></param>
         /// <param name="protocol"></param>
         /// <param name="targetPort"></param>
-        public bool addItem(int pid, string threadid, string path, string target, string protocol, string targetPort, string localport, bool updateCount)
+        public bool AddItem(int pid, string threadid, string path, string target, string protocol, string targetPort, string localport, bool updateCount)
         {
             try
             {
@@ -254,6 +232,8 @@ namespace WindowsFirewallNotifier
                         updateCountLbl();
                     }
 
+                    this.Activate();
+
                     return true;
                 }
             }
@@ -293,7 +273,10 @@ namespace WindowsFirewallNotifier
             updateCountLbl();
 
             lblApp.Text = activeConn.CurrentProd;
+            lblApp.Tag = lblApp.Text;
+
             lblPath.Text = String.Format(defPath, activeConn.CurrentPath);
+            lblPath.Tag = lblPath.Text;
 
             if (!String.IsNullOrEmpty(activeConn.ResolvedHost))
             {
@@ -303,10 +286,14 @@ namespace WindowsFirewallNotifier
             {
                 chkTRule.Text = String.Format(defTarget, activeConn.Target);
                 Dns.BeginGetHostEntry(activeConn.Target, GetHostEntryCallback, activeConn);
+                chkTRule.Tag = chkTRule.Text;
             }
 
             chkPortRule.Text = String.Format(defTargetPort, activeConn.TargetPort);
+            chkPortRule.Tag = chkPortRule.Text;
+
             chkLPortRule.Text = String.Format(defLPort, activeConn.LocalPort);
+            chkLPortRule.Tag = chkLPortRule.Text;
 
             chkTemp.Checked = false;
 
@@ -375,6 +362,7 @@ namespace WindowsFirewallNotifier
                     if (ar.AsyncState == activeConn)
                     {
                         chkTRule.Text = String.Format(defTarget, activeConn.Target + " (" + activeConn.ResolvedHost + ")");
+                        chkTRule.Tag = chkTRule.Text;
                     }
                 }
             }
@@ -457,7 +445,6 @@ namespace WindowsFirewallNotifier
             bool success = false;
 
             string[] services = null;
-            bool createAppRule = false;
             if (chkServiceRule.Checked)
             {
                 if (activeConn.PossibleServices != null && activeConn.PossibleServices.Length > 0)
@@ -668,10 +655,7 @@ namespace WindowsFirewallNotifier
             }
             catch { }
         }
-
-
-
-
+        
         private int exHeight = -1;
         private void btnAdvanced_Click(object sender, EventArgs e)
         {
@@ -708,6 +692,20 @@ namespace WindowsFirewallNotifier
 
             pnlMain.Height = targetHeight;
         }
+
+        private void ctxtCopy_Click(object sender, EventArgs e)
+        {
+            var srccontrol = ((ContextMenuStrip)((ToolStripMenuItem)sender).Owner).SourceControl;
+            var copiedValue = (string)(srccontrol.Tag ?? String.Empty);
+
+            Clipboard.SetText(copiedValue);
+        }
+
+        private void btnNotifOpts_Click(object sender, EventArgs e)
+        {
+
+        }
+
 
     }
 }

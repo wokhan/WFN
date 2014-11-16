@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.Label lblTitle;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             System.Windows.Forms.CheckBox chkPath;
@@ -41,6 +42,8 @@
             this.lblConn = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.lblApp = new System.Windows.Forms.Label();
+            this.ctxtMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ctxtCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnAlwaysBlock = new System.Windows.Forms.Button();
             this.btnAlwaysAllow = new System.Windows.Forms.Button();
@@ -57,6 +60,7 @@
             this.pnlMain.SuspendLayout();
             this.pnlInfos.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.ctxtMenu.SuspendLayout();
             this.pnlHeader.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -179,8 +183,22 @@
             // lblApp
             // 
             this.lblApp.AutoEllipsis = true;
+            this.lblApp.ContextMenuStrip = this.ctxtMenu;
             resources.ApplyResources(this.lblApp, "lblApp");
             this.lblApp.Name = "lblApp";
+            // 
+            // ctxtMenu
+            // 
+            this.ctxtMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ctxtCopy});
+            this.ctxtMenu.Name = "ctxtMenu";
+            resources.ApplyResources(this.ctxtMenu, "ctxtMenu");
+            // 
+            // ctxtCopy
+            // 
+            this.ctxtCopy.Name = "ctxtCopy";
+            resources.ApplyResources(this.ctxtCopy, "ctxtCopy");
+            this.ctxtCopy.Click += new System.EventHandler(this.ctxtCopy_Click);
             // 
             // btnClose
             // 
@@ -250,6 +268,7 @@
             // chkTRule
             // 
             this.chkTRule.AutoEllipsis = true;
+            this.chkTRule.ContextMenuStrip = this.ctxtMenu;
             resources.ApplyResources(this.chkTRule, "chkTRule");
             this.chkTRule.Name = "chkTRule";
             this.chkTRule.TabStop = false;
@@ -257,6 +276,7 @@
             // 
             // chkPortRule
             // 
+            this.chkPortRule.ContextMenuStrip = this.ctxtMenu;
             resources.ApplyResources(this.chkPortRule, "chkPortRule");
             this.chkPortRule.Name = "chkPortRule";
             this.chkPortRule.TabStop = false;
@@ -264,6 +284,7 @@
             // 
             // chkLPortRule
             // 
+            this.chkLPortRule.ContextMenuStrip = this.ctxtMenu;
             resources.ApplyResources(this.chkLPortRule, "chkLPortRule");
             this.chkLPortRule.Name = "chkLPortRule";
             this.chkLPortRule.TabStop = false;
@@ -272,6 +293,7 @@
             // chkServiceRule
             // 
             this.chkServiceRule.AutoEllipsis = true;
+            this.chkServiceRule.ContextMenuStrip = this.ctxtMenu;
             resources.ApplyResources(this.chkServiceRule, "chkServiceRule");
             this.chkServiceRule.Name = "chkServiceRule";
             this.chkServiceRule.TabStop = false;
@@ -280,6 +302,7 @@
             // lblPath
             // 
             this.lblPath.AutoEllipsis = true;
+            this.lblPath.ContextMenuStrip = this.ctxtMenu;
             this.lblPath.Cursor = System.Windows.Forms.Cursors.Hand;
             resources.ApplyResources(this.lblPath, "lblPath");
             this.lblPath.Name = "lblPath";
@@ -298,6 +321,7 @@
             this.pnlMain.ResumeLayout(false);
             this.pnlInfos.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.ctxtMenu.ResumeLayout(false);
             this.pnlHeader.ResumeLayout(false);
             this.pnlHeader.PerformLayout();
             this.ResumeLayout(false);
@@ -327,6 +351,8 @@
         private System.Windows.Forms.CheckBox chkTemp;
         private System.Windows.Forms.Label lblConn;
         private System.Windows.Forms.Panel pnlMain;
+        private System.Windows.Forms.ContextMenuStrip ctxtMenu;
+        private System.Windows.Forms.ToolStripMenuItem ctxtCopy;
 
     }
 }

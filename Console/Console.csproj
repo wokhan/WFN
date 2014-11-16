@@ -14,6 +14,10 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -29,10 +33,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>anycpu</PlatformTarget>
@@ -127,11 +127,11 @@
     <Compile Include="Forms\InstallForm.Designer.cs">
       <DependentUpon>InstallForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OptionsForm.cs">
+    <Compile Include="Forms\ConsoleForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\OptionsForm.Designer.cs">
-      <DependentUpon>OptionsForm.cs</DependentUpon>
+    <Compile Include="Forms\ConsoleForm.Designer.cs">
+      <DependentUpon>ConsoleForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\UpdateForm.cs">
       <SubType>Form</SubType>
@@ -165,11 +165,11 @@
     <EmbeddedResource Include="Forms\InstallForm.resx">
       <DependentUpon>InstallForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OptionsForm.fr.resx">
-      <DependentUpon>OptionsForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ConsoleForm.fr.resx">
+      <DependentUpon>ConsoleForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OptionsForm.resx">
-      <DependentUpon>OptionsForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ConsoleForm.resx">
+      <DependentUpon>ConsoleForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UpdateForm.fr.resx">
       <DependentUpon>UpdateForm.cs</DependentUpon>
@@ -199,7 +199,7 @@
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
