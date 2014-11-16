@@ -1,7 +1,7 @@
 === Windows Firewall Notifier ===
 Auteur : Khan
-Site web : http://wokhan.online.fr
-Version actuelle : 1.8.0 (publiée le 05/05/2013)
+Site web : http://wokhan.online.fr - http://wfn.codeplex.com
+Version actuelle : 1.9.2.9 (publiée le 16/11/2014)
 
 === Descriptif ===
 Windows Firewall Notifier est un complément au pare-feu intégré de Windows, permettant de gérer les connexions sortantes (ce que ne propose pas Windows, pour d'obscures raisons).

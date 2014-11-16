@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Wokhan")]
 [assembly: AssemblyProduct("Windows Firewall Notifier")]
-[assembly: AssemblyCopyright("©2011-2013 Khan (http://wokhan.online.fr)")]
+[assembly: AssemblyCopyright("©2011-2014 Khan (http://wokhan.online.fr)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // Vous pouvez spécifier toutes les valeurs ou indiquer les numéros de build et de révision par défaut 
 // en utilisant '*', comme indiqué ci-dessous :
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.9.1.9")]
-[assembly: AssemblyFileVersion("1.9.1.9")]
+[assembly: AssemblyVersion("1.9.2.9")]
+[assembly: AssemblyFileVersion("1.9.2.9")]

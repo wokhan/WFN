@@ -1,7 +1,7 @@
 === Windows Firewall Notifier ===
 Author: Khan
-Website: http://wokhan.online.fr
-Current version: 1.8.0 (released 2013.05.05)
+Website: http://wokhan.online.fr - http://wfn.codeplex.com
+Current version: 1.9.2.9 (released 2014.11.16)
 
 === Description ===
 Windows Firewall Notifier (WFN) extends the default Windows embedded firewall behavior, allowing to handle outgoing connections, and displaying (almost) real-time information about the current connections.

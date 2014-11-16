@@ -34,8 +34,8 @@ namespace WindowsFirewallNotifierConsole
             System.Windows.Forms.Button btnOptions;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptionsForm));
             System.Windows.Forms.Button btnDonate;
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.btnTConnections = new System.Windows.Forms.Button();
             this.btnTRules = new System.Windows.Forms.Button();
@@ -120,6 +120,7 @@ namespace WindowsFirewallNotifierConsole
             this.timerTrk = new System.Windows.Forms.Timer(this.components);
             this.pnlOverTabTop = new System.Windows.Forms.Panel();
             this.btnTExceptions = new System.Windows.Forms.Button();
+            this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
             btnOptions = new System.Windows.Forms.Button();
             btnDonate = new System.Windows.Forms.Button();
             this.tabPanel.SuspendLayout();
@@ -657,8 +658,8 @@ namespace WindowsFirewallNotifierConsole
             // 
             this.colExcIcon.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.colExcIcon.DataPropertyName = "Icon";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.colExcIcon.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.colExcIcon.DefaultCellStyle = dataGridViewCellStyle11;
             this.colExcIcon.FillWeight = 20.30457F;
             resources.ApplyResources(this.colExcIcon, "colExcIcon");
             this.colExcIcon.Name = "colExcIcon";
@@ -668,8 +669,8 @@ namespace WindowsFirewallNotifierConsole
             // colExcPath
             // 
             this.colExcPath.DataPropertyName = "Path";
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.colExcPath.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.colExcPath.DefaultCellStyle = dataGridViewCellStyle12;
             this.colExcPath.FillWeight = 179.6954F;
             resources.ApplyResources(this.colExcPath, "colExcPath");
             this.colExcPath.Name = "colExcPath";
@@ -860,6 +861,12 @@ namespace WindowsFirewallNotifierConsole
             this.btnTExceptions.UseVisualStyleBackColor = false;
             this.btnTExceptions.Click += new System.EventHandler(this.btnTExceptions_Click);
             // 
+            // trayIcon
+            // 
+            this.trayIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            resources.ApplyResources(this.trayIcon, "trayIcon");
+            this.trayIcon.Click += new System.EventHandler(this.trayIcon_Click);
+            // 
             // OptionsForm
             // 
             resources.ApplyResources(this, "$this");
@@ -980,6 +987,7 @@ namespace WindowsFirewallNotifierConsole
         private System.Windows.Forms.Button btnTLog;
         private System.Windows.Forms.Button btnTExceptions;
         private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.NotifyIcon trayIcon;
 
 
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
@@ -29,6 +30,8 @@ namespace WindowsFirewallNotifierConsole
 
             this.Size = Settings.Default.ConsoleSize;
             this.WindowState = Settings.Default.ConsoleState;
+
+            this.SizeChanged += OptionsForm_SizeChanged;
 
             txtFilter.KeyUp += new KeyEventHandler(txtFilter_KeyUp);
 
@@ -85,6 +88,16 @@ namespace WindowsFirewallNotifierConsole
                 Settings.Default.FirstRun = false;
                 Settings.Default.Save();
             }
+        }
+
+        void OptionsForm_SizeChanged(object sender, EventArgs e)
+        {
+            if (Settings.Default.MinimizeToTray && this.WindowState == FormWindowState.Minimized)
+            {
+                trayIcon.Visible = true;
+                this.Hide();
+            }
+
         }
 
         private void Default_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -210,7 +223,7 @@ namespace WindowsFirewallNotifierConsole
                     pred += filteredRulesPredicate;
                 }
 
-                gridRules.DataSource = (pred == null ? allrules : allrules.Where(r => pred.GetInvocationList().All(p => ((Predicate<FirewallHelper.Rule>)p)(r)))).ToArray();
+                gridRules.DataSource = (pred == null ? allrules : allrules.Where(r => pred.GetInvocationList().All(p => ((Predicate<FirewallHelper.Rule>)p)(r)))).ToList();
                 //foreach (FirewallHelper.Rule r in res)
                 //{
                 //    gridRules.Rows.Add(r.Name, r.Icon, r.ApplicationName, r.Direction, r.Profile, r.Action, r.LocalPort, r.RemoteAddresses, r.RemotePorts, r.Enabled);
@@ -964,6 +977,13 @@ namespace WindowsFirewallNotifierConsole
         {
             Process.Start("http://wfn.codeplex.com/releases");
             //new UpdateForm().ShowDialog();
+        }
+
+        private void trayIcon_Click(object sender, EventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+            trayIcon.Visible = false;
         }
     }
 
