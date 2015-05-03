@@ -1,0 +1,62 @@
+﻿<Application x:Class="WFNConsole.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:BindingConverters="clr-namespace:WFNConsole.Helpers.BindingConverters"
+             StartupUri="UI/Windows/MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <BindingConverters:IconToImageSource x:Key="iconToImageSource" />
+            <BindingConverters:BooleanNegator x:Key="booleanNegator" />
+            <Style x:Key="InfoBlock" TargetType="TextBlock">
+                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.InfoBrush}}" />
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.InfoTextBrush}}" />
+                <Setter Property="Padding" Value="5" />
+            </Style>
+            <Style x:Key="MenuPanel" TargetType="Panel">
+                <Setter Property="Background" Value="WhiteSmoke" />
+                <Style.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="White" />
+                        <!--<Setter Property="BorderBrush" Value="Gray" />
+                        <Setter Property="BorderThickness" Value="2" />-->
+                        <Setter Property="FontSize" Value="12" />
+                        <Setter Property="Padding" Value="5,0" />
+                        <Setter Property="Margin" Value="5" />
+                        <Setter Property="HorizontalContentAlignment" Value="Left" />
+                    </Style>
+                </Style.Resources>
+            </Style>
+            <Style x:Key="ToolBarPanel" TargetType="Panel">
+                <Style.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="FontSize" Value="12" />
+                        <Setter Property="FontWeight" Value="Normal" />
+                        <Setter Property="Padding" Value="5" />
+                        <Setter Property="HorizontalContentAlignment" Value="Left" />
+                        <Setter Property="Margin" Value="0,0,5,0" />
+                    </Style>
+                    <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                        <Setter Property="FontSize" Value="12" />
+                        <Setter Property="Margin" Value="0,0,5,0" />
+                        <Setter Property="Height" Value="16" />
+                    </Style>
+                    <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                        <Setter Property="FontSize" Value="12" />
+                        <Setter Property="Margin" Value="0,0,5,0" />
+                        <Setter Property="Height" Value="16" />
+                    </Style>
+                    <Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                    </Style>
+                </Style.Resources>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

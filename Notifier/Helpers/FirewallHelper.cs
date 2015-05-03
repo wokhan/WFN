@@ -200,14 +200,14 @@ namespace WindowsFirewallNotifier
             public string RemotePorts { get { return InnerRule.RemotePorts; } }
             public string serviceName { get { return InnerRule.serviceName; } }
 
-            private Image _icon = null;
-            public Image Icon
+            private Icon _icon = null;
+            public Icon Icon
             {
                 get
                 {
                     if (_icon == null)
                     {
-                        _icon = ProcessHelper.GetIcon(InnerRule.ApplicationName, true);
+                        _icon = ProcessHelper.GetIcon(InnerRule.ApplicationName);
                     }
 
                     return _icon;
