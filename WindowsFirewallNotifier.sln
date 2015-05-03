@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "Console\Console.csproj", "{76FFECF8-647A-418D-86E5-6C62D1379798}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notifier", "Notifier\Notifier.csproj", "{B0777CD1-8F34-4370-8D9F-C4F896AD542B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuleManager", "RuleManager\RuleManager.csproj", "{A963FA80-520F-4952-82C9-5FDF54FC35F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "Console\Console.csproj", "{95C82925-3B3C-4AD5-840E-55A2C4EA28A2}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -15,15 +15,15 @@ Global
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs34
 		SccLocalPath0 = .
-		SccProjectUniqueName1 = Console\\Console.csproj
-		SccProjectName1 = Console
-		SccLocalPath1 = Console
-		SccProjectUniqueName2 = Notifier\\Notifier.csproj
-		SccProjectName2 = Notifier
-		SccLocalPath2 = Notifier
-		SccProjectUniqueName3 = RuleManager\\RuleManager.csproj
-		SccProjectName3 = RuleManager
-		SccLocalPath3 = RuleManager
+		SccProjectUniqueName1 = Notifier\\Notifier.csproj
+		SccProjectName1 = Notifier
+		SccLocalPath1 = Notifier
+		SccProjectUniqueName2 = RuleManager\\RuleManager.csproj
+		SccProjectName2 = RuleManager
+		SccLocalPath2 = RuleManager
+		SccProjectUniqueName3 = Console\\Console.csproj
+		SccProjectName3 = Console
+		SccLocalPath3 = Console
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,14 +32,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{76FFECF8-647A-418D-86E5-6C62D1379798}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{76FFECF8-647A-418D-86E5-6C62D1379798}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{76FFECF8-647A-418D-86E5-6C62D1379798}.Debug|x86.ActiveCfg = Debug|x86
-		{76FFECF8-647A-418D-86E5-6C62D1379798}.Debug|x86.Build.0 = Debug|x86
-		{76FFECF8-647A-418D-86E5-6C62D1379798}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{76FFECF8-647A-418D-86E5-6C62D1379798}.Release|Any CPU.Build.0 = Release|Any CPU
-		{76FFECF8-647A-418D-86E5-6C62D1379798}.Release|x86.ActiveCfg = Release|x86
-		{76FFECF8-647A-418D-86E5-6C62D1379798}.Release|x86.Build.0 = Release|x86
 		{B0777CD1-8F34-4370-8D9F-C4F896AD542B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B0777CD1-8F34-4370-8D9F-C4F896AD542B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0777CD1-8F34-4370-8D9F-C4F896AD542B}.Debug|x86.ActiveCfg = Debug|x86
@@ -56,6 +48,12 @@ Global
 		{A963FA80-520F-4952-82C9-5FDF54FC35F6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A963FA80-520F-4952-82C9-5FDF54FC35F6}.Release|x86.ActiveCfg = Release|x86
 		{A963FA80-520F-4952-82C9-5FDF54FC35F6}.Release|x86.Build.0 = Release|x86
+		{95C82925-3B3C-4AD5-840E-55A2C4EA28A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95C82925-3B3C-4AD5-840E-55A2C4EA28A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95C82925-3B3C-4AD5-840E-55A2C4EA28A2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{95C82925-3B3C-4AD5-840E-55A2C4EA28A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95C82925-3B3C-4AD5-840E-55A2C4EA28A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95C82925-3B3C-4AD5-840E-55A2C4EA28A2}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

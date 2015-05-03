@@ -9,6 +9,7 @@ namespace WindowsFirewallNotifier
 {
     public static class IpHlpApiHelper
     {
+
         #region Enums
 
         public enum AF_INET
@@ -30,7 +31,8 @@ namespace WindowsFirewallNotifier
             CLOSING,
             LAST_ACK,
             TIME_WAIT,
-            DELETE_TCB
+            DELETE_TCB,
+            NOT_APPLICABLE = 65535
         }
 
         public enum TCP_TABLE_CLASS
@@ -71,7 +73,7 @@ namespace WindowsFirewallNotifier
         [StructLayout(LayoutKind.Sequential)]
         public struct MIB_TCPROW_OWNER_MODULE : OWNER_MODULE
         {
-            public uint State;
+            public uint _state;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
             byte[] _localAddr;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
@@ -80,10 +82,12 @@ namespace WindowsFirewallNotifier
             byte[] _remoteAddr;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
             byte[] _remotePort;
-            public uint OwningPid;
+            public uint _owningPid;
             long _creationTime;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
             public ulong[] OwningModuleInfo;
+
+            public MIB_TCP_STATE State { get { return (MIB_TCP_STATE)_state; } }
 
             public string RemoteAddress { get { return GetAddressAsString(_remoteAddr); } }
             public string LocalAddress { get { return GetAddressAsString(_localAddr); } }
@@ -92,6 +96,8 @@ namespace WindowsFirewallNotifier
             public int LocalPort { get { return GetRealPort(_localPort); } }
 
             public Owner OwnerModule { get { return GetOwningModule(this); } }
+
+            public uint OwningPid { get { return _owningPid; } }
 
             public DateTime CreationTime { get { return _creationTime == 0 ? DateTime.MinValue : DateTime.FromFileTime(_creationTime); } }
         }
@@ -111,7 +117,7 @@ namespace WindowsFirewallNotifier
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]//, FieldOffset(4)]
             byte[] _localPort;
             //[FieldOffset(8)]
-            public uint OwningPid;
+            public uint _owningPid;
             //[FieldOffset(16)]
             long _creationTime;
             //[FieldOffset(24)]
@@ -121,6 +127,9 @@ namespace WindowsFirewallNotifier
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)] //FieldOffset(32), 
             public ulong[] OwningModuleInfo;
 
+            public MIB_TCP_STATE State { get { return MIB_TCP_STATE.NOT_APPLICABLE; } }
+
+            public uint OwningPid { get { return _owningPid; } }
             public string LocalAddress { get { return GetAddressAsString(_localAddr); } }
 
             public int LocalPort { get { return GetRealPort(_localPort); } }
@@ -128,8 +137,17 @@ namespace WindowsFirewallNotifier
             public Owner OwnerModule { get { return GetOwningModule(this); } }
 
             public DateTime CreationTime { get { return _creationTime == 0 ? DateTime.MinValue : DateTime.FromFileTime(_creationTime); } }
-        }
 
+            public string RemoteAddress
+            {
+                get { return String.Empty; }
+            }
+
+            public int RemotePort
+            {
+                get { return -1; }
+            }
+        }
 
 
         [StructLayout(LayoutKind.Sequential)]
@@ -280,14 +298,13 @@ namespace WindowsFirewallNotifier
             public uint RemoteScopeId;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
             byte[] _remotePort;
-
-            public uint State;
-
-            public uint OwningPid;
+            public uint _state;
+            public uint _owningPid;
             long _creationTime;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
             public ulong[] OwningModuleInfo;
 
+            public uint OwningPid { get { return _owningPid; } }
             public string LocalAddress { get { return GetRealAddress(_localAddress); } }
             public int LocalPort { get { return GetRealPort(_localPort); } }
 
@@ -296,6 +313,7 @@ namespace WindowsFirewallNotifier
 
             public Owner OwnerModule { get { return GetOwningModule(this); } }
 
+            public MIB_TCP_STATE State { get { return (IpHlpApiHelper.MIB_TCP_STATE)_state; } }
             public DateTime CreationTime { get { return _creationTime == 0 ? DateTime.MinValue : DateTime.FromFileTime(_creationTime); } }
         }
 
@@ -314,7 +332,7 @@ namespace WindowsFirewallNotifier
             public uint LocalScopeId;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
             byte[] _localPort;
-            public uint OwningPid;
+            public uint _owningPid;
             //[FieldOffset(16)]
             long _creationTime;
             //[FieldOffset(24)]
@@ -324,11 +342,14 @@ namespace WindowsFirewallNotifier
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)] //FieldOffset(32), 
             public ulong[] OwningModuleInfo;
 
+            public MIB_TCP_STATE State { get { return MIB_TCP_STATE.NOT_APPLICABLE; } }
+
+            public uint OwningPid { get { return _owningPid; } }
             public string LocalAddress { get { return GetRealAddress(_localAddress); } }
             public int LocalPort { get { return GetRealPort(_localPort); } }
-
             public Owner OwnerModule { get { return GetOwningModule(this); } }
-
+            public string RemoteAddress { get { return String.Empty; } }
+            public int RemotePort { get { return -1; } }
             public DateTime CreationTime { get { return _creationTime == 0 ? DateTime.MinValue : DateTime.FromFileTime(_creationTime); } }
         }
 
@@ -461,7 +482,22 @@ namespace WindowsFirewallNotifier
         /// <summary>
         /// 
         /// </summary>
-        public interface OWNER_MODULE { }
+        public interface OWNER_MODULE
+        {
+            string RemoteAddress { get; }
+            string LocalAddress { get; }
+
+            int RemotePort { get; }
+            int LocalPort { get; }
+
+            Owner OwnerModule { get; }
+
+            DateTime CreationTime { get; }
+
+            uint OwningPid { get; }
+
+            IpHlpApiHelper.MIB_TCP_STATE State { get; }
+        }
 
         [StructLayout(LayoutKind.Sequential)]
         public struct TCPIP_OWNER_MODULE_BASIC_INFO
@@ -538,7 +574,7 @@ namespace WindowsFirewallNotifier
                 {
                     return new Owner((TCPIP_OWNER_MODULE_BASIC_INFO)Marshal.PtrToStructure(buffer, typeof(TCPIP_OWNER_MODULE_BASIC_INFO)));
                 }
-                else 
+                else
                 {
                     if (resp != 1168) // Ignore closed connections 
                     {

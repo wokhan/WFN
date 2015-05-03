@@ -46,7 +46,7 @@ namespace WindowsFirewallNotifier
         public static void GetService(int pid, string threadid, NetFwTypeLib.NET_FW_IP_PROTOCOL_ protocol, string port, string localport, out string[] svc, out string[] svcdsc, out bool unsure)
         {
             string[] svcs = GetAllServices(pid);
-            
+
             svc = new string[0];
             svcdsc = new string[0];
             unsure = false;
@@ -135,7 +135,7 @@ namespace WindowsFirewallNotifier
             svcs = svcs//.Except(filteredsvcs, StringComparer.CurrentCultureIgnoreCase)
                        .Except(cRules, StringComparer.CurrentCultureIgnoreCase)
                        .ToArray();
-            
+
             LogHelper.Debug("Excluding " + String.Join(",", cRules) + " // Remains " + String.Join(",", svcs));
 
             if (svcs.Length > 0)
