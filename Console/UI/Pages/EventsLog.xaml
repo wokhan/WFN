@@ -1,8 +1,9 @@
-﻿<Page x:Class="WFNConsole.UI.Pages.EventsLog"
+﻿<Page x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.EventsLog"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      DataContext="{Binding RelativeSource={RelativeSource Self}}"
       mc:Ignorable="d" 
       d:DesignHeight="400" d:DesignWidth="800"
 	Title="Event log">
@@ -12,32 +13,32 @@
                 <WrapPanel>
                     <Button IsEnabled="False" x:Name="btnStart" Click="btnStart_Click">
                         <Grid>
-                            <Image Source="/WFNConsole;component/Resources/Images/btnConnTrack.Image.png" HorizontalAlignment="Left" Height="16"/>
+                            <Image Source="/WFN;component/Resources/Images/btnConnTrack.Image.png" HorizontalAlignment="Left" Height="16"/>
                             <TextBlock Margin="20,0,0,0" Text="Start tracking" />
                         </Grid>
                     </Button>
                     <Button x:Name="btnStop" Click="btnStop_Click">
                         <Grid>
-                            <Image Source="/WFNConsole;component/Resources/Images/btnConnStop.Image.png" HorizontalAlignment="Left" Height="16"/>
+                            <Image Source="/WFN;component/Resources/Images/btnConnStop.Image.png" HorizontalAlignment="Left" Height="16"/>
                             <TextBlock Margin="20,0,0,0" Text="Stop tracking" />
                         </Grid>
                     </Button>
                     <Button x:Name="btnLocate" Click="btnLocate_Click">
                         <Grid>
-                            <Image Source="/WFNConsole;component/Resources/Images/btnRLocate.Image.png" HorizontalAlignment="Left" Height="16"/>
+                            <Image Source="/WFN;component/Resources/Images/btnRLocate.Image.png" HorizontalAlignment="Left" Height="16"/>
                             <TextBlock Margin="20,0,0,0" Text="Locate" />
                         </Grid>
                     </Button>
                     <Button x:Name="btnEventLogVwr" Click="btnEventLogVwr_Click">
                         <Grid>
-                            <Image Source="/WFNConsole;component/Resources/Images/btnLEvents.Image.png" HorizontalAlignment="Left" Height="16"/>
+                            <Image Source="/WFN;component/Resources/Images/btnLEvents.Image.png" HorizontalAlignment="Left" Height="16"/>
                             <TextBlock Margin="20,0,0,0" Text="Events log viewer" />
                         </Grid>
                     </Button>
                     <TextBlock VerticalAlignment="Center" Text="{Binding LogEntries.Count, StringFormat='{}{0} item(s)', FallbackValue='No item found'}" />
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Right">
-                    <Image Source="/WFNConsole;component/Resources/Images/stripConnUpdSpeed.Image.png" Height="16"/>
+                    <Image Source="/WFN;component/Resources/Images/stripConnUpdSpeed.Image.png" Height="16"/>
                     <Label Content="Update rate:" HorizontalAlignment="Right" />
                     <ComboBox IsEditable="False" HorizontalAlignment="Right" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
                 </WrapPanel>

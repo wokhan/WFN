@@ -4,19 +4,26 @@ using System.Drawing;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text.RegularExpressions;
-using WindowsFirewallNotifier.Properties;
+using Wokhan.WindowsFirewallNotifier.Common;
 using System.Net.NetworkInformation;
-using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 using NetFwTypeLib;
+using System.Windows.Media;
+using System.Collections.Generic;
+using System.Windows.Interop;
+using System.Windows;
+using System.Windows.Media.Imaging;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.IO;
 
 
-namespace WindowsFirewallNotifier
+namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     public class ProcessHelper
     {
-        private static ImageList procIconLst = new ImageList() { ImageSize = new Size(18, 18) };
+        private static Dictionary<string, ImageSource> procIconLst = new Dictionary<string, ImageSource>();
 
         public static string[] GetAllServices(int pid)
         {
@@ -43,6 +50,11 @@ namespace WindowsFirewallNotifier
         // private static string[] prioSvcs = new string[] { "wuauserv", "BITS", "aelookupsvc", "CryptSvc", "dnscache", "LanmanWorkstation", "TapiSrv" };
 
         //private static string servicesParser = @"^\s*(?<protocol>[^\s]+)(?<localip>(?:\[[^\]]*\])|(?:[^(:|\r)]))*:{0}\s+(?<ip>[^:]+):(?<port>(?:\d*|\*))\s+[^\d]*{1}\r\n\s+(?<service>[^\r]+)\r\n\s*\[[^\]]*\]";
+        public static void GetService(int pid, string threadid, string protocol, string port, string localport, out string[] svc, out string[] svcdsc, out bool unsure)
+        {
+            GetService(pid, threadid, (NetFwTypeLib.NET_FW_IP_PROTOCOL_)Enum.Parse(typeof(NetFwTypeLib.NET_FW_IP_PROTOCOL_), protocol), port, localport, out svc, out svcdsc, out unsure);
+        }
+
         public static void GetService(int pid, string threadid, NetFwTypeLib.NET_FW_IP_PROTOCOL_ protocol, string port, string localport, out string[] svc, out string[] svcdsc, out bool unsure)
         {
             string[] svcs = GetAllServices(pid);
@@ -153,20 +165,24 @@ namespace WindowsFirewallNotifier
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static Icon GetIcon(string path)
+        public static ImageSource GetIcon(string path, bool defaultIfNotFound = false)
         {
-            Icon icon = Resources.ICON_SHIELD;
-
-            try
+            Icon ic;
+            if (File.Exists(path))
             {
-                if (path != "System")
-                {
-                    icon = Icon.ExtractAssociatedIcon(path);
-                }
+                ic = (path != "System" ? Icon.ExtractAssociatedIcon(path) : SystemIcons.WinLogo);
             }
-            catch { }
+            else
+            {
+                ic = SystemIcons.Application;
+            }
+            return Imaging.CreateBitmapSourceFromHIcon(ic.Handle, new Int32Rect(0, 0, ic.Width, ic.Height), BitmapSizeOptions.FromEmptyOptions());
+        }
 
-            return icon;
+
+        public static async Task<ImageSource> GetIconAsync(string path, bool defaultIfNotFound = false)
+        {
+            return await Task<ImageSource>.Run(() => GetIcon(path, defaultIfNotFound));
         }
 
         /// <summary>
@@ -174,17 +190,17 @@ namespace WindowsFirewallNotifier
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static Image GetIcon(string path, bool cache)
+        public static ImageSource GetCachedIcon(string path)
         {
-            Image icon;
-            if (!procIconLst.Images.ContainsKey(path))
+            ImageSource icon;
+            if (!procIconLst.ContainsKey(path))
             {
-                icon = GetIcon(path).ToBitmap().GetThumbnailImage(18, 18, null, IntPtr.Zero);
-                procIconLst.Images.Add(path, icon);
+                icon = GetIcon(path, true);//.ToBitmap().GetThumbnailImage(18, 18, null, IntPtr.Zero);
+                procIconLst.Add(path, icon);
             }
             else
             {
-                icon = procIconLst.Images[path];
+                icon = procIconLst[path];
             }
 
             return icon;
@@ -289,5 +305,30 @@ namespace WindowsFirewallNotifier
 
             return ret;
         }
+
+        /// <summary>
+        ///  Turns command line parameters into a dictionary to ease values retrieval
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static Dictionary<string, string> ParseParameters(IList<string> args)
+        {
+            Dictionary<string, string> ret = null;
+            try
+            {
+                ret = new Dictionary<string, string>(args.Count / 2);
+                for (int i = 0; i < args.Count(); i += 2)
+                {
+                    ret.Add(args[i].TrimStart('-'), args[i + 1]);
+                }
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("Unable to parse the parameters: argv = " + String.Join(" ", args), e);
+            }
+
+            return ret;
+        }
+
     }
 }

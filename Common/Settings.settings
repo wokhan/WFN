@@ -1,14 +1,14 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WindowsFirewallNotifier" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Wokhan.WindowsFirewallNotifier.Common" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="EnableServiceDetection" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="ConsoleSize" Type="System.Drawing.Size" Scope="User">
-      <Value Profile="(Default)">770, 507</Value>
+    <Setting Name="ConsoleSizeHeight" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">500</Value>
     </Setting>
-    <Setting Name="ConsoleState" Type="System.Windows.Forms.FormWindowState" Scope="User">
+    <Setting Name="ConsoleState" Type="System.Windows.WindowState" Scope="User">
       <Value Profile="(Default)">Normal</Value>
     </Setting>
     <Setting Name="UseAnimation" Type="System.Boolean" Scope="User">
@@ -34,6 +34,9 @@
     </Setting>
     <Setting Name="MinimizeToTray" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ConsoleSizeWidth" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">850</Value>
     </Setting>
   </Settings>
 </SettingsFile>

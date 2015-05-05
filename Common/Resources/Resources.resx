@@ -144,10 +144,6 @@ except if you tick the checkbox below to allow it temporarily.</value>
 The application outgoing connections are still allowed.
 Please check the Windows firewall for a rule named {0}.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="ICON_SHIELD" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\shield.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="FW_RULE_BLOCK" xml:space="preserve">
     <value>Block</value>
   </data>
@@ -185,5 +181,9 @@ to prevent any further notification, or creates a blocking rule for the Windows 
   </data>
   <data name="SERVICES_UNDEF" xml:space="preserve">
     <value>Multiple matches found.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="ICON_SHIELD" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>shield.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

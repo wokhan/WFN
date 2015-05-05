@@ -6,15 +6,15 @@ using System.Runtime.InteropServices;
 using System.Text;
 //using Windows.ApplicationModel.Resources.Core;
 
-namespace WindowsFirewallNotifier
+namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     public class CommonHelper
     {
         [DllImport("Wtsapi32.dll", SetLastError = true)]
-        internal static extern bool WTSQueryUserToken(uint SessionId, ref IntPtr phToken);
+        public static extern bool WTSQueryUserToken(uint SessionId, ref IntPtr phToken);
 
         [DllImport("kernel32.dll", SetLastError = true, EntryPoint = "WTSGetActiveConsoleSessionId")]
-        internal static extern ulong WTSGetActiveConsoleSessionId();
+        public static extern ulong WTSGetActiveConsoleSessionId();
 
         [DllImport("kernel32.dll")]
         static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTargetPath, int ucchMax);

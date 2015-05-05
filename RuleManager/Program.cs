@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
-using WindowsFirewallNotifier;
-using System.Windows.Forms;
-using System.Diagnostics;
-using System.Linq;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text;
-using WindowsFirewallNotifier.Properties;
+using System.Windows.Forms;
+using Wokhan.WindowsFirewallNotifier.Common;
+using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
-namespace WindowsFirewallNotifier.RuleManager
+namespace Wokhan.WindowsFirewallNotifier.RuleManager
 {
     class Program
     {

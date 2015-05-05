@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Security.Principal;
 
-namespace WindowsFirewallNotifier
+namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
-    class Impersonation
+    public class Impersonation
     {
         [StructLayout(LayoutKind.Sequential)]
         internal struct PROCESS_INFORMATION
@@ -93,7 +93,7 @@ namespace WindowsFirewallNotifier
         private const uint TOKEN_DUPLICATE = 0x0002;
         private const uint TOKEN_ASSIGN_PRIMARY = 0x0001;
 
-        internal static void LaunchProcessAsUser(string app, string args, IntPtr token)
+        public static void LaunchProcessAsUser(string app, string args, IntPtr token)
         {
             IntPtr primaryToken = IntPtr.Zero;
 

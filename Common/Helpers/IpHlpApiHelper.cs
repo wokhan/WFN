@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Net.Sockets;
 
-namespace WindowsFirewallNotifier
+namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     public static class IpHlpApiHelper
     {

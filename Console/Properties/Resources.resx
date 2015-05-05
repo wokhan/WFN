@@ -126,9 +126,6 @@
   <data name="MSG_INST_OK" xml:space="preserve">
     <value>Windows Firewall Notifier notifications have been enabled.</value>
   </data>
-  <data name="MSG_UNINST_TITLE_1" xml:space="preserve">
-    <value>Windows Firewall Notifier - Disable (1/2)</value>
-  </data>
   <data name="FW_PROFILE_DOMAIN" xml:space="preserve">
     <value>Domain</value>
   </data>
@@ -152,11 +149,6 @@ except if you tick the checkbox below to allow it temporarily.</value>
   </data>
   <data name="FW_PROFILE_PUBLIC" xml:space="preserve">
     <value>Public</value>
-  </data>
-  <data name="MSG_DISABLE_WFN" xml:space="preserve">
-    <value>You are going to disable Windows Firewall Notifier notifications (please note that this action does not remove already created firewall rules, nor does it prevent you to use the Windows Firewall Notifier console). You will be able to enable it back later through the Options tab.
-
-Would you like to continue?</value>
   </data>
   <data name="MSG_RULE_RM_FAILED" xml:space="preserve">
     <value>The temporary rule could not be removed.
@@ -190,16 +182,8 @@ Aborting activation.</value>
     <value>Unable to enable the Windows integrated firewall.\r\n
 Aborting installation.</value>
   </data>
-  <data name="MSG_UNINST_TITLE_2" xml:space="preserve">
-    <value>Windows Firewall Notifier - Disable (2/2)</value>
-  </data>
   <data name="FW_DIR_IN" xml:space="preserve">
     <value>In</value>
-  </data>
-  <data name="MSG_UNINST_UNBLOCK" xml:space="preserve">
-    <value>The Windows embedded firewall is still configured to block outgoing connections.
-Do you want to restore the default settings, allowing them all?
-If not, all rules you created either manually or using this application will still be active.</value>
   </data>
   <data name="MSG_RULE_DELETE" xml:space="preserve">
     <value>You are going to remove the selected firewall rule.
@@ -207,10 +191,6 @@ Continue?</value>
   </data>
   <data name="MSG_RULE_FAILED" xml:space="preserve">
     <value>The corresponding rule has not been created.</value>
-  </data>
-  <data name="MSG_UNINST_DISABLE_LOG" xml:space="preserve">
-    <value>Windows Firewall Notifier enabled the Windows firewall outgoing connections log (disabled by default).
-Do you want to disable it back?</value>
   </data>
   <data name="MSG_RULE_CREATED" xml:space="preserve">
     <value>The corresponding rule has been created.</value>

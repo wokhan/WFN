@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using NetFwTypeLib;
 using System.Runtime.InteropServices;
 using System.Linq;
@@ -8,13 +7,16 @@ using System.Net;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Text;
-using WindowsFirewallNotifier.Properties;
 using System.IO;
 using System.ServiceProcess;
-using System.Windows.Forms;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Windows.Media;
+using System.Windows.Interop;
+using System.Windows.Media.Imaging;
+using System.Windows;
+using Wokhan.WindowsFirewallNotifier.Common;
 
-namespace WindowsFirewallNotifier
+namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     public class FirewallHelper
     {
@@ -49,14 +51,16 @@ namespace WindowsFirewallNotifier
                     this.LocalAddresses = String.Join(", ", parsed["la4"].Concat(parsed["la6"]).ToArray());
                     this.RemotePorts = parsed["rport"].FirstOrDefault();
                     this.RemoteAddresses = String.Join(", ", parsed["ra4"].Concat(parsed["ra6"]).ToArray());
-                    try
+
+                    if (parsed.Contains("protocol") && parsed["protocol"].Any())
                     {
-                        this.Protocol = int.Parse(parsed["Protocol"].FirstOrDefault());
+                        this.Protocol = int.Parse(parsed["protocol"].First());
                     }
-                    catch
+                    else
                     {
                         this.Protocol = (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY;
                     }
+
                     this.serviceName = parsed["svc"].FirstOrDefault();
 
                     //// Win 8 ?
@@ -200,8 +204,8 @@ namespace WindowsFirewallNotifier
             public string RemotePorts { get { return InnerRule.RemotePorts; } }
             public string serviceName { get { return InnerRule.serviceName; } }
 
-            private Icon _icon = null;
-            public Icon Icon
+            private ImageSource _icon = null;
+            public ImageSource Icon
             {
                 get
                 {
@@ -277,7 +281,7 @@ namespace WindowsFirewallNotifier
 
         private static INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
         private const string indParamFormat = "{0}#$#{1}#$#{2}#$#{3}#$#{4}#$#{5}#$#{6}#$#{7}#$#{8}";
-        private static string WFNRuleManagerEXE = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "RuleManager.exe");
+        private static string WFNRuleManagerEXE = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "RuleManager.exe");
 
         /// <summary>
         /// 
@@ -593,6 +597,14 @@ namespace WindowsFirewallNotifier
             return (protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP || protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_UDP);
         }
 
+        public static bool CheckIfBlockingRuleMatches(string path, string protocol, string targetPort, string localport, string[] svc, bool unsure)
+        {
+            return FirewallHelper.GetRules()
+                                 .Any(r => r.Action == NetFwTypeLib.NET_FW_ACTION_.NET_FW_ACTION_BLOCK
+                                           && !unsure 
+                                           && FirewallHelper.RuleMatches(r, path, svc != null && svc.Length > 0 ? svc[0] : null, protocol, localport, targetPort));
+        }
+
 
         public static bool RuleMatches(Rule r, string path, string svc, string protocol, string localport, string remoteport)
         {
@@ -664,13 +676,13 @@ namespace WindowsFirewallNotifier
             return ret;
         }
 
-        internal static string GetCurrentProfileAsText()
+        public static string GetCurrentProfileAsText()
         {
             return GetProfileAsText((int)GetCurrentProfile());
         }
 
 
-        internal static string GetProfileAsText(int nET_FW_PROFILE_TYPE2_)
+        public static string GetProfileAsText(int nET_FW_PROFILE_TYPE2_)
         {
 
             string[] ret = new string[3];

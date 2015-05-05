@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace WFNConsole.Helpers.BindingConverters
+namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.BindingConverters
 {
     [ValueConversion(typeof(bool), typeof(bool))]
     public class BooleanNegator : IValueConverter
