@@ -79,11 +79,10 @@
                 </Style>
             </Button.Style>-->
         </Button>
-        <Grid DockPanel.Dock="Top" Margin="0,0,0,-10">
-            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="30" Fill="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" />
+        <Grid DockPanel.Dock="Top" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" Margin="0,0,0,0">
             <TextBlock HorizontalAlignment="Left" Margin="5" Text="Windows firewall has blocked an outgoing connection" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" FontWeight="Bold" />
-            <Button HorizontalAlignment="Right" Content="0" Width="30" Height="30" VerticalAlignment="Top" FontFamily="Marlett" Margin="0,0,10,0" Click="btnMin_Click" />
-            <Button HorizontalAlignment="Right" Margin="0,0,50,0" Click="btnOptions_Click" Height="40" >
+            <Button HorizontalAlignment="Right" Content="0" Width="28" Height="28" VerticalAlignment="Center" FontFamily="Marlett" FontSize="20" Padding="0" Margin="0,0,10,0" Click="btnMin_Click" />
+            <Button HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,50,0" Padding="4" Click="btnOptions_Click" Height="28" Width="28">
                 <Image Source="/Notifier;component/Resources/Images/btnOptions.Image.png" />
             </Button>
         </Grid>
@@ -91,6 +90,7 @@
             <ListView VirtualizingPanel.ScrollUnit="Item" SelectedIndex="0" SelectionMode="Single" x:Name="lstConnections" Background="Transparent" ItemsSource="{Binding Connections}" DataContext="{x:Static Application.Current}" d:DataContext="{d:DesignInstance Type=sampleApp:AppDataSample, IsDesignTimeCreatable=True}">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
+                        <Setter Property="Padding" Value="0" />
                         <Style.Resources>
                             <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
                             <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
@@ -118,16 +118,17 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Width="{Binding ActualWidth,ElementName=lstConnections}">
-                            <Grid>
+                            <Grid Margin="5,0">
                                 <WrapPanel Margin="5">
                                     <Image Height="32" MinWidth="32" Source="{Binding Icon}" />
-                                    <Label Content="{Binding CurrentProd, FallbackValue=Dummy application}" FontSize="14"/>
+                                    <Label Content="{Binding CurrentProd}" FontSize="14"/>
                                 </WrapPanel>
-                                <WrapPanel HorizontalAlignment="Right" VerticalAlignment="Center">
-                                    <Label Content="{Binding SelectedIndex, ElementName=lstConnections, FallbackValue=X}" />
-                                    <Label Content="/" />
-                                    <Label Content="{Binding Items.Count, ElementName=lstConnections, FallbackValue=X}" />
-                                </WrapPanel>
+                                <StackPanel HorizontalAlignment="Right">
+                                    <TextBlock VerticalAlignment="Top" Margin="2" HorizontalAlignment="Right">
+                                        <Run Text="{Binding SelectedIndex, Mode=OneWay, ElementName=lstConnections}" />/
+                                        <Run Text="{Binding Items.Count, Mode=OneWay, ElementName=lstConnections}" /></TextBlock>
+                                    <TextBlock VerticalAlignment="Top" Margin="2" HorizontalAlignment="Right" Text="{Binding TentativesCounter,StringFormat='Tentatives: {0}'}" />
+                                </StackPanel>
                             </Grid>
                             <WrapPanel HorizontalAlignment="Center">
                                 <WrapPanel.Resources>

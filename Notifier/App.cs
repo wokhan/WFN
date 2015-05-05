@@ -76,7 +76,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             }
         }
 
-
         public bool AddItem(int pid, string threadid, string path, string target, string protocol, string targetPort, string localport)
         {
             try
@@ -86,7 +85,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     path = CommonHelper.GetFriendlyPath(path);
                 }
 
-                if (!this.Connections.Any(c => c.CurrentPath == path && (int.Parse(localport) >= 49152 || c.LocalPort == localport))) //&& c.TargetPort == targetPort))
+                var existing = this.Connections.FirstOrDefault(c => c.CurrentPath == path && (int.Parse(localport) >= 49152 || c.LocalPort == localport));
+                if (existing != null)
+                {
+                    existing.TentativesCounter++;
+                }
+                else
                 {
                     string[] svc = new string[0];
                     string[] svcdsc = new string[0];

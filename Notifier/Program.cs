@@ -22,7 +22,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             {
                 if (argv.Length == 0 || argv[1].Contains("$"))
                 {
-                    argv = new string[] { "-pid", Process.GetCurrentProcess().Id.ToString(), "-threadid", "0", "-ip", "127.0.0.1", "-port", "0", "-protocol", "0", "-localport", "0", "-path", "DEMO MODE _ " + new Random().Next().ToString() };
+                    argv = new string[] { "-pid", Process.GetCurrentProcess().Id.ToString(), "-threadid", "0", "-ip", "127.0.0.1", "-port", "0", "-protocol", "0", "-localport", "0", "-path", "DEMO MODE" };// + new Random().Next().ToString() };
                 }
 
                 Dictionary<string, string> pars = ProcessHelper.ParseParameters(argv);
