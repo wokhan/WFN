@@ -1,19 +1,22 @@
 ﻿using System;
 using System.IO;
-using System.Windows.Forms;
 using System.Reflection;
+using Wokhan.WindowsFirewallNotifier.Common;
 
-namespace WindowsFirewallNotifier
+namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     public class LogHelper
     {
-        private static string logPath = Path.GetDirectoryName(Application.ExecutablePath) + "\\errors.log";
+        private static string runPath = System.AppDomain.CurrentDomain.BaseDirectory;
+        private static string logPath = Path.Combine(runPath, "errors.log");
+        private static string appVersion = Assembly.GetCallingAssembly().GetName().Version.ToString();
+
 
         static LogHelper()
         {
             if (Settings.Default.FirstRun)
             {
-                writeLog("INIT", String.Format("OS: {0} ({1}bit) / .Net CLR: {2} / Path: {3} / Version: {4}", Environment.OSVersion, IntPtr.Size * 8, Environment.Version, Application.ExecutablePath, Application.ProductVersion));
+                writeLog("INIT", String.Format("OS: {0} ({1}bit) / .Net CLR: {2} / Path: {3} / Version: {4}", Environment.OSVersion, IntPtr.Size * 8, Environment.Version, runPath, appVersion));
             }
         }
 

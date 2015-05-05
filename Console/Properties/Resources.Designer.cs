@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WindowsFirewallNotifierConsole.Properties {
+namespace Wokhan.WindowsFirewallNotifier.Console.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace WindowsFirewallNotifierConsole.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WFNConsole.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Wokhan.WindowsFirewallNotifier.Console.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -191,17 +191,6 @@ namespace WindowsFirewallNotifierConsole.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You are going to disable Windows Firewall Notifier notifications (please note that this action does not remove already created firewall rules, nor does it prevent you to use the Windows Firewall Notifier console). You will be able to enable it back later through the Options tab.
-        ///
-        ///Would you like to continue?.
-        /// </summary>
-        public static string MSG_DISABLE_WFN {
-            get {
-                return ResourceManager.GetString("MSG_DISABLE_WFN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Windows Firewall Notifier - Error.
         /// </summary>
         public static string MSG_DLG_ERR_TITLE {
@@ -307,16 +296,6 @@ namespace WindowsFirewallNotifierConsole.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Windows Firewall Notifier enabled the Windows firewall outgoing connections log (disabled by default).
-        ///Do you want to disable it back?.
-        /// </summary>
-        public static string MSG_UNINST_DISABLE_LOG {
-            get {
-                return ResourceManager.GetString("MSG_UNINST_DISABLE_LOG", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to An error occured while restoring the local strategy policy.
         /// </summary>
         public static string MSG_UNINST_DISABLE_LOG_ERR {
@@ -342,35 +321,6 @@ namespace WindowsFirewallNotifierConsole.Properties {
         public static string MSG_UNINST_TASK_ERR {
             get {
                 return ResourceManager.GetString("MSG_UNINST_TASK_ERR", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Windows Firewall Notifier - Disable (1/2).
-        /// </summary>
-        public static string MSG_UNINST_TITLE_1 {
-            get {
-                return ResourceManager.GetString("MSG_UNINST_TITLE_1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Windows Firewall Notifier - Disable (2/2).
-        /// </summary>
-        public static string MSG_UNINST_TITLE_2 {
-            get {
-                return ResourceManager.GetString("MSG_UNINST_TITLE_2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The Windows embedded firewall is still configured to block outgoing connections.
-        ///Do you want to restore the default settings, allowing them all?
-        ///If not, all rules you created either manually or using this application will still be active..
-        /// </summary>
-        public static string MSG_UNINST_UNBLOCK {
-            get {
-                return ResourceManager.GetString("MSG_UNINST_UNBLOCK", resourceCulture);
             }
         }
         

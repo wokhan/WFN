@@ -159,11 +159,6 @@ sauf si vous cochez la case ci-dessous.</value>
 pour éviter que d'autres notifications ne soient affichées.
 Vous pourrez supprimer cette exception via les options de WFN.</value>
   </data>
-  <data name="MSG_DISABLE_WFN" xml:space="preserve">
-    <value>Vous êtes sur le point de désactiver les notifications de Windows Firewall Notifier. Cette action ne supprimera pas les règles de pare-feu créées, et ne vous empêchera pas d'utiliser la console de Windows Firewall Notifier. Vous pourrez réactiver les notifications via l'écran d'options si besoin.
-
-Souhaitez-vous continuer ?</value>
-  </data>
   <data name="MSG_DLG_ERR_TITLE" xml:space="preserve">
     <value>Windows Firewall Notifier - Erreur</value>
   </data>
@@ -203,10 +198,6 @@ Pouvez-vous vérifier la configuration du pare-feu Windows pour une règle nomm�
   <data name="MSG_RULE_TMP_FAILED" xml:space="preserve">
     <value>Impossible d'autoriser temporairement cette application.</value>
   </data>
-  <data name="MSG_UNINST_DISABLE_LOG" xml:space="preserve">
-    <value>Windows Firewall Notifier a activé la journalisation du pare-feu Windows pour les connexions sortantes (désactivée par défaut).
-Souhaitez-vous la désactiver ?</value>
-  </data>
   <data name="MSG_UNINST_DISABLE_LOG_ERR" xml:space="preserve">
     <value>Une erreur est survenue lors de la désactivation de la journalisation des connexions sortantes.</value>
   </data>
@@ -217,17 +208,6 @@ Vous pouvez supprimer l'application.</value>
   <data name="MSG_UNINST_TASK_ERR" xml:space="preserve">
     <value>Une erreur est survenue lors de la suppression de la tâche de Windows Firewall Notifier.
 L'application n'a PAS été correctement désactivée.</value>
-  </data>
-  <data name="MSG_UNINST_TITLE_1" xml:space="preserve">
-    <value>Windows Firewall Notifier - Désactivation (1/2)</value>
-  </data>
-  <data name="MSG_UNINST_TITLE_2" xml:space="preserve">
-    <value>Windows Firewall Notifier - Désactivation (2/2)</value>
-  </data>
-  <data name="MSG_UNINST_UNBLOCK" xml:space="preserve">
-    <value>Le pare-feu Windows intégré est encore configuré pour bloquer les connexions sortantes.
-Souhaitez-vous restaurer le réglage par défaut, en les autorisant ?
-Si vous choisissez non, les règles que vous avez créées (manuellement ou via cette application) seront toujours active.</value>
   </data>
   <data name="MSG_UNINST_UNBLOCK_ERR" xml:space="preserve">
     <value>Une erreur est survenue lors de la restauration du comportement par défaut du pare-feu Windows.

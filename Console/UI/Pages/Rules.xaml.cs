@@ -1,22 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using WindowsFirewallNotifier;
+using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
-namespace WFNConsole.UI.Pages
+namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
     /// <summary>
     /// Interaction logic for Rules.xaml
@@ -26,8 +16,6 @@ namespace WFNConsole.UI.Pages
         public Rules()
         {
             InitializeComponent();
-
-            this.DataContext = this;
 
             initAllRules();
             initRules();
@@ -109,7 +97,7 @@ namespace WFNConsole.UI.Pages
             }
         }
 
-        private static string rulePrefix = WindowsFirewallNotifier.Properties.Resources.RULE_NAME_FORMAT.Split('-')[0];
+        private static string rulePrefix = Wokhan.WindowsFirewallNotifier.Common.Resources.RULE_NAME_FORMAT.Split('-')[0];
         private bool WFNRulesPredicate(FirewallHelper.Rule r)
         {
             return r.Name.StartsWith(rulePrefix);
@@ -132,7 +120,7 @@ namespace WFNConsole.UI.Pages
 
         private void btnRemoveRule_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show(WindowsFirewallNotifier.Properties.Resources.MSG_RULE_DELETE, WindowsFirewallNotifier.Properties.Resources.MSG_DLG_TITLE, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (MessageBox.Show(Wokhan.WindowsFirewallNotifier.Common.Resources.MSG_RULE_DELETE, Wokhan.WindowsFirewallNotifier.Common.Resources.MSG_DLG_TITLE, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 FirewallHelper.RemoveRule(((FirewallHelper.Rule)gridRules.SelectedItem).Name);
 

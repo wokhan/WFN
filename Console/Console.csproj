@@ -7,7 +7,7 @@
     <ProjectGuid>{95C82925-3B3C-4AD5-840E-55A2C4EA28A2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WFNConsole</RootNamespace>
+    <RootNamespace>Wokhan.WindowsFirewallNotifier.Console</RootNamespace>
     <AssemblyName>WFN</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -42,7 +42,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>WFNConsole.App</StartupObject>
+    <StartupObject>Wokhan.WindowsFirewallNotifier.Console.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\Shield.ico</ApplicationIcon>
@@ -75,9 +75,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Helpers\BindingConverters\BooleanNegator.cs" />
-    <Compile Include="Helpers\BindingConverters\IconToImageSource.cs" />
-    <Compile Include="Helpers\Extensions.cs" />
-    <Compile Include="Helpers\NotifierHelper.cs" />
     <Compile Include="UI\Pages\Connections.xaml.cs">
       <DependentUpon>Connections.xaml</DependentUpon>
     </Compile>
@@ -95,6 +92,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Helpers\InstallHelper.cs" />
+    <Compile Include="UI\Windows\SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="UI\Pages\Connections.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -108,6 +108,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Windows\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Windows\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -130,13 +134,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.fr.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
-      <CustomToolNamespace>WindowsFirewallNotifierConsole.Properties</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
-      <CustomToolNamespace>WindowsFirewallNotifierConsole.Properties</CustomToolNamespace>
     </EmbeddedResource>
     <None Include="DisableWFN.cmd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -167,13 +169,9 @@
     <Resource Include="version.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Notifier\Notifier.csproj">
-      <Project>{b0777cd1-8f34-4370-8d9f-c4f896ad542b}</Project>
-      <Name>Notifier</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RuleManager\RuleManager.csproj">
-      <Project>{a963fa80-520f-4952-82c9-5fdf54fc35f6}</Project>
-      <Name>RuleManager</Name>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{94028c5e-9b0e-4d15-966a-9fa766a20821}</Project>
+      <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

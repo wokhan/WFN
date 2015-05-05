@@ -2,16 +2,17 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Security.Principal;
 using System.Windows;
 
-namespace WFNConsole.UI.Windows
+namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow
     {
-        public bool IsAdmin { get { return false; } }
+        public bool IsAdmin { get { return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator); } }
 
         public MainWindow()
         {
@@ -79,6 +80,11 @@ namespace WFNConsole.UI.Windows
         {
             ForceDialog(((Exception)e.ExceptionObject).Message, "Unexpected error");
             //this.ShowMessageAsync("Unexpected error", ((Exception)e.ExceptionObject).Message, MessageDialogStyle.Affirmative);
+        }
+
+        private void btnSettings_Click(object sender, RoutedEventArgs e)
+        {
+            new SettingsWindow().ShowDialog();
         }
     }
 }

@@ -1,13 +1,14 @@
-﻿<MahApps:MetroWindow x:Class="WFNConsole.UI.Windows.MainWindow"
+﻿<MahApps:MetroWindow x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Windows.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:MahApps="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        Title="Windows Firewall Notifier - Console" 
+        Title="Windows Firewall Notifier - Console"
         TitleCaps="False" 
         Height="500" 
         Width="850"
         BorderThickness="1" BorderBrush="Gray" 
-        Icon="/WFNConsole;component/Resources/Shield.ico" 
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        Icon="/WFN;component/Resources/Shield.ico" 
         ResizeMode="CanResizeWithGrip">
     <DockPanel>
         <Border DockPanel.Dock="Top" BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="0,0,0,5">
@@ -15,53 +16,57 @@
                 <WrapPanel>
                     <Button x:Name="btnConnections" Click="btnConnections_Click">
                         <Grid>
-                            <Image Source="/WFNConsole;component/Resources/Images/btnTConnections.Image.png" HorizontalAlignment="Left" Height="16"/>
+                            <Image Source="/WFN;component/Resources/Images/btnTConnections.Image.png" HorizontalAlignment="Left" Height="16"/>
                             <Label Margin="20,0,0,0" Content="connections" />
+                        </Grid>
+                    </Button>
+                    <Button x:Name="btnMonitor">
+                        <Grid>
+                            <Image Source="/WFN;component/Resources/Images/btnTLog.Image.png" HorizontalAlignment="Left" Height="16"/>
+                            <Label Margin="20,0,0,0" Content="monitor" />
                         </Grid>
                     </Button>
                     <Button x:Name="btnRules" Click="btnRules_Click">
                         <Grid>
-                            <Image Source="/WFNConsole;component/Resources/Images/btnTRules.Image.png" HorizontalAlignment="Left" Height="16"/>
+                            <Image Source="/WFN;component/Resources/Images/btnTRules.Image.png" HorizontalAlignment="Left" Height="16"/>
                             <Label Margin="20,0,0,0" Content="firewall rules" />
                         </Grid>
                     </Button>
                     <Button x:Name="btnEventsLog" Click="btnEventsLog_Click" IsEnabled="{Binding IsAdmin}">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsAdmin, Converter={StaticResource booleanNegator}}">
-                                        <Setter Property="ToolTip" Value="This feature is only accessible to administrators." />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
                         <Grid>
-                            <Image Source="/WFNConsole;component/Resources/Images/btnTLog.Image.png" HorizontalAlignment="Left" Height="16"/>
+                            <Image Source="/WFN;component/Resources/Images/btnTLog.Image.png" HorizontalAlignment="Left" Height="16"/>
                             <Label Margin="20,0,0,0" Content="events log" />
                         </Grid>
                     </Button>
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Right">
-                    <Button x:Name="btnSettings">
+                    <Button x:Name="btnSettings" Click="btnSettings_Click">
                         <Grid>
-                            <Image Source="/WFNConsole;component/Resources/Images/btnOptions.Image.png" HorizontalAlignment="Left" Height="16"/>
+                            <Image Source="/WFN;component/Resources/Images/btnOptions.Image.png" HorizontalAlignment="Left" Height="16"/>
                             <Label Margin="20,0,0,0" Content="settings" />
                         </Grid>
                     </Button>
-                    <Button x:Name="btnAbout" Click="btnAbout_Click">
-                        <Grid>
-                            <Image Source="/WFNConsole;component/Resources/Images/btnDonate.Image.png" HorizontalAlignment="Left" Height="16"/>
-                            <Label Margin="20,0,0,0" Content="about" />
-                        </Grid>
+                    <Button x:Name="btnAbout" Click="btnAbout_Click" Width="30">
+                        <Image Source="/WFN;component/Resources/Images/btnDonate.Image.png" HorizontalAlignment="Left" Height="16"/>
                     </Button>
                 </WrapPanel>
             </Grid>
         </Border>
-        <WrapPanel Style="{StaticResource ToolBarPanel}" DockPanel.Dock="Bottom">
+        <WrapPanel DockPanel.Dock="Bottom">
+            <WrapPanel.Style>
+                <Style TargetType="WrapPanel" BasedOn="{StaticResource InfoPanel}">
+                    <Setter Property="Visibility" Value="Visible" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsAdmin}" Value="False">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </WrapPanel.Style>
             <Label Content="To enable all features, you must restart the Console with an admin account." />
             <Button x:Name="btnRestartAdmin">
                 <Grid>
-                    <Image Source="/WFNConsole;component/Resources/Shield.ico" HorizontalAlignment="Left" Height="16"/>
+                    <Image Source="/WFN;component/Resources/Shield.ico" HorizontalAlignment="Left" Height="16"/>
                     <Label Margin="20,0,0,0" Content="restart as admin" />
                 </Grid>
             </Button>
@@ -74,7 +79,7 @@
                 <StackPanel >
                     <Label Content="About" FontSize="16" FontWeight="Bold" />
                     <Grid>
-                        <Image Source="/WFNConsole;component/Resources/Shield.ico" Height="32" HorizontalAlignment="Left" />
+                        <Image Source="/WFN;component/Resources/Shield.ico" Height="32" HorizontalAlignment="Left" />
                         <Label FontSize="13" Margin="30,0,0,0" VerticalAlignment="Center" Content="Windows Firewall Notifier vxxx.xxx" />
                     </Grid>
                     <Label Content="Developped by Khan (http://wfn.codeplex.com)" />

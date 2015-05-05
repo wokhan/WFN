@@ -3,22 +3,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using WindowsFirewallNotifier;
-using WFNConsole.Helpers;
 using System.Windows.Threading;
+using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
-namespace WFNConsole.UI.Pages
+namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
     /// <summary>
     /// Interaction logic for EventLog.xaml
@@ -55,8 +46,6 @@ namespace WFNConsole.UI.Pages
             timer.Tick += timer_Tick;
             timer.Interval = TimeSpan.FromSeconds(Interval);
             timer.Start();
-
-            this.DataContext = this;
         }
 
         void timer_Tick(object sender, EventArgs e)
@@ -100,7 +89,7 @@ namespace WFNConsole.UI.Pages
                             var le = new LogEntry()
                                                     {
                                                         CreationTime = entry.TimeWritten,
-                                                        Icon = ProcessHelper.GetIcon(CommonHelper.GetFriendlyPath(entry.ReplacementStrings[1])).AsImageSource(),
+                                                        Icon = ProcessHelper.GetCachedIcon(CommonHelper.GetFriendlyPath(entry.ReplacementStrings[1])),
                                                         FriendlyPath = CommonHelper.GetFriendlyPath(entry.ReplacementStrings[1]),
                                                         Replacement5 = entry.ReplacementStrings[5],
                                                         Protocol = getProtocol(entry.ReplacementStrings[7]),

@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // Les informations générales relatives à un assembly dépendent de 
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("RuleManager")]
+[assembly: AssemblyTitle("Wokhan.WindowsFirewallNotifier.RuleManager")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Wokhan")]
 [assembly: AssemblyProduct("Windows Firewall Notifier - Rule manager")]
-[assembly: AssemblyCopyright("©2011-2013 Khan (http://wokhan.online.fr)")]
+[assembly: AssemblyCopyright("2011-2015 Wokhan (http://wfn.codeplex.com)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Vous pouvez spécifier toutes les valeurs ou indiquer les numéros de build et de révision par défaut 
 // en utilisant '*', comme indiqué ci-dessous :
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.9.2.9")]
-[assembly: AssemblyFileVersion("1.9.2.9")]
+[assembly: AssemblyVersion("2.0.*")]
+[assembly: AssemblyFileVersion("2.0.0.0")]

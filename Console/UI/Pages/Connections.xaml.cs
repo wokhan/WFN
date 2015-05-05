@@ -1,28 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Interop;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using WFNConsole.Helpers;
-using WindowsFirewallNotifier;
+using Wokhan.WindowsFirewallNotifier.Console.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
-namespace WFNConsole.UI.Pages
+namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
     /// <summary>
     /// Interaction logic for Connections.xaml
     /// </summary>
     public partial class Connections : Page
     {
-        public class ConnectionView : NotifierHelper
+        public class ConnectionView : INotifyPropertyChanged
         {
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            protected void NotifyPropertyChanged(string propertyName)
+            {
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                }
+            }
+
             public ConnectionView(int pid)
             {
                 PID = pid;
@@ -37,12 +46,13 @@ namespace WFNConsole.UI.Pages
                         try
                         {
                             Path = proc.MainModule.FileName;
-                            Icon = ProcessHelper.GetIcon(Path).AsImageSource();
                         }
                         catch
                         {
                             Path = "Unresolved";
                         }
+
+                        Icon = ProcessHelper.GetIcon(Path, true);
                     }
                 }
                 else
@@ -147,8 +157,6 @@ namespace WFNConsole.UI.Pages
 
             InitializeComponent();
 
-            this.DataContext = this;
-            
             timer.Interval = TimeSpan.FromSeconds(Interval);
             timer.Tick += timer_Tick;
             timer.Start();

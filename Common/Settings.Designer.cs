@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WindowsFirewallNotifier {
+namespace Wokhan.WindowsFirewallNotifier.Common {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -37,22 +37,22 @@ namespace WindowsFirewallNotifier {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("770, 507")]
-        public global::System.Drawing.Size ConsoleSize {
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        public int ConsoleSizeHeight {
             get {
-                return ((global::System.Drawing.Size)(this["ConsoleSize"]));
+                return ((int)(this["ConsoleSizeHeight"]));
             }
             set {
-                this["ConsoleSize"] = value;
+                this["ConsoleSizeHeight"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
-        public global::System.Windows.Forms.FormWindowState ConsoleState {
+        public global::System.Windows.WindowState ConsoleState {
             get {
-                return ((global::System.Windows.Forms.FormWindowState)(this["ConsoleState"]));
+                return ((global::System.Windows.WindowState)(this["ConsoleState"]));
             }
             set {
                 this["ConsoleState"] = value;
@@ -145,13 +145,25 @@ namespace WindowsFirewallNotifier {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool MinimizeToTray {
             get {
                 return ((bool)(this["MinimizeToTray"]));
             }
             set {
                 this["MinimizeToTray"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("850")]
+        public int ConsoleSizeWidth {
+            get {
+                return ((int)(this["ConsoleSizeWidth"]));
+            }
+            set {
+                this["ConsoleSizeWidth"] = value;
             }
         }
     }
