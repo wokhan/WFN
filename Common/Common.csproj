@@ -55,7 +55,11 @@
     <Compile Include="Helpers\CommonHelper.cs" />
     <Compile Include="Helpers\FirewallHelper.cs" />
     <Compile Include="Helpers\Impersonation.cs" />
-    <Compile Include="Helpers\IpHlpApiHelper.cs" />
+    <Compile Include="Helpers\IPHelpers\TCP6Helper.cs" />
+    <Compile Include="Helpers\IPHelpers\TCPHelper.cs" />
+    <Compile Include="Helpers\IPHelpers\UDP6Helper.cs" />
+    <Compile Include="Helpers\IPHelpers\UDPHelper.cs" />
+    <Compile Include="Helpers\IPHelpers\BaseHelper.cs" />
     <Compile Include="Helpers\LogHelper.cs" />
     <Compile Include="Helpers\ProcessHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

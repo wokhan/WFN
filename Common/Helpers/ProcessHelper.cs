@@ -70,7 +70,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             LogHelper.Debug("GetService found the following services: " + String.Join(",", svcs));
 
-            var ret = IpHlpApiHelper.GetOwner(protocol, int.Parse(localport));
+            var ret = BaseHelper.GetOwner(protocol, int.Parse(localport));
             if (ret != null && !String.IsNullOrEmpty(ret.ModuleName))
             {
                 // Returns the owner only if it's indeed a service (hence contained in the previously retrieved list)

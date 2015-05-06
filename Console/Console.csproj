@@ -48,6 +48,9 @@
     <ApplicationIcon>Resources\Shield.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="De.TorstenMandelkow.MetroChart">
+      <HintPath>Libs\De.TorstenMandelkow.MetroChart.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro">
       <HintPath>..\packages\MahApps.Metro.1.1.3-ALPHA021\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
@@ -75,11 +78,16 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Helpers\BindingConverters\BooleanNegator.cs" />
+    <Compile Include="Helpers\BindingConverters\ObservablePointCollectionConverter.cs" />
+    <Compile Include="Helpers\DummyData\MonitorDummy.cs" />
     <Compile Include="UI\Pages\Connections.xaml.cs">
       <DependentUpon>Connections.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Pages\EventsLog.xaml.cs">
       <DependentUpon>EventsLog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Pages\Monitor.xaml.cs">
+      <DependentUpon>Monitor.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Pages\Rules.xaml.cs">
       <DependentUpon>Rules.xaml</DependentUpon>
@@ -100,6 +108,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Pages\EventsLog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Pages\Monitor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

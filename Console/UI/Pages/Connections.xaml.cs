@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -164,24 +165,24 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         void timer_Tick(object sender, EventArgs e)
         {
-            foreach (var b in IpHlpApiHelper.GetAllTCPConnections())
+            foreach (var b in TCPHelper.GetAllTCPConnections())
             {
                 AddOrUpdateConnection(b, "TCP");
             }
 
-            foreach (var b in IpHlpApiHelper.GetAllUDPConnections())
+            foreach (var b in UDPHelper.GetAllUDPConnections())
             {
                 AddOrUpdateConnection(b, "UDP");
             }
 
             if (Socket.OSSupportsIPv6)
             {
-                foreach (var b in IpHlpApiHelper.GetAllTCP6Connections())
+                foreach (var b in TCP6Helper.GetAllTCP6Connections())
                 {
                     AddOrUpdateConnection(b, "TCP");
                 }
 
-                foreach (var b in IpHlpApiHelper.GetAllUDP6Connections())
+                foreach (var b in UDP6Helper.GetAllUDP6Connections())
                 {
                     AddOrUpdateConnection(b, "UDP");
                 }
@@ -202,7 +203,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
         }
 
-        private void AddOrUpdateConnection(IpHlpApiHelper.OWNER_MODULE b, string protocol)
+        private void AddOrUpdateConnection(BaseHelper.OWNER_MODULE b, string protocol)
         {
             ConnectionView lvi = lstConnections.SingleOrDefault(l => l.PID == b.OwningPid && l.Protocol == protocol && l.LocalPort == b.LocalPort.ToString());
 
@@ -232,7 +233,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             lvi.RemoteAddress = b.RemoteAddress;
             lvi.RemotePort = (b.RemotePort == -1 ? String.Empty : b.RemotePort.ToString());
             lvi.LastSeen = DateTime.Now;
-            lvi.State = Enum.GetName(typeof(IpHlpApiHelper.MIB_TCP_STATE), b.State);
+            lvi.State = Enum.GetName(typeof(BaseHelper.MIB_TCP_STATE), b.State);
         }
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
