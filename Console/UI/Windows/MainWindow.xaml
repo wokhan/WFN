@@ -20,7 +20,7 @@
                             <Label Margin="20,0,0,0" Content="connections" />
                         </Grid>
                     </Button>
-                    <Button x:Name="btnMonitor">
+                    <Button x:Name="btnMonitor" Click="btnMonitor_Click">
                         <Grid>
                             <Image Source="/WFN;component/Resources/Images/btnTLog.Image.png" HorizontalAlignment="Left" Height="16"/>
                             <Label Margin="20,0,0,0" Content="monitor" />
@@ -71,7 +71,7 @@
                 </Grid>
             </Button>
         </WrapPanel>
-        <Frame x:Name="mainFrame" VirtualizingPanel.VirtualizationMode="Standard" Padding="5" Source="../Pages/Connections.xaml" NavigationUIVisibility="Hidden" />
+        <Frame x:Name="mainFrame" VirtualizingPanel.VirtualizationMode="Standard" Padding="5" Source="../Pages/Monitor.xaml" NavigationUIVisibility="Hidden" />
     </DockPanel>
     <MahApps:MetroWindow.Flyouts>
         <MahApps:FlyoutsControl>

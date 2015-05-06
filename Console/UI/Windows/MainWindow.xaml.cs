@@ -86,5 +86,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
         {
             new SettingsWindow().ShowDialog();
         }
+
+        private void btnMonitor_Click(object sender, RoutedEventArgs e)
+        {
+            mainFrame.Navigate(new Uri("/UI/Pages/Monitor.xaml", UriKind.Relative));
+        }
     }
 }

@@ -85,9 +85,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     path = CommonHelper.GetFriendlyPath(path);
                 }
 
-                var existing = this.Connections.FirstOrDefault(c => c.CurrentPath == path && (int.Parse(localport) >= 49152 || c.LocalPort == localport));
+                var existing = this.Connections.FirstOrDefault(c => c.CurrentPath == path && c.Target == target && c.TargetPort == targetPort);// && (int.Parse(localport) >= 49152 || c.LocalPort == localport));
                 if (existing != null)
                 {
+                    if (int.Parse(localport) < 49152)
+                    {
+                        existing.LocalPort += "," + localport;
+                    }
                     existing.TentativesCounter++;
                 }
                 else
