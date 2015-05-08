@@ -6,31 +6,38 @@
       xmlns:dummydata="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.Helpers.DummyData"
       xmlns:Converters="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.Helpers.BindingConverters"
       mc:Ignorable="d" 
-      d:DesignHeight="400" d:DesignWidth="700" DataContext="{Binding RelativeSource={RelativeSource Self}}"
-	Title="Monitor">
+      DataContext="{Binding RelativeSource={RelativeSource Self}}" 
+      d:DesignHeight="400" d:DesignWidth="700" 
+      d:DataContext="{d:DesignInstance Type=dummydata:MonitorDummy, IsDesignTimeCreatable=True}"
+      Title="Monitor">
     <Page.Resources>
         <Converters:ObservablePointCollectionConverter x:Key="ObservablePointCollectionConverter" />
     </Page.Resources>
     <DockPanel>
-        <Border Padding="5" DockPanel.Dock="Top">
-            <Grid Style="{StaticResource ToolBarPanel}">
+        <Border Style="{StaticResource ToolBarPanel}">
+            <Grid>
                 <WrapPanel HorizontalAlignment="Left">
-                    <Button IsEnabled="False" x:Name="btnStart">
+                    <ToggleButton IsChecked="{Binding IsTrackingEnabled}">
                         <Grid>
-                            <Image Source="/WFN;component/Resources/Images/btnConnTrack.Image.png" HorizontalAlignment="Left" Height="16"/>
-                            <TextBlock Margin="20,0,0,0" Text="Start tracking" />
+                            <Path HorizontalAlignment="Left" Height="16" Stretch="Uniform" Fill="Green">
+                                <Path.Style>
+                                    <Style TargetType="Path">
+                                        <Setter Property="Data" Value="F1 M 30.0833,22.1667L 50.6665,37.6043L 50.6665,38.7918L 30.0833,53.8333L 30.0833,22.1667 Z" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsTrackingEnabled}" Value="True">
+                                                <Setter Property="Data" Value="F1 M 31.6667,19L 44.3333,19L 57,31.6667L 57,44.3333L 44.3333,57L 31.6667,57L 19,44.3333L 19,31.6667L 31.6667,19 Z M 30.875,33.25L 30.875,34.8334L 33.25,34.8334L 33.25,42.75L 34.8333,42.75L 34.8333,34.8334L 37.2083,34.8334L 37.2083,33.25L 30.875,33.25 Z M 37.9999,36.4168L 37.9999,39.5834C 38,40.6389 38,41.6945 38.5278,42.2222C 39.0555,42.75 40.1111,42.75 41.1666,42.75C 42.2221,42.75 43.2777,42.75 43.8055,42.2223C 44.3333,41.6945 44.3333,40.6389 44.3333,39.5834L 44.3333,36.4167C 44.3333,35.3612 44.3333,34.3056 43.8055,33.7778C 43.2777,33.25 42.2222,33.25 41.1666,33.25C 40.1111,33.25 39.0555,33.25 38.5277,33.7778C 38,34.3056 37.9999,35.3612 37.9999,36.4168 Z M 39.8472,40.375C 39.5833,39.0556 39.5833,36.9445 40.1111,35.8889C 40.6389,34.8334 41.6944,34.8334 42.2222,35.8889C 42.75,36.9445 42.75,39.0556 42.2222,40.1111C 41.6944,41.1667 40.6389,41.1667 39.8472,40.375 Z M 45.9167,33.25L 45.9167,42.75L 47.5,42.75L 47.5,39.5833L 49.875,39.5834C 50.4027,39.5834 50.9305,39.5834 51.3923,39.0556C 51.8541,38.5278 52.25,37.4723 52.6458,36.4167C 52.25,35.3611 51.8541,34.3056 51.3923,33.7778C 50.9305,33.25 50.4027,33.2501 49.8749,33.2501L 45.9167,33.25 Z M 49.6111,34.5695C 51.0625,35.8889 51.0625,36.9445 50.4687,37.4722C 49.875,38 48.6875,38 47.5,38L 47.5,34.8334C 48.6875,34.8334 49.875,34.8334 49.6111,34.5695 Z M 28.5,33.25L 25.3333,33.25C 24.8056,33.25 24.2778,33.25 24.0139,33.382C 23.75,33.5139 23.75,33.7778 23.75,34.0417L 23.75,36.4167C 23.75,36.9445 23.75,37.4722 24.0139,37.7361C 24.2778,38 24.8056,38 25.3333,38C 26.3889,38 27.4444,38 27.9722,38.5278C 28.5,39.0556 28.5,40.1111 27.9722,40.6389C 27.4444,41.1667 26.3889,41.1667 25.8611,40.9688C 25.3333,40.7708 25.3333,40.375 25.3333,39.9792L 23.75,39.9792L 23.75,41.1667C 23.75,41.6945 23.75,42.2222 24.2778,42.4861C 24.8056,42.75 25.8611,42.75 26.9167,42.75C 27.9722,42.75 29.0278,42.75 29.5556,42.4861C 30.0833,42.2222 30.0833,41.6945 30.0833,41.1667L 30.0833,38C 30.0833,37.4722 30.0833,36.9445 29.8194,36.6806C 29.5555,36.4167 29.0278,36.4167 28.5,36.4167C 27.4444,36.4167 26.3889,36.4167 25.8611,36.1528C 25.3333,35.8889 25.3333,35.3611 25.8611,35.0972C 26.3889,34.8333 27.4444,34.8333 27.9722,34.9653C 28.5,35.0972 28.5,35.3611 28.5,35.625L 30.0833,35.625L 30.0833,34.8333C 30.0833,34.3056 30.0833,33.7778 29.8194,33.5139C 29.5556,33.25 29.0278,33.25 28.5,33.25 Z" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
+                            <TextBlock Margin="15,0,0,0" Text="Start tracking" />
                         </Grid>
-                    </Button>
-                    <Button x:Name="btnStop">
-                        <Grid>
-                            <Image Source="/WFN;component/Resources/Images/btnConnStop.Image.png" HorizontalAlignment="Left" Height="16"/>
-                            <TextBlock Margin="20,0,0,0" Text="Stop tracking" />
-                        </Grid>
-                    </Button>
+                    </ToggleButton>
                     <TextBlock VerticalAlignment="Center" Text="{Binding Series.Count, StringFormat='Active connection(s): {0}', FallbackValue='No active connection'}" />
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Right">
-                    <Image Source="/WFN;component/Resources/Images/stripConnUpdSpeed.Image.png" Height="16"/>
+                    <Path Height="18" Stretch="Uniform" Fill="#FFA2A2FF" Data="F1 M 53.8333,41.1667C 53.8333,49.9112 46.7445,57 38,57C 29.2555,57 22.1667,49.9112 22.1667,41.1667C 22.1667,32.9565 28.4156,26.2059 36.4167,25.4115L 36.4167,23.75L 31.6667,23.75L 31.6667,19L 44.3333,19L 44.3333,23.75L 39.5833,23.75L 39.5833,25.4115C 42.7678,25.7277 45.6747,26.9874 48.0205,28.907L 49.1629,27.7646L 46.9237,25.5254L 50.2825,22.1667L 57,28.8842L 53.6412,32.2429L 51.4021,30.0038L 50.2597,31.1462C 52.4933,33.8756 53.8333,37.3647 53.8333,41.1667 Z M 26.2296,39.5834L 30.0833,39.5834L 30.0833,42.75L 26.2296,42.75C 26.9347,48.0419 31.1248,52.232 36.4166,52.9371L 36.4166,49.0833L 39.5833,49.0833L 39.5833,52.937C 44.8752,52.232 49.0653,48.0419 49.7703,42.75L 45.9166,42.75L 45.9166,39.5834L 49.7703,39.5834C 49.0652,34.2915 44.8751,30.1014 39.5833,29.3964L 39.5833,33.25L 36.4166,33.25L 36.4166,29.3963C 31.1248,30.1014 26.9347,34.2915 26.2296,39.5834 Z M 38,38C 39.7489,38 41.1666,39.4178 41.1666,41.1667C 41.1666,42.9156 39.7489,44.3334 38,44.3334L 31.6666,49.0834L 34.8333,41.1667C 34.8333,39.4178 36.2511,38 38,38 Z "/>
                     <Label Content="Update rate:" HorizontalAlignment="Right" />
                     <ComboBox IsEditable="False" HorizontalAlignment="Right" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
                 </WrapPanel>
@@ -38,39 +45,48 @@
         </Border>
         <TextBlock Style="{StaticResource InfoBlock}" DockPanel.Dock="Bottom" TextWrapping="Wrap">This screen displays all active connections on this computer, updated every second (by default).
 Closed connections (in orange) will remain displayed a few seconds before disappearing.</TextBlock>
-        <DockPanel d:DataContext="{d:DesignInstance Type=dummydata:MonitorDummy, IsDesignTimeCreatable=True}">
-            <ListView DockPanel.Dock="Left" BorderThickness="0" ItemsSource="{Binding Series}">
-                <ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Margin="10" />
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}" Foreground="{Binding Brush}" />
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-            <ScrollViewer x:Name="scroller" VirtualizingPanel.ScrollUnit="Pixel" Padding="0,0,60,0" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2" />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <ScrollViewer Grid.Column="0" x:Name="scroller" VirtualizingPanel.ScrollUnit="Pixel" Padding="0,0,240,0" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">
                 <DockPanel>
-                    <!--<ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding Xs}">
+                    <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding Xs}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Rows="1" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                    <ItemsControl DockPanel.Dock="Left" Margin="{Binding ActualWidth,ElementName=xsGrid}" ItemsSource="{Binding Ys}">
+                    <ItemsControl DockPanel.Dock="Left" ItemsSource="{Binding Ys}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Columns="1" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
-                    </ItemsControl>-->
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                     <ItemsControl x:Name="chartZone" ItemsSource="{Binding Series}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <Grid />
+                                <Grid>
+                                    <Grid.LayoutTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform ScaleY="{Binding TransformScaleY}" />
+                                        </TransformGroup>
+                                    </Grid.LayoutTransform>
+                                </Grid>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
@@ -79,20 +95,41 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
                                     <Canvas.Resources>
                                         <Style TargetType="Polyline">
                                             <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
+                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
                                                     <Setter Property="StrokeThickness" Value="3" />
-                                                </Trigger>
+                                                </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Canvas.Resources>
-                                    <Polyline x:Name="poly1" StrokeThickness="2" Points="{Binding Points,Converter={StaticResource ObservablePointCollectionConverter}}" ToolTip="{Binding Name}" Stroke="{Binding Brush}" />
-                                    <Polyline StrokeThickness="2" StrokeDashArray="2" Opacity="0.5" StrokeDashCap="Round" Points="{Binding PointsIn,Converter={StaticResource ObservablePointCollectionConverter}}" ToolTip="{Binding Name}" Stroke="{Binding Brush}" />
+                                    <Polyline x:Name="poly1" MouseEnter="poly1_MouseEnter" Tag="{Binding}" Points="{Binding PointsOut,Converter={StaticResource ObservablePointCollectionConverter},ConverterParameter=poly1}" ToolTip="{Binding Name}" Stroke="{Binding Brush}" />
+                                    <Polyline StrokeDashArray="2" Opacity="0.5" MouseEnter="poly1_MouseEnter" Tag="{Binding}"  StrokeDashCap="Round" Points="{Binding PointsIn,Converter={StaticResource ObservablePointCollectionConverter},ConverterParameter=poly1}" ToolTip="{Binding Name}" Stroke="{Binding Brush}" />
                                 </Canvas>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </DockPanel>
             </ScrollViewer>
-        </DockPanel>
+            <GridSplitter Grid.Column="1" />
+            <ListView Grid.Column="2" SelectionMode="Single" Background="Transparent" ScrollViewer.VerticalScrollBarVisibility="Visible" Width="220" Opacity="0.7" BorderThickness="2,0,0,0" ItemsSource="{Binding Series}">
+                <ListView.Resources>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+                    </Style>
+                </ListView.Resources>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="5">
+                            <TextBlock TextTrimming="CharacterEllipsis" Width="180"  Foreground="{Binding Brush}" Text="{Binding Name}">
+                                <Run Text="{Binding ConnectionsCount,StringFormat=' ({0})'}" />
+                            </TextBlock>
+                            <UniformGrid Rows="1" Margin="15,0,0,0">
+                                <TextBlock Text="{Binding LastOut,StringFormat='Up: {0}'}"  />
+                                <TextBlock Text="{Binding LastIn,StringFormat='Down: {0}'}" />
+                            </UniformGrid>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
     </DockPanel>
 </Page>

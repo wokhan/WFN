@@ -6,25 +6,82 @@
              StartupUri="UI/Windows/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <BindingConverters:BooleanNegator x:Key="booleanNegator" />
             <WFNSettings:Settings x:Key="WFNSettings" />
-            <Style TargetType="DataGrid" BasedOn="{StaticResource {x:Type DataGrid}}">
-                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+            <SolidColorBrush x:Key="AccentColorBrush" Color="Coral" />
+            <Style TargetType="DataGrid">
+                <Setter Property="Background" Value="White" />
+            </Style>
+            <Style TargetType="CheckBox">
+                <Setter Property="Background" Value="White" />
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="Background" Value="White" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsKeyboardFocused" Value="true">
+                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                                </Trigger>
+                                <Trigger Property="IsDefaulted" Value="true">
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="true">
+                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                                </Trigger>
+                                <Trigger Property="ToggleButton.IsChecked" Value="true">
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="false">
+                                    <Setter Property="Opacity" Value="0.5" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="ToggleButton">
+                <Setter Property="Background" Value="White" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsKeyboardFocused" Value="true">
+                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="true">
+                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="true">
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="false">
+                                    <Setter Property="Opacity" Value="0.5" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
             <Style x:Key="InfoBlock" TargetType="TextBlock">
-                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.InfoBrush}}" />
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.InfoTextBrush}}" />
+                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.InfoBrushKey}}" />
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.InfoTextBrushKey}}" />
                 <Setter Property="Padding" Value="5" />
             </Style>
             <Style x:Key="InfoPanel" TargetType="WrapPanel">
-                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.InfoBrush}}" />
+                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.InfoBrushKey}}" />
                 <Style.Resources>
                     <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                         <Setter Property="FontSize" Value="12" />
@@ -40,48 +97,68 @@
                     </Style>
                 </Style.Resources>
             </Style>
-            <Style x:Key="MenuPanel" TargetType="Panel">
+            <Style x:Key="MenuPanel" TargetType="Border">
+                <Setter Property="DockPanel.Dock" Value="Top" />
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
+                <Setter Property="BorderThickness" Value="0,0,0,1" />
                 <Setter Property="Background" Value="WhiteSmoke" />
                 <Style.Resources>
-                    <Style TargetType="Button" BasedOn="{StaticResource MetroFlatButton}">
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                         <Setter Property="Background" Value="White" />
-                        <!--<Setter Property="BorderBrush" Value="Gray" />
-                        <Setter Property="BorderThickness" Value="2" />-->
+                        <Setter Property="BorderBrush" Value="Blue" />
+                        <Setter Property="BorderThickness" Value="1" />
                         <Setter Property="FontSize" Value="12" />
                         <Setter Property="Padding" Value="2" />
                         <Setter Property="Margin" Value="5" />
                         <Setter Property="Width" Value="130" />
-                        <Style.Triggers>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.5" />
-                            </Trigger>
-                        </Style.Triggers>
                     </Style>
                 </Style.Resources>
             </Style>
-            <Style x:Key="ToolBarPanel" TargetType="Panel">
+            <Style x:Key="ToolBarPanel" TargetType="Border">
+                <Setter Property="Background" Value="White" />
+                <Setter Property="DockPanel.Dock" Value="Top" />
+                <Setter Property="BorderBrush" Value="LightGray" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Padding" Value="5" />
                 <Style.Resources>
                     <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="Background" Value="WhiteSmoke" />
+                        <Setter Property="BorderThickness" Value="0" />
                         <Setter Property="FontSize" Value="12" />
                         <Setter Property="FontWeight" Value="Normal" />
-                        <Setter Property="Padding" Value="5" />
+                        <Setter Property="Padding" Value="3" />
                         <Setter Property="HorizontalContentAlignment" Value="Left" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
                         <Setter Property="Margin" Value="0,0,5,0" />
-                        <Style.Triggers>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.5" />
-                            </Trigger>
-                        </Style.Triggers>
+                    </Style>
+                    <Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
+                        <Setter Property="Background" Value="WhiteSmoke" />
+                        <Setter Property="FontSize" Value="12" />
+                        <Setter Property="FontWeight" Value="Normal" />
+                        <Setter Property="Padding" Value="3" />
+                        <Setter Property="HorizontalContentAlignment" Value="Left" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Margin" Value="0,0,5,0" />
                     </Style>
                     <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                        <Setter Property="Background" Value="WhiteSmoke" />
                         <Setter Property="FontSize" Value="12" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
                         <Setter Property="Margin" Value="0,0,5,0" />
-                        <Setter Property="Height" Value="16" />
+                        <Setter Property="Padding" Value="3" />
                     </Style>
                     <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                        <Setter Property="Background" Value="WhiteSmoke" />
                         <Setter Property="FontSize" Value="12" />
+                        <Setter Property="Padding" Value="3" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
                         <Setter Property="Margin" Value="0,0,5,0" />
-                        <Setter Property="Height" Value="16" />
+                        <Setter Property="Background" Value="White" />
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
                     </Style>
                     <Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
                         <Setter Property="VerticalAlignment" Value="Center" />

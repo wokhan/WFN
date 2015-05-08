@@ -167,16 +167,37 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         /// <returns></returns>
         public static ImageSource GetIcon(string path, bool defaultIfNotFound = false)
         {
-            Icon ic;
-            if (File.Exists(path))
+            Icon ic = null;
+            switch (path)
             {
-                ic = (path != "System" ? Icon.ExtractAssociatedIcon(path) : SystemIcons.WinLogo);
+                case "?system":
+                    ic = SystemIcons.WinLogo;
+                    break;
+
+                case "?error":
+                    ic = SystemIcons.Error;
+                    break;
+
+                case "?missing":
+                    ic = SystemIcons.Question;
+                    break;
+
+                default:
+                    if (File.Exists(path))
+                    {
+                        ic = Icon.ExtractAssociatedIcon(path) ?? (defaultIfNotFound ? SystemIcons.Application : null);
+                    }
+                    break;
+            }
+           
+            if (ic != null)
+            {
+                return Imaging.CreateBitmapSourceFromHIcon(ic.Handle, new Int32Rect(0, 0, ic.Width, ic.Height), BitmapSizeOptions.FromEmptyOptions());
             }
             else
             {
-                ic = SystemIcons.Application;
+                return null;
             }
-            return Imaging.CreateBitmapSourceFromHIcon(ic.Handle, new Int32Rect(0, 0, ic.Width, ic.Height), BitmapSizeOptions.FromEmptyOptions());
         }
 
 
@@ -190,12 +211,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static ImageSource GetCachedIcon(string path)
+        public static ImageSource GetCachedIcon(string path, bool defaultIfNotFound = false)
         {
             ImageSource icon;
             if (!procIconLst.ContainsKey(path))
             {
-                icon = GetIcon(path, true);//.ToBitmap().GetThumbnailImage(18, 18, null, IntPtr.Zero);
+                icon = GetIcon(path, defaultIfNotFound);//.ToBitmap().GetThumbnailImage(18, 18, null, IntPtr.Zero);
                 procIconLst.Add(path, icon);
             }
             else

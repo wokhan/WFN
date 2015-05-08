@@ -8,24 +8,29 @@
       d:DesignHeight="400" d:DesignWidth="800"
 	Title="Event log">
     <DockPanel>
-        <Border Padding="5" DockPanel.Dock="Top">
-            <Grid Style="{StaticResource ToolBarPanel}">
+        <Border Style="{StaticResource ToolBarPanel}">
+            <Grid>
                 <WrapPanel>
-                    <Button IsEnabled="False" x:Name="btnStart" Click="btnStart_Click">
+                    <ToggleButton IsChecked="{Binding IsTrackingEnabled}">
                         <Grid>
-                            <Image Source="/WFN;component/Resources/Images/btnConnTrack.Image.png" HorizontalAlignment="Left" Height="16"/>
-                            <TextBlock Margin="20,0,0,0" Text="Start tracking" />
+                            <Path HorizontalAlignment="Left" Height="16" Stretch="Uniform" Fill="Green">
+                                <Path.Style>
+                                    <Style TargetType="Path">
+                                        <Setter Property="Data" Value="F1 M 30.0833,22.1667L 50.6665,37.6043L 50.6665,38.7918L 30.0833,53.8333L 30.0833,22.1667 Z" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsTrackingEnabled}" Value="True">
+                                                <Setter Property="Data" Value="F1 M 31.6667,19L 44.3333,19L 57,31.6667L 57,44.3333L 44.3333,57L 31.6667,57L 19,44.3333L 19,31.6667L 31.6667,19 Z M 30.875,33.25L 30.875,34.8334L 33.25,34.8334L 33.25,42.75L 34.8333,42.75L 34.8333,34.8334L 37.2083,34.8334L 37.2083,33.25L 30.875,33.25 Z M 37.9999,36.4168L 37.9999,39.5834C 38,40.6389 38,41.6945 38.5278,42.2222C 39.0555,42.75 40.1111,42.75 41.1666,42.75C 42.2221,42.75 43.2777,42.75 43.8055,42.2223C 44.3333,41.6945 44.3333,40.6389 44.3333,39.5834L 44.3333,36.4167C 44.3333,35.3612 44.3333,34.3056 43.8055,33.7778C 43.2777,33.25 42.2222,33.25 41.1666,33.25C 40.1111,33.25 39.0555,33.25 38.5277,33.7778C 38,34.3056 37.9999,35.3612 37.9999,36.4168 Z M 39.8472,40.375C 39.5833,39.0556 39.5833,36.9445 40.1111,35.8889C 40.6389,34.8334 41.6944,34.8334 42.2222,35.8889C 42.75,36.9445 42.75,39.0556 42.2222,40.1111C 41.6944,41.1667 40.6389,41.1667 39.8472,40.375 Z M 45.9167,33.25L 45.9167,42.75L 47.5,42.75L 47.5,39.5833L 49.875,39.5834C 50.4027,39.5834 50.9305,39.5834 51.3923,39.0556C 51.8541,38.5278 52.25,37.4723 52.6458,36.4167C 52.25,35.3611 51.8541,34.3056 51.3923,33.7778C 50.9305,33.25 50.4027,33.2501 49.8749,33.2501L 45.9167,33.25 Z M 49.6111,34.5695C 51.0625,35.8889 51.0625,36.9445 50.4687,37.4722C 49.875,38 48.6875,38 47.5,38L 47.5,34.8334C 48.6875,34.8334 49.875,34.8334 49.6111,34.5695 Z M 28.5,33.25L 25.3333,33.25C 24.8056,33.25 24.2778,33.25 24.0139,33.382C 23.75,33.5139 23.75,33.7778 23.75,34.0417L 23.75,36.4167C 23.75,36.9445 23.75,37.4722 24.0139,37.7361C 24.2778,38 24.8056,38 25.3333,38C 26.3889,38 27.4444,38 27.9722,38.5278C 28.5,39.0556 28.5,40.1111 27.9722,40.6389C 27.4444,41.1667 26.3889,41.1667 25.8611,40.9688C 25.3333,40.7708 25.3333,40.375 25.3333,39.9792L 23.75,39.9792L 23.75,41.1667C 23.75,41.6945 23.75,42.2222 24.2778,42.4861C 24.8056,42.75 25.8611,42.75 26.9167,42.75C 27.9722,42.75 29.0278,42.75 29.5556,42.4861C 30.0833,42.2222 30.0833,41.6945 30.0833,41.1667L 30.0833,38C 30.0833,37.4722 30.0833,36.9445 29.8194,36.6806C 29.5555,36.4167 29.0278,36.4167 28.5,36.4167C 27.4444,36.4167 26.3889,36.4167 25.8611,36.1528C 25.3333,35.8889 25.3333,35.3611 25.8611,35.0972C 26.3889,34.8333 27.4444,34.8333 27.9722,34.9653C 28.5,35.0972 28.5,35.3611 28.5,35.625L 30.0833,35.625L 30.0833,34.8333C 30.0833,34.3056 30.0833,33.7778 29.8194,33.5139C 29.5556,33.25 29.0278,33.25 28.5,33.25 Z" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
+                            <TextBlock Margin="15,0,0,0" Text="Start tracking" />
                         </Grid>
-                    </Button>
-                    <Button x:Name="btnStop" Click="btnStop_Click">
-                        <Grid>
-                            <Image Source="/WFN;component/Resources/Images/btnConnStop.Image.png" HorizontalAlignment="Left" Height="16"/>
-                            <TextBlock Margin="20,0,0,0" Text="Stop tracking" />
-                        </Grid>
-                    </Button>
+                    </ToggleButton>
                     <Button x:Name="btnLocate" Click="btnLocate_Click">
                         <Grid>
-                            <Image Source="/WFN;component/Resources/Images/btnRLocate.Image.png" HorizontalAlignment="Left" Height="16"/>
+                            <Path HorizontalAlignment="Left" Height="16" Stretch="Uniform" Fill="CornflowerBlue" Data="F1 M 21,30.0001L 55.9999,30.0001L 55.9999,50L 21,50L 21,30.0001 Z M 52,28L 37,28C 38,25 39.4999,24.0001 39.4999,24.0001L 50.75,24C 51.3023,24 52,24.6977 52,25.25L 52,28 Z M 53.5,52C 54.8807,52 56,53.1193 56,54.5C 56,55.8807 54.8807,57 53.5,57C 52.1193,57 51,55.8807 51,54.5C 51,53.1193 52.1193,52 53.5,52 Z M 46.5,52C 47.8807,52 49,53.1193 49,54.5C 49,55.8807 47.8807,57 46.5,57C 45.1193,57 44,55.8807 44,54.5C 44,53.1193 45.1193,52 46.5,52 Z M 39.5,52C 40.8807,52 42,53.1193 42,54.5C 42,55.8807 40.8807,57 39.5,57C 38.1193,57 37,55.8807 37,54.5C 37,53.1193 38.1193,52 39.5,52 Z "/>
                             <TextBlock Margin="20,0,0,0" Text="Locate" />
                         </Grid>
                     </Button>
@@ -38,17 +43,17 @@
                     <TextBlock VerticalAlignment="Center" Text="{Binding LogEntries.Count, StringFormat='{}{0} item(s)', FallbackValue='No item found'}" />
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Right">
-                    <Image Source="/WFN;component/Resources/Images/stripConnUpdSpeed.Image.png" Height="16"/>
+                    <Path Height="18" Stretch="Uniform" Fill="#FFA2A2FF" Data="F1 M 53.8333,41.1667C 53.8333,49.9112 46.7445,57 38,57C 29.2555,57 22.1667,49.9112 22.1667,41.1667C 22.1667,32.9565 28.4156,26.2059 36.4167,25.4115L 36.4167,23.75L 31.6667,23.75L 31.6667,19L 44.3333,19L 44.3333,23.75L 39.5833,23.75L 39.5833,25.4115C 42.7678,25.7277 45.6747,26.9874 48.0205,28.907L 49.1629,27.7646L 46.9237,25.5254L 50.2825,22.1667L 57,28.8842L 53.6412,32.2429L 51.4021,30.0038L 50.2597,31.1462C 52.4933,33.8756 53.8333,37.3647 53.8333,41.1667 Z M 26.2296,39.5834L 30.0833,39.5834L 30.0833,42.75L 26.2296,42.75C 26.9347,48.0419 31.1248,52.232 36.4166,52.9371L 36.4166,49.0833L 39.5833,49.0833L 39.5833,52.937C 44.8752,52.232 49.0653,48.0419 49.7703,42.75L 45.9166,42.75L 45.9166,39.5834L 49.7703,39.5834C 49.0652,34.2915 44.8751,30.1014 39.5833,29.3964L 39.5833,33.25L 36.4166,33.25L 36.4166,29.3963C 31.1248,30.1014 26.9347,34.2915 26.2296,39.5834 Z M 38,38C 39.7489,38 41.1666,39.4178 41.1666,41.1667C 41.1666,42.9156 39.7489,44.3334 38,44.3334L 31.6666,49.0834L 34.8333,41.1667C 34.8333,39.4178 36.2511,38 38,38 Z "/>
                     <Label Content="Update rate:" HorizontalAlignment="Right" />
                     <ComboBox IsEditable="False" HorizontalAlignment="Right" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
                 </WrapPanel>
             </Grid>
         </Border>
         <TextBlock Style="{StaticResource InfoBlock}" DockPanel.Dock="Bottom" TextWrapping="Wrap">This page displays a list of the latest blocked outgoing connections (for performance reasons, the list has been limited to 500 items). If you need a complete list, please use the Windows events log viewer.</TextBlock>
-        <DataGrid x:Name="gridLog" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="True" HeadersVisibility="Column">
+        <DataGrid BorderThickness="0" x:Name="gridLog" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="True" HeadersVisibility="Column">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="CreationTime" Binding="{Binding CreationTime}"/>
-                <DataGridTemplateColumn Header="Path">
+                <DataGridTemplateColumn Header="Path" SortMemberPath="FriendlyPath">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>

@@ -50,7 +50,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         /// <summary>
         /// 
         /// </summary>
-        public interface OWNER_MODULE
+        public interface I_OWNER_MODULE
         {
             string RemoteAddress { get; }
             string LocalAddress { get; }

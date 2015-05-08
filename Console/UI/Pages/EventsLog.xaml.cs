@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -16,14 +17,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// </summary>
     public partial class EventsLog : Page
     {
-        public class LogEntry
+        
+        public bool IsTrackingEnabled
         {
-            public DateTime CreationTime { get; set; }
-            public ImageSource Icon { get; set; }
-            public string FriendlyPath { get; set; }
-            public string Replacement5 { get; set; }
-            public string Protocol { get; set; }
-            public string Replacement6 { get; set; }
+            get { return timer.IsEnabled; }
+            set { timer.IsEnabled = value; }
         }
 
         private DispatcherTimer timer = new DispatcherTimer();
@@ -54,8 +52,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         }
 
 
-        private ObservableCollection<LogEntry> _logEntries = new ObservableCollection<LogEntry>();
-        public ObservableCollection<LogEntry> LogEntries { get { return _logEntries; } }
+        private ObservableCollection<LogEntryViewModel> _logEntries = new ObservableCollection<LogEntryViewModel>();
+        public ObservableCollection<LogEntryViewModel> LogEntries { get { return _logEntries; } }
 
         private DateTime lastDate = DateTime.MinValue;
         private int lastIndex = 0;
@@ -86,7 +84,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                         {
                             cpt--;
                             friendlyPath = CommonHelper.GetFriendlyPath(entry.ReplacementStrings[1]);
-                            var le = new LogEntry()
+                            var le = new LogEntryViewModel()
                                                     {
                                                         CreationTime = entry.TimeWritten,
                                                         Icon = ProcessHelper.GetCachedIcon(CommonHelper.GetFriendlyPath(entry.ReplacementStrings[1])),
@@ -147,23 +145,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         }
 
 
-        private void btnStart_Click(object sender, RoutedEventArgs e)
-        {
-            timer.Start();
-            btnStart.IsEnabled = false;
-            btnStop.IsEnabled = true;
-        }
-
-        private void btnStop_Click(object sender, RoutedEventArgs e)
-        {
-            timer.Stop();
-            btnStart.IsEnabled = true;
-            btnStop.IsEnabled = false;
-        }
-
         private void btnLocate_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("explorer.exe", "/select," + ((LogEntry)gridLog.SelectedItem).FriendlyPath);
+            Process.Start("explorer.exe", "/select," + ((LogEntryViewModel)gridLog.SelectedItem).FriendlyPath);
         }
 
         private void btnEventLogVwr_Click(object sender, RoutedEventArgs e)
