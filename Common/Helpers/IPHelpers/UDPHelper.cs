@@ -21,7 +21,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MIB_UDPROW_OWNER_MODULE : OWNER_MODULE
+        public struct MIB_UDPROW_OWNER_MODULE : I_OWNER_MODULE
         {
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]//, FieldOffset(0)]
             byte[] _localAddr;
@@ -126,7 +126,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             return GetOwnerModuleFromUdpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, buffer, ref buffSize);
         }
 
-        internal static Owner GetOwningModule(OWNER_MODULE row)
+        internal static Owner GetOwningModule(I_OWNER_MODULE row)
         {
             IntPtr buffer = IntPtr.Zero;
             try

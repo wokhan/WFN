@@ -1,62 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
-
+using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.DummyData
 {
     public class MonitorDummy
     {
-        public class SeriesClass
-        {
-            public string Name { get; set; }
-
-            private ObservableCollection<Point> _points = new ObservableCollection<Point>();
-            public ObservableCollection<Point> Points { get { return _points; } }
-
-            private ObservableCollection<Point> _pointsIn = new ObservableCollection<Point>();
-            public ObservableCollection<Point> PointsIn { get { return _points; } }
-            public SolidColorBrush Brush { get; set; }
-
-        }
-
-        public IEnumerable<int> Xs { get { return Enumerable.Range(0, (int)Series.Max(s => s.Points.Max(p => p.X))); } }
-
-        public IEnumerable<int> Ys { get { return Enumerable.Range(0, (int)Series.Max(s => s.Points.Max(p => p.Y))); } }
-
-        private ObservableCollection<SeriesClass> _series = new ObservableCollection<SeriesClass>();
-        public ObservableCollection<SeriesClass> Series
+        private List<MonitoredConnectionViewModel> _series = new List<MonitoredConnectionViewModel>();
+        public List<MonitoredConnectionViewModel> Series
         {
             get { return _series; }
             set { _series = value; }
         }
 
+
+        public List<int> Xs { get { return new List<int>() { 0, 10, 20 }; } }
+
+        public List<int> Ys { get { return new List<int>() { 0, 10, 20 }; } }
+
+
+        public double TransformScaleY
+        {
+            get { return -1; }
+        }
+
         public MonitorDummy()
         {
-            var s1 = new SeriesClass()
+            var s1 = new MonitoredConnectionViewModel()
             {
                 Brush = new SolidColorBrush(Colors.Blue),
                 Name = "Process #1"
             };
-            s1.Points.Add(new Point(0, 10));
-            s1.Points.Add(new Point(10, 20));
-            s1.Points.Add(new Point(20, 12));
-            s1.Points.Add(new Point(30, 150));
-            s1.Points.Add(new Point(40, 10));
-            s1.Points.Add(new Point(50, 901));
-            s1.Points.Add(new Point(60, 120));
+            s1.PointsOut.Add(new Point(0, 10));
+            s1.PointsOut.Add(new Point(10, 20));
+            s1.PointsOut.Add(new Point(20, 12));
+            s1.PointsOut.Add(new Point(30, 15));
+            s1.PointsOut.Add(new Point(40, 10));
+            s1.PointsOut.Add(new Point(50, 90));
+            s1.PointsOut.Add(new Point(60, 12));
 
-            s1.PointsIn.Add(new Point(0, 10));
+            s1.PointsIn.Add(new Point(0, 12));
             s1.PointsIn.Add(new Point(10, 90));
-            s1.PointsIn.Add(new Point(20, 10));
-            s1.PointsIn.Add(new Point(30, 50));
-            s1.PointsIn.Add(new Point(40, 120));
+            s1.PointsIn.Add(new Point(20, 20));
+            s1.PointsIn.Add(new Point(30, 20));
+            s1.PointsIn.Add(new Point(40, 12));
             s1.PointsIn.Add(new Point(50, 50));
-            s1.PointsIn.Add(new Point(60, 120));
+            s1.PointsIn.Add(new Point(60, 10));
+            
+            s1.ConnectionsCount = 2;
+            
+            s1.IsSelected = true;
 
             Series.Add(s1);
 

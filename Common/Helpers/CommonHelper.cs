@@ -80,12 +80,29 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         }
 
-        public static double easeInOut(double t, double b, double c, double d)
-        {
-            if ((t /= d / 2) < 1)
-                return c / 2 * t * t + b;
 
-            return -c / 2 * ((--t) * (t - 2) - 1) + b;
+        public static string FormatBytes(double size)
+        {
+            if (size >= 1073741824)
+            {
+                return String.Format("{0:##.##} GB", size / 1073741824.0);
+            }
+            else if (size >= 1048576)
+            {
+                return String.Format("{0:##.##} MB", size / 1048576.0);
+            }
+            else if (size >= 1024)
+            {
+                return String.Format("{0:##.##} KB", size / 1024.0);
+            }
+            else if (size > 0 & size < 1024)
+            {
+                return String.Format("{0:##.##} B", size);
+            }
+            else
+            {
+                return "0 Bytes";
+            }
         }
     }
 }

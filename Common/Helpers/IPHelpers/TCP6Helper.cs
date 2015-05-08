@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -10,25 +11,48 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         public static extern uint GetOwnerModuleFromTcp6Entry(ref MIB_TCP6ROW_OWNER_MODULE pTcpEntry, TCPIP_OWNER_MODULE_INFO_CLASS Class, IntPtr Buffer, ref int pdwSize);
 
 
+        [DllImport("iphlpapi.dll", SetLastError = true)]
+        public static extern uint GetPerTcp6ConnectionEStats(ref MIB_TCP6ROW Row, TCP_ESTATS_TYPE EstatsType, IntPtr Rw, uint RwVersion, uint RwSize, IntPtr Ros, uint RosVersion, uint RosSize, IntPtr Rod, uint RodVersion, uint RodSize);
+
+        [DllImport("iphlpapi.dll", SetLastError = true)]
+        public static extern uint SetPerTcp6ConnectionEStats(ref MIB_TCP6ROW Row, TCP_ESTATS_TYPE EstatsType, IntPtr Rw, uint RwVersion, uint RwSize, uint Offset);
+
+
         [DllImport("ntdll.dll", SetLastError = true)]
         public static extern void RtlIpv6AddressToString(byte[] Addr, out StringBuilder res);
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public struct MIB_TCP6ROW_OWNER_MODULE : OWNER_MODULE
+        public struct MIB_TCP6ROW
+        {
+            internal MIB_TCP_STATE State;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+            internal byte[] _localAddress;
+            internal uint LocalScopeId;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+            internal byte[] _localPort;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+            internal byte[] _remoteAddress;
+            internal uint RemoteScopeId;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+            internal byte[] _remotePort;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        public struct MIB_TCP6ROW_OWNER_MODULE : I_OWNER_MODULE
         {
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
-            public byte[] _localAddress;
-            public uint LocalScopeId;
+            internal byte[] _localAddress;
+            internal uint LocalScopeId;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-            byte[] _localPort;
+            internal byte[] _localPort;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
-            public byte[] _remoteAddress;
-            public uint RemoteScopeId;
+            internal byte[] _remoteAddress;
+            internal uint RemoteScopeId;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-            byte[] _remotePort;
-            public uint _state;
-            public uint _owningPid;
-            long _creationTime;
+            internal byte[] _remotePort;
+            internal MIB_TCP_STATE _state;
+            internal uint _owningPid;
+            internal long _creationTime;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
             public ulong[] OwningModuleInfo;
 
@@ -110,13 +134,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         }
 
 
-        internal static Owner GetOwningModule(OWNER_MODULE row)
+        internal static new Owner GetOwningModule(I_OWNER_MODULE row)
         {
             IntPtr buffer = IntPtr.Zero;
             try
             {
                 uint resp = IPHelpers.TCP6Helper.GetOwningModuleTCP((IPHelpers.TCP6Helper.MIB_TCP6ROW_OWNER_MODULE)row, ref buffer);
-                
+
                 if (resp == 0)
                 {
                     return new Owner((TCPIP_OWNER_MODULE_BASIC_INFO)Marshal.PtrToStructure(buffer, typeof(TCPIP_OWNER_MODULE_BASIC_INFO)));
@@ -140,6 +164,126 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                 if (buffer != IntPtr.Zero)
                 {
                     Marshal.FreeHGlobal(buffer);
+                }
+            }
+        }
+
+        public static void EnsureStatsAreEnabled(MIB_TCP6ROW row)
+        {
+
+            var rwS = Marshal.SizeOf(typeof(TCP_ESTATS_BANDWIDTH_RW_v0));
+            IntPtr rw = Marshal.AllocHGlobal(rwS);
+            Marshal.StructureToPtr(new TCP_ESTATS_BANDWIDTH_RW_v0() { EnableCollectionInbound = TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled, EnableCollectionOutbound = TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled }, rw, true);
+
+            try
+            {
+                var r = SetPerTcp6ConnectionEStats(ref row, TCP_ESTATS_TYPE.TcpConnectionEstatsBandwidth, rw, (uint)0, (uint)rwS, (uint)0);
+                if (r != 0)
+                {
+                    throw new Win32Exception((int)r);
+                }
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(rw);
+            }
+        }
+
+
+        public static TCP_ESTATS_BANDWIDTH_ROD_v0 GetTCPBandwidth(MIB_TCP6ROW_OWNER_MODULE conn)
+        {
+            IntPtr rw = IntPtr.Zero;
+            IntPtr rod = IntPtr.Zero;
+
+            try
+            {
+                var row = new MIB_TCP6ROW() { _localAddress = conn._localAddress, _remoteAddress = conn._remoteAddress, _localPort = conn._localPort, _remotePort = conn._remotePort, State = conn._state };
+
+                EnsureStatsAreEnabled(row);
+
+                var rwS = Marshal.SizeOf(typeof(TCP_ESTATS_BANDWIDTH_RW_v0));
+                rw = Marshal.AllocHGlobal(rwS);
+
+                var rodS = Marshal.SizeOf(typeof(TCP_ESTATS_BANDWIDTH_ROD_v0));
+                rod = Marshal.AllocHGlobal(rodS);
+
+                var r = GetPerTcp6ConnectionEStats(ref row, TCP_ESTATS_TYPE.TcpConnectionEstatsBandwidth, rw, (uint)0, (uint)rwS, IntPtr.Zero, (uint)0, (uint)0, rod, (uint)0, (uint)rodS);
+                if (r != 0)
+                {
+                    throw new Win32Exception((int)r);
+                }
+
+                var parsedRW = (TCP_ESTATS_BANDWIDTH_RW_v0)Marshal.PtrToStructure(rw, typeof(TCP_ESTATS_BANDWIDTH_RW_v0));
+                var parsedROD = (TCP_ESTATS_BANDWIDTH_ROD_v0)Marshal.PtrToStructure(rod, typeof(TCP_ESTATS_BANDWIDTH_ROD_v0));
+
+                return parsedROD;
+            }
+            catch (Win32Exception we)
+            {
+                if (we.NativeErrorCode == 1168)
+                {
+                    return new TCP_ESTATS_BANDWIDTH_ROD_v0() { InboundBandwidth = 0, OutboundBandwidth = 0 };
+                }
+                else
+                {
+                    throw we;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                if (rw != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(rw);
+                }
+
+                if (rod != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(rod);
+                }
+            }
+        }
+
+        
+        public static TCP_ESTATS_DATA_ROD_v0 GetTCPStatistics(MIB_TCP6ROW_OWNER_MODULE conn)
+        {
+            IntPtr rw = IntPtr.Zero;
+            IntPtr rod = IntPtr.Zero;
+
+            try
+            {
+                var row = new MIB_TCP6ROW() { _localAddress = conn._localAddress, _remoteAddress = conn._remoteAddress, _localPort = conn._localPort, _remotePort = conn._remotePort, State = conn._state, LocalScopeId = conn.LocalScopeId, RemoteScopeId = conn.RemoteScopeId };
+
+                var rwS = Marshal.SizeOf(typeof(TCP_ESTATS_DATA_RW_v0));
+                rw = Marshal.AllocHGlobal(rwS);
+
+                var rodS = Marshal.SizeOf(typeof(TCP_ESTATS_DATA_ROD_v0));
+                rod = Marshal.AllocHGlobal(rodS);
+
+                GetPerTcp6ConnectionEStats(ref row, TCP_ESTATS_TYPE.TcpConnectionEstatsData, rw, (uint)0, (uint)rwS, IntPtr.Zero, (uint)0, (uint)0, rod, (uint)0, (uint)rodS);
+
+                var parsedRW = (TCP_ESTATS_DATA_RW_v0)Marshal.PtrToStructure(rw, typeof(TCP_ESTATS_DATA_RW_v0));
+                var parsedROD = (TCP_ESTATS_DATA_ROD_v0)Marshal.PtrToStructure(rod, typeof(TCP_ESTATS_DATA_ROD_v0));
+
+                return parsedROD;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                if (rw != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(rw);
+                }
+
+                if (rod != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(rod);
                 }
             }
         }

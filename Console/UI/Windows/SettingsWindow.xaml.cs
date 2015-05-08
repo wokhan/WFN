@@ -1,4 +1,6 @@
-﻿using MahApps.Metro.Controls.Dialogs;
+﻿using System;
+using System.Diagnostics;
+using System.Reflection;
 using System.Windows;
 using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers;
@@ -10,6 +12,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
     /// </summary>
     public partial class SettingsWindow
     {
+        public Version Version { get { return Assembly.GetExecutingAssembly().GetName().Version; } }
+        public string ProductName { get { return Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyProductAttribute>().Product; } }
+
         public SettingsWindow()
         {
             InitializeComponent();
@@ -17,7 +22,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
 
         private void callback(string title, string details)
         {
-            this.ShowMessageAsync(title, details);
+            MessageBox.Show(details, title);
         }
         
         private void btnOK_Click(object sender, RoutedEventArgs e)
@@ -35,6 +40,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
             } 
             
             Settings.Default.Save();
+        }
+
+        private void btnDonate_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=wokhan%40online%2efr&lc=US&item_name=Khan%20%28Windows%20Firewall%20Notifier%29&item_number=WOK%2dWFN&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted");
         }
     }
 }

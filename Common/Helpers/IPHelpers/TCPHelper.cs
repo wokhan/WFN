@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
@@ -15,7 +16,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         [DllImport("iphlpapi.dll", SetLastError = true)]
         public static extern uint GetPerTcpConnectionEStats(ref MIB_TCPROW Row, TCP_ESTATS_TYPE EstatsType, IntPtr Rw, uint RwVersion, uint RwSize, IntPtr Ros, uint RosVersion, uint RosSize, IntPtr Rod, uint RodVersion, uint RodSize);
 
-       
+
+        [DllImport("iphlpapi.dll", SetLastError = true)]
+        public static extern uint SetPerTcpConnectionEStats(ref MIB_TCPROW Row, TCP_ESTATS_TYPE EstatsType, IntPtr Rw, uint RwVersion, uint RwSize, uint Offset);
+
         public enum TCP_TABLE_CLASS
         {
             TCP_TABLE_BASIC_LISTENER,
@@ -64,12 +68,19 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         }
 
 
+
         [StructLayout(LayoutKind.Sequential)]
         public struct TCP_ESTATS_DATA_RW_v0
         {
             public bool EnableCollection;
-        };
+        }
 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct TCP_ESTATS_BANDWIDTH_RW_v0
+        {
+            public TCP_BOOLEAN_OPTIONAL EnableCollectionOutbound;
+            public TCP_BOOLEAN_OPTIONAL EnableCollectionInbound;
+        }
 
         [StructLayout(LayoutKind.Sequential)]
         public struct TCP_ESTATS_DATA_ROD_v0
@@ -88,7 +99,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             public uint ThruBytesAcked;
             public uint RcvNxt;
             public uint ThruBytesReceived;
-        };
+        }
 
 
         public enum TCP_ESTATS_TYPE
@@ -103,10 +114,27 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             TcpConnectionEstatsBandwidth,
             TcpConnectionEstatsFineRtt,
             TcpConnectionEstatsMaximum
-        };
+        }
+
+        public enum TCP_BOOLEAN_OPTIONAL
+        {
+            TcpBoolOptDisabled = 0,
+            TcpBoolOptEnabled = 1,
+            TcpBoolOptUnchanged = -1
+        }
+
+        public struct TCP_ESTATS_BANDWIDTH_ROD_v0
+        {
+            public ulong OutboundBandwidth;
+            public ulong InboundBandwidth;
+            public ulong OutboundInstability;
+            public ulong InboundInstability;
+            public bool OutboundBandwidthPeaked;
+            public bool InboundBandwidthPeaked;
+        }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MIB_TCPROW_OWNER_MODULE : OWNER_MODULE
+        public struct MIB_TCPROW_OWNER_MODULE : I_OWNER_MODULE
         {
             public uint _state;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
@@ -193,6 +221,85 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             }
         }
 
+        public static void EnsureStatsAreEnabled(MIB_TCPROW row)
+        {
+
+            var rwS = Marshal.SizeOf(typeof(TCP_ESTATS_BANDWIDTH_RW_v0));
+            IntPtr rw = Marshal.AllocHGlobal(rwS);
+            Marshal.StructureToPtr(new TCP_ESTATS_BANDWIDTH_RW_v0() { EnableCollectionInbound = TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled, EnableCollectionOutbound = TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled }, rw, true);
+
+            try
+            {
+                var r = SetPerTcpConnectionEStats(ref row, TCP_ESTATS_TYPE.TcpConnectionEstatsBandwidth, rw, (uint)0, (uint)rwS, (uint)0);
+                if (r != 0)
+                {
+                    throw new Win32Exception((int)r);
+                }
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(rw);
+            }
+        }
+
+        public static TCP_ESTATS_BANDWIDTH_ROD_v0 GetTCPBandwidth(MIB_TCPROW_OWNER_MODULE conn)
+        {
+            IntPtr rw = IntPtr.Zero;
+            IntPtr rod = IntPtr.Zero;
+
+            try
+            {
+                var row = new MIB_TCPROW() { dwLocalAddr = conn._localAddr, dwRemoteAddr = conn._remoteAddr, dwLocalPort = conn._localPort, dwRemotePort = conn._remotePort, dwState = conn._state };
+
+                EnsureStatsAreEnabled(row);
+
+                var rwS = Marshal.SizeOf(typeof(TCP_ESTATS_BANDWIDTH_RW_v0));
+                rw = Marshal.AllocHGlobal(rwS);
+
+                var rodS = Marshal.SizeOf(typeof(TCP_ESTATS_BANDWIDTH_ROD_v0));
+                rod = Marshal.AllocHGlobal(rodS);
+
+                var r = GetPerTcpConnectionEStats(ref row, TCP_ESTATS_TYPE.TcpConnectionEstatsBandwidth, rw, (uint)0, (uint)rwS, IntPtr.Zero, (uint)0, (uint)0, rod, (uint)0, (uint)rodS);
+                if (r != 0)
+                {
+                    throw new Win32Exception((int)r);
+                }
+
+                var parsedRW = (TCP_ESTATS_BANDWIDTH_RW_v0)Marshal.PtrToStructure(rw, typeof(TCP_ESTATS_BANDWIDTH_RW_v0));
+                var parsedROD = (TCP_ESTATS_BANDWIDTH_ROD_v0)Marshal.PtrToStructure(rod, typeof(TCP_ESTATS_BANDWIDTH_ROD_v0));
+
+                return parsedROD;
+            }
+            catch (Win32Exception we)
+            {
+                if (we.NativeErrorCode == 1168)
+                {
+                    return new TCP_ESTATS_BANDWIDTH_ROD_v0() { InboundBandwidth = 0, OutboundBandwidth = 0 };
+                }
+                else
+                {
+                    throw we;
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+            finally
+            {
+                if (rw != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(rw);
+                }
+
+                if (rod != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(rod);
+                }
+            }
+        }
+
         public static TCP_ESTATS_DATA_ROD_v0 GetTCPStatistics(MIB_TCPROW_OWNER_MODULE conn)
         {
             IntPtr rw = IntPtr.Zero;
@@ -201,6 +308,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             try
             {
                 var row = new MIB_TCPROW() { dwLocalAddr = conn._localAddr, dwRemoteAddr = conn._remoteAddr, dwLocalPort = conn._localPort, dwRemotePort = conn._remotePort, dwState = conn._state };
+
+                EnsureStatsAreEnabled(row);
 
                 var rwS = Marshal.SizeOf(typeof(TCP_ESTATS_DATA_RW_v0));
                 rw = Marshal.AllocHGlobal(rwS);
@@ -242,13 +351,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             return GetOwnerModuleFromTcpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, buffer, ref buffSize);
         }
 
-        internal static Owner GetOwningModule(OWNER_MODULE row)
+        internal static Owner GetOwningModule(I_OWNER_MODULE row)
         {
             IntPtr buffer = IntPtr.Zero;
             try
             {
                 uint resp = IPHelpers.TCPHelper.GetOwningModuleTCP((IPHelpers.TCPHelper.MIB_TCPROW_OWNER_MODULE)row, ref buffer);
-                
+
                 if (resp == 0)
                 {
                     return new Owner((TCPIP_OWNER_MODULE_BASIC_INFO)Marshal.PtrToStructure(buffer, typeof(TCPIP_OWNER_MODULE_BASIC_INFO)));

@@ -51,15 +51,9 @@
     <Reference Include="De.TorstenMandelkow.MetroChart">
       <HintPath>Libs\De.TorstenMandelkow.MetroChart.dll</HintPath>
     </Reference>
-    <Reference Include="MahApps.Metro">
-      <HintPath>..\packages\MahApps.Metro.1.1.3-ALPHA021\lib\net45\MahApps.Metro.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.1.1.3-ALPHA021\lib\net45\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -80,6 +74,9 @@
     <Compile Include="Helpers\BindingConverters\BooleanNegator.cs" />
     <Compile Include="Helpers\BindingConverters\ObservablePointCollectionConverter.cs" />
     <Compile Include="Helpers\DummyData\MonitorDummy.cs" />
+    <Compile Include="Helpers\ViewModels\MonitoredConnectionViewModel.cs" />
+    <Compile Include="Helpers\ViewModels\ConnectionViewModel.cs" />
+    <Compile Include="Helpers\ViewModels\LogEntryViewModel.cs" />
     <Compile Include="UI\Pages\Connections.xaml.cs">
       <DependentUpon>Connections.xaml</DependentUpon>
     </Compile>
@@ -155,7 +152,6 @@
     <None Include="DisableWFN.cmd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
@@ -187,26 +183,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Images\btnConnStop.Image.png" />
-    <Resource Include="Resources\Images\btnConnTrack.Image.png" />
-    <Resource Include="Resources\Images\btnDonate.Image.png" />
-    <Resource Include="Resources\Images\btnELocate.Image.png" />
-    <Resource Include="Resources\Images\btnERemove.Image.png" />
     <Resource Include="Resources\Images\btnLEvents.Image.png" />
-    <Resource Include="Resources\Images\btnLLocate.Image.png" />
     <Resource Include="Resources\Images\btnOpenConsole.Image.png" />
-    <Resource Include="Resources\Images\btnOptions.Image.png" />
-    <Resource Include="Resources\Images\btnRDelete.Image.png" />
-    <Resource Include="Resources\Images\btnRLocate.Image.png" />
-    <Resource Include="Resources\Images\btnRRefresh.Image.png" />
-    <Resource Include="Resources\Images\btnRShow.Image.png" />
-    <Resource Include="Resources\Images\btnTConnections.Image.png" />
-    <Resource Include="Resources\Images\btnTExceptions.Image.png" />
-    <Resource Include="Resources\Images\btnTLog.Image.png" />
-    <Resource Include="Resources\Images\btnTRules.Image.png" />
-    <Resource Include="Resources\Images\btnUpdate.Image.png" />
-    <Resource Include="Resources\Images\stripConnUpdSpeed.Image.png" />
-    <Resource Include="Resources\Images\toolStripLabel1.Image.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
