@@ -26,7 +26,6 @@
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsKeyboardFocused" Value="true">
-                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
                                 </Trigger>
                                 <Trigger Property="IsMouseOver" Value="true">
                                     <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
@@ -35,8 +34,11 @@
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="true">
                                     <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
-                                </Trigger>
-                                <Trigger Property="ToggleButton.IsChecked" Value="true">
+                                    <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                            <TranslateTransform X="1" Y="1" />
+                                        </Setter.Value>
+                                    </Setter>
                                 </Trigger>
                                 <Trigger Property="IsEnabled" Value="false">
                                     <Setter Property="Opacity" Value="0.5" />
@@ -57,15 +59,20 @@
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsKeyboardFocused" Value="true">
-                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
                                 </Trigger>
                                 <Trigger Property="IsMouseOver" Value="true">
                                     <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="true">
                                     <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                                    <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                            <TranslateTransform X="1" Y="1" />
+                                        </Setter.Value>
+                                    </Setter>
                                 </Trigger>
                                 <Trigger Property="IsChecked" Value="true">
+                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
                                 </Trigger>
                                 <Trigger Property="IsEnabled" Value="false">
                                     <Setter Property="Opacity" Value="0.5" />

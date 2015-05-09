@@ -9,6 +9,7 @@
       DataContext="{Binding RelativeSource={RelativeSource Self}}" 
       d:DesignHeight="400" d:DesignWidth="700" 
       d:DataContext="{d:DesignInstance Type=dummydata:MonitorDummy, IsDesignTimeCreatable=True}"
+      x:Name="MonitorPage"
       Title="Monitor">
     <Page.Resources>
         <Converters:ObservablePointCollectionConverter x:Key="ObservablePointCollectionConverter" />
@@ -32,6 +33,12 @@
                                 </Path.Style>
                             </Path>
                             <TextBlock Margin="15,0,0,0" Text="Start tracking" />
+                        </Grid>
+                    </ToggleButton>
+                    <ToggleButton IsChecked="{Binding IsSingleMode}">
+                        <Grid>
+                            <Path HorizontalAlignment="Left" Height="16" Stretch="Uniform" Fill="Blue" Data="M17,12L12,17V14H8V10H12V7L17,12M2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12M4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12Z" />
+                            <TextBlock Margin="20,0,0,0" Text="Single-item mode" />
                         </Grid>
                     </ToggleButton>
                     <TextBlock VerticalAlignment="Center" Text="{Binding Series.Count, StringFormat='Active connection(s): {0}', FallbackValue='No active connection'}" />
@@ -83,7 +90,7 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
                                 <Grid>
                                     <Grid.LayoutTransform>
                                         <TransformGroup>
-                                            <ScaleTransform ScaleY="{Binding TransformScaleY}" />
+                                            <ScaleTransform ScaleY="{Binding TransformScaleY, ElementName=MonitorPage, FallbackValue=-1}" />
                                         </TransformGroup>
                                     </Grid.LayoutTransform>
                                 </Grid>

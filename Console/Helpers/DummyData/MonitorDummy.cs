@@ -13,16 +13,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.DummyData
             set { _series = value; }
         }
 
-
         public List<int> Xs { get { return new List<int>() { 0, 10, 20 }; } }
 
         public List<int> Ys { get { return new List<int>() { 0, 10, 20 }; } }
-
-
-        public double TransformScaleY
-        {
-            get { return -1; }
-        }
 
         public MonitorDummy()
         {

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
@@ -39,25 +41,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             public ulong[] OwningModuleInfo;
 
             public MIB_TCP_STATE State { get { return MIB_TCP_STATE.NOT_APPLICABLE; } }
-
             public uint OwningPid { get { return _owningPid; } }
             public string LocalAddress { get { return GetAddressAsString(_localAddr); } }
-
             public int LocalPort { get { return GetRealPort(_localPort); } }
-
-            public Owner OwnerModule { get { return GetOwningModule(this); } }
-
+            public Owner OwnerModule { get { return GetOwningModuleUDP(this); } }
             public DateTime CreationTime { get { return _creationTime == 0 ? DateTime.MinValue : DateTime.FromFileTime(_creationTime); } }
-
-            public string RemoteAddress
-            {
-                get { return String.Empty; }
-            }
-
-            public int RemotePort
-            {
-                get { return -1; }
-            }
+            public string RemoteAddress { get { return String.Empty; } }
+            public int RemotePort { get { return -1; } }
         }
 
 
@@ -73,7 +63,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         /// 
         /// </summary>
         /// <returns></returns>
-        public static MIB_UDPROW_OWNER_MODULE[] GetAllUDPConnections()
+        public static IEnumerable<MIB_UDPROW_OWNER_MODULE> GetAllUDPConnections()
         {
             IntPtr buffTable = IntPtr.Zero;
 
@@ -83,7 +73,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                 GetExtendedUdpTable(IntPtr.Zero, ref buffSize, true, AF_INET.IP4, UDP_TABLE_CLASS.UDP_TABLE_OWNER_MODULE, 0);
 
                 buffTable = Marshal.AllocHGlobal(buffSize);
-                MIB_UDPROW_OWNER_MODULE[] tTable;
 
                 uint ret = GetExtendedUdpTable(buffTable, ref buffSize, true, AF_INET.IP4, UDP_TABLE_CLASS.UDP_TABLE_OWNER_MODULE, 0);
                 if (ret == 0)
@@ -91,23 +80,20 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                     MIB_UDPTABLE_OWNER_MODULE tab = (MIB_UDPTABLE_OWNER_MODULE)Marshal.PtrToStructure(buffTable, typeof(MIB_UDPTABLE_OWNER_MODULE));
                     IntPtr rowPtr = (IntPtr)((long)buffTable + (long)Marshal.OffsetOf(typeof(MIB_UDPTABLE_OWNER_MODULE), "FirstEntry"));
 
-                    tTable = new MIB_UDPROW_OWNER_MODULE[tab.NumEntries];
+                    MIB_UDPROW_OWNER_MODULE current;
                     for (int i = 0; i < tab.NumEntries; i++)
                     {
-                        tTable[i] = (MIB_UDPROW_OWNER_MODULE)Marshal.PtrToStructure(rowPtr, typeof(MIB_UDPROW_OWNER_MODULE));
-                        rowPtr = (IntPtr)((long)rowPtr + (long)Marshal.SizeOf(tTable[i]));
-                    }
+                        current = (MIB_UDPROW_OWNER_MODULE)Marshal.PtrToStructure(rowPtr, typeof(MIB_UDPROW_OWNER_MODULE));
+                        rowPtr = (IntPtr)((long)rowPtr + (long)Marshal.SizeOf(current));
 
-                    return tTable;
+                        yield return current;
+
+                    }
                 }
                 else
                 {
-                    throw new Exception("Unable to retrieve all connections rows (err:" + ret + ")");
+                    throw new Win32Exception((int)ret);
                 }
-            }
-            catch (Exception e)
-            {
-                return null;
             }
             finally
             {
@@ -118,38 +104,36 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             }
         }
 
-        internal static uint GetOwningModuleUDP(MIB_UDPROW_OWNER_MODULE row, ref IntPtr buffer)
-        {
-            int buffSize = 0;
-            GetOwnerModuleFromUdpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
-            buffer = Marshal.AllocHGlobal(buffSize);
-            return GetOwnerModuleFromUdpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, buffer, ref buffSize);
-        }
 
-        internal static Owner GetOwningModule(I_OWNER_MODULE row)
+        private static Dictionary<MIB_UDPROW_OWNER_MODULE, Owner> ownerCache = new Dictionary<MIB_UDPROW_OWNER_MODULE, Owner>();
+        internal static Owner GetOwningModuleUDP(MIB_UDPROW_OWNER_MODULE row)
         {
+            Owner ret;
+            if (ownerCache.TryGetValue(row, out ret))
+            {
+                return ret;
+            }
+            
             IntPtr buffer = IntPtr.Zero;
             try
             {
-                uint resp = IPHelpers.UDPHelper.GetOwningModuleUDP((IPHelpers.UDPHelper.MIB_UDPROW_OWNER_MODULE)row, ref buffer);
-                
+                int buffSize = 0;
+                GetOwnerModuleFromUdpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
+                buffer = Marshal.AllocHGlobal(buffSize);
+
+                var resp = GetOwnerModuleFromUdpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, buffer, ref buffSize);
                 if (resp == 0)
                 {
-                    return new Owner((TCPIP_OWNER_MODULE_BASIC_INFO)Marshal.PtrToStructure(buffer, typeof(TCPIP_OWNER_MODULE_BASIC_INFO)));
+                    ret = new Owner((TCPIP_OWNER_MODULE_BASIC_INFO)Marshal.PtrToStructure(buffer, typeof(TCPIP_OWNER_MODULE_BASIC_INFO)));
                 }
-                else
+                else if (resp != 1168) // Ignore closed connections 
                 {
-                    if (resp != 1168) // Ignore closed connections 
-                    {
-                        LogHelper.Error("Unable to get the connection owner.", new Exception("GetOwningModule returned " + resp));
-                    }
-                    return null;
+                    LogHelper.Error("Unable to get the connection owner.", new Win32Exception((int)resp));
                 }
-            }
-            catch (Exception e)
-            {
-                LogHelper.Error("Unable to get the connection owner.", e);
-                return null;
+
+                ownerCache.Add(row, ret);
+
+                return ret;
             }
             finally
             {

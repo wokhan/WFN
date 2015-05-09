@@ -44,9 +44,15 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         public bool IsTrackingEnabled
         {
             get { return timer.IsEnabled; }
-            set { timer.IsEnabled = value; }
+            set { timer.IsEnabled = value; NotifyPropertyChanged("IsTrackingEnabled"); }
         }
 
+        private bool _isSingleMode;
+        public bool IsSingleMode 
+        {
+            get { return _isSingleMode; }
+            set { _isSingleMode = value; NotifyPropertyChanged("IsSingleMode"); }
+        }
 
         public List<int> Xs { get { return new List<int>() { 0, 10, 20 }; } }
 
@@ -55,7 +61,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         public List<double> Intervals { get { return new List<double> { 0.05, 0.1, 0.5, 1, 5, 10 }; } }
 
-        private DispatcherTimer timer = new DispatcherTimer();
+        private DispatcherTimer timer = new DispatcherTimer() { IsEnabled = true };
 
         private double _interval = 0.5;
         public double Interval
@@ -77,7 +83,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
             timer.Interval = TimeSpan.FromSeconds(Interval);
             timer.Tick += timer_Tick;
-            timer.Start();
+            Dispatcher.InvokeAsync(() => timer_Tick(null, null));
         }
 
         double currentX = -1;
@@ -111,7 +117,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 }
             }
             
-            foreach (var c in conn)
+            foreach (var c in conn)//.Where(co => co.Key == "firefox.exe"))
             {
                 var existing = Series.FirstOrDefault(s => s.Name == c.Key);
                 if (existing == null)
@@ -123,6 +129,16 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 double sumIn = 0.0;
                 double sumOut = 0.0;
                 int cnt = 0;
+
+                //var totalized = c.AsParallel()
+                //                 .Select(realconn => realconn.Obj is TCPHelper.MIB_TCPROW_OWNER_MODULE ? TCPHelper.GetTCPBandwidth((TCPHelper.MIB_TCPROW_OWNER_MODULE)realconn.Obj) : TCP6Helper.GetTCPBandwidth((TCP6Helper.MIB_TCP6ROW_OWNER_MODULE)realconn.Obj))
+                //                 .Select(co => new { In = co.InboundBandwidth, Out = co.OutboundBandwidth })
+                //                 .Aggregate((ci, co) => new { In = ci.In + co.In, Out = ci.Out + co.Out });
+
+                //cnt = c.Count();
+                //sumIn = totalized.In;
+                //sumOut = totalized.Out;
+
                 foreach (var realconn in c)
                 {
                     cnt++;
@@ -140,31 +156,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 existing.PointsOut.Add(new Point(GetX(currentX), GetY(sumOut)));
                 existing.PointsIn.Add(new Point(GetX(currentX), GetY(sumIn)));
             }
-
-            //foreach (var c in conn6)
-            //{
-            //    var existing = Series.FirstOrDefault(s => s.Name == c.Key);
-            //    if (existing == null)
-            //    {
-            //        existing = new SeriesClass() { Name = c.Key, Brush = new SolidColorBrush(ColorsDic[Series.Count]) };
-            //        Series.Add(existing);
-            //    }
-
-            //    double sumIn = 0.0;
-            //    double sumOut = 0.0;
-            //    int cnt = 0;
-            //    foreach (var realconn in c)
-            //    {
-            //        cnt++;
-
-            //        var r = TCP6Helper.GetTCPStatistics(realconn);
-            //        sumIn += r.DataBytesIn;
-            //        sumOut += r.DataBytesOut;
-            //    }
-
-            //    existing.PointsOut.Add(new Point(GetX(currentX), GetY(sumOut)));
-            //    existing.PointsIn.Add(new Point(GetX(currentX), GetY(sumIn)));
-            //}
         }
 
         private double lastScale= 0;

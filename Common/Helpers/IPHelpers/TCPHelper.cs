@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
@@ -151,17 +152,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             public ulong[] OwningModuleInfo;
 
             public MIB_TCP_STATE State { get { return (MIB_TCP_STATE)_state; } }
-
-            public string RemoteAddress { get { return GetAddressAsString(_remoteAddr); } }
+public string RemoteAddress { get { return GetAddressAsString(_remoteAddr); } }
             public string LocalAddress { get { return GetAddressAsString(_localAddr); } }
-
             public int RemotePort { get { return GetRealPort(_remotePort); } }
             public int LocalPort { get { return GetRealPort(_localPort); } }
-
-            public Owner OwnerModule { get { return GetOwningModule(this); } }
-
+            public Owner OwnerModule { get { return GetOwningModuleTCP(this); } }
             public uint OwningPid { get { return _owningPid; } }
-
             public DateTime CreationTime { get { return _creationTime == 0 ? DateTime.MinValue : DateTime.FromFileTime(_creationTime); } }
         }
 
@@ -176,7 +172,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         /// <summary>
         /// 
         /// </summary>
-        public static MIB_TCPROW_OWNER_MODULE[] GetAllTCPConnections()
+        public static IEnumerable<MIB_TCPROW_OWNER_MODULE> GetAllTCPConnections()
         {
             IntPtr buffTable = IntPtr.Zero;
 
@@ -186,33 +182,28 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                 GetExtendedTcpTable(IntPtr.Zero, ref buffSize, true, AF_INET.IP4, TCP_TABLE_CLASS.TCP_TABLE_OWNER_MODULE_ALL, 0);
 
                 buffTable = Marshal.AllocHGlobal(buffSize);
-                MIB_TCPROW_OWNER_MODULE[] tTable;
-
+                
                 uint ret = GetExtendedTcpTable(buffTable, ref buffSize, true, AF_INET.IP4, TCP_TABLE_CLASS.TCP_TABLE_OWNER_MODULE_ALL, 0);
                 if (ret == 0)
                 {
                     MIB_TCPTABLE_OWNER_MODULE tab = (MIB_TCPTABLE_OWNER_MODULE)Marshal.PtrToStructure(buffTable, typeof(MIB_TCPTABLE_OWNER_MODULE));
                     IntPtr rowPtr = (IntPtr)((long)buffTable + (long)Marshal.OffsetOf(typeof(MIB_TCPTABLE_OWNER_MODULE), "FirstEntry"));
 
-                    tTable = new MIB_TCPROW_OWNER_MODULE[tab.NumEntries];
+                    MIB_TCPROW_OWNER_MODULE current;
                     for (int i = 0; i < tab.NumEntries; i++)
                     {
-                        tTable[i] = (MIB_TCPROW_OWNER_MODULE)Marshal.PtrToStructure(rowPtr, typeof(MIB_TCPROW_OWNER_MODULE));
-                        rowPtr = (IntPtr)((long)rowPtr + (long)Marshal.SizeOf(tTable[i]));
-                    }
+                        current = (MIB_TCPROW_OWNER_MODULE)Marshal.PtrToStructure(rowPtr, typeof(MIB_TCPROW_OWNER_MODULE));
+                        rowPtr = (IntPtr)((long)rowPtr + (long)Marshal.SizeOf(current));
 
-                    return tTable;
+                        yield return current;
+                    }
                 }
                 else
                 {
-                    throw new Exception("Unable to retrieve all connections rows (err:" + ret + ")");
+                    throw new Win32Exception((int)ret);
                 }
             }
-            catch (Exception e)
-            {
-                return null;
-            }
-            finally
+           finally
             {
                 if (buffTable != IntPtr.Zero)
                 {
@@ -242,6 +233,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             }
         }
 
+        private static byte[] port = null;
+        private static IntPtr prev = IntPtr.Zero;
         public static TCP_ESTATS_BANDWIDTH_ROD_v0 GetTCPBandwidth(MIB_TCPROW_OWNER_MODULE conn)
         {
             IntPtr rw = IntPtr.Zero;
@@ -249,26 +242,42 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
 
             try
             {
-                var row = new MIB_TCPROW() { dwLocalAddr = conn._localAddr, dwRemoteAddr = conn._remoteAddr, dwLocalPort = conn._localPort, dwRemotePort = conn._remotePort, dwState = conn._state };
-
-                EnsureStatsAreEnabled(row);
-
-                var rwS = Marshal.SizeOf(typeof(TCP_ESTATS_BANDWIDTH_RW_v0));
-                rw = Marshal.AllocHGlobal(rwS);
-
-                var rodS = Marshal.SizeOf(typeof(TCP_ESTATS_BANDWIDTH_ROD_v0));
-                rod = Marshal.AllocHGlobal(rodS);
-
-                var r = GetPerTcpConnectionEStats(ref row, TCP_ESTATS_TYPE.TcpConnectionEstatsBandwidth, rw, (uint)0, (uint)rwS, IntPtr.Zero, (uint)0, (uint)0, rod, (uint)0, (uint)rodS);
-                if (r != 0)
+                TCP_ESTATS_BANDWIDTH_ROD_v0 ret;
+                if (port != null && System.Linq.Enumerable.SequenceEqual(conn._localPort, port))
                 {
-                    throw new Win32Exception((int)r);
+                    ret = (TCP_ESTATS_BANDWIDTH_ROD_v0)Marshal.PtrToStructure(prev, typeof(TCP_ESTATS_BANDWIDTH_ROD_v0));
+                }
+                else
+                {
+                    var row = new MIB_TCPROW() { dwLocalAddr = conn._localAddr, dwRemoteAddr = conn._remoteAddr, dwLocalPort = conn._localPort, dwRemotePort = conn._remotePort, dwState = conn._state };
+
+                    EnsureStatsAreEnabled(row);
+
+                    var rwS = Marshal.SizeOf(typeof(TCP_ESTATS_BANDWIDTH_RW_v0));
+                    rw = Marshal.AllocHGlobal(rwS);
+
+                    var rodS = Marshal.SizeOf(typeof(TCP_ESTATS_BANDWIDTH_ROD_v0));
+                    rod = Marshal.AllocHGlobal(rodS);
+                    if (port == null)
+                    {
+                        prev = rod;
+                        port = conn._localPort;
+                    }
+                    var r = GetPerTcpConnectionEStats(ref row, TCP_ESTATS_TYPE.TcpConnectionEstatsBandwidth, rw, (uint)0, (uint)rwS, IntPtr.Zero, (uint)0, (uint)0, rod, (uint)0, (uint)rodS);
+                    if (r != 0)
+                    {
+                        throw new Win32Exception((int)r);
+                    }
+
+                    var parsedRW = (TCP_ESTATS_BANDWIDTH_RW_v0)Marshal.PtrToStructure(rw, typeof(TCP_ESTATS_BANDWIDTH_RW_v0));
+                    if (parsedRW.EnableCollectionInbound != TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled || parsedRW.EnableCollectionOutbound != TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled)
+                    {
+                        throw new Exception("Monitoring is disabled for this connection.");
+                    }
+                    ret = (TCP_ESTATS_BANDWIDTH_ROD_v0)Marshal.PtrToStructure(rod, typeof(TCP_ESTATS_BANDWIDTH_ROD_v0));
                 }
 
-                var parsedRW = (TCP_ESTATS_BANDWIDTH_RW_v0)Marshal.PtrToStructure(rw, typeof(TCP_ESTATS_BANDWIDTH_RW_v0));
-                var parsedROD = (TCP_ESTATS_BANDWIDTH_ROD_v0)Marshal.PtrToStructure(rod, typeof(TCP_ESTATS_BANDWIDTH_ROD_v0));
-
-                return parsedROD;
+                return ret;
             }
             catch (Win32Exception we)
             {
@@ -299,7 +308,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                 }
             }
         }
-
+    
         public static TCP_ESTATS_DATA_ROD_v0 GetTCPStatistics(MIB_TCPROW_OWNER_MODULE conn)
         {
             IntPtr rw = IntPtr.Zero;
@@ -342,39 +351,35 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             }
         }
 
-        internal static uint GetOwningModuleTCP(MIB_TCPROW_OWNER_MODULE row, ref IntPtr buffer)
+        private static Dictionary<MIB_TCPROW_OWNER_MODULE, Owner> ownerCache = new Dictionary<MIB_TCPROW_OWNER_MODULE, Owner>();
+        internal static Owner GetOwningModuleTCP(MIB_TCPROW_OWNER_MODULE row)
         {
-            int buffSize = 0;
+            Owner ret;
+            if (ownerCache.TryGetValue(row, out ret))
+            {
+                return ret;
+            }
 
-            GetOwnerModuleFromTcpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
-            buffer = Marshal.AllocHGlobal(buffSize);
-            return GetOwnerModuleFromTcpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, buffer, ref buffSize);
-        }
-
-        internal static Owner GetOwningModule(I_OWNER_MODULE row)
-        {
             IntPtr buffer = IntPtr.Zero;
             try
             {
-                uint resp = IPHelpers.TCPHelper.GetOwningModuleTCP((IPHelpers.TCPHelper.MIB_TCPROW_OWNER_MODULE)row, ref buffer);
-
+                int buffSize = 0;
+                GetOwnerModuleFromTcpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
+                buffer = Marshal.AllocHGlobal(buffSize);
+                
+                var resp = GetOwnerModuleFromTcpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, buffer, ref buffSize);
                 if (resp == 0)
                 {
-                    return new Owner((TCPIP_OWNER_MODULE_BASIC_INFO)Marshal.PtrToStructure(buffer, typeof(TCPIP_OWNER_MODULE_BASIC_INFO)));
+                    ret = new Owner((TCPIP_OWNER_MODULE_BASIC_INFO)Marshal.PtrToStructure(buffer, typeof(TCPIP_OWNER_MODULE_BASIC_INFO)));
                 }
-                else
+                else if (resp != 1168) // Ignore closed connections 
                 {
-                    if (resp != 1168) // Ignore closed connections 
-                    {
-                        LogHelper.Error("Unable to get the connection owner.", new Exception("GetOwningModule returned " + resp));
-                    }
-                    return null;
+                    LogHelper.Error("Unable to get the connection owner.", new Win32Exception((int)resp));
                 }
-            }
-            catch (Exception e)
-            {
-                LogHelper.Error("Unable to get the connection owner.", e);
-                return null;
+
+                ownerCache.Add(row, ret);
+
+                return ret;
             }
             finally
             {
