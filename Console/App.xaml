@@ -105,19 +105,22 @@
                 </Style.Resources>
             </Style>
             <Style x:Key="MenuPanel" TargetType="Border">
-                <Setter Property="DockPanel.Dock" Value="Top" />
+                <Setter Property="DockPanel.Dock" Value="Left" />
                 <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
-                <Setter Property="BorderThickness" Value="0,0,0,1" />
+                <Setter Property="BorderThickness" Value="0,0,2,0" />
                 <Setter Property="Background" Value="WhiteSmoke" />
                 <Style.Resources>
+                    <Style TargetType="WrapPanel">
+                        <Setter Property="Orientation" Value="Vertical" />
+                    </Style>
                     <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                         <Setter Property="Background" Value="White" />
                         <Setter Property="BorderBrush" Value="Blue" />
                         <Setter Property="BorderThickness" Value="1" />
                         <Setter Property="FontSize" Value="12" />
-                        <Setter Property="Padding" Value="2" />
+                        <Setter Property="Padding" Value="4,2" />
                         <Setter Property="Margin" Value="5" />
-                        <Setter Property="Width" Value="130" />
+                        <Setter Property="HorizontalContentAlignment" Value="Left" />
                     </Style>
                 </Style.Resources>
             </Style>
