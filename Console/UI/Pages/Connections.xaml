@@ -48,7 +48,7 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type GroupItem}">
                                         <StackPanel>
-                                            <Grid Background="White" Width="{Binding ActualWidth,RelativeSource={RelativeSource AncestorType=DataGrid,Mode=FindAncestor}}" Margin="5,5,-60,5"  DataContext="{Binding Items[0]}">
+                                            <Grid HorizontalAlignment="Left" Background="White" Width="{Binding ActualWidth,RelativeSource={RelativeSource AncestorType=DataGrid,Mode=FindAncestor}}" Margin="5,5,-60,5"  DataContext="{Binding Items[0]}">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition />

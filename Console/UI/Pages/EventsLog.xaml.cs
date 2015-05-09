@@ -24,7 +24,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             set { timer.IsEnabled = value; }
         }
 
-        private DispatcherTimer timer = new DispatcherTimer();
+        private DispatcherTimer timer = new DispatcherTimer() { IsEnabled = true };
 
         public List<int> Intervals { get { return new List<int> { 1, 5, 10 }; } }
 
@@ -41,9 +41,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
             //   initEventLog();
 
-            timer.Tick += timer_Tick;
             timer.Interval = TimeSpan.FromSeconds(Interval);
-            timer.Start();
+            timer.Tick += timer_Tick;
+            Dispatcher.InvokeAsync(() => timer_Tick(null, null));
         }
 
         void timer_Tick(object sender, EventArgs e)

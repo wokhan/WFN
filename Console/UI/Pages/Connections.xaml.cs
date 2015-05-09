@@ -30,7 +30,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         public List<int> Intervals { get { return new List<int> { 1, 5, 10 }; } }
 
-        private DispatcherTimer timer = new DispatcherTimer();
+        private DispatcherTimer timer = new DispatcherTimer() { IsEnabled = true };
 
         public ObservableCollection<ConnectionViewModel> lstConnections = new ObservableCollection<ConnectionViewModel>();
 
@@ -49,10 +49,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             connectionsView.GroupDescriptions.Add(new PropertyGroupDescription("GroupKey"));
 
             InitializeComponent();
-
+            
             timer.Interval = TimeSpan.FromSeconds(Interval);
             timer.Tick += timer_Tick;
-            timer.Start();
+            Dispatcher.InvokeAsync(() => timer_Tick(null, null));
         }
 
         void timer_Tick(object sender, EventArgs e)

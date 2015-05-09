@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
@@ -7,64 +9,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
     {
         [DllImport("iphlpapi.dll", SetLastError = true)]
         public static extern uint GetOwnerModuleFromUdp6Entry(ref MIB_UDP6ROW_OWNER_MODULE pUdpEntry, TCPIP_OWNER_MODULE_INFO_CLASS Class, IntPtr Buffer, ref int pdwSize);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public static MIB_UDP6ROW_OWNER_MODULE[] GetAllUDP6Connections()
-        {
-            IntPtr buffTable = IntPtr.Zero;
-
-            try
-            {
-                int buffSize = 0;
-                GetExtendedUdpTable(IntPtr.Zero, ref buffSize, true, AF_INET.IP6, UDP_TABLE_CLASS.UDP_TABLE_OWNER_MODULE, 0);
-
-                buffTable = Marshal.AllocHGlobal(buffSize);
-                MIB_UDP6ROW_OWNER_MODULE[] tTable;
-
-                uint ret = GetExtendedUdpTable(buffTable, ref buffSize, true, AF_INET.IP6, UDP_TABLE_CLASS.UDP_TABLE_OWNER_MODULE, 0);
-                if (ret == 0)
-                {
-                    MIB_UDP6TABLE_OWNER_MODULE tab = (MIB_UDP6TABLE_OWNER_MODULE)Marshal.PtrToStructure(buffTable, typeof(MIB_UDP6TABLE_OWNER_MODULE));
-                    IntPtr rowPtr = (IntPtr)((long)buffTable + (long)Marshal.OffsetOf(typeof(MIB_UDP6TABLE_OWNER_MODULE), "FirstEntry"));
-
-                    tTable = new MIB_UDP6ROW_OWNER_MODULE[tab.NumEntries];
-                    for (int i = 0; i < tab.NumEntries; i++)
-                    {
-                        tTable[i] = (MIB_UDP6ROW_OWNER_MODULE)Marshal.PtrToStructure(rowPtr, typeof(MIB_UDP6ROW_OWNER_MODULE));
-                        rowPtr = (IntPtr)((long)rowPtr + (long)Marshal.SizeOf(tTable[i]));
-                    }
-
-                    return tTable;
-                }
-                else
-                {
-                    throw new Exception("Unable to retrieve all connections rows (err:" + ret + ")");
-                }
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
-            finally
-            {
-                if (buffTable != IntPtr.Zero)
-                {
-                    Marshal.FreeHGlobal(buffTable);
-                }
-            }
-        }
-
-
-        internal static uint GetOwningModuleUDP(MIB_UDP6ROW_OWNER_MODULE row, ref IntPtr buffer)
-        {
-            int buffSize = 0;
-            GetOwnerModuleFromUdp6Entry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
-            buffer = Marshal.AllocHGlobal(buffSize);
-            return GetOwnerModuleFromUdp6Entry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, buffer, ref buffSize);
-        }
 
         [StructLayout(LayoutKind.Sequential)]
         public struct MIB_UDP6ROW_OWNER_MODULE : I_OWNER_MODULE
@@ -85,11 +29,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             public ulong[] OwningModuleInfo;
 
             public MIB_TCP_STATE State { get { return MIB_TCP_STATE.NOT_APPLICABLE; } }
-
             public uint OwningPid { get { return _owningPid; } }
             public string LocalAddress { get { return GetRealAddress(_localAddress); } }
             public int LocalPort { get { return GetRealPort(_localPort); } }
-            public Owner OwnerModule { get { return GetOwningModule(this); } }
+            public Owner OwnerModule { get { return GetOwningModuleUDP6(this); } }
             public string RemoteAddress { get { return String.Empty; } }
             public int RemotePort { get { return -1; } }
             public DateTime CreationTime { get { return _creationTime == 0 ? DateTime.MinValue : DateTime.FromFileTime(_creationTime); } }
@@ -103,30 +46,79 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         }
 
 
-        internal static new Owner GetOwningModule(I_OWNER_MODULE row)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<MIB_UDP6ROW_OWNER_MODULE> GetAllUDP6Connections()
         {
-            IntPtr buffer = IntPtr.Zero;
+            IntPtr buffTable = IntPtr.Zero;
+
             try
             {
-                uint resp = IPHelpers.UDP6Helper.GetOwningModuleUDP((IPHelpers.UDP6Helper.MIB_UDP6ROW_OWNER_MODULE)row, ref buffer);
-                
-                if (resp == 0)
+                int buffSize = 0;
+                GetExtendedUdpTable(IntPtr.Zero, ref buffSize, true, AF_INET.IP6, UDP_TABLE_CLASS.UDP_TABLE_OWNER_MODULE, 0);
+
+                buffTable = Marshal.AllocHGlobal(buffSize);
+
+                uint ret = GetExtendedUdpTable(buffTable, ref buffSize, true, AF_INET.IP6, UDP_TABLE_CLASS.UDP_TABLE_OWNER_MODULE, 0);
+                if (ret == 0)
                 {
-                    return new Owner((TCPIP_OWNER_MODULE_BASIC_INFO)Marshal.PtrToStructure(buffer, typeof(TCPIP_OWNER_MODULE_BASIC_INFO)));
+                    MIB_UDP6TABLE_OWNER_MODULE tab = (MIB_UDP6TABLE_OWNER_MODULE)Marshal.PtrToStructure(buffTable, typeof(MIB_UDP6TABLE_OWNER_MODULE));
+                    IntPtr rowPtr = (IntPtr)((long)buffTable + (long)Marshal.OffsetOf(typeof(MIB_UDP6TABLE_OWNER_MODULE), "FirstEntry"));
+
+                    MIB_UDP6ROW_OWNER_MODULE current;
+                    for (int i = 0; i < tab.NumEntries; i++)
+                    {
+                        current = (MIB_UDP6ROW_OWNER_MODULE)Marshal.PtrToStructure(rowPtr, typeof(MIB_UDP6ROW_OWNER_MODULE));
+                        rowPtr = (IntPtr)((long)rowPtr + (long)Marshal.SizeOf(current));
+
+                        yield return current;
+                    }
                 }
                 else
                 {
-                    if (resp != 1168) // Ignore closed connections 
-                    {
-                        LogHelper.Error("Unable to get the connection owner.", new Exception("GetOwningModule returned " + resp));
-                    }
-                    return null;
+                    throw new Win32Exception((int)ret);
                 }
             }
-            catch (Exception e)
+            finally
             {
-                LogHelper.Error("Unable to get the connection owner.", e);
-                return null;
+                if (buffTable != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(buffTable);
+                }
+            }
+        }
+
+        private static Dictionary<MIB_UDP6ROW_OWNER_MODULE, Owner> ownerCache = new Dictionary<MIB_UDP6ROW_OWNER_MODULE, Owner>();
+        internal static Owner GetOwningModuleUDP6(MIB_UDP6ROW_OWNER_MODULE row)
+        {
+            Owner ret;
+            if (ownerCache.TryGetValue(row, out ret))
+            {
+                return ret;
+            }
+            
+            IntPtr buffer = IntPtr.Zero;
+            try
+            {
+                int buffSize = 0;
+                GetOwnerModuleFromUdp6Entry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
+                buffer = Marshal.AllocHGlobal(buffSize);
+
+                var resp = GetOwnerModuleFromUdp6Entry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, buffer, ref buffSize);
+                if (resp == 0)
+                {
+                    ret = new Owner((TCPIP_OWNER_MODULE_BASIC_INFO)Marshal.PtrToStructure(buffer, typeof(TCPIP_OWNER_MODULE_BASIC_INFO)));
+                }
+                else if (resp != 1168) // Ignore closed connections 
+                {
+                    LogHelper.Error("Unable to get the connection owner.", new Win32Exception((int)resp));
+                }
+
+                ownerCache.Add(row, ret);
+
+                return ret;
             }
             finally
             {

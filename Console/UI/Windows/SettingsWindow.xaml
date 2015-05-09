@@ -36,7 +36,7 @@
                         </Grid>
                     </Button>
                     <Label Content="External libraries and components" Background="LightGray" FontWeight="Bold" />
-                    <TextBlock TextAlignment="Justify" Margin="0,10" TextWrapping="Wrap" Text="Windows Firewall Notifier uses the free 'Blueberry Basic' icon pack by icojam (http://www.icojam.com). All other functions have been developed by WFN developer for the community." />
+                    <TextBlock TextAlignment="Justify" Margin="0,10" TextWrapping="Wrap" Text="Windows Firewall Notifier uses XAML icons from http://modernuiicons.com and http://materialdesignicons.com." />
                 </StackPanel>
             </TabItem>
             <TabItem Header="Notifications settings">
