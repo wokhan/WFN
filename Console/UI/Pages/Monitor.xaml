@@ -58,32 +58,32 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
                 <ColumnDefinition Width="2" />
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <ScrollViewer Grid.Column="0" x:Name="scroller" VirtualizingPanel.ScrollUnit="Pixel" Padding="0,0,240,0" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">
-                <DockPanel>
-                    <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding Xs}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Rows="1" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Label Content="{Binding}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                    <ItemsControl DockPanel.Dock="Left" ItemsSource="{Binding Ys}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="1" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Label Content="{Binding}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+            <DockPanel>
+                <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding Xs}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="1" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Label Content="{Binding}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <ItemsControl DockPanel.Dock="Left" ItemsSource="{Binding Ys}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="1" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Label Content="{Binding}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Grid>
                     <ItemsControl x:Name="chartZone" ItemsSource="{Binding Series}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -108,14 +108,29 @@ Closed connections (in orange) will remain displayed a few seconds before disapp
                                             </Style.Triggers>
                                         </Style>
                                     </Canvas.Resources>
-                                    <Polyline x:Name="poly1" MouseEnter="poly1_MouseEnter" Tag="{Binding}" Points="{Binding PointsOut,Converter={StaticResource ObservablePointCollectionConverter},ConverterParameter=poly1}" ToolTip="{Binding Name}" Stroke="{Binding Brush}" />
-                                    <Polyline StrokeDashArray="2" Opacity="0.5" MouseEnter="poly1_MouseEnter" Tag="{Binding}"  StrokeDashCap="Round" Points="{Binding PointsIn,Converter={StaticResource ObservablePointCollectionConverter},ConverterParameter=poly1}" ToolTip="{Binding Name}" Stroke="{Binding Brush}" />
+                                    <Polyline x:Name="poly1"  MouseEnter="poly1_MouseEnter" Tag="{Binding}" ToolTip="{Binding Name}" Stroke="{Binding Brush}">
+                                        <Polyline.Points>
+                                            <MultiBinding Converter="{StaticResource ObservablePointCollectionConverter}">
+                                                <Binding Path="PointsOut" />
+                                                <Binding ElementName="chartZone" />
+                                            </MultiBinding>
+                                        </Polyline.Points>
+                                    </Polyline>
+                                    <Polyline StrokeDashArray="2" Opacity="0.5" MouseEnter="poly1_MouseEnter" Tag="{Binding}" StrokeDashCap="Round" ToolTip="{Binding Name}" Stroke="{Binding Brush}">
+                                        <Polyline.Points>
+                                            <MultiBinding Converter="{StaticResource ObservablePointCollectionConverter}">
+                                                <Binding Path="PointsIn" />
+                                                <Binding ElementName="chartZone" />
+                                            </MultiBinding>
+                                        </Polyline.Points>
+                                    </Polyline>
                                 </Canvas>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                </DockPanel>
-            </ScrollViewer>
+                    <Line X1="{Binding CurrentX}" X2="{Binding CurrentX}" Y2="{Binding ActualHeight, ElementName=chartZone}" StrokeThickness="1" Stroke="Red" />
+                </Grid>
+            </DockPanel>
             <GridSplitter Grid.Column="1" />
             <ListView Grid.Column="2" SelectionMode="Single" Background="Transparent" ScrollViewer.VerticalScrollBarVisibility="Visible" Width="220" Opacity="0.7" BorderThickness="2,0,0,0" ItemsSource="{Binding Series}">
                 <ListView.Resources>

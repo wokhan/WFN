@@ -19,7 +19,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         }
 
         public string LastIn { get { return CommonHelper.FormatBytes(PointsIn.Last().Y); } }
-
         public string LastOut { get { return CommonHelper.FormatBytes(PointsOut.Last().Y); } }
 
         private ObservableCollection<Point> _pointsOut = new ObservableCollection<Point>();

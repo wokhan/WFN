@@ -4,21 +4,24 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.BindingConverters
 {
     [ValueConversion(typeof(ObservableCollection<Point>), typeof(PointCollection))]
-    public class ObservablePointCollectionConverter : IValueConverter
+    public class ObservablePointCollectionConverter : IMultiValueConverter
     {
         private Dictionary<ObservableCollection<Point>, PointCollection> pointMap = new Dictionary<ObservableCollection<Point>, PointCollection>();
 
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
 
-            var src = (ObservableCollection<Point>)value;
-            return new PointCollection(src);
+            var src = (ObservableCollection<Point>)values[0];
+            var chartZone = (Control)values[1];
+            
+            return new PointCollection(src.Skip(src.Count - ((int)chartZone.ActualWidth / 2 + 1)).OrderBy(s => s.X));//.Reverse().Take((int)chartZone.ActualWidth / 2).Reverse());
 
             PointCollection ret;
             if (pointMap.TryGetValue(src, out ret))
@@ -76,7 +79,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.BindingConverters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
         {
             return null;
         }

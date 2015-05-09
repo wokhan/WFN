@@ -19,9 +19,16 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// </summary>
     public partial class Monitor : Page, INotifyPropertyChanged
     {
-        public List<Color> ColorsDic = typeof(Colors).GetProperties().Select(m => m.GetValue(null)).Cast<Color>().Where(c => c.A > 150 && c.R < 150 && c.G < 150 && c.B < 150).ToList();
+        public List<Color> ColorsDic = typeof(Colors).GetProperties().Select(m => m.GetValue(null)).Cast<Color>().Where(c => c.A > 200 && c.R < 150 && c.G < 150 && c.B < 150).ToList();
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private double _currentX;
+        public double CurrentX
+        {
+            get { return chartZone != null ? (_currentX / 100) % chartZone.ActualWidth : 0; }
+            set { _currentX = value; NotifyPropertyChanged("CurrentX"); }
+        }
 
         private void NotifyPropertyChanged(string caller)
         {
@@ -48,7 +55,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         }
 
         private bool _isSingleMode;
-        public bool IsSingleMode 
+        public bool IsSingleMode
         {
             get { return _isSingleMode; }
             set { _isSingleMode = value; NotifyPropertyChanged("IsSingleMode"); }
@@ -80,17 +87,21 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         public Monitor()
         {
             InitializeComponent();
-
             timer.Interval = TimeSpan.FromSeconds(Interval);
             timer.Tick += timer_Tick;
+
+            this.Loaded += Monitor_Loaded;
+        }
+
+        void Monitor_Loaded(object sender, RoutedEventArgs e)
+        {
             Dispatcher.InvokeAsync(() => timer_Tick(null, null));
         }
 
-        double currentX = -1;
-
+        DateTime start = DateTime.Now;
         private void timer_Tick(object sender, EventArgs e)
         {
-            currentX += 1;
+            CurrentX = DateTime.Now.Subtract(start).TotalMilliseconds;
 
             // Boxing + unboxing operation has a cost, should be avoided... Will have a look at that later.
             var tcpc = TCPHelper.GetAllTCPConnections()
@@ -100,13 +111,13 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             if (Socket.OSSupportsIPv6)
             {
                 tcpc = tcpc.Concat(TCP6Helper.GetAllTCP6Connections()
-                                             .Where(co => co.RemoteAddress != "::" &&  co.OwnerModule != null)
+                                             .Where(co => co.RemoteAddress != "::" && co.OwnerModule != null)
                                              .Select(c => new { c.OwnerModule.ModuleName, Obj = (object)c }));
             }
 
-             var conn = tcpc.GroupBy(c => c.ModuleName);
+            var conn = tcpc.GroupBy(c => c.ModuleName);
             //var conn6 = TCP6Helper.GetAllTCP6Connections().Where(co => co.OwnerModule != null).GroupBy(c => c.OwnerModule.ModuleName);
-            
+
             for (int i = Series.Count - 1; i > 0; i--)
             {
                 var s = Series[i];
@@ -116,7 +127,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     //Series.RemoveAt(i);
                 }
             }
-            
+
             foreach (var c in conn)//.Where(co => co.Key == "firefox.exe"))
             {
                 var existing = Series.FirstOrDefault(s => s.Name == c.Key);
@@ -153,12 +164,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
                 existing.ConnectionsCount = cnt;
 
-                existing.PointsOut.Add(new Point(GetX(currentX), GetY(sumOut)));
-                existing.PointsIn.Add(new Point(GetX(currentX), GetY(sumIn)));
+                existing.PointsOut.Add(new Point(CurrentX, GetY(sumOut)));
+                existing.PointsIn.Add(new Point(CurrentX, GetY(sumIn)));
             }
         }
 
-        private double lastScale= 0;
+        private double lastScale = 0;
         private double GetY(double value)
         {
             value = (chartZone.ActualHeight / Math.Log10(300000000) * Math.Log10(value));
@@ -171,18 +182,13 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             return value;
         }
 
-        private double GetX(double value)
-        {
-            return value * 2;
-        }
-
         private void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (e.WidthChanged)
+            /*if (e.WidthChanged)
             {
                 var offset = e.NewSize.Width - e.PreviousSize.Width;
                 scroller.ScrollToHorizontalOffset(scroller.HorizontalOffset + offset);
-            }
+            }*/
         }
 
         private void poly1_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)

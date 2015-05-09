@@ -52,6 +52,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             
             timer.Interval = TimeSpan.FromSeconds(Interval);
             timer.Tick += timer_Tick;
+
+            this.Loaded += Connections_Loaded;
+        }
+
+        void Connections_Loaded(object sender, RoutedEventArgs e)
+        {
             Dispatcher.InvokeAsync(() => timer_Tick(null, null));
         }
 

@@ -13,6 +13,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.DummyData
             set { _series = value; }
         }
 
+        public int CurrentX { get { return 20; } }
         public List<int> Xs { get { return new List<int>() { 0, 10, 20 }; } }
 
         public List<int> Ys { get { return new List<int>() { 0, 10, 20 }; } }
