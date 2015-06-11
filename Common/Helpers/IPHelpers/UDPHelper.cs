@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Net;
 using System.Runtime.InteropServices;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
 {
-    public class UDPHelper : BaseHelper
+    public class UDPHelper : IPHelper
     {
         [DllImport("iphlpapi.dll", SetLastError = true)]
         public static extern uint GetOwnerModuleFromUdpEntry(ref MIB_UDPROW_OWNER_MODULE pUdpEntry, TCPIP_OWNER_MODULE_INFO_CLASS Class, IntPtr Buffer, ref int pdwSize);
@@ -30,26 +31,29 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]//, FieldOffset(4)]
             byte[] _localPort;
             //[FieldOffset(8)]
-            public uint _owningPid;
+            uint _owningPid;
             //[FieldOffset(16)]
             long _creationTime;
             //[FieldOffset(24)]
             //public int SpecificPortBind;
             //[FieldOffset(24)]
-            public int Flags;
+            int _flags;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)] //FieldOffset(32), 
-            public ulong[] OwningModuleInfo;
+            ulong[] _owningModuleInfo;
+
+            public byte[] RemoteAddrBytes { get { return new byte[0]; } }
 
             public MIB_TCP_STATE State { get { return MIB_TCP_STATE.NOT_APPLICABLE; } }
             public uint OwningPid { get { return _owningPid; } }
             public string LocalAddress { get { return GetAddressAsString(_localAddr); } }
             public int LocalPort { get { return GetRealPort(_localPort); } }
             public Owner OwnerModule { get { return GetOwningModuleUDP(this); } }
-            public DateTime CreationTime { get { return _creationTime == 0 ? DateTime.MinValue : DateTime.FromFileTime(_creationTime); } }
+            public string Protocol { get { return "UDP"; } }
+            public DateTime? CreationTime { get { return _creationTime == 0 ? (DateTime?)null : DateTime.FromFileTime(_creationTime); } }
             public string RemoteAddress { get { return String.Empty; } }
             public int RemotePort { get { return -1; } }
+            public bool IsLoopback { get { return IPAddress.IsLoopback(IPAddress.Parse(RemoteAddress)); } }
         }
-
 
         [StructLayout(LayoutKind.Sequential)]
         private struct MIB_UDPTABLE_OWNER_MODULE
@@ -63,18 +67,18 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         /// 
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<MIB_UDPROW_OWNER_MODULE> GetAllUDPConnections()
+        public static IEnumerable<I_OWNER_MODULE> GetAllUDPConnections()
         {
             IntPtr buffTable = IntPtr.Zero;
 
             try
             {
                 int buffSize = 0;
-                GetExtendedUdpTable(IntPtr.Zero, ref buffSize, true, AF_INET.IP4, UDP_TABLE_CLASS.UDP_TABLE_OWNER_MODULE, 0);
+                GetExtendedUdpTable(IntPtr.Zero, ref buffSize, false, AF_INET.IP4, UDP_TABLE_CLASS.UDP_TABLE_OWNER_MODULE, 0);
 
                 buffTable = Marshal.AllocHGlobal(buffSize);
 
-                uint ret = GetExtendedUdpTable(buffTable, ref buffSize, true, AF_INET.IP4, UDP_TABLE_CLASS.UDP_TABLE_OWNER_MODULE, 0);
+                uint ret = GetExtendedUdpTable(buffTable, ref buffSize, false, AF_INET.IP4, UDP_TABLE_CLASS.UDP_TABLE_OWNER_MODULE, 0);
                 if (ret == 0)
                 {
                     MIB_UDPTABLE_OWNER_MODULE tab = (MIB_UDPTABLE_OWNER_MODULE)Marshal.PtrToStructure(buffTable, typeof(MIB_UDPTABLE_OWNER_MODULE));
@@ -104,7 +108,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             }
         }
 
-
         private static Dictionary<MIB_UDPROW_OWNER_MODULE, Owner> ownerCache = new Dictionary<MIB_UDPROW_OWNER_MODULE, Owner>();
         internal static Owner GetOwningModuleUDP(MIB_UDPROW_OWNER_MODULE row)
         {
@@ -113,7 +116,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             {
                 return ret;
             }
-            
+
             IntPtr buffer = IntPtr.Zero;
             try
             {

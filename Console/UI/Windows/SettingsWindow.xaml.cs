@@ -14,6 +14,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
     {
         public Version Version { get { return Assembly.GetExecutingAssembly().GetName().Version; } }
         public string ProductName { get { return Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyProductAttribute>().Product; } }
+        
+        public bool IsInstalled {  get { return InstallHelper.IsInstalled(); } }
 
         public SettingsWindow()
         {
@@ -27,18 +29,16 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
         
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
-            if (false)
+
+            if (!IsInstalled && rbEnable.IsChecked.Value)
             {
-                if (rbEnable.IsChecked.Value)
-                {
-                    InstallHelper.EnableProgram(Settings.Default.EnableFor == 1);
-                }
-                else if (InstallHelper.IsInstalled())
-                {
-                    InstallHelper.RemoveProgram(chkReallowOut.IsChecked.Value, chkDisableLog.IsChecked.Value, callback, callback);
-                }
-            } 
-            
+                InstallHelper.EnableProgram(Settings.Default.EnableFor == 1);
+            }
+            else if (IsInstalled && rbDisable.IsChecked.Value)
+            {
+                InstallHelper.RemoveProgram(chkReallowOut.IsChecked.Value, chkDisableLog.IsChecked.Value, callback, callback);
+            }
+
             Settings.Default.Save();
         }
 

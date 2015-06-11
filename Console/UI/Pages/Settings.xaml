@@ -1,0 +1,77 @@
+﻿<Page x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="600"
+      Title="Settings" DataContext="{Binding RelativeSource={RelativeSource Self}}" Margin="10,10,0,10">
+    <DockPanel>
+        <WrapPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center">
+            <Button Content="OK" Width="75" x:Name="btnOK" Margin="10" Click="btnOK_Click" />
+            <Button Content="Cancel" Width="75" x:Name="btnCancel" Margin="10" Click="btnCancel_Click" />
+        </WrapPanel>
+        <ScrollViewer>
+            <StackPanel>
+                <Label Content="Notifications (outgoing connections)" Background="LightGray" FontWeight="Bold" />
+                <Border BorderThickness="0" Background="#FFFF7B7B">
+                    <Border.Style>
+                        <Style TargetType="Border" BasedOn="{StaticResource InfoPanel}">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsAdmin}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <WrapPanel>
+                        <Label Content="This feature is only enabled for administrators." />
+                        <Button BorderBrush="LightGray" BorderThickness="1" x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
+                            <Grid>
+                                <Path Height="16" HorizontalAlignment="Left" Stretch="Uniform" Fill="#FF5353F7" Data="{StaticResource Image_Shield}" />
+                                <Label Margin="15,0,0,0" Content="restart as admin" />
+                            </Grid>
+                        </Button>
+                    </WrapPanel>
+                </Border>
+                <StackPanel Margin="0,10,0,0"  IsEnabled="{Binding IsAdmin}">
+                    <TextBlock TextWrapping="Wrap" TextAlignment="Justify" Text="By default, Windows allows all and every outgoing connections without asking for the user's consent, which obviously induces a security risk. Enabling the outgoing connections filter implies that some security settings will be strengthened (those settings can be restored to their default values when disabling WFN)." />
+                    <GroupBox Padding="20,10" Margin="10" BorderThickness="0">
+                        <GroupBox.Header>
+                            <RadioButton HorizontalAlignment="Stretch" FontWeight="Bold" IsChecked="{Binding IsInstalled, Mode=OneTime}" GroupName="rbEnable" x:Name="rbEnable" Content="Enable the notifications" />
+                        </GroupBox.Header>
+                        <StackPanel IsEnabled="{Binding IsChecked,ElementName=rbEnable}">
+                            <WrapPanel Margin="0,0,0,10">
+                                <Label Content="Enable for: " />
+                                <ComboBox IsEditable="False" SelectedIndex="{Binding EnableFor, Source={StaticResource WFNSettings}}">
+                                    <ComboBoxItem Content="the current user" />
+                                    <ComboBoxItem Content="everyone" />
+                                </ComboBox>
+                            </WrapPanel>
+                            <CheckBox Content="Use an animated notification" Margin="0,0,0,10" IsChecked="{Binding UseAnimation, Source={StaticResource WFNSettings}}" />
+                            <CheckBox Content="Create a blocking rule instead of using an exceptions list" Margin="0,0,0,5" IsChecked="{Binding UseBlockRules, Source={StaticResource WFNSettings}}" />
+                            <TextBlock Margin="30,0,0,10" Text="This option allows the blocked applications to stay blocked even if you disable WFN notifications, by creating a blocking rule in the Windows embedded firewall." TextWrapping="Wrap" />
+                            <CheckBox Content="Enable services detection" IsChecked="{Binding EnableServiceDetection, Source={StaticResource WFNSettings}}" />
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Padding="20,10" Margin="10,0,10,10" BorderThickness="0">
+                        <GroupBox.Header>
+                            <RadioButton FontWeight="Bold" IsChecked="{Binding IsInstalled,Mode=OneTime,Converter={StaticResource booleanNegator}}" GroupName="rbEnable" x:Name="rbDisable" VerticalContentAlignment="Top" Content="Do not enable the notifications" />
+                        </GroupBox.Header>
+                        <StackPanel IsEnabled="{Binding IsChecked,ElementName=rbDisable}">
+                            <TextBlock Text="You will still be able to use Windows Firewall Notifier console, but will not get any notification and will not allow outgoing connections filtering.
+Please note that you will be able to do it later through the Options panel." TextAlignment="Justify" TextWrapping="Wrap" Margin="0,0,0,10"/>
+                            <CheckBox x:Name="chkReallowOut" Content="Reallow unknown outgoing connections (default)" />
+                            <TextBlock TextWrapping="Wrap" Text="Note: All blocking rules you created either manually or using this application will still be active." Margin="30,0,0,10" />
+                            <CheckBox x:Name="chkDisableLog" Content="Disable the Windows firewall outgoing connections log (default)" />
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+                <Label Margin="0,0,0,10" Content="Miscellaneous options" Background="LightGray" FontWeight="Bold" />
+                <CheckBox Content="Minimize the console to the system tray instead of the taskbar." IsChecked="{Binding MinimizeToTray, Source={StaticResource WFNSettings}}" />
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Page>

@@ -229,17 +229,17 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             /// </summary>
             /// <param name="nET_FW_RULE_DIRECTION_"></param>
             /// <returns></returns>
-            private static string getDirection(NetFwTypeLib.NET_FW_RULE_DIRECTION_ nET_FW_RULE_DIRECTION_)
+            private static string getDirection(NET_FW_RULE_DIRECTION_ nET_FW_RULE_DIRECTION_)
             {
                 switch (nET_FW_RULE_DIRECTION_)
                 {
-                    case NetFwTypeLib.NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_IN:
+                    case NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_IN:
                         return Resources.FW_DIR_IN;
 
-                    case NetFwTypeLib.NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT:
+                    case NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT:
                         return Resources.FW_DIR_OUT;
 
-                    case NetFwTypeLib.NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_MAX:
+                    case NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_MAX:
                         return Resources.FW_DIR_BOTH;
 
                     default:
@@ -253,14 +253,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             /// </summary>
             /// <param name="nET_FW_ACTION_"></param>
             /// <returns></returns>
-            private static string getAction(NetFwTypeLib.NET_FW_ACTION_ nET_FW_ACTION_)
+            private static string getAction(NET_FW_ACTION_ nET_FW_ACTION_)
             {
                 switch (nET_FW_ACTION_)
                 {
-                    case NetFwTypeLib.NET_FW_ACTION_.NET_FW_ACTION_ALLOW:
+                    case NET_FW_ACTION_.NET_FW_ACTION_ALLOW:
                         return Resources.FW_RULE_ALLOW;
 
-                    case NetFwTypeLib.NET_FW_ACTION_.NET_FW_ACTION_BLOCK:
+                    case NET_FW_ACTION_.NET_FW_ACTION_BLOCK:
                         return Resources.FW_RULE_BLOCK;
 
                     default:
@@ -597,35 +597,36 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return (protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP || protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_UDP);
         }
 
-        public static bool CheckIfBlockingRuleMatches(string path, string protocol, string targetPort, string localport, string[] svc, bool unsure)
+        public static IEnumerable<Rule> GetMatchingRules(string path, string protocol, string target, string targetPort, string localport, IEnumerable<string> svc, bool blockOnly)
         {
-            return FirewallHelper.GetRules()
-                                 .Any(r => r.Action == NetFwTypeLib.NET_FW_ACTION_.NET_FW_ACTION_BLOCK
-                                           && !unsure 
-                                           && FirewallHelper.RuleMatches(r, path, svc != null && svc.Length > 0 ? svc[0] : null, protocol, localport, targetPort));
+            var ret = GetRules().Where(r => RuleMatches(r, path, svc, protocol, localport, target, targetPort));
+            if (blockOnly)
+            {
+                ret = ret.Where(r => r.Action == NET_FW_ACTION_.NET_FW_ACTION_BLOCK);
+            }
+
+            return ret;
         }
 
 
-        public static bool RuleMatches(Rule r, string path, string svc, string protocol, string localport, string remoteport)
+        public static bool RuleMatches(Rule r, string path, IEnumerable<string> svc, string protocol, string localport, string target, string remoteport)
         {
-            bool ret = r.Enabled &&
-                               (((r.Profiles & GetCurrentProfile()) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0)) &&
-                               (String.IsNullOrEmpty(r.ApplicationName) || StringComparer.CurrentCultureIgnoreCase.Compare(r.ApplicationName, path) == 0) &&
-                               ((String.IsNullOrEmpty(r.serviceName) && String.IsNullOrEmpty(svc)) || StringComparer.CurrentCultureIgnoreCase.Compare(svc, r.serviceName) == 0) &&
-                               (r.Protocol == (int)NetFwTypeLib.NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY || r.Protocol.ToString() == protocol) &&
-                               (String.IsNullOrEmpty(r.RemotePorts) || r.RemotePorts == "*" || r.RemotePorts.Contains(remoteport)) &&
-                               (String.IsNullOrEmpty(r.LocalPorts) || r.LocalPorts == "*" || r.LocalPorts.Contains(localport));
-            string det;
-            if (ret)
-            {
-                det = String.Format("Enabled:{0}\r\nAppName:{1}\r\nService:{2}\r\nProtocol:{3}\r\nRPorts:{4}\r\nLPorts:{5}", r.Enabled,
-                       (String.IsNullOrEmpty(r.ApplicationName) || StringComparer.CurrentCultureIgnoreCase.Compare(r.ApplicationName, path) == 0),
-                       ((String.IsNullOrEmpty(r.serviceName) && String.IsNullOrEmpty(svc)) || StringComparer.CurrentCultureIgnoreCase.Compare(svc, r.serviceName) == 0),
-                       (r.Protocol == (int)NetFwTypeLib.NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY || r.Protocol.ToString() == protocol),
-                       (String.IsNullOrEmpty(r.RemotePorts) || r.RemotePorts == "*" || r.RemotePorts.Contains(remoteport)),
-                       (String.IsNullOrEmpty(r.LocalPorts) || r.LocalPorts == "*" || r.LocalPorts.Contains(localport)));
-            }
+            bool ret = r.Enabled
+                       && (((r.Profiles & GetCurrentProfile()) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0))
+                       && (String.IsNullOrEmpty(r.ApplicationName) || StringComparer.CurrentCultureIgnoreCase.Compare(r.ApplicationName, path) == 0)
+                       && ((String.IsNullOrEmpty(r.serviceName) && (svc == null || !svc.Any())) || svc.Contains(r.serviceName, StringComparer.CurrentCultureIgnoreCase))
+                       && (r.Protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY || r.Protocol.ToString() == protocol)
+                       && CheckRuleMultivalue(r.RemoteAddresses, target)
+                       && CheckRuleMultivalue(r.RemotePorts, remoteport)
+                       && CheckRuleMultivalue(r.LocalPorts, localport);
+
             return ret;
+        }
+
+
+        private static bool CheckRuleMultivalue(string rulePorts, string checkedport)
+        {
+            return String.IsNullOrEmpty(rulePorts) || rulePorts == "*" || rulePorts.Split(',').Contains(checkedport);
         }
 
         public static bool CreateDefaultRules()

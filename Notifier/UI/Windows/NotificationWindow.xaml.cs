@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
+using System.Windows.Media.Animation;
 using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
@@ -19,22 +14,25 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
     /// <summary>
     /// Interaction logic for NotificationWindow.xaml
     /// </summary>
-    public partial class NotificationWindow : Window
+    public partial class NotificationWindow : Window, INotifyPropertyChanged
     {
         public double StartLeft
         {
-            get { return SystemParameters.PrimaryScreenWidth; }
+            get { return SystemParameters.WorkArea.Width; }
         }
 
         public double ExpectedTop
         {
-            get { return SystemParameters.PrimaryScreenHeight - this.Height; }
+            get { return SystemParameters.WorkArea.Height - this.ActualHeight; }
         }
 
         public double ExpectedLeft
         {
-            get { return SystemParameters.PrimaryScreenWidth - this.Width; }
+            get { return SystemParameters.WorkArea.Width - this.ActualWidth; }
         }
+
+        public int NbConnectionsAfter { get { return lstConnections != null ? lstConnections.Items.Count - lstConnections.SelectedIndex + 1 : 0; } }
+        public int NbConnectionsBefore { get { return lstConnections != null ? lstConnections.SelectedIndex : 0; } }
 
         public class OptionsViewClass
         {
@@ -50,11 +48,21 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         private OptionsViewClass _optionsView = new OptionsViewClass();
         public OptionsViewClass OptionsView { get { return _optionsView; } }
 
-        
+
         public string CurrentProfile { get { return FirewallHelper.GetCurrentProfileAsText(); } }
 
 
         private ToolTip ttip = new ToolTip();
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
 
         /// <summary>
         /// Initializes the form
@@ -68,17 +76,34 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             InitializeComponent();
 
+            lstConnections.SelectionChanged += LstConnections_SelectionChanged;
             lstConnections.SelectedIndex = 0;
 
+            this.Loaded += NotificationWindow_Loaded;
+
             this.Show();
-            this.Activate();
-            
+            //this.Activate();
+
             /*ttip.SetToolTip(btnAlwaysAllow, Resources.MSG_ALLOW);
             ttip.SetToolTip(btnAlwaysBlock, Resources.MSG_BLOCK);
             */
         }
 
-        
+        private void LstConnections_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            NotifyPropertyChanged("NbConnectionsAfter");
+            NotifyPropertyChanged("NbConnectionsBefore");
+        }
+
+        private void NotificationWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.Top = ExpectedTop;
+            this.Left = ExpectedLeft;
+           
+            ((Storyboard)this.Resources["animate"]).Begin(Main);
+        }
+
+
         /// <summary>
         /// Updates all controls contents according to the currently selected blocked connection
         /// </summary>
@@ -189,7 +214,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
             else
             {
-                MessageBox.Show(_optionsView.IsTempRuleChecked ? Wokhan.WindowsFirewallNotifier.Common.Resources.MSG_RULE_TMP_FAILED : Wokhan.WindowsFirewallNotifier.Common.Resources.MSG_RULE_FAILED, Wokhan.WindowsFirewallNotifier.Common.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(_optionsView.IsTempRuleChecked ? Common.Resources.MSG_RULE_TMP_FAILED : Common.Resources.MSG_RULE_FAILED, Common.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -267,7 +292,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 if (((App)Application.Current).Connections.Count == 0)
                 {
                     this.Close();
-                }
+                } 
             }
         }
 
@@ -290,7 +315,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void btnMin_Click(object sender, RoutedEventArgs e)
         {
-            this.WindowState = System.Windows.WindowState.Minimized;
+            this.WindowState = WindowState.Minimized;
         }
 
         public void lblService_Click(object sender, RoutedEventArgs e)
@@ -302,53 +327,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             try
             {
-                Process.Start(System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "WFN.exe"));
+                Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "WFN.exe"));
             }
             catch { }
-        }
-
-        //private int exHeight = -1;
-        private void btnAdvanced_Expand(object sender, RoutedEventArgs e)
-        {
-            //int targetHeight;
-            //int localexHeight = this.Height;
-            //if (exHeight == -1)
-            //{
-            //    exHeight = this.Height;
-            //    targetHeight = this.Height + pnlHeader.Height;
-            //    pnlMain.Height = targetHeight;
-
-            //    Settings.Default.AlwaysShowDetails = true;
-            //}
-            //else
-            //{
-            //    targetHeight = exHeight;
-            //    exHeight = -1;
-
-            //    Settings.Default.AlwaysShowDetails = false;
-            //}
-
-            //int targetTop = Screen.PrimaryScreen.WorkingArea.Bottom - targetHeight;
-            //int startTop = this.Top;
-            //int i = 1;
-            //while (i < 20)
-            //{
-            //    //this.Height += (targetHeight - localexHeight) / 20;// (int)QuadEaseInOut(targetHeight, exHeight, 2, 20);
-            //    this.Height = (int)CommonHelper.easeInOut(i, localexHeight, targetHeight - localexHeight, 20);
-            //    this.Top = (int)CommonHelper.easeInOut(i, startTop, targetTop - startTop, 20); ;
-
-            //    Application.DoEvents();
-
-            //    // I know, should rely on a timer for animations, feel free to change that one (yep, that one is a dup :-P)...
-            //    Thread.Sleep(10);
-
-            //    i++;
-            //}
-
-            //pnlMain.Height = targetHeight;
-
-            Settings.Default.Save();
-
         }
 
         private void ctxtCopy_Click(object sender, RoutedEventArgs e)
@@ -362,6 +343,15 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         private void btnSkipAll_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+
+
+        private void expand_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            this.Top = ExpectedTop;
+
+            Settings.Default.Save();
         }
     }
 }

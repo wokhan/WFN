@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Net;
 using System.Runtime.InteropServices;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
@@ -28,15 +29,18 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)] //FieldOffset(32), 
             public ulong[] OwningModuleInfo;
 
+            public byte[] RemoteAddrBytes { get { return new byte[0]; } }
             public MIB_TCP_STATE State { get { return MIB_TCP_STATE.NOT_APPLICABLE; } }
             public uint OwningPid { get { return _owningPid; } }
             public string LocalAddress { get { return GetRealAddress(_localAddress); } }
             public int LocalPort { get { return GetRealPort(_localPort); } }
             public Owner OwnerModule { get { return GetOwningModuleUDP6(this); } }
+            public string Protocol { get { return "UDP"; } }
             public string RemoteAddress { get { return String.Empty; } }
             public int RemotePort { get { return -1; } }
-            public DateTime CreationTime { get { return _creationTime == 0 ? DateTime.MinValue : DateTime.FromFileTime(_creationTime); } }
-        }
+            public DateTime? CreationTime { get { return _creationTime == 0 ? (DateTime?)null : DateTime.FromFileTime(_creationTime); } }
+            public bool IsLoopback { get { return IPAddress.IsLoopback(IPAddress.Parse(RemoteAddress)); } }
+}
 
         [StructLayout(LayoutKind.Sequential)]
         private struct MIB_UDP6TABLE_OWNER_MODULE
@@ -50,7 +54,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         /// 
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<MIB_UDP6ROW_OWNER_MODULE> GetAllUDP6Connections()
+        public static IEnumerable<I_OWNER_MODULE> GetAllUDP6Connections()
         {
             IntPtr buffTable = IntPtr.Zero;
 
@@ -98,7 +102,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             {
                 return ret;
             }
-            
+
             IntPtr buffer = IntPtr.Zero;
             try
             {

@@ -45,6 +45,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             timer.Tick += timer_Tick;
 
             this.Loaded += EventsLog_Loaded;
+            this.Unloaded += EventsLog_Unloaded;
+        }
+
+        private void EventsLog_Unloaded(object sender, RoutedEventArgs e)
+        {
+            timer.Stop();
         }
 
         void EventsLog_Loaded(object sender, RoutedEventArgs e)
