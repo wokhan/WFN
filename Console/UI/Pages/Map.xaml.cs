@@ -89,6 +89,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         async void Map_Loaded(object sender, RoutedEventArgs e)
         {
+            if (!GeoConnection.CheckDB())
+            {
+                MessageBox.Show("The IP database cannot be found. The Map feature is disabled.", "Missing database");
+                return;
+            }
             var ok = await GeoConnection.InitCache();
 
             initialPoint.SetValue(MapLayer.PositionProperty, CurrentCoordinates);

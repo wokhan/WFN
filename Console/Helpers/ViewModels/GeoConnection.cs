@@ -224,19 +224,17 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
         }
 
+        public static bool CheckDB()
+        {
+            return File.Exists(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "IPDatabase.gz"));
+        }
+
         public static async Task<bool> InitCache()
         {
             return await Task.Run(() =>
             {
-                using (var file = new FileStream("D:\\Downloads\\IPDatabase.gz", FileMode.Open))
+                using (var file = new FileStream(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "IPDatabase.gz"), FileMode.Open))
                 {
-                    /*var x = new FileStream("D:\\Downloads\\IPDatabase.gz", FileMode.CreateNew);
-
-                    using (var gzc = new GZipStream(x, CompressionLevel.Optimal, false))
-                    {
-                        file.CopyTo(gzc);
-                    }
-                    */
                     using (var gz = new GZipStream(file, CompressionMode.Decompress))
                     {
                         using (var sr = new StreamReader(gz))
