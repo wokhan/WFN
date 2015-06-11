@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
-using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
+using Wokhan.WindowsFirewallNotifier.Console.UI.Controls;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -19,35 +22,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// </summary>
     public partial class Monitor : Page, INotifyPropertyChanged
     {
-        public List<Color> ColorsDic = typeof(Colors).GetProperties().Select(m => m.GetValue(null)).Cast<Color>().Where(c => c.A > 200 && c.R < 150 && c.G < 150 && c.B < 150).ToList();
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private double _currentX;
-        public double CurrentX
-        {
-            get { return chartZone != null ? (_currentX / 100) % chartZone.ActualWidth : 0; }
-            set { _currentX = value; NotifyPropertyChanged("CurrentX"); }
-        }
-
-        private void NotifyPropertyChanged(string caller)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(caller));
-            }
-        }
-
-        private double lastMax = 0;
-
-        private double transformScaleY = -1;
-
-        public double TransformScaleY
-        {
-            get { return transformScaleY; }
-            set { transformScaleY = value; NotifyPropertyChanged("TransformScaleY"); }
-        }
-
         public bool IsTrackingEnabled
         {
             get { return timer.IsEnabled; }
@@ -58,31 +32,29 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         public bool IsSingleMode
         {
             get { return _isSingleMode; }
-            set { _isSingleMode = value; NotifyPropertyChanged("IsSingleMode"); }
+            set { _isSingleMode = value; _groupedConnections.Clear(); NotifyPropertyChanged("IsSingleMode"); }
         }
 
-        public List<int> Xs { get { return new List<int>() { 0, 10, 20 }; } }
-
-        public List<int> Ys { get { return new List<int>() { 0, 10, 20 }; } }
-
-
-        public List<double> Intervals { get { return new List<double> { 0.05, 0.1, 0.5, 1, 5, 10 }; } }
+        public List<double> Intervals { get { return new List<double> { 0.2, 0.5, 1, 5, 10 }; } }
 
         private DispatcherTimer timer = new DispatcherTimer() { IsEnabled = true };
 
-        private double _interval = 0.5;
+        private double _interval = 1;
         public double Interval
         {
             get { return _interval; }
             set { _interval = value; timer.Interval = TimeSpan.FromSeconds(value); }
         }
 
-        private ObservableCollection<MonitoredConnectionViewModel> _series = new ObservableCollection<MonitoredConnectionViewModel>();
-        public ObservableCollection<MonitoredConnectionViewModel> Series
-        {
-            get { return _series; }
-            set { _series = value; }
-        }
+        //private ObservableCollection<MonitoredConnection> _connectionViews = new ObservableCollection<MonitoredConnection>();
+        //public ObservableCollection<MonitoredConnection> ConnectionViews
+        //{
+        //    get { return _connectionViews; }
+        //    set { _connectionViews = value; }
+        //}
+
+        private ObservableCollection<LineChart.Series> _series = new ObservableCollection<LineChart.Series>();
+        public ObservableCollection<LineChart.Series> Series { get { return _series; } }
 
         public Monitor()
         {
@@ -90,7 +62,25 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             timer.Interval = TimeSpan.FromSeconds(Interval);
             timer.Tick += timer_Tick;
 
+            chart.XMaxStartDelta = 60 * TimeSpan.TicksPerSecond;
+            chart.XFuncConverter = (x) => new DateTime((long)x).ToString(DateTimeFormatInfo.CurrentInfo.LongTimePattern);
+            chart.YFuncConverter = (y) => CommonHelper.FormatBytes(y, "ps");
+
             this.Loaded += Monitor_Loaded;
+            this.Unloaded += Monitor_Unloaded;
+        }
+
+        private void Monitor_Unloaded(object sender, RoutedEventArgs e)
+        {
+            timer.Stop();
+        }
+    
+        private void NotifyPropertyChanged(string caller)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(caller));
+            }
         }
 
         void Monitor_Loaded(object sender, RoutedEventArgs e)
@@ -98,103 +88,106 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             Dispatcher.InvokeAsync(() => timer_Tick(null, null));
         }
 
-        DateTime start = DateTime.Now;
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private ObservableCollection<GroupedView> _groupedConnections = new ObservableCollection<GroupedView>();
+        public ObservableCollection<GroupedView> GroupedConnections { get { return _groupedConnections; } }
+
         private void timer_Tick(object sender, EventArgs e)
         {
-            CurrentX = DateTime.Now.Subtract(start).TotalMilliseconds;
+            var x = DateTime.Now.Ticks;
 
-            // Boxing + unboxing operation has a cost, should be avoided... Will have a look at that later.
-            var tcpc = TCPHelper.GetAllTCPConnections()
-                                .Where(co => co.RemoteAddress != "0.0.0.0" && co.OwnerModule != null)
-                                .Select(c => new { c.OwnerModule.ModuleName, Obj = (object)c });
+            var tcpc = IPHelper.GetAllConnections(true)
+                               .Where(co => co.State == IPHelper.MIB_TCP_STATE.ESTABLISHED && !co.IsLoopback && co.OwnerModule != null)
+                               //.AsParallel()
+                               .Select(c => new MonitoredConnection(c))
+                               .ToList();
 
-            if (Socket.OSSupportsIPv6)
+            //) co.RemoteAddress != "::" && co.RemoteAddress != "0.0.0.0" 
+            Func<MonitoredConnection, string> groupFn;
+            if (_isSingleMode)
             {
-                tcpc = tcpc.Concat(TCP6Helper.GetAllTCP6Connections()
-                                             .Where(co => co.RemoteAddress != "::" && co.OwnerModule != null)
-                                             .Select(c => new { c.OwnerModule.ModuleName, Obj = (object)c }));
+                groupFn = (c) => c.Owner + c.LocalPort;
+            }
+            else
+            {
+                groupFn = (c) => c.ProcName;
             }
 
-            var conn = tcpc.GroupBy(c => c.ModuleName);
-            //var conn6 = TCP6Helper.GetAllTCP6Connections().Where(co => co.OwnerModule != null).GroupBy(c => c.OwnerModule.ModuleName);
+            var groups = tcpc.GroupBy(c => groupFn(c)).ToList(); // OwnerModule.ModuleName).ToList();
 
-            for (int i = Series.Count - 1; i > 0; i--)
+            int ic = 0;
+            foreach (var grp in groups)
             {
-                var s = Series[i];
-                if (!conn.Any(c => c.Key == s.Name))
-                {
-                    s.IsDead = true;
-                    //Series.RemoveAt(i);
-                }
-            }
+                var existing = _groupedConnections.FirstOrDefault(s => s.Name == grp.Key);
 
-            foreach (var c in conn)//.Where(co => co.Key == "firefox.exe"))
-            {
-                var existing = Series.FirstOrDefault(s => s.Name == c.Key);
                 if (existing == null)
                 {
-                    existing = new MonitoredConnectionViewModel() { Name = c.Key, Brush = new SolidColorBrush(ColorsDic[Series.Count]) };
-                    Series.Add(existing);
+                    ic = (ic + 1) % LineChart.ColorsDic.Count;
+
+                    var br = new SolidColorBrush(LineChart.ColorsDic[ic]);
+                    existing = new GroupedView { Name = grp.Key };
+                    existing.Brush = br;
+                    existing.Icon = grp.First().Icon;
+                    existing.SeriesIn = new LineChart.Series() { Name = grp.Key + "_IN", Brush = br };
+                    Series.Add(existing.SeriesIn);
+
+                    var color = new SolidColorBrush(LineChart.ColorsDic[ic]) { Opacity = 0.6 };
+                    existing.SeriesOut = new LineChart.Series() { Name = grp.Key + "_OUT", Brush = color };
+                    Series.Add(existing.SeriesOut);
+
+                    _groupedConnections.Add(existing);
                 }
 
-                double sumIn = 0.0;
-                double sumOut = 0.0;
-                int cnt = 0;
+                bool iserror = false;
+                var totalized = grp.AsParallel()
+                                 .Select(realconn =>
+                                 {
+                                     try { return realconn.EstimateBandwidth(); }
+                                     catch { iserror = true; return new TCPHelper.TCP_ESTATS_BANDWIDTH_ROD_v0 { InboundBandwidth = 0, OutboundBandwidth = 0 }; }
+                                 })
+                                 .Select(co => new { In = co.InboundBandwidth / 8, Out = co.OutboundBandwidth / 8 })
+                                 .Aggregate((ci, co) => new { In = ci.In + co.In, Out = ci.Out + co.Out });
 
-                //var totalized = c.AsParallel()
-                //                 .Select(realconn => realconn.Obj is TCPHelper.MIB_TCPROW_OWNER_MODULE ? TCPHelper.GetTCPBandwidth((TCPHelper.MIB_TCPROW_OWNER_MODULE)realconn.Obj) : TCP6Helper.GetTCPBandwidth((TCP6Helper.MIB_TCP6ROW_OWNER_MODULE)realconn.Obj))
-                //                 .Select(co => new { In = co.InboundBandwidth, Out = co.OutboundBandwidth })
-                //                 .Aggregate((ci, co) => new { In = ci.In + co.In, Out = ci.Out + co.Out });
+                existing.Count = grp.Count();
+                existing.LastIn = CommonHelper.FormatBytes(totalized.In, "ps");
+                existing.LastOut = CommonHelper.FormatBytes(totalized.Out, "ps");
+                existing.SeriesOut.Points.Add(new Point(x, totalized.Out));
+                existing.SeriesIn.Points.Add(new Point(x, totalized.In));
+                existing.IsAccessDenied = iserror;
+                existing.LastSeen = DateTime.Now;
+                //foreach (var realconn in grp)
+                //{
+                //    cnt++;
+                //    try
+                //    {
+                //        var r = realconn.EstimateBandwidth();
+                //        sumIn += r.InboundBandwidth / 8.0;
+                //        sumOut += r.OutboundBandwidth / 8.0;
+                //    }
+                //    catch (Exception exc)
+                //    {
+                //        lastError = exc.Message;
+                //        accessDenied = true;
+                //    }
+                //}
 
-                //cnt = c.Count();
-                //sumIn = totalized.In;
-                //sumOut = totalized.Out;
+                //existing.LastError = lastError;
+                //existing.IsAccessDenied = accessDenied;
+                //existing.ConnectionsCount = cnt;
 
-                foreach (var realconn in c)
-                {
-                    cnt++;
-                    try
-                    {
-                        var r = realconn.Obj is TCPHelper.MIB_TCPROW_OWNER_MODULE ? TCPHelper.GetTCPBandwidth((TCPHelper.MIB_TCPROW_OWNER_MODULE)realconn.Obj) : TCP6Helper.GetTCPBandwidth((TCP6Helper.MIB_TCP6ROW_OWNER_MODULE)realconn.Obj);
-                        sumIn += r.InboundBandwidth;
-                        sumOut += r.OutboundBandwidth;
-                    }
-                    catch { }
-                }
+            }
 
-                existing.ConnectionsCount = cnt;
-
-                existing.PointsOut.Add(new Point(CurrentX, GetY(sumOut)));
-                existing.PointsIn.Add(new Point(CurrentX, GetY(sumIn)));
+            var removableGr = _groupedConnections.Where(gr => DateTime.Now.Subtract(gr.LastSeen).TotalMilliseconds > 1000).ToList();
+            foreach (var g in removableGr)
+            {
+                g.LastIn = "-";
+                g.LastOut = "-";
+                g.Count = 0;
+                g.Brush = new SolidColorBrush(Colors.LightGray);
+                _groupedConnections.Remove(g);
             }
         }
 
-        private double lastScale = 0;
-        private double GetY(double value)
-        {
-            value = (chartZone.ActualHeight / Math.Log10(300000000) * Math.Log10(value));
-            if (value > lastMax)
-            {
-                lastMax = value * 1.5;
-                lastScale = value / lastMax;
-                TransformScaleY = -lastScale;
-            }
-            return value;
-        }
-
-        private void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            /*if (e.WidthChanged)
-            {
-                var offset = e.NewSize.Width - e.PreviousSize.Width;
-                scroller.ScrollToHorizontalOffset(scroller.HorizontalOffset + offset);
-            }*/
-        }
-
-        private void poly1_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            Polyline line = (Polyline)sender;
-            ((MonitoredConnectionViewModel)line.Tag).IsSelected = true;
-        }
     }
 }

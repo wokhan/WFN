@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -57,14 +58,23 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
             public ulong[] OwningModuleInfo;
 
+
+            public byte[] RemoteAddrBytes { get { return _remoteAddress; } }
             public uint OwningPid { get { return _owningPid; } }
             public string LocalAddress { get { return GetRealAddress(_localAddress); } }
             public int LocalPort { get { return GetRealPort(_localPort); } }
             public string RemoteAddress { get { return GetRealAddress(_remoteAddress); } }
             public int RemotePort { get { return GetRealPort(_remotePort); } }
             public Owner OwnerModule { get { return GetOwningModuleTCP6(this); } }
+            public string Protocol { get { return "TCP"; } }
             public MIB_TCP_STATE State { get { return _state; } }
-            public DateTime CreationTime { get { return _creationTime == 0 ? DateTime.MinValue : DateTime.FromFileTime(_creationTime); } }
+            public DateTime? CreationTime { get { return _creationTime == 0 ? (DateTime?)null : DateTime.FromFileTime(_creationTime); } }
+            public bool IsLoopback { get { return IPAddress.IsLoopback(IPAddress.Parse(RemoteAddress)); } }
+
+            public MIB_TCP6ROW ToTCPRow()
+            {
+                return new MIB_TCP6ROW() { _localAddress = _localAddress, _remoteAddress = _remoteAddress, _localPort = _localPort, _remotePort = _remotePort, State = _state };
+            }
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -77,28 +87,28 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         /// <summary>
         /// 
         /// </summary>
-        public static IEnumerable<MIB_TCP6ROW_OWNER_MODULE> GetAllTCP6Connections()
+        public static IEnumerable<I_OWNER_MODULE> GetAllTCP6Connections()
         {
             IntPtr buffTable = IntPtr.Zero;
 
             try
             {
                 int buffSize = 0;
-                GetExtendedTcpTable(IntPtr.Zero, ref buffSize, true, AF_INET.IP6, TCP_TABLE_CLASS.TCP_TABLE_OWNER_MODULE_ALL, 0);
+                GetExtendedTcpTable(IntPtr.Zero, ref buffSize, false, AF_INET.IP6, TCP_TABLE_CLASS.TCP_TABLE_OWNER_MODULE_ALL, 0);
 
                 buffTable = Marshal.AllocHGlobal(buffSize);
 
-                uint ret = GetExtendedTcpTable(buffTable, ref buffSize, true, AF_INET.IP6, TCP_TABLE_CLASS.TCP_TABLE_OWNER_MODULE_ALL, 0);
+                uint ret = GetExtendedTcpTable(buffTable, ref buffSize, false, AF_INET.IP6, TCP_TABLE_CLASS.TCP_TABLE_OWNER_MODULE_ALL, 0);
                 if (ret == 0)
                 {
                     MIB_TCP6TABLE_OWNER_MODULE tab = (MIB_TCP6TABLE_OWNER_MODULE)Marshal.PtrToStructure(buffTable, typeof(MIB_TCP6TABLE_OWNER_MODULE));
-                    IntPtr rowPtr = (IntPtr)((long)buffTable + (long)Marshal.OffsetOf(typeof(MIB_TCP6TABLE_OWNER_MODULE), "FirstEntry"));
+                    long rowPtr = ((long)buffTable + (long)Marshal.OffsetOf(typeof(MIB_TCP6TABLE_OWNER_MODULE), "FirstEntry"));
 
                     MIB_TCP6ROW_OWNER_MODULE current;
                     for (int i = 0; i < tab.NumEntries; i++)
                     {
-                        current = (MIB_TCP6ROW_OWNER_MODULE)Marshal.PtrToStructure(rowPtr, typeof(MIB_TCP6ROW_OWNER_MODULE));
-                        rowPtr = (IntPtr)((long)rowPtr + (long)Marshal.SizeOf(current));
+                        current = (MIB_TCP6ROW_OWNER_MODULE)Marshal.PtrToStructure((IntPtr)rowPtr, typeof(MIB_TCP6ROW_OWNER_MODULE));
+                        rowPtr += Marshal.SizeOf(current);
 
                         yield return current;
                     }
@@ -178,17 +188,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         }
 
 
-        public static TCP_ESTATS_BANDWIDTH_ROD_v0 GetTCPBandwidth(MIB_TCP6ROW_OWNER_MODULE conn)
+        public static TCP_ESTATS_BANDWIDTH_ROD_v0 GetTCPBandwidth(MIB_TCP6ROW row)
         {
             IntPtr rw = IntPtr.Zero;
             IntPtr rod = IntPtr.Zero;
 
             try
             {
-                var row = new MIB_TCP6ROW() { _localAddress = conn._localAddress, _remoteAddress = conn._remoteAddress, _localPort = conn._localPort, _remotePort = conn._remotePort, State = conn._state };
-
-                EnsureStatsAreEnabled(row);
-
                 var rwS = Marshal.SizeOf(typeof(TCP_ESTATS_BANDWIDTH_RW_v0));
                 rw = Marshal.AllocHGlobal(rwS);
 
@@ -202,9 +208,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                 }
 
                 var parsedRW = (TCP_ESTATS_BANDWIDTH_RW_v0)Marshal.PtrToStructure(rw, typeof(TCP_ESTATS_BANDWIDTH_RW_v0));
-                var parsedROD = (TCP_ESTATS_BANDWIDTH_ROD_v0)Marshal.PtrToStructure(rod, typeof(TCP_ESTATS_BANDWIDTH_ROD_v0));
+                if (parsedRW.EnableCollectionInbound != TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled || parsedRW.EnableCollectionOutbound != TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled)
+                {
+                    throw new Exception("Monitoring is disabled for this connection.");
+                }
 
-                return parsedROD;
+                return (TCP_ESTATS_BANDWIDTH_ROD_v0)Marshal.PtrToStructure(rod, typeof(TCP_ESTATS_BANDWIDTH_ROD_v0));
             }
             catch (Win32Exception we)
             {

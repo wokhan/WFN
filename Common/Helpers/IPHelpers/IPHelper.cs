@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using System.Windows.Media;
+using Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
-    public class BaseHelper
+    public class IPHelper
     {
 
         #region Enums
@@ -47,24 +50,21 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         #region Common structs
 
-        /// <summary>
-        /// 
-        /// </summary>
         public interface I_OWNER_MODULE
         {
+            // CHANGE
+            byte[] RemoteAddrBytes { get; }
+
             string RemoteAddress { get; }
-            string LocalAddress { get; }
-
             int RemotePort { get; }
+            string LocalAddress { get; }
             int LocalPort { get; }
-
             Owner OwnerModule { get; }
-
-            DateTime CreationTime { get; }
-
+            string Protocol { get; }
+            DateTime? CreationTime { get; }
             uint OwningPid { get; }
-
-            BaseHelper.MIB_TCP_STATE State { get; }
+            MIB_TCP_STATE State { get; }
+            bool IsLoopback { get; }
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -78,6 +78,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             public string ModuleName;
             public string ModulePath;
+
+            private ImageSource _icon = null;
+            public ImageSource Icon { get { return _icon = _icon ?? ProcessHelper.GetCachedIcon(ModulePath, true); } }
 
             public Owner(TCPIP_OWNER_MODULE_BASIC_INFO inf)
             {
@@ -103,56 +106,41 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return new IPAddress(_remoteAddress).ToString();
         }
 
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="row"></param>
         /// <returns></returns>
-        public static Owner GetOwner(NetFwTypeLib.NET_FW_IP_PROTOCOL_ protocol, int localPort)
+        public static Owner GetOwner(int pid, int localPort)
         {
-            Owner ret = null;
-            try
-            {
-                if (protocol == NetFwTypeLib.NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_UDP)
-                {
-                    try
-                    {
-                        ret = IPHelpers.UDPHelper.GetAllUDPConnections().First(r => r.LocalPort == localPort)// && r.RemoteAddress == remoteAddr && r.RemotePort == remotePort)
-                                                    .OwnerModule;
-                    }
-                    catch
-                    {
-                        if (Socket.OSSupportsIPv6)
-                        {
-                            ret = IPHelpers.UDP6Helper.GetAllUDP6Connections().First(r => r.LocalPort == localPort)// && r.RemoteAddress == remoteAddr && r.RemotePort == remotePort)
-                                                         .OwnerModule;
-                        }
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        ret = IPHelpers.TCPHelper.GetAllTCPConnections().First(r => r.LocalPort == localPort)// && r.RemoteAddress == remoteAddr && r.RemotePort == remotePort)
-                                                    .OwnerModule;
-                    }
-                    catch (Exception e)
-                    {
-                        if (Socket.OSSupportsIPv6)
-                        {
-                            ret = IPHelpers.TCP6Helper.GetAllTCP6Connections().First(r => r.LocalPort == localPort)// && r.RemoteAddress == remoteAddr && r.RemotePort == remotePort)
-                                                         .OwnerModule;
-                        }
-                    }
-                }
+            var ret = GetAllConnections().FirstOrDefault(r => r.LocalPort == localPort && r.OwningPid == pid);
+            return ret != null ? ret.OwnerModule : null;
+        }
 
-                return ret;
-            }
-            catch
+        private static bool IsIPV6(string localAddress)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IEnumerable<I_OWNER_MODULE> GetAllConnections(bool tcpOnly = false)
+        {
+            var ret = TCPHelper.GetAllTCPConnections();
+            if (!tcpOnly)
             {
-                return null;
+                ret = ret.Concat(UDPHelper.GetAllUDPConnections());
             }
+
+            if (Socket.OSSupportsIPv6)
+            {
+                ret = ret.Concat(TCP6Helper.GetAllTCP6Connections());
+                if (!tcpOnly)
+                {
+                    ret = ret.Concat(UDP6Helper.GetAllUDP6Connections());
+                }
+            }
+
+            return ret;
         }
     }
 }

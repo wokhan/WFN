@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notifier", "Notifier\Notifier.csproj", "{B0777CD1-8F34-4370-8D9F-C4F896AD542B}"
 EndProject
@@ -11,25 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "Console\Console.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{94028C5E-9B0E-4D15-966A-9FA766A20821}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UACWrapper", "UACWrapper\UACWrapper.csproj", "{72D48105-D4E2-4965-A0C6-6DA642F15B8D}"
+EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs34
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Notifier\\Notifier.csproj
-		SccProjectName1 = Notifier
-		SccLocalPath1 = Notifier
-		SccProjectUniqueName2 = RuleManager\\RuleManager.csproj
-		SccProjectName2 = RuleManager
-		SccLocalPath2 = RuleManager
-		SccProjectUniqueName3 = Console\\Console.csproj
-		SccProjectName3 = Console
-		SccLocalPath3 = Console
-		SccProjectUniqueName4 = Common\\Common.csproj
-		SccProjectName4 = Common
-		SccLocalPath4 = Common
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
@@ -63,8 +47,37 @@ Global
 		{94028C5E-9B0E-4D15-966A-9FA766A20821}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94028C5E-9B0E-4D15-966A-9FA766A20821}.Release|Any CPU.Build.0 = Release|Any CPU
 		{94028C5E-9B0E-4D15-966A-9FA766A20821}.Release|x86.ActiveCfg = Release|Any CPU
+		{72D48105-D4E2-4965-A0C6-6DA642F15B8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72D48105-D4E2-4965-A0C6-6DA642F15B8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72D48105-D4E2-4965-A0C6-6DA642F15B8D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{72D48105-D4E2-4965-A0C6-6DA642F15B8D}.Debug|x86.Build.0 = Debug|Any CPU
+		{72D48105-D4E2-4965-A0C6-6DA642F15B8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72D48105-D4E2-4965-A0C6-6DA642F15B8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72D48105-D4E2-4965-A0C6-6DA642F15B8D}.Release|x86.ActiveCfg = Release|Any CPU
+		{72D48105-D4E2-4965-A0C6-6DA642F15B8D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 6
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs34
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Notifier\\Notifier.csproj
+		SccProjectName1 = Notifier
+		SccLocalPath1 = Notifier
+		SccProjectUniqueName2 = RuleManager\\RuleManager.csproj
+		SccProjectName2 = RuleManager
+		SccLocalPath2 = RuleManager
+		SccProjectUniqueName3 = Console\\Console.csproj
+		SccProjectName3 = Console
+		SccLocalPath3 = Console
+		SccProjectUniqueName4 = Common\\Common.csproj
+		SccProjectName4 = Common
+		SccLocalPath4 = Common
+		SccProjectUniqueName5 = UACWrapper\\UACWrapper.csproj
+		SccProjectName5 = UACWrapper
+		SccLocalPath5 = UACWrapper
 	EndGlobalSection
 EndGlobal

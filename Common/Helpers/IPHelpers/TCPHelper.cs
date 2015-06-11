@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Net;
 using System.Runtime.InteropServices;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
 {
-    public class TCPHelper : BaseHelper
+    public class TCPHelper : IPHelper
     {
         [DllImport("iphlpapi.dll", SetLastError = true)]
         public static extern uint GetOwnerModuleFromTcpEntry(ref MIB_TCPROW_OWNER_MODULE pTcpEntry, TCPIP_OWNER_MODULE_INFO_CLASS Class, IntPtr Buffer, ref int pdwSize);
@@ -102,7 +103,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             public uint ThruBytesReceived;
         }
 
-
         public enum TCP_ESTATS_TYPE
         {
             TcpConnectionEstatsSynOpts,
@@ -137,28 +137,36 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         [StructLayout(LayoutKind.Sequential)]
         public struct MIB_TCPROW_OWNER_MODULE : I_OWNER_MODULE
         {
-            public uint _state;
+            internal uint _state;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
             internal byte[] _localAddr;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
             internal byte[] _localPort;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-            internal byte[] _remoteAddr;
+            public byte[] _remoteAddr;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
             internal byte[] _remotePort;
             internal uint _owningPid;
-            long _creationTime;
+            internal long _creationTime;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
-            public ulong[] OwningModuleInfo;
+            internal ulong[] _owningModuleInfo;
 
+            public byte[] RemoteAddrBytes { get { return _remoteAddr; } }            
             public MIB_TCP_STATE State { get { return (MIB_TCP_STATE)_state; } }
-public string RemoteAddress { get { return GetAddressAsString(_remoteAddr); } }
+            public string RemoteAddress { get { return GetAddressAsString(_remoteAddr); } }
             public string LocalAddress { get { return GetAddressAsString(_localAddr); } }
             public int RemotePort { get { return GetRealPort(_remotePort); } }
             public int LocalPort { get { return GetRealPort(_localPort); } }
             public Owner OwnerModule { get { return GetOwningModuleTCP(this); } }
+            public string Protocol { get { return "TCP"; } }
             public uint OwningPid { get { return _owningPid; } }
-            public DateTime CreationTime { get { return _creationTime == 0 ? DateTime.MinValue : DateTime.FromFileTime(_creationTime); } }
+            public DateTime? CreationTime { get { return _creationTime == 0 ? (DateTime?)null : DateTime.FromFileTime(_creationTime); } }
+            public bool IsLoopback { get { return IPAddress.IsLoopback(IPAddress.Parse(RemoteAddress)); } }
+
+            public MIB_TCPROW ToTCPRow()
+            {
+                return new MIB_TCPROW() { dwLocalAddr = _localAddr, dwRemoteAddr = _remoteAddr, dwLocalPort = _localPort, dwRemotePort = _remotePort, dwState = _state };
+            }
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -172,18 +180,18 @@ public string RemoteAddress { get { return GetAddressAsString(_remoteAddr); } }
         /// <summary>
         /// 
         /// </summary>
-        public static IEnumerable<MIB_TCPROW_OWNER_MODULE> GetAllTCPConnections()
+        public static IEnumerable<I_OWNER_MODULE> GetAllTCPConnections()
         {
             IntPtr buffTable = IntPtr.Zero;
 
             try
             {
                 int buffSize = 0;
-                GetExtendedTcpTable(IntPtr.Zero, ref buffSize, true, AF_INET.IP4, TCP_TABLE_CLASS.TCP_TABLE_OWNER_MODULE_ALL, 0);
+                GetExtendedTcpTable(IntPtr.Zero, ref buffSize, false, AF_INET.IP4, TCP_TABLE_CLASS.TCP_TABLE_OWNER_MODULE_ALL, 0);
 
                 buffTable = Marshal.AllocHGlobal(buffSize);
-                
-                uint ret = GetExtendedTcpTable(buffTable, ref buffSize, true, AF_INET.IP4, TCP_TABLE_CLASS.TCP_TABLE_OWNER_MODULE_ALL, 0);
+
+                uint ret = GetExtendedTcpTable(buffTable, ref buffSize, false, AF_INET.IP4, TCP_TABLE_CLASS.TCP_TABLE_OWNER_MODULE_ALL, 0);
                 if (ret == 0)
                 {
                     MIB_TCPTABLE_OWNER_MODULE tab = (MIB_TCPTABLE_OWNER_MODULE)Marshal.PtrToStructure(buffTable, typeof(MIB_TCPTABLE_OWNER_MODULE));
@@ -203,7 +211,7 @@ public string RemoteAddress { get { return GetAddressAsString(_remoteAddr); } }
                     throw new Win32Exception((int)ret);
                 }
             }
-           finally
+            finally
             {
                 if (buffTable != IntPtr.Zero)
                 {
@@ -221,7 +229,7 @@ public string RemoteAddress { get { return GetAddressAsString(_remoteAddr); } }
 
             try
             {
-                var r = SetPerTcpConnectionEStats(ref row, TCP_ESTATS_TYPE.TcpConnectionEstatsBandwidth, rw, (uint)0, (uint)rwS, (uint)0);
+                var r = SetPerTcpConnectionEStats(ref row, TCP_ESTATS_TYPE.TcpConnectionEstatsBandwidth, rw, 0, (uint)rwS, 0);
                 if (r != 0)
                 {
                     throw new Win32Exception((int)r);
@@ -233,51 +241,32 @@ public string RemoteAddress { get { return GetAddressAsString(_remoteAddr); } }
             }
         }
 
-        private static byte[] port = null;
-        private static IntPtr prev = IntPtr.Zero;
-        public static TCP_ESTATS_BANDWIDTH_ROD_v0 GetTCPBandwidth(MIB_TCPROW_OWNER_MODULE conn)
+        public static TCP_ESTATS_BANDWIDTH_ROD_v0 GetTCPBandwidth(MIB_TCPROW row)
         {
             IntPtr rw = IntPtr.Zero;
             IntPtr rod = IntPtr.Zero;
 
             try
             {
-                TCP_ESTATS_BANDWIDTH_ROD_v0 ret;
-                if (port != null && System.Linq.Enumerable.SequenceEqual(conn._localPort, port))
+                var rwS = Marshal.SizeOf(typeof(TCP_ESTATS_BANDWIDTH_RW_v0));
+                rw = Marshal.AllocHGlobal(rwS);
+
+                var rodS = Marshal.SizeOf(typeof(TCP_ESTATS_BANDWIDTH_ROD_v0));
+                rod = Marshal.AllocHGlobal(rodS);
+
+                var r = GetPerTcpConnectionEStats(ref row, TCP_ESTATS_TYPE.TcpConnectionEstatsBandwidth, rw, 0, (uint)rwS, IntPtr.Zero, 0, 0, rod, 0, (uint)rodS);
+                if (r != 0)
                 {
-                    ret = (TCP_ESTATS_BANDWIDTH_ROD_v0)Marshal.PtrToStructure(prev, typeof(TCP_ESTATS_BANDWIDTH_ROD_v0));
-                }
-                else
-                {
-                    var row = new MIB_TCPROW() { dwLocalAddr = conn._localAddr, dwRemoteAddr = conn._remoteAddr, dwLocalPort = conn._localPort, dwRemotePort = conn._remotePort, dwState = conn._state };
-
-                    EnsureStatsAreEnabled(row);
-
-                    var rwS = Marshal.SizeOf(typeof(TCP_ESTATS_BANDWIDTH_RW_v0));
-                    rw = Marshal.AllocHGlobal(rwS);
-
-                    var rodS = Marshal.SizeOf(typeof(TCP_ESTATS_BANDWIDTH_ROD_v0));
-                    rod = Marshal.AllocHGlobal(rodS);
-                    if (port == null)
-                    {
-                        prev = rod;
-                        port = conn._localPort;
-                    }
-                    var r = GetPerTcpConnectionEStats(ref row, TCP_ESTATS_TYPE.TcpConnectionEstatsBandwidth, rw, (uint)0, (uint)rwS, IntPtr.Zero, (uint)0, (uint)0, rod, (uint)0, (uint)rodS);
-                    if (r != 0)
-                    {
-                        throw new Win32Exception((int)r);
-                    }
-
-                    var parsedRW = (TCP_ESTATS_BANDWIDTH_RW_v0)Marshal.PtrToStructure(rw, typeof(TCP_ESTATS_BANDWIDTH_RW_v0));
-                    if (parsedRW.EnableCollectionInbound != TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled || parsedRW.EnableCollectionOutbound != TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled)
-                    {
-                        throw new Exception("Monitoring is disabled for this connection.");
-                    }
-                    ret = (TCP_ESTATS_BANDWIDTH_ROD_v0)Marshal.PtrToStructure(rod, typeof(TCP_ESTATS_BANDWIDTH_ROD_v0));
+                    throw new Win32Exception((int)r);
                 }
 
-                return ret;
+                var parsedRW = (TCP_ESTATS_BANDWIDTH_RW_v0)Marshal.PtrToStructure(rw, typeof(TCP_ESTATS_BANDWIDTH_RW_v0));
+                if (parsedRW.EnableCollectionInbound != TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled || parsedRW.EnableCollectionOutbound != TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled)
+                {
+                    throw new Exception("Monitoring is disabled for this connection.");
+                }
+
+                return (TCP_ESTATS_BANDWIDTH_ROD_v0)Marshal.PtrToStructure(rod, typeof(TCP_ESTATS_BANDWIDTH_ROD_v0));
             }
             catch (Win32Exception we)
             {
@@ -308,7 +297,7 @@ public string RemoteAddress { get { return GetAddressAsString(_remoteAddr); } }
                 }
             }
         }
-    
+
         public static TCP_ESTATS_DATA_ROD_v0 GetTCPStatistics(MIB_TCPROW_OWNER_MODULE conn)
         {
             IntPtr rw = IntPtr.Zero;
@@ -366,7 +355,7 @@ public string RemoteAddress { get { return GetAddressAsString(_remoteAddr); } }
                 int buffSize = 0;
                 GetOwnerModuleFromTcpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
                 buffer = Marshal.AllocHGlobal(buffSize);
-                
+
                 var resp = GetOwnerModuleFromTcpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, buffer, ref buffSize);
                 if (resp == 0)
                 {

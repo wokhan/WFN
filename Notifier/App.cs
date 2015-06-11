@@ -29,29 +29,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
         public App(ReadOnlyCollection<string> argv)
         {
-            Dictionary<string, string> pars = ProcessHelper.ParseParameters(argv);
-            int pid = int.Parse(pars["pid"]);
-            string currentTarget = pars["ip"];
-            string currentTargetPort = pars["port"];
-            string currentProtocol = pars["protocol"];
-            string currentLocalPort = pars["localport"];
-            string currentPath = pars["path"];
-            string threadid = pars["threadid"];
-            pars = null;
-
-            initExclusions();
-
-            if (!AddItem(pid, threadid, currentPath, currentTarget, currentProtocol, currentTargetPort, currentLocalPort))
-            {
-                return;
-            }
-
-            LogHelper.Debug("Launching. Parameters: " + String.Join(" ", argv));
-
-            window = new NotificationWindow();
-
-            this.ShutdownMode = System.Windows.ShutdownMode.OnMainWindowClose;
-            //this.Run(window);
+            NextInstance(argv);
         }
 
         /// <summary>
@@ -126,7 +104,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
                         if (Settings.Default.EnableServiceDetection)
                         {
-                            ProcessHelper.GetService(pid, threadid, protocol, targetPort, localport, out svc, out svcdsc, out unsure);
+                            ProcessHelper.GetService(pid, threadid, path, protocol, localport, target, targetPort, out svc, out svcdsc, out unsure);
                         }
                     }
 
@@ -148,7 +126,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     }
 
                     // WARNING: check for regressions
-                    if (FirewallHelper.CheckIfBlockingRuleMatches(path, protocol, targetPort, localport, svc, unsure))
+                    if (FirewallHelper.GetMatchingRules(path, protocol, target, targetPort, localport, unsure ? svc : svc.Take(1), true).Any())
                     {
                         return false;
                     }
@@ -157,16 +135,23 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     {
                         CurrentProd = app,
                         CurrentPath = path,
-                        CurrentService = !unsure ? svc.FirstOrDefault() : null,
-                        PossibleServices = unsure ? svc : null,
-                        CurrentServiceDesc = !unsure ? svcdsc.FirstOrDefault() : null,
-                        PossibleServicesDesc = unsure ? svcdsc : null,
                         Protocol = int.Parse(protocol),
                         TargetPort = targetPort,
-                        RuleName = String.Format(Wokhan.WindowsFirewallNotifier.Common.Resources.RULE_NAME_FORMAT, unsure || String.IsNullOrEmpty(svcdsc.FirstOrDefault()) ? app : svcdsc.FirstOrDefault()),
+                        RuleName = String.Format(Common.Resources.RULE_NAME_FORMAT, unsure || String.IsNullOrEmpty(svcdsc.FirstOrDefault()) ? app : svcdsc.FirstOrDefault()),
                         Target = target,
                         LocalPort = localport
                     };
+
+                    if (unsure)
+                    {
+                        conn.PossibleServices = svc;
+                        conn.PossibleServicesDesc = svcdsc;
+                    }
+                    else
+                    {
+                        conn.CurrentService = svc.FirstOrDefault();
+                        conn.CurrentServiceDesc = svcdsc.FirstOrDefault();
+                    }
 
                     resolveHostForConnection(conn);
                     //retrieveIcon(conn);
@@ -193,11 +178,15 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
         private async void resolveHostForConnection(CurrentConn conn)
         {
-            var host = (await Dns.GetHostEntryAsync(conn.Target)).HostName;
-            if (conn.Target != host)
+            try
             {
-                conn.ResolvedHost = host;
+                var host = (await Dns.GetHostEntryAsync(conn.Target)).HostName;
+                if (conn.Target != host)
+                {
+                    conn.ResolvedHost = host;
+                }
             }
+            catch { }
         }
 
 
@@ -220,9 +209,16 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 return;
             }
 
-            if (window.WindowState == System.Windows.WindowState.Minimized)
+            if (window == null)
             {
-                window.WindowState = System.Windows.WindowState.Normal;
+                window = new NotificationWindow();
+                this.ShutdownMode = ShutdownMode.OnMainWindowClose;
+                //this.Run(window);
+            }
+
+            if (window.WindowState == WindowState.Minimized)
+            {
+                window.WindowState = WindowState.Normal;
             }
         }
     }

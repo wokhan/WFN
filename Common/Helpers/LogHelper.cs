@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using Wokhan.WindowsFirewallNotifier.Common;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     public class LogHelper
     {
-        private static string runPath = System.AppDomain.CurrentDomain.BaseDirectory;
+        private static string runPath = AppDomain.CurrentDomain.BaseDirectory;
         private static string logPath = Path.Combine(runPath, "errors.log");
         private static string appVersion = Assembly.GetCallingAssembly().GetName().Version.ToString();
 
@@ -40,6 +39,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         private static void writeLog(string type, string msg)
         {
+            System.Diagnostics.Debug.WriteLine(msg);
+            return;
             StreamWriter sw = null;
             try
             {

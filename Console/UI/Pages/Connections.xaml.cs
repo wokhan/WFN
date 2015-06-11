@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Media;
 using System.Windows.Threading;
-using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
@@ -32,7 +26,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private DispatcherTimer timer = new DispatcherTimer() { IsEnabled = true };
 
-        public ObservableCollection<ConnectionViewModel> lstConnections = new ObservableCollection<ConnectionViewModel>();
+        public ObservableCollection<Connection> lstConnections = new ObservableCollection<Connection>();
 
         public ListCollectionView connectionsView { get; set; }
 
@@ -49,11 +43,17 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             connectionsView.GroupDescriptions.Add(new PropertyGroupDescription("GroupKey"));
 
             InitializeComponent();
-            
+
             timer.Interval = TimeSpan.FromSeconds(Interval);
             timer.Tick += timer_Tick;
 
             this.Loaded += Connections_Loaded;
+            this.Unloaded += Connections_Unloaded;
+        }
+
+        private void Connections_Unloaded(object sender, RoutedEventArgs e)
+        {
+            timer.Stop();
         }
 
         void Connections_Loaded(object sender, RoutedEventArgs e)
@@ -63,27 +63,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         void timer_Tick(object sender, EventArgs e)
         {
-            foreach (var b in TCPHelper.GetAllTCPConnections())
+            foreach (var c in IPHelper.GetAllConnections().ToList())
             {
-                AddOrUpdateConnection(b, "TCP");
-            }
-
-            foreach (var b in UDPHelper.GetAllUDPConnections())
-            {
-                AddOrUpdateConnection(b, "UDP");
-            }
-
-            if (Socket.OSSupportsIPv6)
-            {
-                foreach (var b in TCP6Helper.GetAllTCP6Connections())
-                {
-                    AddOrUpdateConnection(b, "TCP");
-                }
-
-                foreach (var b in UDP6Helper.GetAllUDP6Connections())
-                {
-                    AddOrUpdateConnection(b, "UDP");
-                }
+                AddOrUpdateConnection(c);
             }
 
             for (int i = lstConnections.Count - 1; i > 0; i--)
@@ -96,42 +78,28 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 }
                 else if (elapsed > 2)
                 {
-                    item.IsDying = false;
+                    item.IsDying = true;
                 }
             }
         }
 
-        private void AddOrUpdateConnection(BaseHelper.I_OWNER_MODULE b, string protocol)
+        private void AddOrUpdateConnection(IPHelper.I_OWNER_MODULE b)
         {
-            ConnectionViewModel lvi = lstConnections.SingleOrDefault(l => l.PID == b.OwningPid && l.Protocol == protocol && l.LocalPort == b.LocalPort.ToString());
-
-            string ownerStr = (b.OwnerModule == null ? String.Empty : b.OwnerModule.ModuleName);
+            Connection lvi = lstConnections.SingleOrDefault(l => l.PID == b.OwningPid && l.Protocol == b.Protocol && l.LocalPort == b.LocalPort.ToString());
 
             if (lvi != null)
             {
-                if (DateTime.Now.Subtract(lvi.LastSeen).TotalMilliseconds > 500)
+                if (DateTime.Now.Subtract(lvi.LastSeen).TotalMilliseconds > 1000)
                 {
                     lvi.IsNew = false;
                 }
+
+                lvi.UpdateValues(b);
             }
             else
             {
-                lvi = new ConnectionViewModel((int)b.OwningPid)
-                {
-                    LocalPort = b.LocalPort.ToString(),
-                    Owner = ownerStr,
-                    CreationTime = b.CreationTime
-                };
-
-                lstConnections.Add(lvi);
+                lstConnections.Add(new Connection(b));
             }
-
-            lvi.LocalAddress = b.LocalAddress;
-            lvi.Protocol = protocol;
-            lvi.RemoteAddress = b.RemoteAddress;
-            lvi.RemotePort = (b.RemotePort == -1 ? String.Empty : b.RemotePort.ToString());
-            lvi.LastSeen = DateTime.Now;
-            lvi.State = Enum.GetName(typeof(BaseHelper.MIB_TCP_STATE), b.State);
         }
     }
 }

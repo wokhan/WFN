@@ -17,12 +17,30 @@ using System.Windows.Media.Imaging;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.IO;
-
+using System.Text;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     public class ProcessHelper
     {
+        [Flags]
+        public enum ProcessAccessFlags : uint
+        {
+            All = 0x001F0FFF,
+            Terminate = 0x00000001,
+            CreateThread = 0x00000002,
+            VirtualMemoryOperation = 0x00000008,
+            VirtualMemoryRead = 0x00000010,
+            VirtualMemoryWrite = 0x00000020,
+            DuplicateHandle = 0x00000040,
+            CreateProcess = 0x000000080,
+            SetQuota = 0x00000100,
+            SetInformation = 0x00000200,
+            QueryInformation = 0x00000400,
+            QueryLimitedInformation = 0x00001000,
+            Synchronize = 0x00100000
+        }
+
         private static Dictionary<string, ImageSource> procIconLst = new Dictionary<string, ImageSource>();
 
         public static string[] GetAllServices(int pid)
@@ -47,18 +65,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                                                               // detected
                                                               "lanmanserver", "browser", "schedule" };
         */
-        // private static string[] prioSvcs = new string[] { "wuauserv", "BITS", "aelookupsvc", "CryptSvc", "dnscache", "LanmanWorkstation", "TapiSrv" };
-
-        //private static string servicesParser = @"^\s*(?<protocol>[^\s]+)(?<localip>(?:\[[^\]]*\])|(?:[^(:|\r)]))*:{0}\s+(?<ip>[^:]+):(?<port>(?:\d*|\*))\s+[^\d]*{1}\r\n\s+(?<service>[^\r]+)\r\n\s*\[[^\]]*\]";
-        public static void GetService(int pid, string threadid, string protocol, string port, string localport, out string[] svc, out string[] svcdsc, out bool unsure)
-        {
-            GetService(pid, threadid, (NetFwTypeLib.NET_FW_IP_PROTOCOL_)Enum.Parse(typeof(NetFwTypeLib.NET_FW_IP_PROTOCOL_), protocol), port, localport, out svc, out svcdsc, out unsure);
-        }
-
-        public static void GetService(int pid, string threadid, NetFwTypeLib.NET_FW_IP_PROTOCOL_ protocol, string port, string localport, out string[] svc, out string[] svcdsc, out bool unsure)
+        // private static string[] prioSvcs = new string[] { "wuauserv", "BITS", "aelookupsvc", "CryptSvc", "dnscache", "LanmanWorkstation", "TapiSrv" };  
+        public static void GetService(int pid, string threadid, string path, string protocolStr, string localport, string target, string remoteport, out string[] svc, out string[] svcdsc, out bool unsure)
         {
             string[] svcs = GetAllServices(pid);
-
+            //int protocol = (int)Enum.Parse(typeof(NET_FW_IP_PROTOCOL_), protocolStr);
             svc = new string[0];
             svcdsc = new string[0];
             unsure = false;
@@ -70,7 +81,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             LogHelper.Debug("GetService found the following services: " + String.Join(",", svcs));
 
-            var ret = BaseHelper.GetOwner(protocol, int.Parse(localport));
+            var ret = IPHelper.GetOwner(pid, int.Parse(localport));
             if (ret != null && !String.IsNullOrEmpty(ret.ModuleName))
             {
                 // Returns the owner only if it's indeed a service (hence contained in the previously retrieved list)
@@ -131,14 +142,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             // And if it still fails, fall backs to the most ugly way ever I am not able to get rid of :-P
             // Retrieves corresponding existing rules
             int profile = FirewallHelper.GetCurrentProfile();
-            var cRules = FirewallHelper.GetRules()
-                                       .Where(r => r.Enabled &&
-                                                   (((r.Profiles & profile) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0)) &&
-                                                   r.Action == NetFwTypeLib.NET_FW_ACTION_.NET_FW_ACTION_ALLOW &&
-                                                   !String.IsNullOrEmpty(r.serviceName) && svcs.Contains(r.serviceName, StringComparer.CurrentCultureIgnoreCase) &&
-                                                   (r.Protocol == (int)NetFwTypeLib.NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY || r.Protocol == (int)protocol) &&
-                                                   (String.IsNullOrEmpty(r.RemotePorts) || r.RemotePorts == "*" || r.RemotePorts.Split(',').Contains(port)) &&
-                                                   (String.IsNullOrEmpty(r.LocalPorts) || r.LocalPorts == "*" || r.LocalPorts.Split(',').Contains(localport)))
+            var cRules = FirewallHelper.GetMatchingRules(path, protocolStr, target, remoteport, localport, svc, true)
                                        .Select(r => r.serviceName)
                                        .Distinct()
                                        .ToList();
@@ -160,6 +164,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return;
         }
 
+
         /// <summary>
         /// 
         /// </summary>
@@ -170,7 +175,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             Icon ic = null;
             switch (path)
             {
-                case "?system":
+                case "System":
                     ic = SystemIcons.WinLogo;
                     break;
 
@@ -178,18 +183,18 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     ic = SystemIcons.Error;
                     break;
 
-                case "?missing":
-                    ic = SystemIcons.Question;
-                    break;
-
                 default:
                     if (File.Exists(path))
                     {
                         ic = Icon.ExtractAssociatedIcon(path) ?? (defaultIfNotFound ? SystemIcons.Application : null);
                     }
+                    else
+                    {
+                        ic = SystemIcons.Warning;
+                    }
                     break;
             }
-           
+
             if (ic != null)
             {
                 return Imaging.CreateBitmapSourceFromHIcon(ic.Handle, new Int32Rect(0, 0, ic.Width, ic.Height), BitmapSizeOptions.FromEmptyOptions());
@@ -226,6 +231,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             return icon;
         }
+
 
         /// <summary>
         /// 

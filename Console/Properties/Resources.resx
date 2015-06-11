@@ -136,10 +136,6 @@
     <value>An error occured while updating the local strategy policy.
 Aborting installation.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="WindowsFirewallNotifier" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\windowsfirewallnotifier.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
   <data name="MSG_ALLOW" xml:space="preserve">
     <value>Allow: a firewall rule will be created for the concerned application,
 except if you tick the checkbox below to allow it temporarily.</value>
@@ -154,9 +150,6 @@ except if you tick the checkbox below to allow it temporarily.</value>
     <value>The temporary rule could not be removed.
 The application outgoing connections are still allowed.
 Please check the Windows firewall for a rule named {0}.</value>
-  </data>
-  <data name="ICON_SHIELD" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\shield.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="FW_RULE_BLOCK" xml:space="preserve">
     <value>Block</value>

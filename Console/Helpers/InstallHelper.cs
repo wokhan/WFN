@@ -5,6 +5,10 @@ using System.Text;
 using System.Windows;
 using Wokhan.WindowsFirewallNotifier.Console.Properties;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using System.Xml.Linq;
+using System.Reflection;
+using System.Xml;
+using System.Xml.XPath;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
 {
@@ -107,15 +111,17 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
         private static bool createTask(bool allUsers)
         {
             string tmpXML = Path.GetTempFileName();
-            File.WriteAllText(tmpXML, 
-                              String.Format(Resources.WindowsFirewallNotifier, allUsers ? "<UserId>NT AUTHORITY\\SYSTEM</UserId>"//"<GroupId>S-1-5-32-545</GroupId>" 
-                                                                                        : "<UserId><![CDATA[" + WindowsIdentity.GetCurrent().Name + "]]></UserId>", 
-                                                                               "",//Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Notifier.exe"), 
-                                                                               DateTime.Now.ToString("s")), 
-                              Encoding.Unicode);
-            //getProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", "/Create /TN WindowsFirewallNotifierTask /IT /SC ONEVENT /MO \"*[System[(Level=4 or Level=0) and (EventID=5157)]]\" /EC Security /TR \"" + Application.ExecutablePath + " run\" /F /RL HIGHEST");
+            var taskStr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Wokhan.WindowsFirewallNotifier.Console.Resources.TaskTemplate.xml"));
+            var newtask = String.Format(taskStr.ReadToEnd(),
+                                        allUsers ? "<UserId>NT AUTHORITY\\SYSTEM</UserId>"//"<GroupId>S-1-5-32-545</GroupId>" 
+                                                 : "<UserId><![CDATA[" + WindowsIdentity.GetCurrent().Name + "]]></UserId>",
+                                        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe"),
+                                        DateTime.Now.ToString("s"));
 
-            //bool ret = ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", (pass != null ? "/RU " + WindowsIdentity.GetCurrent().Name + " /RP " + pass : "") + " /Create /TN WindowsFirewallNotifierTask /XML \"" + tmpXML + "\"");
+            taskStr.Close();
+                              
+            File.WriteAllText(tmpXML, newtask, Encoding.Unicode);
+
             bool ret = ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", "/IT /Create /TN WindowsFirewallNotifierTask /XML \"" + tmpXML + "\"");
 
             File.Delete(tmpXML);

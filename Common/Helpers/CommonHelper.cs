@@ -81,28 +81,22 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         }
 
 
-        public static string FormatBytes(double size)
+        public static string FormatBytes(double size, string suffix = null)
         {
             if (size >= 1073741824)
             {
-                return String.Format("{0:##.##} GB", size / 1073741824.0);
+                return String.Format("{0:##.##}GB", size / 1073741824.0, suffix);
             }
             else if (size >= 1048576)
             {
-                return String.Format("{0:##.##} MB", size / 1048576.0);
+                return String.Format("{0:##.##}MB", size / 1048576.0, suffix);
             }
             else if (size >= 1024)
             {
-                return String.Format("{0:##.##} KB", size / 1024.0);
+                return String.Format("{0:##.##}KB", size / 1024.0, suffix);
             }
-            else if (size > 0 & size < 1024)
-            {
-                return String.Format("{0:##.##} B", size);
-            }
-            else
-            {
-                return "0 Bytes";
-            }
+
+            return String.Format("{0:#0.##}B", size, suffix);
         }
     }
 }

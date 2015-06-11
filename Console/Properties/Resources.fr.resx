@@ -170,7 +170,7 @@ Vous pourrez supprimer cette exception via les options de WFN.</value>
 Abandon de l'installation.</value>
   </data>
   <data name="MSG_INST_ENABLE_LOG_ERR" xml:space="preserve">
-    <value>Une erreur est survenue lors de la désactivation de la journalisation des évènements.
+    <value>Une erreur est survenue lors de l'activation de la journalisation des évènements.
 Abandon de l'installation.</value>
   </data>
   <data name="MSG_INST_OK" xml:space="preserve">
