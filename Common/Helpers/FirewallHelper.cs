@@ -281,7 +281,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         private static INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
         private const string indParamFormat = "{0}#$#{1}#$#{2}#$#{3}#$#{4}#$#{5}#$#{6}#$#{7}#$#{8}";
-        private static string WFNRuleManagerEXE = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "RuleManager.exe");
+        private static string WFNRuleManagerEXE = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RuleManager.exe");
 
         /// <summary>
         /// 
@@ -494,6 +494,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, services != null ? String.Join(",", services) : null, protocol, target, targetPort, localport, useCurrentProfile, "T")));
             return ProcessHelper.getProcessFeedback(WFNRuleManagerEXE, param, true, true);
+        }
+
+        public static bool CheckFirewallEnabled()
+        {
+            return firewallPolicy.FirewallEnabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL] || 
+                   firewallPolicy.FirewallEnabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE] || 
+                   firewallPolicy.FirewallEnabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC] || 
+                   firewallPolicy.FirewallEnabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN];
         }
 
         /// <summary>

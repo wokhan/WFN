@@ -8,6 +8,19 @@
       d:DesignHeight="400" d:DesignWidth="800"
 	Title="Firewall rules">
     <DockPanel>
+        <Border DockPanel.Dock="Top">
+            <Border.Style>
+                <Style TargetType="Border" BasedOn="{StaticResource InfoPanel}">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsFirewallEnabled}" Value="False">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <TextBlock Text="The Windows embedded firewall is currently disabled. The following rules will not apply until you enable it back, either using WFN notifications options or the standard Windows firewall ones." />
+        </Border>
         <Border Style="{StaticResource ToolBarPanel}">
             <Grid>
                 <WrapPanel>
@@ -26,7 +39,7 @@
                     <Button x:Name="btnStartAdvConsole" Click="btnStartAdvConsole_Click">
                         <Grid>
                             <Image Source="/WFN;component/Resources/Images/btnOpenConsole.Image.png" HorizontalAlignment="Left" Height="16"/>
-                            <TextBlock Margin="20,0,0,0" Text="Open advanced console" />
+                            <TextBlock Margin="20,0,0,0" Text="Adv. console" />
                         </Grid>
                     </Button>
                 </WrapPanel>
@@ -36,12 +49,9 @@
                     <TextBox x:Name="txtFilter" Width="150" Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" />
                     <Path Height="14" Fill="Green" Data="{StaticResource Image_Show}"/>
                     <Label Content="Show:" />
-                    <ComboBox IsEditable="False" SelectedValue="{Binding TypeFilter}" DisplayMemberPath="Value" SelectedValuePath="Key" ItemsSource="{Binding TypeFilters}" />
+                    <ComboBox IsEditable="False" Width="100" SelectedValue="{Binding TypeFilter}" DisplayMemberPath="Value" SelectedValuePath="Key" ItemsSource="{Binding TypeFilters}" />
                     <Button x:Name="btnRefresh" Click="btnRefresh_Click">
-                        <Grid>
-                            <Path Fill="#FFA2A2FF" Data="{StaticResource Image_Refresh}"/>
-                            <TextBlock Margin="20,0,0,0" Text="Refresh" />
-                        </Grid>
+                        <Path Fill="#FFA2A2FF" Data="{StaticResource Image_Refresh}"/>
                     </Button>
                     <ToggleButton x:Name="btnHelp">
                         <Path Fill="Chocolate" Data="{StaticResource Image_Help}"/>
@@ -50,7 +60,12 @@
             </Grid>
         </Border>
         <Grid>
-            <DataGrid BorderThickness="0" x:Name="gridRules" IsReadOnly="True" ColumnWidth="*" AutoGenerateColumns="False" HeadersVisibility="Column">
+            <DataGrid BorderThickness="0" x:Name="gridRules" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" ItemsSource="{Binding connectionsView}" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="0,-1,0,1">
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                    </Style>
+                </DataGrid.CellStyle>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=OneTime}" />
                     <DataGridTemplateColumn Header="Path" SortMemberPath="ApplicationName">
@@ -63,18 +78,18 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="serviceName" Binding="{Binding serviceName, Mode=OneTime}" />
+                    <DataGridTextColumn Header="Service" Binding="{Binding serviceName, Mode=OneTime}" />
                     <DataGridTextColumn Header="Direction" Binding="{Binding Direction, Mode=OneTime}" />
                     <DataGridTextColumn Header="Profiles" Binding="{Binding Profiles, Mode=OneTime}" />
                     <DataGridTextColumn Header="Action" Binding="{Binding Action, Mode=OneTime}" />
-                    <DataGridTextColumn Header="LocalPorts" Binding="{Binding LocalPorts, Mode=OneTime}" />
-                    <DataGridTextColumn Header="RemoteAddresses" Binding="{Binding RemoteAddresses, Mode=OneTime}" />
+                    <DataGridTextColumn Header="Local ports" Binding="{Binding LocalPorts, Mode=OneTime}" />
+                    <DataGridTextColumn Header="Remote addresses" Binding="{Binding RemoteAddresses, Mode=OneTime}" />
                     <DataGridTextColumn Header="Remote port" Binding="{Binding RemotePorts, Mode=OneTime}" />
                     <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding Enabled, Mode=OneTime}" />
                 </DataGrid.Columns>
             </DataGrid>
             <Border Style="{StaticResource InfoBlock}">
-                <TextBlock>The grid above lists all Windows firewall rules. The ones prefixed by "Custom rules" have been created by Windows Firewall Notifier. You can not manually create rules, but you can remove useless ones if required.</TextBlock>
+                <TextBlock>This screen displays all Windows firewall rules. The ones prefixed by "Custom rules" have been created by Windows Firewall Notifier. You can not manually create rules, but you can remove useless ones if required.</TextBlock>
             </Border>
         </Grid>
     </DockPanel>
