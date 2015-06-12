@@ -7,7 +7,6 @@ using System.Globalization;
 using System;
 using System.Net;
 using System.Windows.Media;
-using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.IO.Compression;
 using Wokhan.WindowsFirewallNotifier.Common.Extensions;
@@ -27,83 +26,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             {
                 if (_currentCoordinates == null)
                 {
-                    _currentCoordinates = IPToLocation(GetPublicIpAddress());
+                    _currentCoordinates = IPToLocation(IPHelper.GetPublicIpAddress());
                 }
                 return _currentCoordinates;
             }
         }
-
-
-        private static async Task<IEnumerable<IPAddress>> GetFullRoute(string adr)
-        {
-            Ping pong = new Ping();
-            PingOptions po = new PingOptions(1, true);
-            List<IPAddress> ret = new List<IPAddress>();
-            PingReply r = null;
-            for (int i = 1; i < 30; i++)
-            {
-                if (r != null && r.Status != IPStatus.TimedOut)
-                {
-                    po.Ttl = i;
-                }
-                r = await pong.SendPingAsync(adr, 4000, new byte[32], po);
                 
-                if (r.Status == IPStatus.TtlExpired)
-                {
-                    ret.Add(r.Address);
-                }
-                else
-                {
-                    break;
-                }
-            }
-            ret.Add(IPAddress.Parse(adr));
-            return ret;
-        }
-
-        //private static List<IPAddress> defaultGateway = NetworkInterface.GetAllNetworkInterfaces().Where(i => i.OperationalStatus == OperationalStatus.Up).Select(i => i.GetIPProperties().GatewayAddresses.First().Address).ToList();
-        private static IPAddress GetPublicIpAddress()
-        {
-            //Ping pong = new Ping();
-            //PingOptions po = new PingOptions(1, true);
-            //IPAddress ret;
-            //bool next;
-            //for (int i = 1; i < 30; i++)
-            //{
-            //    po.Ttl = i;
-            //    var r = pong.Send("www.microsoft.com", 4000, new byte[1], po);
-            //    if (r.Status == IPStatus.TtlExpired && defaultGateway.Contains(r.Address))
-            //    {
-            //        return r.Address;
-            //    }
-            //}
-
-            //return null;
-            currentAddress = IPAddress.Parse("92.144.89.116");
-            if (currentAddress == null)
-            {
-                var request = (HttpWebRequest)WebRequest.Create("http://ifconfig.me/ip");
-                request.Method = "GET";
-                request.UserAgent = "curl";
-                try
-                {
-                    using (WebResponse response = request.GetResponse())
-                    {
-                        using (var reader = new StreamReader(response.GetResponseStream()))
-                        {
-                            currentAddress = IPAddress.Parse(reader.ReadToEnd().Replace("\n", ""));
-                        }
-                    }
-                }
-                catch
-                {
-                    return null;
-                }
-            }
-
-            return currentAddress;
-        }
-
         private Location _coordinates = null;
         public Location Coordinates
         {
@@ -200,7 +128,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             var r = new LocationCollection();
             r.Add(CurrentCoordinates);
-            foreach (var x in (await GetFullRoute(this.RemoteAddress)).Select(ip => IPToLocation(ip)).Where(l => l.Latitude != 0 && l.Longitude != 0))
+            foreach (var x in (await IPHelper.GetFullRoute(this.RemoteAddress)).Select(ip => IPToLocation(ip)).Where(l => l.Latitude != 0 && l.Longitude != 0))
             {
                 r.Add(x);
             }
