@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Media;
+using Wokhan.WindowsFirewallNotifier.Common.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
@@ -43,7 +48,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             IP4 = 2,
             IP6 = 23
         }
-
 
         #endregion
 
@@ -142,5 +146,57 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             return ret;
         }
+
+        public static IPAddress GetPublicIpAddress()
+        {
+            var request = (HttpWebRequest)WebRequest.Create("http://checkip.eurodyndns.org/");
+            request.Method = "GET";
+            request.UserAgent = "curl";
+            try
+            {
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (var reader = new StreamReader(response.GetResponseStream()))
+                    {
+                        var ans = reader.ReadLines().Skip(2).First();
+                        var adr = Regex.Match(ans, "Current IP Address: (.*)", RegexOptions.Singleline);
+
+                        return IPAddress.Parse(adr.Groups[1].Value.Trim());
+                    }
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static async Task<IEnumerable<IPAddress>> GetFullRoute(string adr)
+        {
+            Ping pong = new Ping();
+            PingOptions po = new PingOptions(1, true);
+            List<IPAddress> ret = new List<IPAddress>();
+            PingReply r = null;
+            for (int i = 1; i < 30; i++)
+            {
+                if (r != null && r.Status != IPStatus.TimedOut)
+                {
+                    po.Ttl = i;
+                }
+                r = await pong.SendPingAsync(adr, 4000, new byte[32], po);
+
+                if (r.Status == IPStatus.TtlExpired)
+                {
+                    ret.Add(r.Address);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            ret.Add(IPAddress.Parse(adr));
+            return ret;
+        }
+
     }
 }

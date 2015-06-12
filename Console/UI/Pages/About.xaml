@@ -28,6 +28,7 @@
             </Grid>
         </Button>
         <Label Margin="0,10" Content="External libraries and components" Background="LightGray" FontWeight="Bold" />
-        <TextBlock TextAlignment="Justify" TextWrapping="Wrap" Text="Windows Firewall Notifier uses XAML icons from http://modernuiicons.com and http://materialdesignicons.com." />
+        <TextBlock TextAlignment="Justify" TextWrapping="Wrap" Text="WFN uses XAML icons from http://modernuiicons.com and http://materialdesignicons.com." />
+        <TextBlock Margin="0,10" TextAlignment="Justify" TextWrapping="Wrap" Text="This site or product includes IP2Location LITE data available from http://lite.ip2location.com." />
     </StackPanel>
 </Page>
