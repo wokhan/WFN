@@ -9,14 +9,18 @@
       d:DesignHeight="500" d:DesignWidth="600"
       Title="About" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto">
     <StackPanel>
-        <Grid>
-            <Image Source="/WFN;component/Resources/Shield.ico" Height="32" HorizontalAlignment="Left" />
-            <TextBlock FontSize="13" Margin="40,0,0,0" VerticalAlignment="Center" FontWeight="Bold">
-                            <Run Text="{Binding ProductName,Mode=OneTime,FallbackValue='Windows Firewall Notifier'}" />
+        <WrapPanel Margin="0,10">
+            <Border HorizontalAlignment="Left" Margin="10,0" Padding="2" Background="White" BorderBrush="Gray" BorderThickness="1">
+                <Image Source="/WFN;component/Resources/Images/WFN Logo.ico" Height="60" HorizontalAlignment="Left" />
+            </Border>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock FontSize="13" VerticalAlignment="Center" FontWeight="Bold">
+                            <Run Text="{Binding ProductName,Mode=OneTime,FallbackValue='WFN'}" />
                             <Run Text="{Binding Version,Mode=OneTime,FallbackValue='X.X.X.X'}" />
-            </TextBlock>
-        </Grid>
-        <TextBlock Margin="0,10" Text="Developped by Jérôme Saliba (Khan) (http://wfn.codeplex.com)" />
+                </TextBlock>
+                <TextBlock Margin="0,5" Text="Developped by Jérôme Saliba (Khan) (http://wfn.codeplex.com)" />
+            </StackPanel>
+        </WrapPanel>
         <Label Content="Description" Background="{DynamicResource AccentColorBrush}" FontWeight="Bold" />
         <TextBlock Margin="10" TextWrapping="Wrap" TextAlignment="Justify" Text="WFN offers network related tools and optionnally extends the Windows embedded firewall behavior by displaying notifications to allow users to control outgoing connections (by default, Windows allows all of them, meaning that any program on your computer can send information on the Internet without your consent)." />
         <Label Content="License" Background="{DynamicResource AccentColorBrush}" FontWeight="Bold" />

@@ -5,7 +5,7 @@
         Height="600" 
         Width="900"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Icon="/WFN;component/Resources/Shield.ico" 
+        Icon="/WFN;component/Resources/Images/WFN Logo.ico" 
         ResizeMode="CanResizeWithGrip">
     <DockPanel>
         <Border Style="{StaticResource MenuPanel}">
