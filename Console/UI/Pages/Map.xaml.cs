@@ -154,5 +154,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             _connectionsView.GroupDescriptions.Clear();
             _connectionsView.GroupDescriptions.Add(new PropertyGroupDescription("RemoteAddress"));
         }
+
+        private void btnRestartAdmin_Click(object sender, RoutedEventArgs e)
+        {
+            ((App)Application.Current).RestartAsAdmin();
+        }
     }
 }

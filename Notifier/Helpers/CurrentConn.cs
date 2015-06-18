@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
 {
@@ -38,6 +39,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
         public string Target { get; set; }
         public string TargetPort { get; set; }
         public int Protocol { get; set; }
+        public string ProtocolAsString { get { return FirewallHelper.getProtocolAsString(Protocol); } }
 
         private string _resolvedHost = null;
         public string ResolvedHost

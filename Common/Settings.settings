@@ -38,5 +38,8 @@
     <Setting Name="ConsoleSizeWidth" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">850</Value>
     </Setting>
+    <Setting Name="AccentColor" Type="System.Windows.Media.SolidColorBrush" Scope="User">
+      <Value Profile="(Default)">#FFFF7F50</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -8,7 +8,18 @@
       d:DesignHeight="400" d:DesignWidth="800"
 	Title="Event log">
     <DockPanel>
-        <Border Style="{StaticResource ToolBarPanel}">
+        <Border Background="#FFFF7B7B" Style="{StaticResource NonAdminPanel}">
+            <WrapPanel>
+                <Label Content="Only an administrator can use this feature." />
+                <Button BorderBrush="LightGray" BorderThickness="1" x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
+                    <Grid>
+                        <Path Height="16" HorizontalAlignment="Left" Stretch="Uniform" Fill="#FF5353F7" Data="{StaticResource Image_Shield}" />
+                        <Label Margin="15,0,0,0" Content="restart as admin" />
+                    </Grid>
+                </Button>
+            </WrapPanel>
+        </Border>
+        <Border Style="{StaticResource ToolBarPanel}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
             <Grid>
                 <WrapPanel>
                     <ToggleButton IsChecked="{Binding IsTrackingEnabled}">
@@ -27,7 +38,7 @@
                                     </Style>
                                 </Path.Style>
                             </Path>
-                            <TextBlock Margin="20,0,0,0" Text="Auto-refresh" />
+                            <Label Margin="20,0,0,0" Content="Auto-refresh" />
                         </Grid>
                     </ToggleButton>
                     <Button x:Name="btnLocate" Click="btnLocate_Click">
@@ -45,16 +56,20 @@
                     <TextBlock VerticalAlignment="Center" Text="{Binding LogEntries.Count, StringFormat='{}{0} item(s)', FallbackValue='No item found'}" />
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Right">
-                    <Path Fill="#FFA2A2FF" Data="{StaticResource Image_UpdateRate}"/>
-                    <Label Content="Update rate:" />
-                    <ComboBox IsEditable="False" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
+                    <Border BorderBrush="White" Background="White" BorderThickness="0" CornerRadius="8" Padding="5,2" Margin="0,0,5,0">
+                        <WrapPanel>
+                            <Path Fill="#FFA2A2FF" Data="{StaticResource Image_UpdateRate}"/>
+                            <Label Margin="4,0" Content="Update rate:" />
+                            <ComboBox IsEditable="False" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
+                        </WrapPanel>
+                    </Border>
                     <ToggleButton x:Name="btnHelp">
                         <Path Fill="Chocolate" Data="{StaticResource Image_Help}"/>
                     </ToggleButton>
                 </WrapPanel>
             </Grid>
         </Border>
-        <Grid>
+        <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
             <DataGrid BorderThickness="0" x:Name="gridLog" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="True" HeadersVisibility="Column">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="CreationTime" Binding="{Binding CreationTime}"/>

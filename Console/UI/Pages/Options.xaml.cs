@@ -1,0 +1,51 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using Wokhan.WindowsFirewallNotifier.Common;
+using Wokhan.WindowsFirewallNotifier.Console.UI.Windows;
+using System.Linq;
+
+namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
+{
+    /// <summary>
+    /// Interaction logic for Settings.xaml
+    /// </summary>
+    public partial class Options : Page
+    {
+        private Dictionary<string, Brush> _colors = typeof(Colors).GetProperties(BindingFlags.Public | BindingFlags.Static).ToDictionary(c => c.Name, c => (Brush)new SolidColorBrush((Color)c.GetValue(null)));
+        public Dictionary<string, Brush> Colors { get { return _colors; } }
+
+        public SolidColorBrush AccentColor
+        {
+            get { return (SolidColorBrush)Application.Current.Resources["AccentColorBrush"]; }
+            set { Application.Current.Resources["AccentColorBrush"] = value; Settings.Default.AccentColor = value; }
+        }
+
+        public Options()
+        {
+            InitializeComponent();
+        }
+
+        private void btnOK_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.Save();
+
+            ((MainWindow)Window.GetWindow(this)).GoBack();
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainWindow)Window.GetWindow(this)).GoBack();
+        }
+
+        private void btnTestNotif_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe"));
+        }
+    }
+}

@@ -41,6 +41,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             System.Diagnostics.Debug.WriteLine(msg);
             return;
+
             StreamWriter sw = null;
             try
             {

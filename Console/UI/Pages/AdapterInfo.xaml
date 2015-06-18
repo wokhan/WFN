@@ -9,7 +9,6 @@
       d:DesignHeight="600" d:DesignWidth="600"
       Title="AdapterInfo"
       xmlns:dummydata="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.Helpers.DummyData"
-      d:DataContext="{d:DesignInstance Type=dummydata:AdapterDummy, IsDesignTimeCreatable=True}"
       DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Page.Resources>
         <Converters:SecondsToDateTimeConverter x:Key="secondsConverter" />
@@ -34,15 +33,19 @@
                                     </Style>
                                 </Path.Style>
                             </Path>
-                            <TextBlock Margin="15,0,0,0" Text="Auto-refresh" />
+                            <Label Margin="15,0,0,0" Content="Auto-refresh" />
                         </Grid>
                     </ToggleButton>
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Right">
-                    <Path Fill="#FFA2A2FF" Data="{StaticResource Image_UpdateRate}"/>
-                    <Label Content="Update rate:" HorizontalAlignment="Right" />
-                    <ComboBox IsEditable="False" HorizontalAlignment="Right" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
-                    <ToggleButton x:Name="btnHelp" Margin="0">
+                    <Border BorderBrush="White" Background="White" BorderThickness="0" CornerRadius="8" Padding="5,2" Margin="0,0,5,0">
+                        <WrapPanel>
+                            <Path Fill="#FFA2A2FF" Data="{StaticResource Image_UpdateRate}"/>
+                            <Label Margin="4,0" Content="Update rate:" />
+                            <ComboBox IsEditable="False" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
+                        </WrapPanel>
+                    </Border>
+                    <ToggleButton x:Name="btnHelp">
                         <Path Fill="Chocolate" Data="{StaticResource Image_Help}"/>
                     </ToggleButton>
                 </WrapPanel>
@@ -50,7 +53,7 @@
         </Border>
         <Grid>
             <ScrollViewer>
-                <ItemsControl ItemsSource="{Binding AllInterfaces}">
+                <ItemsControl ItemsSource="{Binding}" DataContext="{Binding AllInterfaces}" d:DataContext="{d:DesignInstance Type=dummydata:AdapterDummy,IsDesignTimeCreatable=True,CreateList=True}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Expander>

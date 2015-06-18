@@ -41,7 +41,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             {
                 if (!Settings.Default.UseBlockRules && exclusions == null)
                 {
-                    string exclusionsPath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "exclusions.set");
+                    string exclusionsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exclusions.set");
                     if (File.Exists(exclusionsPath))
                     {
                         exclusions = File.ReadAllLines(exclusionsPath);

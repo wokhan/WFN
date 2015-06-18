@@ -101,5 +101,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 lstConnections.Add(new Connection(b));
             }
         }
+
+        private void btnRestartAdmin_Click(object sender, RoutedEventArgs e)
+        {
+            ((App)Application.Current).RestartAsAdmin();
+        }
     }
 }

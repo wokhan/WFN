@@ -1,4 +1,4 @@
-﻿<Page x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.SettingsPage"
+﻿<Page x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.Options"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,16 +6,29 @@
       xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="600"
-      Title="Settings" DataContext="{Binding RelativeSource={RelativeSource Self}}" Margin="10,10,0,10">
+      Title="Settings" DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <DockPanel>
-        <WrapPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center">
-            <Button Content="OK" Width="75" x:Name="btnOK" Margin="10" Click="btnOK_Click" />
-            <Button Content="Cancel" Width="75" x:Name="btnCancel" Margin="10" Click="btnCancel_Click" />
-        </WrapPanel>
-        <ScrollViewer>
-            <StackPanel>
-                <Label Content="Notifications (outgoing connections)" Background="LightGray" FontWeight="Bold" />
-                <Border BorderThickness="0" Background="#FFFF7B7B">
+        <Border Style="{StaticResource ToolBarPanel}">
+            <WrapPanel HorizontalAlignment="Left">
+                <Button x:Name="btnSave" Click="btnOK_Click">
+                    <Grid>
+                        <Path HorizontalAlignment="Left" Height="14" Stretch="Uniform" Fill="#FF6C6CD4" Data="{StaticResource Image_Shield}" />
+                        <TextBlock Margin="20,0,0,0" Text="Apply modifications" />
+                    </Grid>
+                </Button>
+                <Button x:Name="btnRevert" Click="btnCancel_Click">
+                    <Grid>
+                        <Path HorizontalAlignment="Left" Height="14" Stretch="Uniform" Fill="Red" Data="{StaticResource Image_Refresh}" />
+                        <TextBlock Margin="20,0,0,0" Text="Revert" />
+                    </Grid>
+                </Button>
+            </WrapPanel>
+        </Border>
+        <StackPanel>
+            <Label Content="Notifier settings" Background="{DynamicResource AccentColorBrush}" FontWeight="Bold" />
+            <StackPanel Margin="10">
+                <TextBlock Margin="0,0,0,10" TextWrapping="Wrap" Text="The following options only apply if you choosed 'Block and prompt' for the outgoing connections in the Firewall settings page, as they target the WFN notification window." />
+                <!--<Border BorderThickness="0" Background="#FFFF7B7B">
                     <Border.Style>
                         <Style TargetType="Border" BasedOn="{StaticResource InfoPanel}">
                             <Setter Property="Visibility" Value="Visible" />
@@ -51,6 +64,7 @@
                                 </ComboBox>
                             </WrapPanel>
                             <CheckBox Content="Use an animated notification" Margin="0,0,0,10" IsChecked="{Binding UseAnimation, Source={StaticResource WFNSettings}}" />
+                            <Button Content="Test" x:Name="btnTestNotif" Click="btnTestNotif_Click" />
                             <CheckBox Content="Create a blocking rule instead of using an exceptions list" Margin="0,0,0,5" IsChecked="{Binding UseBlockRules, Source={StaticResource WFNSettings}}" />
                             <TextBlock Margin="30,0,0,10" Text="This option allows the blocked applications to stay blocked even if you disable WFN notifications, by creating a blocking rule in the Windows embedded firewall." TextWrapping="Wrap" />
                             <CheckBox Content="Enable services detection" IsChecked="{Binding EnableServiceDetection, Source={StaticResource WFNSettings}}" />
@@ -68,10 +82,30 @@ Please note that you will be able to do it later through the Options panel." Tex
                             <CheckBox x:Name="chkDisableLog" Content="Disable the Windows firewall outgoing connections log (default)" />
                         </StackPanel>
                     </GroupBox>
-                </StackPanel>
-                <Label Margin="0,0,0,10" Content="Miscellaneous options" Background="LightGray" FontWeight="Bold" />
-                <CheckBox Content="Minimize the console to the system tray instead of the taskbar." IsChecked="{Binding MinimizeToTray, Source={StaticResource WFNSettings}}" />
+                </StackPanel-->
+                <CheckBox Content="Use an animated notification" Margin="0,0,0,10" IsChecked="{Binding UseAnimation, Source={StaticResource WFNSettings}}" />
+                <Button Margin="0,0,0,10" Padding="4"  HorizontalAlignment="Center" Content="Click here to test" x:Name="btnTestNotif" Click="btnTestNotif_Click" />
+                <CheckBox Content="Create a blocking rule instead of using an exceptions list for the blocked outgoing connections" Margin="0,0,0,5" IsChecked="{Binding UseBlockRules, Source={StaticResource WFNSettings}}" />
+                <TextBlock Margin="30,0,0,10" Text="This option allows the blocked applications to stay blocked even if you disable WFN notifications, by creating a blocking rule in the Windows embedded firewall." TextWrapping="Wrap" />
+                <CheckBox Content="Enable services detection" IsChecked="{Binding EnableServiceDetection, Source={StaticResource WFNSettings}}" />
             </StackPanel>
-        </ScrollViewer>
+            <Label Content="Miscellaneous options" Background="{DynamicResource AccentColorBrush}" FontWeight="Bold" />
+            <StackPanel Margin="10">
+                <CheckBox Content="Minimize the console to the system tray instead of the taskbar." IsChecked="{Binding MinimizeToTray, Source={StaticResource WFNSettings}}" />
+                <WrapPanel>
+                    <Label Content="Accent color: " />
+                    <ComboBox IsEditable="False" ItemsSource="{Binding Colors}" SelectedValuePath="Value" SelectedValue="{Binding AccentColor}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <WrapPanel>
+                                    <Rectangle Width="10" Height="10" Fill="{Binding Value}" />
+                                    <Label Content="{Binding Key}" />
+                                </WrapPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </WrapPanel>
+            </StackPanel>
+        </StackPanel>
     </DockPanel>
 </Page>

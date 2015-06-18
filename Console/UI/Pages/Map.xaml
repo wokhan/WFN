@@ -10,6 +10,17 @@
       DataContext="{Binding RelativeSource={RelativeSource Self}}"
       Title="Map">
     <DockPanel>
+        <Border Background="#FFFF7B7B" Style="{StaticResource NonAdminPanel}">
+            <WrapPanel>
+                <Label Content="Information provided here might be inaccurate for non-admin users." />
+                <Button x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
+                    <Grid>
+                        <Path Height="16" HorizontalAlignment="Left" Stretch="Uniform" Fill="#FF5353F7" Data="{StaticResource Image_Shield}" />
+                        <Label Margin="20,0,0,0" Padding="0"  Content="Restart as admin" />
+                    </Grid>
+                </Button>
+            </WrapPanel>
+        </Border>
         <Border Style="{StaticResource ToolBarPanel}">
             <Grid>
                 <WrapPanel HorizontalAlignment="Left">
@@ -41,11 +52,11 @@
                     <TextBlock VerticalAlignment="Center" Text="{Binding Connections.Count, StringFormat='Active connection(s): {0}', FallbackValue='No active connection'}" />
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Right">
-                    <Border BorderBrush="White" Background="White" BorderThickness="0" CornerRadius="8" Padding="5,0" Margin="0,0,5,0">
+                    <Border BorderBrush="White" Background="White" BorderThickness="0" CornerRadius="8" Padding="5,2" Margin="0,0,5,0">
                         <WrapPanel>
                             <Path Fill="#FFA2A2FF" Data="{StaticResource Image_UpdateRate}"/>
-                            <Label Content="Update rate:" HorizontalAlignment="Right" />
-                            <ComboBox IsEditable="False" HorizontalAlignment="Right" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
+                            <Label Margin="4,0" Content="Update rate:" />
+                            <ComboBox IsEditable="False" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
                         </WrapPanel>
                     </Border>
                     <ToggleButton x:Name="btnHelp">
