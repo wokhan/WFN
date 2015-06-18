@@ -1,0 +1,41 @@
+﻿<Window x:Class="Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows.ServicesForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows"
+        mc:Ignorable="d" ShowInTaskbar="False" WindowStyle="None" 
+        Title="Service selection" Height="350" Width="500" WindowStartupLocation="CenterScreen"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Border BorderBrush="Black" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Content="Services selection" />
+            <TextBlock Background="LightYellow" Padding="10"  TextWrapping="Wrap" Grid.Row="1">
+            Windows Firewall Notifier was not able to determine which service actually attempted to create an outgoing connection.
+<LineBreak />Please pick up the service(s) you would like to allow, or chose the first option to create an application rule instead of a service one.
+<LineBreak />If you are unsure of what you should do, picking them all would be the best option (and the default one).
+            </TextBlock>
+            <RadioButton Grid.Row="2" Margin="5" GroupName="rdbType" IsChecked="{Binding CreateAppRule}" Content="Create an application rule and ignore the services."/>
+            <RadioButton Grid.Row="3" Margin="5" GroupName="rdbType" Content="Create rules for the specified services (recommended)." IsChecked="True" x:Name="rdbTypeService" />
+            <DataGrid Margin="10,0,10,10" IsEnabled="{Binding IsChecked,ElementName=rdbTypeService}" Grid.Row="4" ItemsSource="{Binding Services}" SelectedValue="{Binding SelectedServices}">
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn Binding="{Binding IsSelected}" />
+                    <DataGridTextColumn Header="Service" Binding="{Binding Name}" />
+                    <DataGridTextColumn Header="Description" Binding="{Binding Description}" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <WrapPanel Grid.Row="5" HorizontalAlignment="Center">
+                <Button HorizontalAlignment="Center" Margin="5" Width="75" Content="OK" />
+                <Button HorizontalAlignment="Center" Margin="5" Width="75" Content="Cancel" IsCancel="True" />
+            </WrapPanel>
+        </Grid>
+    </Border>
+</Window>

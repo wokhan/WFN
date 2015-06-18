@@ -5,10 +5,9 @@ using System.Text;
 using System.Windows;
 using Wokhan.WindowsFirewallNotifier.Console.Properties;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
-using System.Xml.Linq;
 using System.Reflection;
-using System.Xml;
-using System.Xml.XPath;
+using System.ServiceProcess;
+using System.Linq;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
 {
@@ -17,13 +16,13 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
         /// <summary>
         /// 
         /// </summary>
-        public static bool RemoveProgram(bool reallowOutgoing, bool disableLogging, Action<string, string> failureCallback, Action<string, string> successCallback)
+        public static bool RemoveProgram(bool disableLogging, Action<string, string> failureCallback, Action<string, string> successCallback)
         {
-            if (reallowOutgoing && !FirewallHelper.RestoreWindowsFirewall())
+            /*if (reallowOutgoing && !FirewallHelper.RestoreWindowsFirewall())
             {
                 failureCallback(Resources.MSG_UNINST_UNBLOCK_ERR, Resources.MSG_DLG_ERR_TITLE);
                 return false;
-            }
+            }*/
 
             if (disableLogging
                 && !ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\auditpol.exe", "/set /subcategory:{0CCE9226-69AE-11D9-BED3-505054503030} /failure:disable"))
@@ -69,7 +68,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
             {
                 if (FirewallHelper.EnableWindowsFirewall())
                 {
-                    if (FirewallHelper.CreateDefaultRules())
+                    if (CreateDefaultRules())
                     {
                         if (createTask(allUsers))
                         {
@@ -102,6 +101,53 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
             return true;
         }
 
+        private static bool CreateDefaultRules()
+        {
+            bool ret = true;
+            var rules = FirewallHelper.GetRules();
+            ServiceController sc = new ServiceController();
+            string rname;
+
+            // Windows 8
+            if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 2)
+            {
+                rname = String.Format(Common.Resources.RULE_NAME_FORMAT, "Windows Applications (auto)");
+                if (rules.All(r => r.Name != rname))
+                {
+                    ret = ret && FirewallHelper.AddAllowRule(rname, Environment.SystemDirectory + "\\wwahost.exe", null, (int)FirewallHelper.Protocols.ANY, null, null, null, false);
+                }
+            }
+
+            sc.ServiceName = "wuauserv";
+            rname = String.Format(Common.Resources.RULE_NAME_FORMAT, sc.DisplayName + " (auto)");
+            if (rules.All(r => r.Name != rname + " [R:80,443]"))
+            {
+                ret = ret && FirewallHelper.AddAllowRule(rname, Environment.SystemDirectory + "\\svchost.exe", "wuauserv", (int)FirewallHelper.Protocols.TCP, null, "80,443", null, false);
+            }
+
+            sc.ServiceName = "bits";
+            rname = String.Format(Common.Resources.RULE_NAME_FORMAT, sc.DisplayName + "(auto)");
+            if (rules.All(r => r.Name != rname + " [R:80,443]"))
+            {
+                ret = ret && FirewallHelper.AddAllowRule(rname, Environment.SystemDirectory + "\\svchost.exe", "bits", (int)FirewallHelper.Protocols.TCP, null, "80,443", null, false);
+            }
+
+            sc.ServiceName = "cryptsvc";
+            rname = String.Format(Common.Resources.RULE_NAME_FORMAT, sc.DisplayName + "(auto)");
+            if (rules.All(r => r.Name != rname + " [R:80]"))
+            {
+                ret = ret && FirewallHelper.AddAllowRule(rname, Environment.SystemDirectory + "\\svchost.exe", "cryptsvc", (int)FirewallHelper.Protocols.TCP, null, "80", null, false);
+            }
+
+            //sc.ServiceName = "aelookupsvc";
+            //rname = String.Format(Resources.RULE_NAME_FORMAT, sc.DisplayName + "(auto)");
+            //if (rules.All(r => r.Name != rname + " [R:80]"))
+            //{
+            //    ret = ret && AddRule(rname, Environment.SystemDirectory + "\\svchost.exe", "aelookupsvc", (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP, null, "80", null);
+            //}
+
+            return ret;
+        }
 
 
         /// <summary>
@@ -119,7 +165,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
                                         DateTime.Now.ToString("s"));
 
             taskStr.Close();
-                              
+
             File.WriteAllText(tmpXML, newtask, Encoding.Unicode);
 
             bool ret = ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", "/IT /Create /TN WindowsFirewallNotifierTask /XML \"" + tmpXML + "\"");

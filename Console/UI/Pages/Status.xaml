@@ -1,0 +1,148 @@
+﻿<Page x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.Status"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="500" d:DesignWidth="600"
+      Title="Status">
+    <DockPanel>
+        <Border Background="#FFFF7B7B" Style="{StaticResource NonAdminPanel}">
+            <WrapPanel>
+                <Label Content="Only an administrator can use this feature." />
+                <Button BorderBrush="LightGray" BorderThickness="1" x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
+                    <Grid>
+                        <Path Height="16" HorizontalAlignment="Left" Stretch="Uniform" Fill="#FF5353F7" Data="{StaticResource Image_Shield}" />
+                        <Label Margin="20,0,0,0" Content="restart as admin" />
+                    </Grid>
+                </Button>
+            </WrapPanel>
+        </Border>
+        <Border Style="{StaticResource ToolBarPanel}">
+            <WrapPanel HorizontalAlignment="Left">
+                <Button x:Name="btnSave" Click="btnSave_Click" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
+                    <Grid>
+                        <Path HorizontalAlignment="Left" Height="14" Stretch="Uniform" Fill="#FF6C6CD4" Data="{StaticResource Image_Shield}" />
+                        <Label Margin="20,0,0,0" Content="Apply modifications" />
+                    </Grid>
+                </Button>
+                <Button x:Name="btnRevert" Click="btnRevert_Click">
+                    <Grid>
+                        <Path HorizontalAlignment="Left" Height="14" Stretch="Uniform" Fill="Red" Data="{StaticResource Image_Refresh}" />
+                        <Label Margin="20,0,0,0" Content="Revert" />
+                    </Grid>
+                </Button>
+            </WrapPanel>
+        </Border>
+        <StackPanel>
+            <TextBlock Margin="5" TextWrapping="Wrap" Text="WFN is not a firewall and relies on the Windows embedded firewall when it comes to connections filtering. The table below shows the current Windows firewall status and allows you to manage the same directly." />
+            <WrapPanel>
+                <Label FontWeight="Bold" Content="Current profile: "/>
+                <Label Content="{Binding CurrentProfile,FallbackValue=Unknown}" />
+            </WrapPanel>
+            <TextBlock Margin="5" TextWrapping="Wrap" FontStyle="Italic" Text="Note: if you don't know what a profile is all about, the private one usually refers to your home network, while the public one is for public places (restaurant, hotels...). A domain profile is usually for workplaces." />
+            <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
+                <Grid.Style>
+                    <Style>
+                        <Style.Resources>
+                            <Style TargetType="ToggleButton" BasedOn="{StaticResource ToggleSwitch}">
+                                <Setter Property="Content" Value="Disabled" />
+                                <Setter Property="Padding" Value="10,5" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter Property="Content" Value="Enabled" />
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="BorderBrush" Value="Gray" />
+                                        <Setter Property="Foreground" Value="Gray" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Margin" Value="5" />
+                            </Style>
+                            <Style TargetType="RadioButton" BasedOn="{StaticResource RadioButtonSlide}">
+                                <Setter Property="Margin" Value="5,0" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="BorderBrush" Value="Gray" />
+                                        <Setter Property="Foreground" Value="Gray" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Style.Resources>
+                    </Style>
+                </Grid.Style>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <!-- -->
+                <Rectangle Grid.Column="1" Grid.Row="0" Grid.RowSpan="10" Fill="Lavender" />
+                <Rectangle Grid.Column="2" Grid.Row="0" Grid.RowSpan="10" Fill="#FFC5FFC5" />
+                <Rectangle Grid.Column="3" Grid.Row="0" Grid.RowSpan="10" Fill="#FFC1F4FF" />
+                <!-- -->
+                <Label Grid.Column="1" HorizontalContentAlignment="Center" FontWeight="Bold" Content="Private" />
+                <Label Grid.Column="2" HorizontalContentAlignment="Center" FontWeight="Bold" Content="Public" />
+                <Label Grid.Column="3" HorizontalContentAlignment="Center" FontWeight="Bold" Content="Domain" />
+                <!-- -->
+                <Label Grid.Row="1" Grid.ColumnSpan="4" FontWeight="Bold" Content="Windows firewall global status" Background="{DynamicResource AccentColorBrush}" />
+                <!-- -->
+                <ToggleButton Padding="5" Grid.Row="2" Grid.Column="1" IsChecked="{Binding PrivateIsEnabled}" />
+                <ToggleButton Grid.Row="2" Grid.Column="2" IsChecked="{Binding PublicIsEnabled}" />
+                <ToggleButton Grid.Row="2" Grid.Column="3" IsChecked="{Binding DomainIsEnabled}" />
+                <!-- -->
+                <Label Grid.Row="4" FontWeight="Bold" Grid.ColumnSpan="4" Content="Default actions (when no filtering rule matches)" Background="{DynamicResource AccentColorBrush}" />
+                <!-- -->
+                <Label Grid.Row="5" Content="Inbound" FontWeight="Bold" />
+                <StackPanel Grid.Row="5" Grid.Column="1" IsEnabled="{Binding PrivateIsEnabled}">
+                    <RadioButton GroupName="rdbInPrv" Padding="0,0,0,10" IsChecked="True" Content="Allow" Tag="IsFirst" />
+                    <RadioButton GroupName="rdbInPrv" IsChecked="{Binding PrivateIsInBlocked}" Content="Block silently" />
+                    <RadioButton GroupName="rdbInPrv" Padding="0,10,0,0" IsChecked="{Binding PrivateIsInBlockedNotif}" Tag="IsLast"  Content="Block and prompt" />
+                </StackPanel>
+                <StackPanel Grid.Row="5" Grid.Column="2" IsEnabled="{Binding PublicIsEnabled}">
+                    <RadioButton GroupName="rdbInPub" Padding="0,0,0,10" IsChecked="True" Content="Allow" />
+                    <RadioButton GroupName="rdbInPub" IsChecked="{Binding PublicIsInBlocked}" Content="Block silently" />
+                    <RadioButton GroupName="rdbInPub" Padding="0,10,0,0" IsChecked="{Binding PublicIsInBlockedNotif}" Content="Block and prompt" />
+                </StackPanel>
+                <StackPanel Grid.Row="5" Grid.Column="3" IsEnabled="{Binding DomainIsEnabled}">
+                    <RadioButton GroupName="rdbInDom" Padding="0,0,0,10" IsChecked="True" Content="Allow" />
+                    <RadioButton GroupName="rdbInDom" IsChecked="{Binding DomainIsInBlocked}" Content="Block silently" />
+                    <RadioButton GroupName="rdbInDom" Padding="0,10,0,0" IsChecked="{Binding DomainIsInBlockedNotif}" Content="Block and prompt" />
+                </StackPanel>
+                <Label Grid.Row="6" Content="Outbound" FontWeight="Bold" />
+                <StackPanel Grid.Row="6" Grid.Column="1" IsEnabled="{Binding PrivateIsEnabled}">
+                    <RadioButton GroupName="rdbOutPrv" Padding="0,0,0,10" IsChecked="True" Content="Allow" />
+                    <RadioButton GroupName="rdbOutPrv" IsChecked="{Binding PrivateIsOutBlocked}" Content="Block silently" />
+                    <RadioButton GroupName="rdbOutPrv" Padding="0,10,0,0" IsChecked="{Binding PrivateIsOutBlockedNotif}" Content="Block and prompt*" />
+                </StackPanel>
+                <StackPanel Grid.Row="6" Grid.Column="2" IsEnabled="{Binding PublicIsEnabled}">
+                    <RadioButton GroupName="rdbOutPub" Padding="0,0,0,10" IsChecked="True" Content="Allow" />
+                    <RadioButton GroupName="rdbOutPub" IsChecked="{Binding PublicIsOutBlocked}" Content="Block silently" />
+                    <RadioButton GroupName="rdbOutPub" Padding="0,10,0,0" IsChecked="{Binding PublicIsOutBlockedNotif}" Content="Block and prompt*" />
+                </StackPanel>
+                <StackPanel Grid.Row="6" Grid.Column="3" IsEnabled="{Binding DomainIsEnabled}">
+                    <RadioButton GroupName="rdbOutDom" Padding="0,0,0,10" IsChecked="True" Content="Allow" />
+                    <RadioButton GroupName="rdbOutDom" IsChecked="{Binding DomainIsOutBlocked}" Content="Block silently" />
+                    <RadioButton GroupName="rdbOutDom" Padding="0,10,0,0" IsChecked="{Binding DomainIsOutBlockedNotif}" Content="Block and prompt*" />
+                </StackPanel>
+            </Grid>
+            <TextBlock TextWrapping="Wrap" Text="* The outgoing notifications are handled by WFN and cannot be applied to a specific profile. Selecting 'Block and notify' for at least one profile will enable notifications for all of them." />
+        </StackPanel>
+    </DockPanel>
+</Page>

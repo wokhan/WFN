@@ -18,6 +18,74 @@
             <Style TargetType="CheckBox">
                 <Setter Property="Background" Value="White" />
             </Style>
+            <Style TargetType="ToggleButton" x:Key="ToggleSwitch">
+                <Setter Property="OverridesDefaultStyle" Value="True"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="BorderThickness" Value="2" />
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ToggleButton">
+                            <StackPanel Margin="{TemplateBinding Padding}" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Border VerticalAlignment="Center" CornerRadius="10" Width="40" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+                                    <Grid>
+                                        <Ellipse Margin="2" Width="10" Height="10" Fill="{TemplateBinding Foreground}">
+                                            <Ellipse.Style>
+                                                <Style TargetType="Ellipse">
+                                                    <Setter Property="HorizontalAlignment" Value="Left" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsChecked,RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="True">
+                                                            <Setter Property="HorizontalAlignment" Value="Right" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Ellipse.Style>
+                                        </Ellipse>
+                                    </Grid>
+                                </Border>
+                                <ContentPresenter Margin="{TemplateBinding Padding}" />
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="RadioButton" x:Key="RadioButtonSlide">
+                <Setter Property="OverridesDefaultStyle" Value="True"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="BorderThickness" Value="2" />
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="RadioButton">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Rectangle Grid.Column="0" Fill="{TemplateBinding BorderBrush}" HorizontalAlignment="Center" Width="5" />
+                                <Border Grid.Column="0" Margin="{TemplateBinding Padding}" VerticalAlignment="Center" CornerRadius="10" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+                                    <Ellipse Margin="2" Width="10" Height="10" Fill="{TemplateBinding Foreground}">
+                                        <Ellipse.Style>
+                                            <Style TargetType="Ellipse">
+                                                <Setter Property="Visibility" Value="Hidden" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsChecked,RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Ellipse.Style>
+                                    </Ellipse>
+                                </Border>
+                                <Grid Grid.Column="1" Margin="5,0">
+                                    <ContentPresenter Margin="{TemplateBinding Padding}" />
+                                </Grid>
+                                <!--</StackPanel>-->
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
             <Style x:Key="InfoBlock" TargetType="Border">
                 <Setter Property="HorizontalAlignment" Value="Right" />
                 <Setter Property="Margin" Value="30,5" />
@@ -64,7 +132,7 @@
             </Style>
             <Style x:Key="MenuPanel" TargetType="Border">
                 <Setter Property="DockPanel.Dock" Value="Left" />
-                <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
+                <Setter Property="BorderBrush" Value="LightGray" />
                 <Setter Property="BorderThickness" Value="0,0,1,0" />
                 <Setter Property="Background" Value="WhiteSmoke" />
                 <Style.Resources>
@@ -217,6 +285,8 @@
                     </Style>
                     <Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
                         <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                        <Setter Property="Padding" Value="0" />
                     </Style>
                     <Style TargetType="Path">
                         <Setter Property="Height" Value="16"  />
@@ -224,6 +294,14 @@
                         <Setter Property="HorizontalAlignment" Value="Left" />
                     </Style>
                 </Style.Resources>
+            </Style>
+            <Style x:Key="NonAdminPanel" TargetType="Border" BasedOn="{StaticResource ToolBarPanel}">
+                <Setter Property="Visibility" Value="Visible" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsElevated,Source={x:Static Application.Current}}" Value="True">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </DataTrigger>
+                </Style.Triggers>
             </Style>
         </ResourceDictionary>
     </Application.Resources>

@@ -8,6 +8,17 @@
       d:DesignHeight="400" d:DesignWidth="800"
 	Title="Connections">
     <DockPanel>
+        <Border Background="#FFFF7B7B" Style="{StaticResource NonAdminPanel}">
+            <WrapPanel>
+                <Label Content="Information provided here might be inaccurate for non-admin users." />
+                <Button BorderBrush="LightGray" BorderThickness="1" x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
+                    <Grid>
+                        <Path Height="16" HorizontalAlignment="Left" Stretch="Uniform" Fill="#FF5353F7" Data="{StaticResource Image_Shield}" />
+                        <Label Margin="20,0,0,0" Content="restart as admin" />
+                    </Grid>
+                </Button>
+            </WrapPanel>
+        </Border>
         <Border Style="{StaticResource ToolBarPanel}">
             <Grid>
                 <WrapPanel HorizontalAlignment="Left">
@@ -27,15 +38,19 @@
                                     </Style>
                                 </Path.Style>
                             </Path>
-                            <TextBlock Margin="15,0,0,0" Text="Auto-refresh" />
+                            <Label Margin="15,0,0,0" Content="Auto-refresh" />
                         </Grid>
                     </ToggleButton>
                     <TextBlock VerticalAlignment="Center" Text="{Binding connectionsView.Count, StringFormat='Active connection(s): {0}', FallbackValue='No active connection'}" />
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Right">
-                    <Path Fill="#FFA2A2FF" Data="{StaticResource Image_UpdateRate}"/>
-                    <Label Content="Update rate:" HorizontalAlignment="Right" />
-                    <ComboBox IsEditable="False" HorizontalAlignment="Right" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
+                    <Border BorderBrush="White" Background="White" BorderThickness="0" CornerRadius="8" Padding="5,2" Margin="0,0,5,0">
+                        <WrapPanel>
+                            <Path Fill="#FFA2A2FF" Data="{StaticResource Image_UpdateRate}"/>
+                            <Label Margin="4,0" Content="Update rate:" />
+                            <ComboBox IsEditable="False" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
+                        </WrapPanel>
+                    </Border>
                     <ToggleButton x:Name="btnHelp">
                         <Path Fill="Chocolate" Data="{StaticResource Image_Help}"/>
                     </ToggleButton>

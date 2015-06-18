@@ -3,21 +3,14 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.ServiceProcess;
-using System.Text.RegularExpressions;
-using Wokhan.WindowsFirewallNotifier.Common;
-using System.Net.NetworkInformation;
-using System.Runtime.InteropServices;
-using Microsoft.Win32.SafeHandles;
-using NetFwTypeLib;
 using System.Windows.Media;
 using System.Collections.Generic;
 using System.Windows.Interop;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.IO;
-using System.Text;
+using System.Reflection;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -40,6 +33,18 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             QueryLimitedInformation = 0x00001000,
             Synchronize = 0x00100000
         }
+
+        public static void ElevateCurrentProcess()
+        {
+            ProcessStartInfo proc = new ProcessStartInfo();
+            proc.UseShellExecute = true;
+            proc.WorkingDirectory = Environment.CurrentDirectory;
+            proc.FileName = Path.Combine(Assembly.GetCallingAssembly().Location);
+            proc.Verb = "runas";
+
+            Process.Start(proc);
+        }
+        
 
         private static Dictionary<string, ImageSource> procIconLst = new Dictionary<string, ImageSource>();
 
@@ -356,6 +361,5 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             return ret;
         }
-
     }
 }

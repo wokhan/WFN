@@ -39,13 +39,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             InitializeComponent();
 
-            //   initEventLog();
+            if (((App)Application.Current).IsElevated)
+            {
+                timer.Interval = TimeSpan.FromSeconds(Interval);
+                timer.Tick += timer_Tick;
 
-            timer.Interval = TimeSpan.FromSeconds(Interval);
-            timer.Tick += timer_Tick;
-
-            this.Loaded += EventsLog_Loaded;
-            this.Unloaded += EventsLog_Unloaded;
+                this.Loaded += EventsLog_Loaded;
+                this.Unloaded += EventsLog_Unloaded;
+            }
         }
 
         private void EventsLog_Unloaded(object sender, RoutedEventArgs e)
@@ -167,5 +168,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             Process.Start("eventvwr.msc");
         }
 
+        private void btnRestartAdmin_Click(object sender, RoutedEventArgs e)
+        {
+            ((App)Application.Current).RestartAsAdmin();
+        }
     }
 }

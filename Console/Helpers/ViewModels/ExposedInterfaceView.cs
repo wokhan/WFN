@@ -44,6 +44,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             NotifyPropertyChanged("Statistics");
             NotifyPropertyChanged("Properties");
             NotifyPropertyChanged("MAC");
+            NotifyPropertyChanged("FormattedBytesSent");
+            NotifyPropertyChanged("FormattedBytesReceived");
         }
     }
 }

@@ -11,8 +11,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
     /// </summary>
     public partial class MainWindow
     {
-        public bool IsAdmin { get { return ((App)Application.Current).IsElevated; } }
-
         private Uri previousUri = null;
 
         public void GoBack()
@@ -87,7 +85,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
         private void btnSettings_Click(object sender, RoutedEventArgs e)
         {
             previousUri = mainFrame.CurrentSource;
-            mainFrame.Navigate(new SettingsPage());
+            mainFrame.Navigate(new Options());
         }
 
         private void btnMonitor_Click(object sender, RoutedEventArgs e)
@@ -113,6 +111,16 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
         private void btnMap_Click(object sender, RoutedEventArgs e)
         {
             mainFrame.Navigate(new Map());
+        }
+
+        private void btnStatus_Click(object sender, RoutedEventArgs e)
+        {
+            mainFrame.Navigate(new Status());
+        }
+
+        private void btnMenu_Click(object sender, RoutedEventArgs e)
+        {
+            menuGrid.Width = (menuGrid.Width != menuBar.Width ? menuBar.Width : Double.NaN);
         }
     }
 }

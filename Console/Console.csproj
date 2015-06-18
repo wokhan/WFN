@@ -75,6 +75,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -96,6 +97,7 @@
     <Compile Include="Helpers\BindingConverters\BooleanNegator.cs" />
     <Compile Include="Helpers\DummyData\AdapterDummy.cs" />
     <Compile Include="Helpers\DummyData\MonitorDummy.cs" />
+    <Compile Include="Helpers\InstallHelper.cs" />
     <Compile Include="Helpers\ViewModels\GeoConnection.cs" />
     <Compile Include="Helpers\ViewModels\ExposedInterfaceView.cs" />
     <Compile Include="Helpers\ViewModels\MapGroupedView.cs" />
@@ -128,8 +130,11 @@
     <Compile Include="UI\Pages\Rules.xaml.cs">
       <DependentUpon>Rules.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Pages\Settings.xaml.cs">
-      <DependentUpon>Settings.xaml</DependentUpon>
+    <Compile Include="UI\Pages\Options.xaml.cs">
+      <DependentUpon>Options.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Pages\Status.xaml.cs">
+      <DependentUpon>Status.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -138,7 +143,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Helpers\InstallHelper.cs" />
     <Page Include="Resources\Images.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -175,7 +179,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Pages\Settings.xaml">
+    <Page Include="UI\Pages\Options.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Pages\Status.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,20 +1,12 @@
 ﻿using System;
 using NetFwTypeLib;
-using System.Runtime.InteropServices;
 using System.Linq;
 using Microsoft.Win32;
-using System.Net;
-using System.Diagnostics;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.ServiceProcess;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Media;
-using System.Windows.Interop;
-using System.Windows.Media.Imaging;
-using System.Windows;
-using Wokhan.WindowsFirewallNotifier.Common;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -465,7 +457,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         public static string getProtocolAsString(string protocol)
         {
-            switch (int.Parse(protocol))
+            return getProtocolAsString(int.Parse(protocol));
+        }
+
+        public static string getProtocolAsString(int protocol)
+        {
+            switch (protocol)
             {
                 case (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP:
                     return "TCP";
@@ -498,9 +495,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         public static bool CheckFirewallEnabled()
         {
-            return firewallPolicy.FirewallEnabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL] || 
-                   firewallPolicy.FirewallEnabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE] || 
-                   firewallPolicy.FirewallEnabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC] || 
+            return firewallPolicy.FirewallEnabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL] ||
+                   firewallPolicy.FirewallEnabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE] ||
+                   firewallPolicy.FirewallEnabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC] ||
                    firewallPolicy.FirewallEnabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN];
         }
 
@@ -565,6 +562,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         }
 
         private static Rule[] wshRulesCache = null;
+
+        public enum Protocols
+        {
+            TCP = NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP,
+            UDP = NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_UDP,
+            ANY = NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY
+        }
+
         public static Rule[] GetRules()
         {
             if (wshRulesCache == null)
@@ -637,54 +642,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return String.IsNullOrEmpty(rulePorts) || rulePorts == "*" || rulePorts.Split(',').Contains(checkedport);
         }
 
-        public static bool CreateDefaultRules()
-        {
-            bool ret = true;
-            Rule[] rules = GetRules();
-            ServiceController sc = new ServiceController();
-            string rname;
-
-            // Windows 8
-            if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 2)
-            {
-                rname = String.Format(Resources.RULE_NAME_FORMAT, "Windows Applications (auto)");
-                if (rules.All(r => r.Name != rname))
-                {
-                    ret = ret && AddAllowRule(rname, Environment.SystemDirectory + "\\wwahost.exe", null, (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY, null, null, null, false);
-                }
-            }
-
-            sc.ServiceName = "wuauserv";
-            rname = String.Format(Resources.RULE_NAME_FORMAT, sc.DisplayName + " (auto)");
-            if (rules.All(r => r.Name != rname + " [R:80,443]"))
-            {
-                ret = ret && AddAllowRule(rname, Environment.SystemDirectory + "\\svchost.exe", "wuauserv", (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP, null, "80,443", null, false);
-            }
-
-            sc.ServiceName = "bits";
-            rname = String.Format(Resources.RULE_NAME_FORMAT, sc.DisplayName + "(auto)");
-            if (rules.All(r => r.Name != rname + " [R:80,443]"))
-            {
-                ret = ret && AddAllowRule(rname, Environment.SystemDirectory + "\\svchost.exe", "bits", (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP, null, "80,443", null, false);
-            }
-
-            sc.ServiceName = "cryptsvc";
-            rname = String.Format(Resources.RULE_NAME_FORMAT, sc.DisplayName + "(auto)");
-            if (rules.All(r => r.Name != rname + " [R:80]"))
-            {
-                ret = ret && AddAllowRule(rname, Environment.SystemDirectory + "\\svchost.exe", "cryptsvc", (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP, null, "80", null, false);
-            }
-
-            //sc.ServiceName = "aelookupsvc";
-            //rname = String.Format(Resources.RULE_NAME_FORMAT, sc.DisplayName + "(auto)");
-            //if (rules.All(r => r.Name != rname + " [R:80]"))
-            //{
-            //    ret = ret && AddRule(rname, Environment.SystemDirectory + "\\svchost.exe", "aelookupsvc", (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP, null, "80", null);
-            //}
-
-            return ret;
-        }
-
         public static string GetCurrentProfileAsText()
         {
             return GetProfileAsText((int)GetCurrentProfile());
@@ -718,5 +675,121 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return String.Join(", ", ret, 0, i);
         }
 
+        public class FirewallStatusWrapper
+        {
+            private static Dictionary<bool, string> _actions = new Dictionary<bool, string>{
+                { true, "Block" },
+                { false, "Allow"}
+            };
+
+            public Dictionary<bool, string> Actions { get { return _actions; } }
+
+            public enum Status
+            {
+                DISABLED,
+                ENABLED_ALLOW,
+                ENABLED_BLOCK,
+                ENABLED_NOTIFY
+            }
+
+            private Status privateInStatus = Status.DISABLED;
+            private Status domainInStatus = Status.DISABLED;
+            private Status publicInStatus = Status.DISABLED;
+
+            private Status privateOutStatus = Status.DISABLED;
+            private Status domainOutStatus = Status.DISABLED;
+            private Status publicOutStatus = Status.DISABLED;
+
+            public bool PrivateIsEnabled { get; set; }
+            public bool PrivateIsInBlocked { get; set; }
+            public bool PrivateIsOutBlocked { get; set; }
+            public bool PrivateIsInBlockedNotif { get; set; }
+            public bool PrivateIsOutBlockedNotif { get; set; }
+
+            public bool PublicIsEnabled { get; set; }
+            public bool PublicIsInBlocked { get; set; }
+            public bool PublicIsOutBlocked { get; set; }
+            public bool PublicIsInBlockedNotif { get; set; }
+            public bool PublicIsOutBlockedNotif { get; set; }
+
+            public bool DomainIsEnabled { get; set; }
+            public bool DomainIsInBlocked { get; set; }
+            public bool DomainIsOutBlocked { get; set; }
+            public bool DomainIsInBlockedNotif { get; set; }
+            public bool DomainIsOutBlockedNotif { get; set; }
+
+            public string CurrentProfile { get { return GetCurrentProfileAsText(); } }
+
+            public FirewallStatusWrapper()
+            {
+                updateStatus(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE, ref privateInStatus, ref privateOutStatus);
+                updateStatus(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC, ref publicInStatus, ref publicOutStatus);
+                updateStatus(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN, ref domainInStatus, ref domainOutStatus);
+
+                PrivateIsEnabled = (privateInStatus != Status.DISABLED);
+                PrivateIsInBlocked = (privateInStatus == Status.ENABLED_BLOCK);
+                PrivateIsInBlockedNotif = (privateInStatus == Status.ENABLED_NOTIFY);
+                PrivateIsOutBlocked = (privateOutStatus != Status.DISABLED);
+
+                PublicIsEnabled = (publicInStatus != Status.DISABLED);
+                PublicIsInBlocked = (publicInStatus == Status.ENABLED_BLOCK);
+                PublicIsInBlockedNotif = (publicInStatus == Status.ENABLED_NOTIFY);
+                PublicIsOutBlocked = (publicOutStatus != Status.DISABLED);
+
+                DomainIsEnabled = (domainInStatus != Status.DISABLED);
+                DomainIsInBlocked = (domainInStatus == Status.ENABLED_BLOCK);
+                DomainIsInBlockedNotif = (domainInStatus == Status.ENABLED_NOTIFY);
+                DomainIsOutBlocked = (domainOutStatus != Status.DISABLED);
+            }
+
+            private void updateStatus(NET_FW_PROFILE_TYPE2_ profile, ref Status stat, ref Status statOut)
+            {
+                if (firewallPolicy.FirewallEnabled[profile])
+                {
+                    if (firewallPolicy.DefaultInboundAction[profile] == NET_FW_ACTION_.NET_FW_ACTION_BLOCK)
+                    {
+                        if (firewallPolicy.NotificationsDisabled[profile])
+                        {
+                            stat = Status.ENABLED_BLOCK;
+                        }
+                        else
+                        {
+                            stat = Status.ENABLED_NOTIFY;
+                        }
+                    }
+                    else
+                    {
+                        stat = Status.ENABLED_ALLOW;
+                    }
+
+                    if (firewallPolicy.DefaultOutboundAction[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE] == NET_FW_ACTION_.NET_FW_ACTION_BLOCK)
+                    {
+                        statOut = Status.ENABLED_BLOCK;
+                    }
+                    else
+                    {
+                        statOut = Status.ENABLED_ALLOW;
+                    }
+                }
+            }
+
+            public void Save()
+            {
+                firewallPolicy.FirewallEnabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE] = PrivateIsEnabled;
+                firewallPolicy.DefaultInboundAction[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE] = PrivateIsInBlockedNotif || PrivateIsInBlocked ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
+                firewallPolicy.DefaultOutboundAction[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE] = PrivateIsOutBlockedNotif || PrivateIsOutBlocked ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
+                firewallPolicy.NotificationsDisabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE] = !PrivateIsInBlockedNotif;
+
+                firewallPolicy.FirewallEnabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC] = PublicIsEnabled;
+                firewallPolicy.DefaultInboundAction[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC] = PublicIsInBlockedNotif || PublicIsInBlocked ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
+                firewallPolicy.DefaultOutboundAction[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC] = PublicIsOutBlockedNotif || PublicIsOutBlocked ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
+                firewallPolicy.NotificationsDisabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC] = !PublicIsInBlockedNotif;
+
+                firewallPolicy.FirewallEnabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN] = DomainIsEnabled;
+                firewallPolicy.DefaultInboundAction[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN] = DomainIsInBlockedNotif || DomainIsInBlocked ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
+                firewallPolicy.DefaultOutboundAction[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN] = DomainIsOutBlockedNotif || DomainIsOutBlocked ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
+                firewallPolicy.NotificationsDisabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN] = !DomainIsInBlockedNotif;
+            }
+        }
     }
 }

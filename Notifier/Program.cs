@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
@@ -88,7 +89,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
                     string argstr = String.Join(" ", argv.Select(a => a.Contains(" ") ? "\"" + a + "\"" : a).ToArray());
                     LogHelper.Debug("Impersonating. Parameters: " + argstr);
-                    Impersonation.LaunchProcessAsUser(System.AppDomain.CurrentDomain.BaseDirectory, argstr, userToken);
+                    Impersonation.LaunchProcessAsUser(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe"), argstr, userToken);
                 }
                 else
                 {
