@@ -60,7 +60,7 @@
                 </Setter>
             </Style>
             <Style TargetType="ToggleButton" x:Key="ToggleSwitch">
-               <Setter Property="OverridesDefaultStyle" Value="True"/>
+                <Setter Property="OverridesDefaultStyle" Value="True"/>
                 <Setter Property="Background" Value="White"/>
                 <Setter Property="BorderThickness" Value="2" />
                 <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
