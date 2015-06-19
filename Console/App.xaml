@@ -18,8 +18,49 @@
             <Style TargetType="CheckBox">
                 <Setter Property="Background" Value="White" />
             </Style>
+            <Style TargetType="Button" x:Key="RoundedButton">
+                <Setter Property="Background" Value="White" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontWeight" Value="Normal" />
+                <Setter Property="Padding" Value="5,2" />
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Margin" Value="0,0,5,0" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsKeyboardFocused" Value="true">
+                                    <Setter Property="Background" Value="White" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                                </Trigger>
+                                <Trigger Property="IsDefaulted" Value="true">
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="true">
+                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                                    <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                            <TranslateTransform X="1" Y="1" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="false">
+                                    <Setter Property="Opacity" Value="0.5" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
             <Style TargetType="ToggleButton" x:Key="ToggleSwitch">
-                <Setter Property="OverridesDefaultStyle" Value="True"/>
+               <Setter Property="OverridesDefaultStyle" Value="True"/>
                 <Setter Property="Background" Value="White"/>
                 <Setter Property="BorderThickness" Value="2" />
                 <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
@@ -177,46 +218,7 @@
                 <Setter Property="BorderThickness" Value="0,0,0,1" />
                 <Setter Property="Padding" Value="5" />
                 <Style.Resources>
-                    <Style TargetType="Button">
-                        <Setter Property="Background" Value="White" />
-                        <Setter Property="BorderBrush" Value="Transparent" />
-                        <Setter Property="BorderThickness" Value="1" />
-                        <Setter Property="FontSize" Value="12" />
-                        <Setter Property="FontWeight" Value="Normal" />
-                        <Setter Property="Padding" Value="5,2" />
-                        <Setter Property="HorizontalContentAlignment" Value="Left" />
-                        <Setter Property="VerticalAlignment" Value="Center" />
-                        <Setter Property="Margin" Value="0,0,5,0" />
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type Button}">
-                                    <Border BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" Padding="{TemplateBinding Padding}">
-                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsKeyboardFocused" Value="true">
-                                            <Setter Property="Background" Value="White" />
-                                        </Trigger>
-                                        <Trigger Property="IsMouseOver" Value="true">
-                                            <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
-                                        </Trigger>
-                                        <Trigger Property="IsDefaulted" Value="true">
-                                        </Trigger>
-                                        <Trigger Property="IsPressed" Value="true">
-                                            <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
-                                            <Setter Property="RenderTransform">
-                                                <Setter.Value>
-                                                    <TranslateTransform X="1" Y="1" />
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Trigger>
-                                        <Trigger Property="IsEnabled" Value="false">
-                                            <Setter Property="Opacity" Value="0.5" />
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
+                    <Style TargetType="Button" BasedOn="{StaticResource RoundedButton}">
                     </Style>
                     <Style TargetType="ToggleButton">
                         <Setter Property="Background" Value="White" />
