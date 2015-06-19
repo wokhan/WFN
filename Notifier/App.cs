@@ -131,9 +131,17 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                         return false;
                     }
 
+                    FileVersionInfo fileinfo = null;
+                    try
+                    {
+                        fileinfo = FileVersionInfo.GetVersionInfo(path);
+                    }
+                    catch { }
+
                     var conn = new CurrentConn
                     {
                         CurrentProd = app,
+                        Editor = fileinfo !=null ? fileinfo.CompanyName : String.Empty,
                         CurrentPath = path,
                         Protocol = int.Parse(protocol),
                         TargetPort = targetPort,

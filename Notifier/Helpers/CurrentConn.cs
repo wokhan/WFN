@@ -22,6 +22,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
         }
 
         public string CurrentProd { get; set; }
+        public string Editor { get; internal set; }
 
         private ImageSource _icon;
         public ImageSource Icon

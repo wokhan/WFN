@@ -202,7 +202,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="Resources\Images\WFN Logo.png" />
-    <Resource Include="Resources\Images\WFN Logo.ico" />
+    <None Include="Resources\Images\WFN Logo.ico" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

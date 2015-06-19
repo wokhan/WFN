@@ -296,12 +296,18 @@
                 </Style.Resources>
             </Style>
             <Style x:Key="NonAdminPanel" TargetType="Border" BasedOn="{StaticResource ToolBarPanel}">
+                <Setter Property="DockPanel.Dock" Value="Bottom" />
                 <Setter Property="Visibility" Value="Visible" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding IsElevated,Source={x:Static Application.Current}}" Value="True">
                         <Setter Property="Visibility" Value="Collapsed" />
                     </DataTrigger>
                 </Style.Triggers>
+                <Style.Resources>
+                    <Style TargetType="Label">
+                        <Setter Property="Margin" Value="10,0" />
+                    </Style>
+                </Style.Resources>
             </Style>
         </ResourceDictionary>
     </Application.Resources>
