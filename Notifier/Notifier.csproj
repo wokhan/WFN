@@ -109,7 +109,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\WFN Logo.ico" />
+    <Resource Include="Resources\WFN.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
