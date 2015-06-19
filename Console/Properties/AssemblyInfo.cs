@@ -5,11 +5,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Wokhan.WindowsFirewallNotifier.Console")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("WFN - Windows Firewall Notifier")]
+[assembly: AssemblyDescription("Main executable for the WFN program")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Wokhan")]
-[assembly: AssemblyProduct("Windows Firewall Notifier - Console")]
+[assembly: AssemblyCompany("Wokhan Solutions")]
+[assembly: AssemblyProduct("WFN")]
 [assembly: AssemblyCopyright("2011-2015 Wokhan (http://wfn.codeplex.com)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

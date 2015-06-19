@@ -61,7 +61,7 @@
     <StartupObject>Wokhan.WindowsFirewallNotifier.Console.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\Images\WFN Logo.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Images\WFN.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
@@ -202,7 +202,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="Resources\Images\WFN Logo.png" />
-    <None Include="Resources\Images\WFN Logo.ico" />
+    <Resource Include="Resources\Images\WFN.ico" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

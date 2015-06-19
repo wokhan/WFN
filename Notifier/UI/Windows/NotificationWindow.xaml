@@ -11,7 +11,7 @@
         Width="425"
         WindowStyle="None" 
         Opacity="0.8"
-        Icon="/Notifier;component/Resources/WFN Logo.ico" 
+        Icon="/Notifier;component/Resources/WFN.ico" 
         Topmost="True"
         x:Name="NotifWindow" 
         WindowStartupLocation="Manual" 
