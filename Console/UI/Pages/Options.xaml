@@ -83,15 +83,15 @@ Please note that you will be able to do it later through the Options panel." Tex
                         </StackPanel>
                     </GroupBox>
                 </StackPanel-->
-                <CheckBox Content="Use an animated notification" Margin="0,0,0,10" IsChecked="{Binding UseAnimation, Source={StaticResource WFNSettings}}" />
-                <Button Margin="0,0,0,10" Padding="4"  HorizontalAlignment="Center" Content="Click here to test" x:Name="btnTestNotif" Click="btnTestNotif_Click" />
-                <CheckBox Content="Create a blocking rule instead of using an exceptions list for the blocked outgoing connections" Margin="0,0,0,5" IsChecked="{Binding UseBlockRules, Source={StaticResource WFNSettings}}" />
+                <ToggleButton Style="{StaticResource ToggleSwitch}" Padding="5,0" Content="Use an animated notification" Margin="0,0,0,10" IsChecked="{Binding UseAnimation, Source={StaticResource WFNSettings}}" />
+                <Button Style="{StaticResource RoundedButton}" Background="LightBlue" Margin="0,0,0,10" Padding="4"  HorizontalAlignment="Center" Content="Click here to test" x:Name="btnTestNotif" Click="btnTestNotif_Click" />
+                <ToggleButton Style="{StaticResource ToggleSwitch}" Padding="5,0" Content="Create a blocking rule instead of using an exceptions list for the blocked outgoing connections" Margin="0,0,0,5" IsChecked="{Binding UseBlockRules, Source={StaticResource WFNSettings}}" />
                 <TextBlock Margin="30,0,0,10" Text="This option allows the blocked applications to stay blocked even if you disable WFN notifications, by creating a blocking rule in the Windows embedded firewall." TextWrapping="Wrap" />
-                <CheckBox Content="Enable services detection" IsChecked="{Binding EnableServiceDetection, Source={StaticResource WFNSettings}}" />
+                <ToggleButton Style="{StaticResource ToggleSwitch}" Padding="5,0" Content="Enable services detection" IsChecked="{Binding EnableServiceDetection, Source={StaticResource WFNSettings}}" />
             </StackPanel>
             <Label Content="Miscellaneous options" Background="{DynamicResource AccentColorBrush}" FontWeight="Bold" />
             <StackPanel Margin="10">
-                <CheckBox Content="Minimize the console to the system tray instead of the taskbar." IsChecked="{Binding MinimizeToTray, Source={StaticResource WFNSettings}}" />
+                <ToggleButton Style="{StaticResource ToggleSwitch}" Padding="5,0" Content="Minimize the console to the system tray instead of the taskbar." IsChecked="{Binding MinimizeToTray, Source={StaticResource WFNSettings}}" />
                 <WrapPanel>
                     <Label Content="Accent color: " />
                     <ComboBox IsEditable="False" ItemsSource="{Binding Colors}" SelectedValuePath="Value" SelectedValue="{Binding AccentColor}">
