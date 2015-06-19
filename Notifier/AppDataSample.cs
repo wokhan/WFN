@@ -16,7 +16,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
         public AppDataSample()
         {
-            Connections.Add(new Helpers.CurrentConn() { CurrentPath = "Test 1", CurrentService = "Service", CurrentProd = "Sample data", Icon = new BitmapImage(new Uri("/Notifier;component/Resources/Shield.ico", UriKind.Relative)) });
+            Connections.Add(new Helpers.CurrentConn() { CurrentPath = "Test 1", CurrentService = "Service", CurrentProd = "Sample data", Editor = "Wokhan Solutions", Icon = new BitmapImage(new Uri("/Notifier;component/Resources/WFN Logo.png", UriKind.Relative)) });
         }
     }
 }
