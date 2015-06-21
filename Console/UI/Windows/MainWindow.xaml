@@ -101,6 +101,6 @@
                 </StackPanel>
             </Grid>
          </Border>
-        <Frame x:Name="mainFrame" Source="../Pages/Connections.xaml" NavigationUIVisibility="Hidden" />
+        <Frame x:Name="mainFrame" Source="../Pages/About.xaml" NavigationUIVisibility="Hidden" />
     </DockPanel>
 </Window>
