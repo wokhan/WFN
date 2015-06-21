@@ -178,13 +178,18 @@
                 <Setter Property="Background" Value="WhiteSmoke" />
                 <Style.Resources>
                     <Style TargetType="Button">
-                        <Setter Property="Background" Value="Transparent" />
-                        <Setter Property="BorderBrush" Value="Blue" />
-                        <Setter Property="BorderThickness" Value="0" />
-                        <Setter Property="FontSize" Value="14" />
+                        <Setter Property="OverridesDefaultStyle" Value="True" />
+                        <Setter Property="FontSize" Value="24" />
                         <Setter Property="Padding" Value="4" />
-                        <Setter Property="Margin" Value="0" />
-                        <Setter Property="HorizontalContentAlignment" Value="Left" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Padding="{TemplateBinding Padding}" TextElement.FontSize="{TemplateBinding FontSize}" Background="{TemplateBinding Background}">
+                                        <ContentPresenter />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
                                 <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
