@@ -78,11 +78,11 @@
                                         </Path>
                                         <TextBlock Margin="20,0,0,0" Text="{Binding Information.Name}" />
                                         <WrapPanel HorizontalAlignment="Left" Grid.Column="1" Margin="0,0,10,0">
-                                            <Path Margin="0,0,5,0" Height="16" Stretch="Uniform" Fill="Red" Data="F1 M 25.3333,52.25L 50.6667,52.25L 50.6667,45.9167L 55.4167,45.9167L 55.4167,57L 50.6667,57L 25.3333,57L 20.5833,57L 20.5833,45.9167L 25.3333,45.9167L 25.3333,52.25 Z M 34.8333,49.0834L 41.1667,49.0834L 41.1666,28.5L 49.0833,38L 49.0833,28.5L 38,15.8334L 26.9167,28.5L 26.9167,38L 34.8333,28.5L 34.8333,49.0834 Z "/>
+                                            <Path Margin="0,0,5,0" Height="16" Stretch="Uniform" Fill="Red" Data="{StaticResource Image_DataUp}"/>
                                             <TextBlock Text="{Binding FormattedBytesSent}" Margin="0,0,10,0" />
                                         </WrapPanel>
                                         <WrapPanel HorizontalAlignment="Left" Grid.Column="2" Margin="0,0,40,0">
-                                            <Path Margin="0,0,5,0" Height="16" Stretch="Uniform" Fill="Green" Data="F1 M 25.3333,52.25L 50.6666,52.25L 50.6666,45.9167L 55.4166,45.9167L 55.4166,57L 20.5833,57L 20.5833,45.9167L 25.3333,45.9167L 25.3333,52.25 Z M 34.8333,15.8333L 41.1667,15.8333L 41.1667,36.4167L 49.0833,26.9167L 49.0833,36.4167L 38,49.0833L 26.9167,36.4167L 26.9167,26.9167L 34.8333,36.4167L 34.8333,15.8333 Z "/>
+                                            <Path Margin="0,0,5,0" Height="16" Stretch="Uniform" Fill="Green" Data="{StaticResource Image_DataDown}"/>
                                             <TextBlock Text="{Binding FormattedBytesReceived}" />
                                         </WrapPanel>
                                     </Grid>

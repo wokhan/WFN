@@ -154,6 +154,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 existing.LastOut = CommonHelper.FormatBytes(totalized.Out, "ps");
                 existing.SeriesOut.Points.Add(new Point(x, totalized.Out));
                 existing.SeriesIn.Points.Add(new Point(x, totalized.In));
+                
                 existing.IsAccessDenied = iserror;
                 existing.LastSeen = DateTime.Now;
                 //foreach (var realconn in grp)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -39,8 +40,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         public Connections()
         {
-            connectionsView = new ListCollectionView(lstConnections);
+            connectionsView = (ListCollectionView)CollectionViewSource.GetDefaultView(lstConnections);
             connectionsView.GroupDescriptions.Add(new PropertyGroupDescription("GroupKey"));
+            connectionsView.SortDescriptions.Add(new SortDescription("GroupKey", ListSortDirection.Ascending));
 
             InitializeComponent();
 
@@ -56,14 +58,16 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             timer.Stop();
         }
 
-        void Connections_Loaded(object sender, RoutedEventArgs e)
+        async void Connections_Loaded(object sender, RoutedEventArgs e)
         {
-            Dispatcher.InvokeAsync(() => timer_Tick(null, null));
+            await Dispatcher.InvokeAsync(() => timer_Tick(null, null));
         }
 
         void timer_Tick(object sender, EventArgs e)
         {
-            foreach (var c in IPHelper.GetAllConnections().ToList())
+            // Resets the WMI cache (used for non admin users)
+            Connection.LocalOwnerWMICache = null;
+            foreach (var c in IPHelper.GetAllConnections())
             {
                 AddOrUpdateConnection(c);
             }

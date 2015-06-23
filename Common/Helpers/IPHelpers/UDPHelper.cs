@@ -111,11 +111,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         private static Dictionary<MIB_UDPROW_OWNER_MODULE, Owner> ownerCache = new Dictionary<MIB_UDPROW_OWNER_MODULE, Owner>();
         internal static Owner GetOwningModuleUDP(MIB_UDPROW_OWNER_MODULE row)
         {
-            Owner ret;
-            if (ownerCache.TryGetValue(row, out ret))
-            {
-                return ret;
-            }
+            Owner ret = null;
+            //if (ownerCache.TryGetValue(row, out ret))
+            //{
+            //    return ret;
+            //}
 
             IntPtr buffer = IntPtr.Zero;
             try
@@ -134,7 +134,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                     LogHelper.Error("Unable to get the connection owner.", new Win32Exception((int)resp));
                 }
 
-                ownerCache.Add(row, ret);
+                //ownerCache.Add(row, ret);
 
                 return ret;
             }

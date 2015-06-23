@@ -13,7 +13,7 @@
         <Border Background="#FFFF7B7B" Style="{StaticResource NonAdminPanel}">
             <WrapPanel>
                 <Label Content="Information provided here might be inaccurate for non-admin users." />
-                <Button BorderBrush="LightGray" BorderThickness="1" x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
+                <Button x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
                     <Grid>
                         <Path Height="16" HorizontalAlignment="Left" Stretch="Uniform" Fill="#FF5353F7" Data="{StaticResource Image_Shield}" />
                         <Label Margin="20,0,0,0" Padding="0" Content="restart as admin" />
@@ -67,30 +67,22 @@
         </Border>
         <Grid>
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="2" />
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <LineChart:LineChart x:Name="chart" XAxeType="DateTime" DataSeries="{Binding Series, ElementName=MonitorPage}" />
-                <GridSplitter Grid.Column="1" />
-                <ScrollViewer Grid.Column="2">
-                    <ListView Grid.Column="2" SelectionMode="Single" Background="Transparent" Width="220" BorderThickness="2,0,0,0" ItemsSource="{Binding GroupedConnections}">
-                        <ListView.Resources>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="IsSelected" Value="{Binding IsSelected}" />
-                            </Style>
-                        </ListView.Resources>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Margin="5" x:Name="parentStack">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="150" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <DataGrid BorderThickness="0" ColumnWidth="*" GridLinesVisibility="None" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" SelectionMode="Single" SelectionUnit="FullRow" Background="Transparent" ItemsSource="{Binding GroupedConnections}" AutoGenerateColumns="False" HeadersVisibility="Column">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn SortMemberPath="Name" Header="Process">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
                                         <Path Grid.Column="0" ToolTip="{Binding LastError}" Height="16" Stretch="Uniform" Fill="OrangeRed" Data="F1 M 58.5832,55.4172L 17.4169,55.4171C 15.5619,53.5621 15.5619,50.5546 17.4168,48.6996L 35.201,15.8402C 37.056,13.9852 40.0635,13.9852 41.9185,15.8402L 58.5832,48.6997C 60.4382,50.5546 60.4382,53.5622 58.5832,55.4172 Z M 34.0417,25.7292L 36.0208,41.9584L 39.9791,41.9583L 41.9583,25.7292L 34.0417,25.7292 Z M 38,44.3333C 36.2511,44.3333 34.8333,45.7511 34.8333,47.5C 34.8333,49.2489 36.2511,50.6667 38,50.6667C 39.7489,50.6667 41.1666,49.2489 41.1666,47.5C 41.1666,45.7511 39.7489,44.3333 38,44.3333 Z ">
                                             <Path.Style>
                                                 <Style TargetType="Path">
@@ -103,19 +95,19 @@
                                                 </Style>
                                             </Path.Style>
                                         </Path>
-                                        <Image Grid.Column="1" Source="{Binding Icon}" Width="16" Stretch="Uniform" Margin="2,0" />
-                                        <TextBlock Grid.Column="2" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Foreground="{Binding Brush}" Text="{Binding Name}" />
-                                        <TextBlock Grid.Column="3" Text="{Binding Count,StringFormat='({0})'}" />
-                                    </Grid>
-                                    <UniformGrid Rows="1">
-                                        <TextBlock FontSize="11" Text="{Binding LastOut,StringFormat='Up: {0}'}"  />
-                                        <TextBlock FontSize="11" Text="{Binding LastIn,StringFormat='Down: {0}'}" />
-                                    </UniformGrid>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </ScrollViewer>
+                                        <Image Source="{Binding Icon}" Width="16" Stretch="Uniform" Margin="2,0" />
+                                        <TextBlock Foreground="{Binding Brush}" Text="{Binding Name}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Binding="{Binding Count,StringFormat='({0})'}" Header="Connections"/>
+                        <DataGridTextColumn Binding="{Binding LastOut}" Header="Up" />
+                        <DataGridTextColumn Binding="{Binding LastIn}" Header="Down" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <GridSplitter Grid.Row="1" Height="2" Background="{DynamicResource AccentColorBrush}" HorizontalAlignment="Stretch" />
+                <LineChart:LineChart Grid.Row="2" x:Name="chart" XAxeType="DateTime" DataSeries="{Binding Series, ElementName=MonitorPage}" />
             </Grid>
             <Border Style="{StaticResource InfoBlock}">
                 <TextBlock>This screen displays all active connections on this computer, updated every second (by default).

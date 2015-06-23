@@ -17,7 +17,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// </summary>
     public partial class EventsLog : Page
     {
-        
+
         public bool IsTrackingEnabled
         {
             get { return timer.IsEnabled; }
@@ -61,7 +61,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         void timer_Tick(object sender, EventArgs e)
         {
-           initEventLog();
+            initEventLog();
         }
 
 
@@ -88,7 +88,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     {
                         entry = securityLog.Entries[i--];
 
-                        if (lastDate != DateTime.MinValue && entry.TimeWritten <= lastDate && entry.Index == lastIndex)
+                        if (lastDate != DateTime.MinValue && entry.TimeWritten <= lastDate && (entry.Index == lastIndex || lastIndex == -1))
                         {
                             break;
                         }
@@ -98,14 +98,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                             cpt--;
                             friendlyPath = CommonHelper.GetFriendlyPath(entry.ReplacementStrings[1]);
                             var le = new LogEntryViewModel()
-                                                    {
-                                                        CreationTime = entry.TimeWritten,
-                                                        Icon = ProcessHelper.GetCachedIcon(CommonHelper.GetFriendlyPath(entry.ReplacementStrings[1])),
-                                                        FriendlyPath = CommonHelper.GetFriendlyPath(entry.ReplacementStrings[1]),
-                                                        Replacement5 = entry.ReplacementStrings[5],
-                                                        Protocol = getProtocol(entry.ReplacementStrings[7]),
-                                                        Replacement6 = entry.ReplacementStrings[6]
-                                                    };
+                            {
+                                CreationTime = entry.TimeWritten,
+                                Icon = ProcessHelper.GetCachedIcon(CommonHelper.GetFriendlyPath(entry.ReplacementStrings[1])),
+                                FriendlyPath = CommonHelper.GetFriendlyPath(entry.ReplacementStrings[1]),
+                                Replacement5 = entry.ReplacementStrings[5],
+                                Protocol = getProtocol(entry.ReplacementStrings[7]),
+                                Replacement6 = entry.ReplacementStrings[6]
+                            };
 
                             if (isAppending)
                             {
@@ -124,10 +124,17 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                         }
                     }
 
-                    lastDate = lastDateLocal;
-                    lastIndex = indexLocal;
+                    if (cpt == 0)
+                    {
+                        lastDate = DateTime.Now;
+                        lastIndex = -1;
+                    }
+                    else
+                    {
+                        lastDate = lastDateLocal;
+                        lastIndex = indexLocal;
+                    }
                 }
-
             }
             catch (Exception e)
             {

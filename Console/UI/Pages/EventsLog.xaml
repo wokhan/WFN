@@ -11,7 +11,7 @@
         <Border Background="#FFFF7B7B" Style="{StaticResource NonAdminPanel}">
             <WrapPanel>
                 <Label Content="Only an administrator can use this feature." />
-                <Button BorderBrush="LightGray" BorderThickness="1" x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
+                <Button x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
                     <Grid>
                         <Path Height="16" HorizontalAlignment="Left" Stretch="Uniform" Fill="#FF5353F7" Data="{StaticResource Image_Shield}" />
                         <Label Margin="20,0,0,0" Padding="0" Content="restart as admin" />

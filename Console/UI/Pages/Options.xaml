@@ -13,13 +13,13 @@
                 <Button x:Name="btnSave" Click="btnOK_Click">
                     <Grid>
                         <Path HorizontalAlignment="Left" Height="14" Stretch="Uniform" Fill="#FF6C6CD4" Data="{StaticResource Image_Shield}" />
-                        <TextBlock Margin="20,0,0,0" Text="Apply modifications" />
+                        <TextBlock Margin="20,0,0,0" Text="Apply" />
                     </Grid>
                 </Button>
                 <Button x:Name="btnRevert" Click="btnCancel_Click">
                     <Grid>
                         <Path HorizontalAlignment="Left" Height="14" Stretch="Uniform" Fill="Red" Data="{StaticResource Image_Refresh}" />
-                        <TextBlock Margin="20,0,0,0" Text="Revert" />
+                        <TextBlock Margin="20,0,0,0" Text="Reload" />
                     </Grid>
                 </Button>
             </WrapPanel>

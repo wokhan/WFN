@@ -11,7 +11,7 @@
         <Border Background="#FFFF7B7B" Style="{StaticResource NonAdminPanel}">
             <WrapPanel>
                 <Label Content="Only an administrator can use this feature." />
-                <Button BorderBrush="LightGray" BorderThickness="1" x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
+                <Button x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
                     <Grid>
                         <Path Height="16" HorizontalAlignment="Left" Stretch="Uniform" Fill="#FF5353F7" Data="{StaticResource Image_Shield}" />
                         <Label Margin="20,0,0,0" Padding="0" Content="restart as admin" />
@@ -24,13 +24,13 @@
                 <Button x:Name="btnSave" Click="btnSave_Click" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
                     <Grid>
                         <Path HorizontalAlignment="Left" Height="14" Stretch="Uniform" Fill="#FF6C6CD4" Data="{StaticResource Image_Shield}" />
-                        <Label Margin="20,0,0,0" Content="Apply modifications" />
+                        <Label Margin="20,0,0,0" Content="Apply" />
                     </Grid>
                 </Button>
                 <Button x:Name="btnRevert" Click="btnRevert_Click">
                     <Grid>
                         <Path HorizontalAlignment="Left" Height="14" Stretch="Uniform" Fill="Red" Data="{StaticResource Image_Refresh}" />
-                        <Label Margin="20,0,0,0" Content="Revert" />
+                        <Label Margin="20,0,0,0" Content="Reload" />
                     </Grid>
                 </Button>
             </WrapPanel>
