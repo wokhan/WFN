@@ -11,7 +11,7 @@
         <Border Background="#FFFF7B7B" Style="{StaticResource NonAdminPanel}">
             <WrapPanel>
                 <Label Content="Information provided here might be inaccurate for non-admin users." />
-                <Button BorderBrush="LightGray" BorderThickness="1" x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
+                <Button x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
                     <Grid>
                         <Path Height="16" HorizontalAlignment="Left" Stretch="Uniform" Fill="#FF5353F7" Data="{StaticResource Image_Shield}" />
                         <Label Margin="20,0,0,0" Padding="0" Content="restart as admin" />
@@ -58,7 +58,7 @@
             </Grid>
         </Border>
         <Grid>
-            <DataGrid BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" ItemsSource="{Binding connectionsView}" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="0,-1,0,1">
+            <DataGrid BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" ItemsSource="{Binding connectionsView}" AutoGenerateColumns="False" HeadersVisibility="Column" HorizontalAlignment="Stretch">
                 <DataGrid.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.ContainerStyle>
@@ -67,7 +67,7 @@
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type GroupItem}">
                                             <StackPanel>
-                                                <Grid HorizontalAlignment="Left" Background="White" Width="{Binding ActualWidth,RelativeSource={RelativeSource AncestorType=DataGrid,Mode=FindAncestor}}" Margin="5,5,-60,5"  DataContext="{Binding Items[0]}">
+                                                <Grid Background="White" DataContext="{Binding Items[0]}">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition />
@@ -124,7 +124,7 @@
                     <DataGridTextColumn Header="RemotePort" Binding="{Binding RemotePort, Mode=OneWay}" />
                     <DataGridTextColumn Header="State" Binding="{Binding State, Mode=OneWay}" />
                     <DataGridTextColumn Header="CreationTime" Binding="{Binding CreationTime, Mode=OneWay}" />
-                    <DataGridTextColumn Header="FirewallRule" Binding="{Binding FirewallRule.Count, Mode=OneWay}" />
+                    <!--<DataGridTextColumn Header="FirewallRule" Binding="{Binding FirewallRule.Count, Mode=OneWay}" />-->
                 </DataGrid.Columns>
             </DataGrid>
             <Border Style="{StaticResource InfoBlock}">

@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Threading.Tasks;
 using System.IO;
 using System.Reflection;
+using System.Management;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -44,7 +45,24 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             Process.Start(proc);
         }
-        
+
+        public static string[] GetProcessOwnerWMI(int owningPid, ref Dictionary<int, string[]> previousCache)
+        {
+            if (previousCache == null)
+            {
+                using (var searcher = new ManagementObjectSearcher("SELECT ProcessId, Name, ExecutablePath FROM Win32_Process"))
+                {
+                    using (var results = searcher.Get())
+                    {
+                        previousCache = results.Cast<ManagementObject>()
+                                               .ToDictionary(r => (int)(uint)r["ProcessId"], 
+                                                             r => new[] { (string)r["Name"], (string)r["ExecutablePath"] });
+                    }
+                }
+            }
+
+            return previousCache[owningPid];
+        }
 
         private static Dictionary<string, ImageSource> procIconLst = new Dictionary<string, ImageSource>();
 

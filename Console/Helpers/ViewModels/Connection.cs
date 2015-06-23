@@ -12,6 +12,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Uses a cache for WMI information to avoid per-process costly queries.
+        /// Warning: it has to be reset to null every time a new batch of processes will be handled, since it's not dynamically self-refreshed.
+        /// </summary>
+        public static Dictionary<int, string[]> LocalOwnerWMICache = null;
+
         protected void NotifyPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
@@ -30,21 +36,20 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             this._protocol = ownerMod.Protocol;
             this._remoteAddress = ownerMod.RemoteAddress;
             this._remotePort = (ownerMod.RemotePort == -1 ? String.Empty : ownerMod.RemotePort.ToString());
-            this._lastSeen = DateTime.Now;
+            this.LastSeen = DateTime.Now;
             this._state = Enum.GetName(typeof(IPHelper.MIB_TCP_STATE), ownerMod.State);
 
             try
             {
-                using (var proc = Process.GetProcessById((int)ownerMod.OwningPid))
-                {
-                    ProcName = proc.ProcessName;
-                    Path = proc.MainModule.FileName;
-                }
+                // Mainly for non-admin users, could use Process.GetProcessById for admins...
+                var r = ProcessHelper.GetProcessOwnerWMI((int)ownerMod.OwningPid, ref LocalOwnerWMICache);
+                Path = r[1] ?? "Unknown";
+                ProcName = r[0] ?? "Unknown";
             }
-            catch (Exception exc)
+            catch
             {
-                ProcName = ProcName ?? "Closed process";
-                Path = ProcName != null ? "Access denied" : "Unresolved";
+                ProcName = "[Unknown or closed process]";
+                Path = "Unresolved";
             }
 
             if (ownerMod.OwnerModule == null)
@@ -67,6 +72,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
                 Icon = ownerMod.OwnerModule.Icon;
                 Owner = ownerMod.OwnerModule.ModuleName;
             }
+
+            GroupKey = String.Format("{0} ({1}) - [{2}]", ProcName, Path, PID);
         }
 
         private bool _isAccessDenied;
@@ -97,7 +104,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             set { _lastError = value; NotifyPropertyChanged("LastError"); }
         }
 
-        public string GroupKey { get { return String.Format("{0} ({1}) - [{2}]", ProcName, Path, PID); } }
+        public string GroupKey { get; private set; }
         public ImageSource Icon { get; private set; }
         public long PID { get; private set; }
         public string ProcName { get; private set; }
@@ -108,10 +115,24 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             //lvi.LocalAddress = b.LocalAddress;
             //lvi.Protocol = b.Protocol;
-            this.RemoteAddress = b.RemoteAddress;
-            this.RemotePort = (b.RemotePort == -1 ? String.Empty : b.RemotePort.ToString());
+            if (this.RemoteAddress != b.RemoteAddress)
+            {
+                this.RemoteAddress = b.RemoteAddress;
+            }
+
+            var newPort = (b.RemotePort == -1 ? String.Empty : b.RemotePort.ToString());
+            if (this.RemotePort != newPort)
+            {
+                this.RemotePort = newPort;
+            }
+
+            var newState = Enum.GetName(typeof(IPHelper.MIB_TCP_STATE), b.State);
+            if (this.State != newState)
+            {
+                this.State = newState;
+            }
+
             this.LastSeen = DateTime.Now;
-            this.State = Enum.GetName(typeof(IPHelper.MIB_TCP_STATE), b.State);
         }
 
         private string _protocol;
@@ -159,12 +180,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         public string Owner { get; private set; }
         public DateTime? CreationTime { get; set; }
 
-        private DateTime _lastSeen;
-        public DateTime LastSeen
-        {
-            get { return _lastSeen; }
-            set { _lastSeen = value; NotifyPropertyChanged("RemotePort"); }
-        }
+        public DateTime LastSeen { get; set; }
 
         private bool _isDying;
         public bool IsDying

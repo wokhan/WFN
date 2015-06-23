@@ -10,7 +10,7 @@
              x:Name="Chart">
     <Grid>
         <DockPanel>
-            <Border DockPanel.Dock="Bottom" Margin="40,0,0,0" BorderThickness="0,1,0,0" BorderBrush="Black">
+            <Border DockPanel.Dock="Bottom" Margin="60,0,0,0" BorderThickness="0,1,0,0" BorderBrush="Black">
                 <ItemsControl ItemsSource="{Binding Xs}">
                     <ItemsControl.ItemContainerStyle>
                         <Style TargetType="ContentPresenter">
@@ -20,16 +20,16 @@
                     </ItemsControl.ItemContainerStyle>
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <Canvas Height="40" />
+                            <Canvas Height="60" ClipToBounds="True" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
                                 <Rectangle HorizontalAlignment="Left" Fill="Black" Height="5" Width="1" />
-                                <Label Content="{Binding RealValue}">
+                                <Label Content="{Binding RealValue}" Margin="-50,-10,0,0" FontSize="11">
                                     <Label.LayoutTransform>
-                                        <RotateTransform CenterX="0" Angle="35" />
+                                        <RotateTransform Angle="-35" />
                                     </Label.LayoutTransform>
                                 </Label>
                             </StackPanel>
@@ -47,12 +47,12 @@
                     </ItemsControl.ItemContainerStyle>
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <Canvas Width="40" ClipToBounds="True" />
+                            <Canvas Width="60" ClipToBounds="True" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Label Content="{Binding RealValue}">
+                            <Label Content="{Binding RealValue}" FontSize="10">
                                 <Label.LayoutTransform>
                                     <RotateTransform Angle="-35" />
                                 </Label.LayoutTransform>

@@ -151,7 +151,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
             internal ulong[] _owningModuleInfo;
 
-            public byte[] RemoteAddrBytes { get { return _remoteAddr; } }            
+            public byte[] RemoteAddrBytes { get { return _remoteAddr; } }
             public MIB_TCP_STATE State { get { return (MIB_TCP_STATE)_state; } }
             public string RemoteAddress { get { return GetAddressAsString(_remoteAddr); } }
             public string LocalAddress { get { return GetAddressAsString(_localAddr); } }
@@ -343,11 +343,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         private static Dictionary<MIB_TCPROW_OWNER_MODULE, Owner> ownerCache = new Dictionary<MIB_TCPROW_OWNER_MODULE, Owner>();
         internal static Owner GetOwningModuleTCP(MIB_TCPROW_OWNER_MODULE row)
         {
-            Owner ret;
-            if (ownerCache.TryGetValue(row, out ret))
+            Owner ret = null;
+            /*if (ownerCache.TryGetValue(row, out ret))
             {
                 return ret;
-            }
+            }*/
 
             IntPtr buffer = IntPtr.Zero;
             try
@@ -366,7 +366,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                     LogHelper.Error("Unable to get the connection owner.", new Win32Exception((int)resp));
                 }
 
-                ownerCache.Add(row, ret);
+                //ownerCache.Add(row, ret);
 
                 return ret;
             }

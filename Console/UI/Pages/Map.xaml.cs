@@ -36,6 +36,20 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             set { _isFullRouteDisplayed = value; NotifyPropertyChanged("IsFullRouteDisplayed"); }
         }
 
+        private bool _isAerial;
+        public bool IsAerial
+        {
+            get { return _mode is AerialMode; }
+            set { Mode = (value ? new AerialMode(true) : (MapMode)new RoadMode()); NotifyPropertyChanged("IsAerial"); }
+        }
+
+        private MapMode _mode = new RoadMode();
+        public MapMode Mode
+        {
+            get { return _mode; }
+            set { _mode = value; NotifyPropertyChanged("Mode"); }
+        }
+
         public List<int> Intervals { get { return new List<int> { 1, 5, 10 }; } }
 
         private DispatcherTimer timer = new DispatcherTimer() { IsEnabled = true };
@@ -49,7 +63,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private ObservableCollection<GeoConnection> _connectionsRoutes = new ObservableCollection<GeoConnection>();
         public ObservableCollection<GeoConnection> ConnectionsRoutes { get { return _connectionsRoutes; } }
 
-        private int _interval = 10;
+        private int _interval = 1;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -107,12 +121,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         void timer_Tick(object sender, EventArgs e)
         {
             foreach (var c in IPHelper.GetAllConnections(true)
-                                      .Where(co => co.State == IPHelper.MIB_TCP_STATE.ESTABLISHED && !co.IsLoopback && co.OwnerModule != null)
-                                      .ToList())
+                                      .Where(co => co.State == IPHelper.MIB_TCP_STATE.ESTABLISHED && !co.IsLoopback && co.OwnerModule != null))
             {
                 AddOrUpdateConnection(c);
             }
-
+            
             /*
             var killduration = Math.Max(5, 3 * _interval);
             var dieduration = Math.Max(2, 2 * _interval);

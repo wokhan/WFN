@@ -16,7 +16,7 @@
                 <Button x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
                     <Grid>
                         <Path Height="16" HorizontalAlignment="Left" Stretch="Uniform" Fill="#FF5353F7" Data="{StaticResource Image_Shield}" />
-                        <Label Margin="20,0,0,0" Padding="0"  Content="Restart as admin" />
+                        <Label Margin="20,0,0,0" Padding="0" Content="Restart as admin" />
                     </Grid>
                 </Button>
             </WrapPanel>
@@ -49,6 +49,12 @@
                             <TextBlock Margin="20,0,0,0" Text="Full routes" />
                         </Grid>
                     </ToggleButton>
+                    <ToggleButton IsChecked="{Binding IsAerial}">
+                        <Grid>
+                            <Path HorizontalAlignment="Left" Height="14" Stretch="Uniform" Fill="Coral" Data="{StaticResource Image_MapAerial}" />
+                            <TextBlock Margin="20,0,0,0" Text="Aerial mode" />
+                        </Grid>
+                    </ToggleButton>
                     <TextBlock VerticalAlignment="Center" Text="{Binding Connections.Count, StringFormat='Active connection(s): {0}', FallbackValue='No active connection'}" />
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Right">
@@ -72,7 +78,7 @@
                     <ColumnDefinition Width="2" />
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <maps:Map x:Name="CurrentMap" BorderThickness="0" CredentialsProvider="AsuL3JPMhN5U5z09JOCSXp5C_4J_X6YV3FTk7jEMCDLkQdGee7xPspAuIAxbhyyK" Mode="Road">
+                <maps:Map x:Name="CurrentMap" BorderThickness="0" CredentialsProvider="AsuL3JPMhN5U5z09JOCSXp5C_4J_X6YV3FTk7jEMCDLkQdGee7xPspAuIAxbhyyK" Mode="{Binding Mode}">
                     <maps:MapItemsControl x:Name="layerRoutes" ItemsSource="{Binding ConnectionsRoutes}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
