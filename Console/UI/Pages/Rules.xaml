@@ -60,7 +60,7 @@
             </Grid>
         </Border>
         <Grid>
-            <DataGrid BorderThickness="0" x:Name="gridRules" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" ItemsSource="{Binding connectionsView}" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="0,-1,0,1">
+            <DataGrid AlternatingRowBackground="Gainsboro" BorderThickness="0" x:Name="gridRules" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" ItemsSource="{Binding connectionsView}" AutoGenerateColumns="False" HeadersVisibility="Column">
                 <DataGrid.CellStyle>
                     <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
                         <Setter Property="VerticalAlignment" Value="Center" />
@@ -79,9 +79,9 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Service" Binding="{Binding serviceName, Mode=OneTime}" />
-                    <DataGridTextColumn Header="Direction" Binding="{Binding Direction, Mode=OneTime}" />
-                    <DataGridTextColumn Header="Profiles" Binding="{Binding Profiles, Mode=OneTime}" />
-                    <DataGridTextColumn Header="Action" Binding="{Binding Action, Mode=OneTime}" />
+                    <DataGridTextColumn Header="Direction" Binding="{Binding DirectionStr, Mode=OneTime}" />
+                    <DataGridTextColumn Header="Profiles" Binding="{Binding ProfilesStr, Mode=OneTime}" />
+                    <DataGridTextColumn Header="Action" Binding="{Binding ActionStr, Mode=OneTime}" />
                     <DataGridTextColumn Header="Local ports" Binding="{Binding LocalPorts, Mode=OneTime}" />
                     <DataGridTextColumn Header="Remote addresses" Binding="{Binding RemoteAddresses, Mode=OneTime}" />
                     <DataGridTextColumn Header="Remote port" Binding="{Binding RemotePorts, Mode=OneTime}" />

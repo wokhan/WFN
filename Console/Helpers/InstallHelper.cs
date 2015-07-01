@@ -16,7 +16,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
         /// <summary>
         /// 
         /// </summary>
-        public static bool RemoveProgram(bool disableLogging, Action<string, string> failureCallback, Action<string, string> successCallback)
+        public static bool RemoveProgram(bool disableLogging, Action<bool, string> callback)
         {
             /*if (reallowOutgoing && !FirewallHelper.RestoreWindowsFirewall())
             {
@@ -27,28 +27,19 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
             if (disableLogging
                 && !ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\auditpol.exe", "/set /subcategory:{0CCE9226-69AE-11D9-BED3-505054503030} /failure:disable"))
             {
-                failureCallback(Resources.MSG_UNINST_DISABLE_LOG_ERR, Resources.MSG_DLG_ERR_TITLE);
+                callback(false, Resources.MSG_UNINST_DISABLE_LOG_ERR);
                 return false;
             }
 
             if (!RemoveTask())
             {
-                failureCallback(Resources.MSG_UNINST_TASK_ERR, Resources.MSG_DLG_ERR_TITLE);
+                callback(false, Resources.MSG_UNINST_TASK_ERR);
                 return false;
             }
 
-            successCallback(Resources.MSG_UNINST_OK, Resources.MSG_DLG_TITLE);
+            callback(true, Resources.MSG_UNINST_OK);
 
             return true;
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public static bool EnableProgram()
-        {
-            return EnableProgram(false);
         }
 
         /// <summary>
@@ -56,7 +47,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
         /// </summary>
         /// <param name="pass"></param>
         /// <returns></returns>
-        public static bool EnableProgram(bool allUsers)
+        public static bool EnableProgram(bool allUsers, Action<bool, string> callback)
         {
             if (IsInstalled())
             {
@@ -72,29 +63,29 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
                     {
                         if (createTask(allUsers))
                         {
-                            MessageBox.Show(Resources.MSG_INST_OK, Resources.MSG_DLG_TITLE, MessageBoxButton.OK, MessageBoxImage.Information);
+                            callback(true, Resources.MSG_INST_OK);
                         }
                         else
                         {
-                            MessageBox.Show(Resources.MSG_INST_TASK_ERR, Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                            callback(false, Resources.MSG_INST_TASK_ERR);
                             return false;
                         }
                     }
                     else
                     {
-                        MessageBox.Show("Unable to create the default rules, please consider reactivating Windows Firewall Notifier.", Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                        callback(false, "Unable to create the default rules, please consider reactivating WFN.");
                         return false;
                     }
                 }
                 else
                 {
-                    MessageBox.Show(Resources.MSG_INST_ENABLE_FW_ERR, Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                    callback(false, Resources.MSG_INST_ENABLE_FW_ERR);
                     return false;
                 }
             }
             else
             {
-                MessageBox.Show(Resources.MSG_INST_ENABLE_LOG_ERR, Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                callback(false, Resources.MSG_INST_ENABLE_LOG_ERR);
                 return false;
             }
 

@@ -70,7 +70,7 @@
             </Grid>
         </Border>
         <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
-            <DataGrid BorderThickness="0" x:Name="gridLog" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="True" HeadersVisibility="Column">
+            <DataGrid BorderThickness="0" AlternatingRowBackground="Gainsboro" x:Name="gridLog" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="True" HeadersVisibility="Column">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="CreationTime" Binding="{Binding CreationTime}"/>
                     <DataGridTemplateColumn Header="Path" SortMemberPath="FriendlyPath">

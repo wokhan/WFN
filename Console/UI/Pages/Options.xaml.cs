@@ -34,13 +34,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
             Settings.Default.Save();
-
-            ((MainWindow)Window.GetWindow(this)).GoBack();
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            ((MainWindow)Window.GetWindow(this)).GoBack();
+            Settings.Default.Reload();
         }
 
         private void btnTestNotif_Click(object sender, RoutedEventArgs e)

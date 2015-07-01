@@ -9,7 +9,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         private static string runPath = AppDomain.CurrentDomain.BaseDirectory;
         private static string logPath = Path.Combine(runPath, "errors.log");
         private static string appVersion = Assembly.GetCallingAssembly().GetName().Version.ToString();
-
+        private static bool isAdmin = UacHelper.CheckProcessElevated();
 
         static LogHelper()
         {
@@ -40,20 +40,22 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         private static void writeLog(string type, string msg)
         {
             System.Diagnostics.Debug.WriteLine(msg);
-            return;
-
-            StreamWriter sw = null;
-            try
+            //return;
+            if (Settings.Default.EnableVerboseLogging)
             {
-                sw = new StreamWriter(logPath, true);
-                sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} - [{2}] - {3}", DateTime.Now, Environment.UserName, type, msg);
-            }
-            catch { }
-            finally
-            {
-                if (sw != null)
+                StreamWriter sw = null;
+                try
                 {
-                    sw.Close();
+                    sw = new StreamWriter(logPath, true);
+                    sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}] - {4}", DateTime.Now, Environment.UserName, isAdmin, type, msg);
+                }
+                catch { }
+                finally
+                {
+                    if (sw != null)
+                    {
+                        sw.Close();
+                    }
                 }
             }
         }

@@ -5,9 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
@@ -25,10 +22,15 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
         private string[] exclusions = null;
 
-        public App() { }
+        public App()
+        {
+            CommonHelper.OverrideSettingsFile("WFN.config");
+        }
 
         public App(ReadOnlyCollection<string> argv)
         {
+            CommonHelper.OverrideSettingsFile("WFN.config");
+
             NextInstance(argv);
         }
 
@@ -68,6 +70,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 {
                     if (int.Parse(localport) < 49152)
                     {
+                        existing.LocalPortArray.Add(localport);
                         existing.LocalPort += "," + localport;
                     }
                     existing.TentativesCounter++;
@@ -141,7 +144,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     var conn = new CurrentConn
                     {
                         CurrentProd = app,
-                        Editor = fileinfo !=null ? fileinfo.CompanyName : String.Empty,
+                        Editor = fileinfo != null ? fileinfo.CompanyName : String.Empty,
                         CurrentPath = path,
                         Protocol = int.Parse(protocol),
                         TargetPort = targetPort,
@@ -149,6 +152,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                         Target = target,
                         LocalPort = localport
                     };
+
+                    conn.LocalPortArray.Add(localport);
 
                     if (unsure)
                     {

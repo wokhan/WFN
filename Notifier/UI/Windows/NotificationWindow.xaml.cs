@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
@@ -18,6 +17,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
     /// </summary>
     public partial class NotificationWindow : Window, INotifyPropertyChanged
     {
+        private bool isDetailsExpanded;
+
         public double StartLeft
         {
             get { return SystemParameters.WorkArea.Width; }
@@ -75,6 +76,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             InitializeComponent();
 
+            this.isDetailsExpanded = expand.IsExpanded;
+
             if (Settings.Default.AccentColor != null)
             {
                 Resources["AccentColorBrush"] = Settings.Default.AccentColor;
@@ -102,15 +105,22 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void LstConnections_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (lstConnections.SelectedItem == null && lstConnections.Items.Count > 0)
+            if (lstConnections.Items.Count > 0)
             {
-                lstConnections.SelectedIndex = 0;
+                if (lstConnections.SelectedItem == null)
+                {
+                    lstConnections.SelectedIndex = 0;
+                }
+
+                showConn();
+
+                NotifyPropertyChanged("NbConnectionsAfter");
+                NotifyPropertyChanged("NbConnectionsBefore");
             }
-
-            showConn();
-
-            NotifyPropertyChanged("NbConnectionsAfter");
-            NotifyPropertyChanged("NbConnectionsBefore");
+            else
+            {
+                this.Close();
+            }
         }
 
 
@@ -131,7 +141,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             var activeConn = (CurrentConn)lstConnections.SelectedItem;
 
             chkPort.IsEnabled = FirewallHelper.IsIPProtocol(activeConn.Protocol);
-            chkLPort.IsEnabled = (int.Parse(activeConn.LocalPort) < 49152);
+            chkLPort.IsEnabled = (activeConn.LocalPortArray.Count == 1 && int.Parse(activeConn.LocalPortArray[0]) < 49152);
 
             if (!String.IsNullOrEmpty(activeConn.CurrentService))
             {
@@ -223,7 +233,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             this.Top = ExpectedTop;
 
-            Settings.Default.Save();
+            if (isDetailsExpanded != expand.IsExpanded)
+            {
+                isDetailsExpanded = expand.IsExpanded;
+                Settings.Default.Save();
+            }
         }
 
         private void btnBlockTemp_Click(object sender, RoutedEventArgs e)
@@ -266,7 +280,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             {
                 success = createBlockRule(activeConn, services, isTemp);
             }
-            
+
             if (success)
             {
                 if (_optionsView.IsLocalPortChecked)

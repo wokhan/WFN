@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers;
@@ -8,11 +9,27 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// <summary>
     /// Logique d'interaction pour Status.xaml
     /// </summary>
-    public partial class Status : Page
+    public partial class Status : Page, INotifyPropertyChanged
     {
         FirewallHelper.FirewallStatusWrapper status = new FirewallHelper.FirewallStatusWrapper();
 
         bool isInstalled = false;
+
+        private string _lastMessage;
+        public string LastMessage
+        {
+            get { return _lastMessage; }
+            private set { _lastMessage = value; NotifyPropertyChanged("LastMessage"); }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged(string caller)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(caller));
+            }
+        }
 
         public Status()
         {
@@ -25,17 +42,19 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             status.Save();
 
-            if (!isInstalled && 
+            if (!isInstalled &&
                 ((status.PrivateIsEnabled && status.PrivateIsOutBlockedNotif)
                 || (status.PublicIsEnabled && status.PublicIsOutBlockedNotif)
                 || (status.DomainIsEnabled && status.DomainIsOutBlockedNotif)))
             {
-                InstallHelper.EnableProgram(true);
+                InstallHelper.EnableProgram(true, callback);
             }
             else if (isInstalled && (!status.PrivateIsEnabled || !status.PrivateIsOutBlockedNotif) && (!status.PublicIsEnabled || !status.PublicIsOutBlockedNotif) && (!status.DomainIsEnabled || !status.DomainIsOutBlockedNotif))
             {
-                InstallHelper.RemoveProgram(true, callback, callback);
+                InstallHelper.RemoveProgram(true, callback);
             }
+
+            init();
         }
 
         private void btnRevert_Click(object sender, RoutedEventArgs e)
@@ -67,12 +86,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 status.DomainIsOutBlocked = false;
             }
 
-            this.DataContext = status;
+            stackOptions.DataContext = status;
         }
 
-        private void callback(string title, string details)
+        private void callback(bool isSuccess, string details)
         {
-            MessageBox.Show(details, title);
+            LastMessage = details;
         }
 
 

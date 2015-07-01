@@ -21,6 +21,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         private static Dictionary<string, string> deviceNameMap = null;
 
+        public static void OverrideSettingsFile(string fileName)
+        {
+            AppDomain.CurrentDomain.SetupInformation.ConfigurationFile = fileName;
+        }
+
         /// <summary>
         /// 
         /// </summary>

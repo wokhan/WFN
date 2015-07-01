@@ -97,7 +97,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
         }
 
-        private static string rulePrefix = Wokhan.WindowsFirewallNotifier.Common.Resources.RULE_NAME_FORMAT.Split('-')[0];
+        private static string rulePrefix = Common.Resources.RULE_NAME_FORMAT.Split('-')[0];
         private bool WFNRulesPredicate(FirewallHelper.Rule r)
         {
             return r.Name.StartsWith(rulePrefix);
@@ -120,7 +120,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void btnRemoveRule_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show(Wokhan.WindowsFirewallNotifier.Common.Resources.MSG_RULE_DELETE, Wokhan.WindowsFirewallNotifier.Common.Resources.MSG_DLG_TITLE, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (MessageBox.Show(Common.Resources.MSG_RULE_DELETE, Common.Resources.MSG_DLG_TITLE, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 FirewallHelper.RemoveRule(((FirewallHelper.Rule)gridRules.SelectedItem).Name);
 
