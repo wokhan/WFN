@@ -23,15 +23,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool EnableServiceDetection {
+        public bool EnableServiceDetectionGlobal {
             get {
-                return ((bool)(this["EnableServiceDetection"]));
-            }
-            set {
-                this["EnableServiceDetection"] = value;
+                return ((bool)(this["EnableServiceDetectionGlobal"]));
             }
         }
         
@@ -95,15 +92,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool UseBlockRules {
+        public bool UseBlockRulesGlobal {
             get {
-                return ((bool)(this["UseBlockRules"]));
-            }
-            set {
-                this["UseBlockRules"] = value;
+                return ((bool)(this["UseBlockRulesGlobal"]));
             }
         }
         
@@ -176,6 +170,18 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
             }
             set {
                 this["AccentColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableVerboseLogging {
+            get {
+                return ((bool)(this["EnableVerboseLogging"]));
+            }
+            set {
+                this["EnableVerboseLogging"] = value;
             }
         }
     }

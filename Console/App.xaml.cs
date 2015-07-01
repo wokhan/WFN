@@ -10,6 +10,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console
 {
     public partial class App : Application
     {
+        public App() : base()
+        {
+            CommonHelper.OverrideSettingsFile("WFN.config");
+        }
+
         private bool? _isElevated = null;
         public bool IsElevated
         {

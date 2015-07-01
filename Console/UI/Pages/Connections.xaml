@@ -111,19 +111,19 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
-                                    <Image Source="{Binding Icon}" Margin="5" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                    <TextBlock Margin="30,0,0,0" VerticalAlignment="Center" Text="{Binding Owner, Mode=OneWay}" />
+                                    <Image Source="{Binding Icon,Mode=OneTime}" Margin="5" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                    <TextBlock Margin="30,0,0,0" VerticalAlignment="Center" Text="{Binding Owner, Mode=OneTime}" />
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol, Mode=OneWay}" />
-                    <DataGridTextColumn Header="LocalAddress" Binding="{Binding LocalAddress, Mode=OneWay}" />
-                    <DataGridTextColumn Header="LocalPort" Binding="{Binding LocalPort, Mode=OneWay}" />
-                    <DataGridTextColumn Header="RemoteAddress" Binding="{Binding RemoteAddress, Mode=OneWay}" />
-                    <DataGridTextColumn Header="RemotePort" Binding="{Binding RemotePort, Mode=OneWay}" />
+                    <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol, Mode=OneTime}" />
+                    <DataGridTextColumn Header="LocalAddress" Binding="{Binding LocalAddress, Mode=OneTime}" />
+                    <DataGridTextColumn Header="LocalPort" Binding="{Binding LocalPort, Mode=OneTime}" />
+                    <DataGridTextColumn Header="RemoteAddress" Binding="{Binding RemoteAddress, Mode=OneTime}" />
+                    <DataGridTextColumn Header="RemotePort" Binding="{Binding RemotePort, Mode=OneTime}" />
                     <DataGridTextColumn Header="State" Binding="{Binding State, Mode=OneWay}" />
-                    <DataGridTextColumn Header="CreationTime" Binding="{Binding CreationTime, Mode=OneWay}" />
+                    <DataGridTextColumn Header="CreationTime" Binding="{Binding CreationTime, Mode=OneTime}" />
                     <!--<DataGridTextColumn Header="FirewallRule" Binding="{Binding FirewallRule.Count, Mode=OneWay}" />-->
                 </DataGrid.Columns>
             </DataGrid>

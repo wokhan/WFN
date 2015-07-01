@@ -2,7 +2,6 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:BindingConverters="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.Helpers.BindingConverters"
-             xmlns:WFNSettings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common;assembly=Wokhan.WindowsFirewallNotifier.Common"
              StartupUri="UI/Windows/MainWindow.xaml" Startup="Application_Startup">
     <Application.Resources>
         <ResourceDictionary>
@@ -10,7 +9,6 @@
                 <ResourceDictionary Source="Resources/Images.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <BindingConverters:BooleanNegator x:Key="booleanNegator" />
-            <WFNSettings:Settings x:Key="WFNSettings" />
             <SolidColorBrush x:Key="AccentColorBrush" Color="Coral" />
             <Style TargetType="DataGrid" BasedOn="{StaticResource {x:Type DataGrid}}">
                 <Setter Property="Background" Value="White" />
@@ -74,9 +72,11 @@
                                             <Ellipse.Style>
                                                 <Style TargetType="Ellipse">
                                                     <Setter Property="HorizontalAlignment" Value="Left" />
+                                                    <Setter Property="Opacity" Value="0.3" />
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding IsChecked,RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="True">
                                                             <Setter Property="HorizontalAlignment" Value="Right" />
+                                                            <Setter Property="Opacity" Value="1" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -89,6 +89,12 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="BorderBrush" Value="LightGray" />
+                        <Setter Property="Foreground" Value="Gray" />
+                    </Trigger>
+                </Style.Triggers>
             </Style>
             <Style TargetType="RadioButton" x:Key="RadioButtonSlide">
                 <Setter Property="OverridesDefaultStyle" Value="True"/>

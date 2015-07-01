@@ -5,7 +5,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="500" d:DesignWidth="600"
+      d:DesignHeight="600" d:DesignWidth="600"
+      DataContext="{Binding RelativeSource={RelativeSource Self}}"
       Title="Status">
     <DockPanel>
         <Border Background="#FFFF7B7B" Style="{StaticResource NonAdminPanel}">
@@ -35,7 +36,21 @@
                 </Button>
             </WrapPanel>
         </Border>
-        <StackPanel>
+        <Border DataContext="{Binding LastMessage}" Padding="10" DockPanel.Dock="Top">
+            <Border.Style>
+                <Style TargetType="Border" BasedOn="{StaticResource InfoPanel}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding}" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <Grid>
+                <TextBlock Text="{Binding}" />
+            </Grid>
+        </Border>
+        <StackPanel x:Name="stackOptions">
             <TextBlock Margin="5" TextWrapping="Wrap" Text="WFN is not a firewall and relies on the Windows embedded firewall when it comes to connections filtering. The table below shows the current Windows firewall status and allows you to manage the same directly." />
             <WrapPanel>
                 <Label FontWeight="Bold" Content="Current profile: "/>
@@ -52,10 +67,6 @@
                                 <Style.Triggers>
                                     <Trigger Property="IsChecked" Value="True">
                                         <Setter Property="Content" Value="Enabled" />
-                                    </Trigger>
-                                    <Trigger Property="IsEnabled" Value="False">
-                                        <Setter Property="BorderBrush" Value="Gray" />
-                                        <Setter Property="Foreground" Value="Gray" />
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
@@ -142,7 +153,7 @@
                     <RadioButton GroupName="rdbOutDom" Padding="0,10,0,0" IsChecked="{Binding DomainIsOutBlockedNotif}" Content="Block and prompt*" />
                 </StackPanel>
             </Grid>
-            <TextBlock TextWrapping="Wrap" Text="* The outgoing notifications are handled by WFN and cannot be applied to a specific profile. Selecting 'Block and notify' for at least one profile will enable notifications for all of them." />
+            <TextBlock Margin="10" FontStyle="Italic" TextWrapping="Wrap" Text="* The outgoing notifications are handled by WFN and cannot be applied to a specific profile. Selecting 'Block and prompt' for at least one profile will enable notifications for all of them. It also means that you'll need to disable them for all profiles at once if you wish to." />
         </StackPanel>
     </DockPanel>
 </Page>
