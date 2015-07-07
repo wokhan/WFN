@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Pages"
       xmlns:settings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common;assembly=Wokhan.WindowsFirewallNotifier.Common"
+      xmlns:helpers="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Helpers;assembly=Wokhan.WindowsFirewallNotifier.Common"
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="600"
       Title="Settings" DataContext="{Binding RelativeSource={RelativeSource Self}}">
@@ -105,6 +106,8 @@ Please note that you will be able to do it later through the Options panel." Tex
             <StackPanel Margin="10">
                 <ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10"  Padding="5,0" Content="Minimize the console to the system tray instead of the taskbar." IsChecked="{Binding MinimizeToTray, Source={x:Static settings:Settings.Default}}" />
                 <ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10" Padding="5,0" Content="Enable verbose logging (for debugging purpose only, may use a lot more disk space)" IsChecked="{Binding EnableVerboseLogging, Source={x:Static settings:Settings.Default}}" />
+                <TextBlock Margin="30,0,0,10" Text="Note: the log files can either be in the WFN installation directory or the current user's appdata folder." />
+                <TextBlock Margin="30,0,0,10" Text="{Binding Source={x:Static helpers:LogHelper.CurrentLogsPath},StringFormat='Path for the current user: {0}'}" Tag="{Binding Source={x:Static helpers:LogHelper.CurrentLogsPath}}" x:Name="txtCurrentLogPath" MouseDown="txtCurrentLogPath_MouseDown"/>
                 <ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10" Padding="5,0" Content="Always run as admin*" IsChecked="{Binding AlwaysRunAs, Source={x:Static settings:Settings.Default}}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
                 <WrapPanel>
                     <Label Content="Accent color: " />

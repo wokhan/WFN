@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Wokhan.WindowsFirewallNotifier.Common;
 using System.Linq;
+using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -48,6 +49,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private void btnRestartAdmin_Click(object sender, RoutedEventArgs e)
         {
             ((App)Application.Current).RestartAsAdmin();
+        }
+
+        private void txtCurrentLogPath_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Process.Start("explorer.exe", LogHelper.CurrentLogsPath);
         }
     }
 }

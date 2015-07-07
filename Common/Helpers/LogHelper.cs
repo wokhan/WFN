@@ -7,6 +7,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     public class LogHelper
     {
+        public static string CurrentLogsPath
+        {
+            get;
+            private set;
+        }
+
         private static string appVersion;
         private static string assemblyName;
 
@@ -20,12 +26,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             appVersion = assembly.Version.ToString();
             assemblyName = assembly.Name;
 
-            logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, assemblyName + ".log");
+            CurrentLogsPath = AppDomain.CurrentDomain.BaseDirectory;
+            logFilePath = Path.Combine(CurrentLogsPath, assemblyName + ".log");
 
-            using (var fs = new FileStream(logFilePath, FileMode.Append))
+            using (var fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Write))
             {
                 if (!fs.CanWrite)
                 {
+                    CurrentLogsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN");
                     logFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN", assemblyName + ".log");
                 }
             }
@@ -38,7 +46,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         public static void Debug(string msg)
         {
-            if (Settings.Default.DebugMode)
+            if (Settings.Default.EnableVerboseLogging)
             {
                 writeLog("DEBUG", msg);
             }
@@ -46,7 +54,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         public static void Info(string msg)
         {
-            writeLog("INFO", msg);
+            if (Settings.Default.EnableVerboseLogging)
+            {
+                writeLog("INFO", msg);
+            }
         }
 
         public static void Error(string msg, Exception e)
@@ -59,22 +70,19 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             System.Diagnostics.Debug.WriteLine(msg);
 
-            if (Settings.Default.EnableVerboseLogging)
+            lock (locker)
             {
-                lock (locker)
+                StreamWriter sw = null;
+                try
                 {
-                    StreamWriter sw = null;
-                    try
+                    sw = new StreamWriter(logFilePath, true);
+                    sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}] - {4}", DateTime.Now, Environment.UserName, isAdmin, type, msg);
+                }
+                finally
+                {
+                    if (sw != null)
                     {
-                        sw = new StreamWriter(logFilePath, true);
-                        sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}] - {4}", DateTime.Now, Environment.UserName, isAdmin, type, msg);
-                    }
-                    finally
-                    {
-                        if (sw != null)
-                        {
-                            sw.Close();
-                        }
+                        sw.Close();
                     }
                 }
             }
