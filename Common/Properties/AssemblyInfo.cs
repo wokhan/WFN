@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Wokhan.WindowsFirewallNotifier.Common")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Wokhan")]
+[assembly: AssemblyCompany("Wokhan Solutions")]
 [assembly: AssemblyProduct("Windows Firewall Notifier - Common Library")]
 [assembly: AssemblyCopyright("2011-2015 Wokhan (http://wfn.codeplex.com)")]
 [assembly: AssemblyTrademark("")]

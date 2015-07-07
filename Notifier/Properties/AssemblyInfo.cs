@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("Wokhan.WindowsFirewallNotifier.Notifier")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Wokhan")]
+[assembly: AssemblyCompany("Wokhan Solutions")]
 [assembly: AssemblyProduct("Windows Firewall Notifier - Notification Handler")]
 [assembly: AssemblyCopyright("©2011-2015 Wokhan (http://wfn.codeplex.com)")]
 [assembly: AssemblyTrademark("")]

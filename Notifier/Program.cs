@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -23,13 +24,19 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             {
                 if (argv.Length == 0 || argv[1].Contains("$"))
                 {
-                    argv = new string[] { "-pid", Process.GetCurrentProcess().Id.ToString(), "-threadid", "0", "-ip", "127.0.0.1", "-port", "0", "-protocol", "0", "-localport", "0", "-path", "DEMO MODE" };// + new Random().Next().ToString() };
+                    argv = new string[] { "-pid", Process.GetCurrentProcess().Id.ToString(), "-threadid", "0", "-ip", "127.0.0.1", "-port", "0", "-protocol", "0", "-localport", "0", "-path", "DEMO MODE", "-impersonated", "1" };// + new Random().Next().ToString() };
                 }
 
                 Dictionary<string, string> pars = ProcessHelper.ParseParameters(argv);
                 int pid = int.Parse(pars["pid"]);
 
-                EnsureUserSession(pid, argv);
+                // Check if impersonation has already taken place (to avoir repeated relaunched and infinite loops)
+                string impersonated = "0";
+                pars.TryGetValue("impersonated", out impersonated);
+                if (impersonated != "1")
+                {
+                    EnsureUserSession(pid, argv);
+                }
 
                 new SingletonManager().Run(argv);
             }
@@ -43,59 +50,52 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
         private static void EnsureUserSession(int pid, string[] argv)
         {
-            Process currentProc = Process.GetCurrentProcess();
-            uint SessID = (uint)currentProc.SessionId;
-
             if (WindowsIdentity.GetCurrent().IsSystem)
             {
+                uint targetSessionID = uint.MaxValue;
+
                 IntPtr userToken = IntPtr.Zero;
+
+                // Retrieves the target process Session ID
                 try
                 {
                     using (Process srcPr = Process.GetProcessById(pid))
                     {
-                        SessID = (uint)srcPr.SessionId;
+                        targetSessionID = (uint)srcPr.SessionId;
                     }
                 }
-                catch { }
-
-                if (SessID == uint.MaxValue || SessID == 4 || SessID == 0)
+                catch (Exception e)
                 {
-                    // Retrieves the currently active session if the process was not running
-                    SessID = (uint)CommonHelper.WTSGetActiveConsoleSessionId();
-                    if (SessID == 0xFFFFFFFF)
-                    {
-                        Exception e = new Exception("No active session found. Aborting.");
-                        LogHelper.Error("FATAL ERROR", e);
-                        throw e;
-                    }
-                    /*else
-                    {
-                        int errCode = Marshal.GetLastWin32Error();
-                        if (errCode != 0)
-                        {
-                            throw new Exception("Unable to retrieve the active session ID. ErrCode = " + errCode);
-                        }
-                    }*/
+                    LogHelper.Error("Unable to retrieve the target process SessionID.", e);
                 }
 
-                if (SessID != 0 && SessID != currentProc.SessionId)
+                // If the target Session ID is still unknown or if it belongs to SYSTEM, the currently active session is retrieved.
+                if (targetSessionID == uint.MaxValue || targetSessionID == 0 || targetSessionID == 4)
                 {
-                    if (!CommonHelper.WTSQueryUserToken(SessID, ref userToken))
+                    targetSessionID = (uint)CommonHelper.WTSGetActiveConsoleSessionId();
+                    if (targetSessionID == 0xFFFFFFFF)
                     {
-                        Exception e = new Exception("Unable to retrieve the current user token. ErrCode = " + Marshal.GetLastWin32Error());
-                        LogHelper.Error("FATAL ERROR", e);
-                        throw e;
+                        throw new Exception("No active session found. Aborting.");
+                    }
+                }
+
+                // If the active Session ID is still a SYSTEM one, cannot continue.
+                if (targetSessionID == 0 || targetSessionID == 4)
+                {
+                    throw new Exception("WFN can not start in the SYSTEM session.");
+                }
+                // Else if the target Session ID is found, impersonation can take place.
+                else 
+                {
+                    if (!CommonHelper.WTSQueryUserToken(targetSessionID, ref userToken))
+                    {
+                        throw new Win32Exception(Marshal.GetLastWin32Error(), "Unable to retrieve the current user token.");
                     }
 
-                    string argstr = String.Join(" ", argv.Select(a => a.Contains(" ") ? "\"" + a + "\"" : a).ToArray());
+                    string argstr = String.Join(" ", argv.Select(a => a.Contains(" ") ? "\"" + a + "\"" : a).ToArray()) + " -impersonated 1";
                     LogHelper.Debug("Impersonating. Parameters: " + argstr);
+
                     Impersonation.LaunchProcessAsUser(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe"), argstr, userToken);
-                }
-                else
-                {
-                    Exception e = new Exception("WFN can not start in the SYSTEM session.");
-                    LogHelper.Error("FATAL ERROR", e);
-                    throw e;
                 }
 
                 Environment.Exit(0);

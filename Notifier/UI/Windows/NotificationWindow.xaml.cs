@@ -76,6 +76,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             InitializeComponent();
 
+            if (Settings.Default.UseAnimation)
+            {
+                this.Margin = new Thickness(250, 0, -250, 0);
+            }
+
             this.isDetailsExpanded = expand.IsExpanded;
 
             if (Settings.Default.AccentColor != null)
@@ -129,7 +134,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             this.Top = ExpectedTop;
             this.Left = ExpectedLeft;
 
-            Dispatcher.InvokeAsync(() => ((Storyboard)this.Resources["animate"]).Begin(Main));
+            if (Settings.Default.UseAnimation)
+            {
+                Dispatcher.InvokeAsync(() => ((Storyboard)this.Resources["animate"]).Begin(Main));
+            }
         }
 
 
@@ -236,7 +244,14 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             if (isDetailsExpanded != expand.IsExpanded)
             {
                 isDetailsExpanded = expand.IsExpanded;
-                Settings.Default.Save();
+                try
+                {
+                    Settings.Default.Save();
+                }
+                catch (Exception exc)
+                {
+                    LogHelper.Error("Notification window settings cannot be saved.", exc);
+                }
             }
         }
 

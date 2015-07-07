@@ -217,9 +217,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Shield.ico" />
   </ItemGroup>
   <ItemGroup>

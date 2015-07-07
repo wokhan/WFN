@@ -125,7 +125,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             {
                 AddOrUpdateConnection(c);
             }
-            
+
+            CurrentMap.UpdateLayout();
             /*
             var killduration = Math.Max(5, 3 * _interval);
             var dieduration = Math.Max(2, 2 * _interval);

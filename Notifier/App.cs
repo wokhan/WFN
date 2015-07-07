@@ -27,10 +27,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             CommonHelper.OverrideSettingsFile("WFN.config");
         }
 
-        public App(ReadOnlyCollection<string> argv)
+        public App(ReadOnlyCollection<string> argv) : this()
         {
-            CommonHelper.OverrideSettingsFile("WFN.config");
-
             NextInstance(argv);
         }
 
