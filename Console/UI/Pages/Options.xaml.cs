@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Wokhan.WindowsFirewallNotifier.Common;
-using Wokhan.WindowsFirewallNotifier.Console.UI.Windows;
 using System.Linq;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
@@ -44,6 +43,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private void btnTestNotif_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe"));
+        }
+
+        private void btnRestartAdmin_Click(object sender, RoutedEventArgs e)
+        {
+            ((App)Application.Current).RestartAsAdmin();
         }
     }
 }

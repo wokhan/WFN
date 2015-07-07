@@ -89,9 +89,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{94028c5e-9b0e-4d15-966a-9fa766a20821}</Project>
       <Name>Common</Name>

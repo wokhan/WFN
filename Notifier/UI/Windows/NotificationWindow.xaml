@@ -22,7 +22,7 @@
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Window.Resources>
         <Storyboard x:Key="animate" BeginTime="0" Duration="0:0:1" SpeedRatio="2">
-            <ThicknessAnimation Storyboard.TargetProperty="Margin" From="250,0,0,0" To="0,0,0,0" />
+            <ThicknessAnimation Storyboard.TargetProperty="Margin" From="250,0,-250,0" To="0,0,0,0" />
             <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1"/>
         </Storyboard>
         <SolidColorBrush x:Key="AccentColorBrush" Color="Coral" />

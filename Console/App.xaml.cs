@@ -13,6 +13,24 @@ namespace Wokhan.WindowsFirewallNotifier.Console
         public App() : base()
         {
             CommonHelper.OverrideSettingsFile("WFN.config");
+
+            if (Settings.Default.AlwaysRunAs && !UacHelper.CheckProcessElevated())
+            {
+                RestartAsAdmin();
+            }
+
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            this.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+        }
+
+        private void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show(e.Exception.Message, "FATAL ERROR");
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show(((Exception)e.ExceptionObject).Message, "FATAL ERROR");
         }
 
         private bool? _isElevated = null;

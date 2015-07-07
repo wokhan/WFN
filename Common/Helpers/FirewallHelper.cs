@@ -729,17 +729,17 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 PrivateIsEnabled = (privateInStatus != Status.DISABLED);
                 PrivateIsInBlocked = (privateInStatus == Status.ENABLED_BLOCK);
                 PrivateIsInBlockedNotif = (privateInStatus == Status.ENABLED_NOTIFY);
-                PrivateIsOutBlocked = (privateOutStatus != Status.DISABLED);
+                PrivateIsOutBlocked = (privateOutStatus == Status.ENABLED_BLOCK);
 
                 PublicIsEnabled = (publicInStatus != Status.DISABLED);
                 PublicIsInBlocked = (publicInStatus == Status.ENABLED_BLOCK);
                 PublicIsInBlockedNotif = (publicInStatus == Status.ENABLED_NOTIFY);
-                PublicIsOutBlocked = (publicOutStatus != Status.DISABLED);
+                PublicIsOutBlocked = (publicOutStatus == Status.ENABLED_BLOCK);
 
                 DomainIsEnabled = (domainInStatus != Status.DISABLED);
                 DomainIsInBlocked = (domainInStatus == Status.ENABLED_BLOCK);
                 DomainIsInBlockedNotif = (domainInStatus == Status.ENABLED_NOTIFY);
-                DomainIsOutBlocked = (domainOutStatus != Status.DISABLED);
+                DomainIsOutBlocked = (domainOutStatus == Status.ENABLED_BLOCK);
             }
 
             private void updateStatus(NET_FW_PROFILE_TYPE2_ profile, ref Status stat, ref Status statOut)
@@ -762,7 +762,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                         stat = Status.ENABLED_ALLOW;
                     }
 
-                    if (firewallPolicy.DefaultOutboundAction[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE] == NET_FW_ACTION_.NET_FW_ACTION_BLOCK)
+                    if (firewallPolicy.DefaultOutboundAction[profile] == NET_FW_ACTION_.NET_FW_ACTION_BLOCK)
                     {
                         statOut = Status.ENABLED_BLOCK;
                     }

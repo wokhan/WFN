@@ -5,6 +5,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Security.Principal;
+using System.ComponentModel;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -113,7 +114,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             if (!retdup)
             {
-                new Exception("Unable to duplicate the current user's token. Error Code: " + Marshal.GetLastWin32Error());
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "Unable to duplicate the current user's token.");
             }
 
             string cmd = "\"" + app + "\" " + args;
@@ -123,7 +124,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             if (!retimper)
             {
-                throw new  Exception("Unable to impersonate. Command was: " + cmd + ". Error Code: " + Marshal.GetLastWin32Error());
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "Unable to impersonate. Command was: " + cmd);
             }
         }
 
