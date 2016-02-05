@@ -26,10 +26,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.DummyData
             public List<string> AnycastAddresses { get { return new List<string> { "12345" }; } }
             public List<string> DhcpServerAddresses { get { return new List<string> { "12345" }; } }
             public List<string> DnsAddresses { get { return new List<string> { "12345" }; } }
-            public string DnsSuffix { get; }
+            public string DnsSuffix { get { return ""; } }
             public List<string> GatewayAddresses { get { return new List<string> { "12345" }; } }
-            public bool IsDnsEnabled { get; }
-            public bool IsDynamicDnsEnabled { get; }
+            public bool IsDnsEnabled { get { return true; } }
+            public bool IsDynamicDnsEnabled { get { return false;  } }
             public List<string> MulticastAddresses { get { return new List<string> { "12345" }; } }
             public List<string> UnicastAddresses { get { return new List<string> { "12345" }; } }
             public List<string> WinsServersAddresses { get { return new List<string> { "12345" }; } }
@@ -39,7 +39,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.DummyData
         {
             public string Description { get { return "Test interface"; } }
             public string Id { get { return "ID"; } }
-            public bool IsReceiveOnly { get; }
+            public bool IsReceiveOnly { get { return false; } }
             public string Name { get { return "Name"; } }
             public string NetworkInterfaceType { get { return "Fake interface"; } }
             public string OperationalStatus { get { return "Online"; } }
