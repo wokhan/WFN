@@ -10,15 +10,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
     public class TCP6Helper : TCPHelper
     {
         [DllImport("iphlpapi.dll", SetLastError = true)]
-        public static extern uint GetOwnerModuleFromTcp6Entry(ref MIB_TCP6ROW_OWNER_MODULE pTcpEntry, TCPIP_OWNER_MODULE_INFO_CLASS Class, IntPtr Buffer, ref int pdwSize);
-
+        public static extern uint GetOwnerModuleFromTcp6Entry(ref MIB_TCP6ROW_OWNER_MODULE pTcpEntry, TCPIP_OWNER_MODULE_INFO_CLASS Class, IntPtr Buffer, ref uint pdwSize);
 
         [DllImport("iphlpapi.dll", SetLastError = true)]
         public static extern uint GetPerTcp6ConnectionEStats(ref MIB_TCP6ROW Row, TCP_ESTATS_TYPE EstatsType, IntPtr Rw, uint RwVersion, uint RwSize, IntPtr Ros, uint RosVersion, uint RosSize, IntPtr Rod, uint RodVersion, uint RodSize);
 
         [DllImport("iphlpapi.dll", SetLastError = true)]
         public static extern uint SetPerTcp6ConnectionEStats(ref MIB_TCP6ROW Row, TCP_ESTATS_TYPE EstatsType, IntPtr Rw, uint RwVersion, uint RwSize, uint Offset);
-
 
         [DllImport("ntdll.dll", SetLastError = true)]
         public static extern void RtlIpv6AddressToString(byte[] Addr, out StringBuilder res);
@@ -139,9 +137,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             IntPtr buffer = IntPtr.Zero;
             try
             {
-                int buffSize = 0;
+                uint buffSize = 0;
                 GetOwnerModuleFromTcp6Entry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
-                buffer = Marshal.AllocHGlobal(buffSize);
+                buffer = Marshal.AllocHGlobal((int)buffSize);
+
+                //GetOwnerModuleFromTcp6Entry needs the fields of TCPIP_OWNER_MODULE_INFO_BASIC to be NULL
+                ZeroMemory(buffer, buffSize);
 
                 var resp = GetOwnerModuleFromTcp6Entry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, buffer, ref buffSize);
                 if (resp == 0)
