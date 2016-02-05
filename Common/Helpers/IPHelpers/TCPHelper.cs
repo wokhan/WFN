@@ -8,16 +8,17 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
 {
     public class TCPHelper : IPHelper
     {
+        [DllImport("kernel32.dll", EntryPoint = "RtlZeroMemory", SetLastError = false)]
+        public static extern void ZeroMemory(IntPtr dest, uint size);
+
         [DllImport("iphlpapi.dll", SetLastError = true)]
-        public static extern uint GetOwnerModuleFromTcpEntry(ref MIB_TCPROW_OWNER_MODULE pTcpEntry, TCPIP_OWNER_MODULE_INFO_CLASS Class, IntPtr Buffer, ref int pdwSize);
+        public static extern uint GetOwnerModuleFromTcpEntry(ref MIB_TCPROW_OWNER_MODULE pTcpEntry, TCPIP_OWNER_MODULE_INFO_CLASS Class, IntPtr Buffer, ref uint pdwSize);
 
         [DllImport("iphlpapi.dll", SetLastError = true)]
         public static extern uint GetExtendedTcpTable(IntPtr pTcpTable, ref int dwOutBufLen, bool sort, AF_INET ipVersion, TCP_TABLE_CLASS tblClass, int reserved);
 
-
         [DllImport("iphlpapi.dll", SetLastError = true)]
         public static extern uint GetPerTcpConnectionEStats(ref MIB_TCPROW Row, TCP_ESTATS_TYPE EstatsType, IntPtr Rw, uint RwVersion, uint RwSize, IntPtr Ros, uint RosVersion, uint RosSize, IntPtr Rod, uint RodVersion, uint RodSize);
-
 
         [DllImport("iphlpapi.dll", SetLastError = true)]
         public static extern uint SetPerTcpConnectionEStats(ref MIB_TCPROW Row, TCP_ESTATS_TYPE EstatsType, IntPtr Rw, uint RwVersion, uint RwSize, uint Offset);
@@ -352,9 +353,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             IntPtr buffer = IntPtr.Zero;
             try
             {
-                int buffSize = 0;
+                uint buffSize = 0;
                 GetOwnerModuleFromTcpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
-                buffer = Marshal.AllocHGlobal(buffSize);
+                buffer = Marshal.AllocHGlobal((int)buffSize);
+
+                //GetOwnerModuleFromTcpEntry needs the fields of TCPIP_OWNER_MODULE_INFO_BASIC to be NULL
+                ZeroMemory(buffer, buffSize);
 
                 var resp = GetOwnerModuleFromTcpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, buffer, ref buffSize);
                 if (resp == 0)
