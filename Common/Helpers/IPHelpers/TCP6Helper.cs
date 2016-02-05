@@ -91,10 +91,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
 
             try
             {
-                int buffSize = 0;
+                uint buffSize = 0;
                 GetExtendedTcpTable(IntPtr.Zero, ref buffSize, false, AF_INET.IP6, TCP_TABLE_CLASS.TCP_TABLE_OWNER_MODULE_ALL, 0);
 
-                buffTable = Marshal.AllocHGlobal(buffSize);
+                buffTable = Marshal.AllocHGlobal((int)buffSize);
 
                 uint ret = GetExtendedTcpTable(buffTable, ref buffSize, false, AF_INET.IP6, TCP_TABLE_CLASS.TCP_TABLE_OWNER_MODULE_ALL, 0);
                 if (ret == 0)
@@ -103,7 +103,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                     long rowPtr = ((long)buffTable + (long)Marshal.OffsetOf(typeof(MIB_TCP6TABLE_OWNER_MODULE), "FirstEntry"));
 
                     MIB_TCP6ROW_OWNER_MODULE current;
-                    for (int i = 0; i < tab.NumEntries; i++)
+                    for (uint i = 0; i < tab.NumEntries; i++)
                     {
                         current = (MIB_TCP6ROW_OWNER_MODULE)Marshal.PtrToStructure((IntPtr)rowPtr, typeof(MIB_TCP6ROW_OWNER_MODULE));
                         rowPtr += Marshal.SizeOf(current);
@@ -149,7 +149,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                 {
                     ret = new Owner((TCPIP_OWNER_MODULE_BASIC_INFO)Marshal.PtrToStructure(buffer, typeof(TCPIP_OWNER_MODULE_BASIC_INFO)));
                 }
-                else if (resp != 1168) // Ignore closed connections 
+                else if (resp != 1168) // Ignore closed connections
                 {
                     LogHelper.Error("Unable to get the connection owner.", new Win32Exception((int)resp));
                 }
@@ -267,10 +267,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                 var parsedROD = (TCP_ESTATS_DATA_ROD_v0)Marshal.PtrToStructure(rod, typeof(TCP_ESTATS_DATA_ROD_v0));
 
                 return parsedROD;
-            }
-            catch (Exception e)
-            {
-                throw e;
             }
             finally
             {

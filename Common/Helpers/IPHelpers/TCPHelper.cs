@@ -15,7 +15,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         public static extern uint GetOwnerModuleFromTcpEntry(ref MIB_TCPROW_OWNER_MODULE pTcpEntry, TCPIP_OWNER_MODULE_INFO_CLASS Class, IntPtr Buffer, ref uint pdwSize);
 
         [DllImport("iphlpapi.dll", SetLastError = true)]
-        public static extern uint GetExtendedTcpTable(IntPtr pTcpTable, ref int dwOutBufLen, bool sort, AF_INET ipVersion, TCP_TABLE_CLASS tblClass, int reserved);
+        public static extern uint GetExtendedTcpTable(IntPtr pTcpTable, ref uint dwOutBufLen, bool sort, AF_INET ipVersion, TCP_TABLE_CLASS tblClass, int reserved);
 
         [DllImport("iphlpapi.dll", SetLastError = true)]
         public static extern uint GetPerTcpConnectionEStats(ref MIB_TCPROW Row, TCP_ESTATS_TYPE EstatsType, IntPtr Rw, uint RwVersion, uint RwSize, IntPtr Ros, uint RosVersion, uint RosSize, IntPtr Rod, uint RodVersion, uint RodSize);
@@ -187,10 +187,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
 
             try
             {
-                int buffSize = 0;
+                uint buffSize = 0;
                 GetExtendedTcpTable(IntPtr.Zero, ref buffSize, false, AF_INET.IP4, TCP_TABLE_CLASS.TCP_TABLE_OWNER_MODULE_ALL, 0);
 
-                buffTable = Marshal.AllocHGlobal(buffSize);
+                buffTable = Marshal.AllocHGlobal((int)buffSize);
 
                 uint ret = GetExtendedTcpTable(buffTable, ref buffSize, false, AF_INET.IP4, TCP_TABLE_CLASS.TCP_TABLE_OWNER_MODULE_ALL, 0);
                 if (ret == 0)
@@ -199,7 +199,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                     IntPtr rowPtr = (IntPtr)((long)buffTable + (long)Marshal.OffsetOf(typeof(MIB_TCPTABLE_OWNER_MODULE), "FirstEntry"));
 
                     MIB_TCPROW_OWNER_MODULE current;
-                    for (int i = 0; i < tab.NumEntries; i++)
+                    for (uint i = 0; i < tab.NumEntries; i++)
                     {
                         current = (MIB_TCPROW_OWNER_MODULE)Marshal.PtrToStructure(rowPtr, typeof(MIB_TCPROW_OWNER_MODULE));
                         rowPtr = (IntPtr)((long)rowPtr + (long)Marshal.SizeOf(current));
@@ -323,10 +323,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
 
                 return parsedROD;
             }
-            catch (Exception e)
-            {
-                throw e;
-            }
             finally
             {
                 if (rw != IntPtr.Zero)
@@ -365,7 +361,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                 {
                     ret = new Owner((TCPIP_OWNER_MODULE_BASIC_INFO)Marshal.PtrToStructure(buffer, typeof(TCPIP_OWNER_MODULE_BASIC_INFO)));
                 }
-                else if (resp != 1168) // Ignore closed connections 
+                else if (resp != 1168) // Ignore closed connections
                 {
                     LogHelper.Error("Unable to get the connection owner.", new Win32Exception((int)resp));
                 }
