@@ -582,8 +582,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                                             .Concat(keyConfig.GetValueNames()
                                                               .Select(s => (string)keyConfig.GetValue(s)));
 
-                // Windows 8 (ignoring Metro apps)
-                if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 2)
+                // Windows 8 or higher (ignoring Metro apps)
+                if ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 2) || (Environment.OSVersion.Version.Major > 6))
                 {
                     allkeyvalues = allkeyvalues.Where(r => !r.Contains("AppPkgId"));
                 }
