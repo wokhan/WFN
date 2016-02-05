@@ -99,8 +99,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
             ServiceController sc = new ServiceController();
             string rname;
 
-            // Windows 8
-            if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 2)
+            // Windows 8 or higher
+            if ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 2) || (Environment.OSVersion.Version.Major > 6))
             {
                 rname = String.Format(Common.Resources.RULE_NAME_FORMAT, "Windows Applications (auto)");
                 if (rules.All(r => r.Name != rname))
