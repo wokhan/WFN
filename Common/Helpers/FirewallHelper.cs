@@ -644,7 +644,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         public static string GetCurrentProfileAsText()
         {
-            return GetProfileAsText((int)GetCurrentProfile());
+            return GetProfileAsText(GetCurrentProfile());
         }
 
 
