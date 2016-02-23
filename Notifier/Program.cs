@@ -64,9 +64,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                         targetSessionID = (uint)srcPr.SessionId;
                     }
                 }
-                catch (Exception e)
+                catch (ArgumentException)
                 {
-                    LogHelper.Error("Unable to retrieve the target process SessionID.", e);
+                    LogHelper.Warning("Unable to retrieve the target process SessionID. Process may have already exited.");
                 }
 
                 // If the target Session ID is still unknown or if it belongs to SYSTEM, the currently active session is retrieved.
