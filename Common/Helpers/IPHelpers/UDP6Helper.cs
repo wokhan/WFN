@@ -9,7 +9,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
     public class UDP6Helper : UDPHelper
     {
         [DllImport("iphlpapi.dll", SetLastError = true)]
-        public static extern uint GetOwnerModuleFromUdp6Entry(ref MIB_UDP6ROW_OWNER_MODULE pUdpEntry, TCPIP_OWNER_MODULE_INFO_CLASS Class, IntPtr Buffer, ref int pdwSize);
+        public static extern uint GetOwnerModuleFromUdp6Entry(ref MIB_UDP6ROW_OWNER_MODULE pUdpEntry, TCPIP_OWNER_MODULE_INFO_CLASS Class, IntPtr Buffer, ref uint pdwSize);
 
         [StructLayout(LayoutKind.Sequential)]
         public struct MIB_UDP6ROW_OWNER_MODULE : I_OWNER_MODULE
@@ -106,9 +106,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             IntPtr buffer = IntPtr.Zero;
             try
             {
-                int buffSize = 0;
+                uint buffSize = 0;
                 GetOwnerModuleFromUdp6Entry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
-                buffer = Marshal.AllocHGlobal(buffSize);
+                buffer = Marshal.AllocHGlobal((int)buffSize);
+
+                //GetOwnerModuleFromUdp6Entry needs the fields of TCPIP_OWNER_MODULE_INFO_BASIC to be NULL
+                ZeroMemory(buffer, buffSize);
 
                 var resp = GetOwnerModuleFromUdp6Entry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, buffer, ref buffSize);
                 if (resp == 0)

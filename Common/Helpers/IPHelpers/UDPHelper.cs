@@ -8,9 +8,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
 {
     public class UDPHelper : IPHelper
     {
-        [DllImport("iphlpapi.dll", SetLastError = true)]
-        public static extern uint GetOwnerModuleFromUdpEntry(ref MIB_UDPROW_OWNER_MODULE pUdpEntry, TCPIP_OWNER_MODULE_INFO_CLASS Class, IntPtr Buffer, ref int pdwSize);
+        [DllImport("kernel32.dll", EntryPoint = "RtlZeroMemory", SetLastError = false)]
+        public static extern void ZeroMemory(IntPtr dest, uint size);
 
+        [DllImport("iphlpapi.dll", SetLastError = true)]
+        public static extern uint GetOwnerModuleFromUdpEntry(ref MIB_UDPROW_OWNER_MODULE pUdpEntry, TCPIP_OWNER_MODULE_INFO_CLASS Class, IntPtr Buffer, ref uint pdwSize);
 
         [DllImport("iphlpapi.dll", SetLastError = true)]
         public static extern uint GetExtendedUdpTable(IntPtr pUdpTable, ref int dwOutBufLen, bool sort, AF_INET ipVersion, UDP_TABLE_CLASS tblClass, int reserved);
@@ -120,9 +122,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             IntPtr buffer = IntPtr.Zero;
             try
             {
-                int buffSize = 0;
+                uint buffSize = 0;
                 GetOwnerModuleFromUdpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
-                buffer = Marshal.AllocHGlobal(buffSize);
+                buffer = Marshal.AllocHGlobal((int)buffSize);
+
+                //GetOwnerModuleFromUdpEntry needs the fields of TCPIP_OWNER_MODULE_INFO_BASIC to be NULL
+                ZeroMemory(buffer, buffSize);
 
                 var resp = GetOwnerModuleFromUdpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, buffer, ref buffSize);
                 if (resp == 0)
