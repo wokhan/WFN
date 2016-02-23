@@ -79,7 +79,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             writeLog("ERROR", msg + "\r\n" + (e != null ? e.Message + "\r\n" + e.StackTrace : ""));
         }
 
-        public static readonly EventWaitHandle locker = new EventWaitHandle(true, EventResetMode.AutoReset, "WFN_Log_Sync_Lock");
+        private static readonly EventWaitHandle locker = new EventWaitHandle(true, EventResetMode.AutoReset, "WFN_Log_Sync_Lock");
         private static void writeLog(string type, string msg)
         {
             System.Diagnostics.Debug.WriteLine(msg);
