@@ -17,8 +17,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
     {
         public Brush Brush { get; set; }
 
-        private static IPAddress currentAddress = null;
-
         private static Location _currentCoordinates = null;
         public static Location CurrentCoordinates
         {
@@ -26,7 +24,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             {
                 if (_currentCoordinates == null)
                 {
-                    _currentCoordinates = IPToLocation(IPHelper.GetPublicIpAddress());
+                    IPAddress address = IPHelper.GetPublicIpAddress();
+                    if (address == null)
+                    {
+                        throw new Exception("Cannot retrieve connection location.");
+                    }
+                    _currentCoordinates = IPToLocation(address);
                 }
                 return _currentCoordinates;
             }
