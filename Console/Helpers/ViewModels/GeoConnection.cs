@@ -68,7 +68,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
                 addrBytes = addrBytes.Reverse().ToArray();
             }
 
-            if (addrBytes.Length > 8)
+            if (address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
             {
                 //IPv6
                 ipnum = BitConverter.ToUInt64(addrBytes, 8);
