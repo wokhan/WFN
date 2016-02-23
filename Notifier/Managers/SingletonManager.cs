@@ -2,16 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Runtime.InteropServices;
-using System.Security.Principal;
 using System.Windows;
-using Wokhan.WindowsFirewallNotifier.Common;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
 using Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows;
 
@@ -38,6 +29,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Managers
         protected override void OnStartupNextInstance(StartupNextInstanceEventArgs e)
         {
             base.OnStartupNextInstance(e);
+
+            //Give focus to the main instance
+            e.BringToForeground = true;
 
             application.NextInstance(e.CommandLine);
         }
