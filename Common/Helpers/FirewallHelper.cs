@@ -13,16 +13,16 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
     public class FirewallHelper
     {
         //[DllImport("user32.dll", SetLastError = true)]
-        //static extern int LoadString(IntPtr hInstance, UInt16 uID, StringBuilder lpBuffer, int nBufferMax);
+        //private static extern int LoadString(IntPtr hInstance, uint uID, StringBuilder lpBuffer, int nBufferMax);
 
         //[DllImport("kernel32.dll", SetLastError = true)]
-        //static extern IntPtr FindResource(IntPtr hModule, int lpName, int lpType);
+        //private static extern IntPtr FindResource(IntPtr hModule, int lpName, int lpType);
 
-        //[DllImport("kernel32.dll")]
-        //static extern IntPtr LoadLibraryEx(string lpFileName, [In] IntPtr hFile, uint dwFlags);
+        //[DllImport("kernel32.dll", SetLastError = true)]
+        //private static extern IntPtr LoadLibraryEx(string lpFileName, [In] IntPtr hFile, uint dwFlags);
 
-        //[DllImport("kernel32.dll")]
-        //public static extern bool FreeLibrary([In] IntPtr hModule);
+        //[DllImport("kernel32.dll", SetLastError = true)]
+        //private static extern bool FreeLibrary([In] IntPtr hModule);
 
         public class Rule
         {

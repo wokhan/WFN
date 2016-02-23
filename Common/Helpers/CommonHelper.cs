@@ -13,11 +13,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         [DllImport("Wtsapi32.dll", SetLastError = true)]
         public static extern bool WTSQueryUserToken(uint SessionId, ref IntPtr phToken);
 
-        [DllImport("kernel32.dll", SetLastError = true, EntryPoint = "WTSGetActiveConsoleSessionId")]
+        [DllImport("kernel32.dll", SetLastError = true)]
         public static extern uint WTSGetActiveConsoleSessionId();
 
-        [DllImport("kernel32.dll")]
-        static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTargetPath, int ucchMax);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTargetPath, uint ucchMax);
 
         private static Dictionary<string, string> deviceNameMap = null;
 
@@ -41,7 +41,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 foreach (string drive in drives)
                 {
                     trimmedDrive = drive.TrimEnd('\\');
-                    QueryDosDevice(trimmedDrive, sb, sb.Capacity);
+                    QueryDosDevice(trimmedDrive, sb, (uint)sb.Capacity);
                     deviceNameMap.Add(sb.ToString().ToLower() + "\\", trimmedDrive);
                 }
             }
@@ -68,14 +68,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         }
 
         [DllImport("shlwapi.dll", BestFitMapping = false, CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = false, ThrowOnUnmappableChar = true)]
-        public static extern int SHLoadIndirectString(string pszSource, StringBuilder pszOutBuf, int cchOutBuf, IntPtr ppvReserved);
+        private static extern int SHLoadIndirectString(string pszSource, StringBuilder pszOutBuf, uint cchOutBuf, IntPtr ppvReserved);
 
         public static string GetMSResourceString(string src)
         {
             if (src != null && src.StartsWith("@"))
             {
                 StringBuilder sb = new StringBuilder(1024);
-                if (0 == SHLoadIndirectString(Environment.ExpandEnvironmentVariables(src), sb, sb.Capacity, IntPtr.Zero))
+                if (0 == SHLoadIndirectString(Environment.ExpandEnvironmentVariables(src), sb, (uint)sb.Capacity, IntPtr.Zero))
                 {
                     src = sb.ToString();
                 }
