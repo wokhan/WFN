@@ -49,7 +49,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             if (Settings.Default.FirstRun)
             {
-                writeLog("INIT", String.Format("OS: {0} ({1}bit) / .Net CLR: {2} / Path: {3} / Version: {4}", Environment.OSVersion, IntPtr.Size * 8, Environment.Version, AppDomain.CurrentDomain.BaseDirectory, appVersion));
+                writeLog("INIT", String.Format("OS: {0} ({1} bit) / .Net CLR: {2} / Path: {3} / Version: {4} ({5} bit)", Environment.OSVersion, Environment.Is64BitOperatingSystem ? 64 : 32, Environment.Version, AppDomain.CurrentDomain.BaseDirectory, appVersion, Environment.Is64BitProcess ? 64 : 32));
             }
         }
 
