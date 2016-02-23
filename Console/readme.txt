@@ -25,14 +25,14 @@ The application can be unzipped in the folder of your choice (usually c:\Program
 When launching version 1.6 for the first time, I advise to remove any svchost.exe firewall rule you may have created using the previous versions since the services management logic has been way improved.
 
 === How-to ===
-Once enabled (after a first launch), the application will show a notification balloon when an application attempts an outgoing connexion while not being allowed to do so. A click on the notification will display a dialog box, allowing the user to:
+Once enabled (after a first launch), the application will show a notification balloon when an application attempts an outgoing connection while not being allowed to do so. A click on the notification will display a dialog box, allowing the user to:
 - temporarily allow the application
 - create a rule for the application, so that it will always be able to connect
-- block the application once only, after what other notifications may (will) appear
+- block the application once only, after which other notifications may (will) appear
 - always block the application (no notification will therefore be displayed afterwards)
 
-By manually relaunching the application executable, a new dialog will appear, allowing to display and modify the exceptions list ("always blocked" applications), to check the connections lastly blocked by Windows (allowing to create rules directly from that point), and, as before, to deactivate WFN.
-Starting from v1.2.0, the same window will allow you to check all Windows firewall rules (and to remove the unneeded ones).
+By manually relaunching the application executable, a new dialog will appear, allowing to display and modify the exceptions list ("always blocked" applications), to check the connections blocked recently by Windows (allowing to create rules directly from that point), and, as before, to deactivate WFN.
+Starting from v1.2.0, the same window will allow you to check all Windows Firewall rules (and to remove the unneeded ones).
 
 NB: If you get a services list starting with "*" when using service detection, it means that WFN was not able to properly detect the service the connection originates from, probably because the corresponding process is not running anymore.
  

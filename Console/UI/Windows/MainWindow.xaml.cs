@@ -48,7 +48,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
         {
             if (e.Exception is InvalidOperationException && e.Exception.InnerException != null && e.Exception.InnerException is Win32Exception && ((Win32Exception)e.Exception.InnerException).NativeErrorCode == 1314)
             {
-                ForceDialog("You must run the Windows Firewall Notifier console as an administrator to be able to use this feature.", "Insufficiant privileges");
+                ForceDialog("You must run the Windows Firewall Notifier console as an administrator to be able to use this feature.", "Insufficient privileges");
             }
             else
             {
