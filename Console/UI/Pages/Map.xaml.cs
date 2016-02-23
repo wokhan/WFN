@@ -36,7 +36,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             set { _isFullRouteDisplayed = value; NotifyPropertyChanged("IsFullRouteDisplayed"); }
         }
 
-        private bool _isAerial;
         public bool IsAerial
         {
             get { return _mode is AerialMode; }
