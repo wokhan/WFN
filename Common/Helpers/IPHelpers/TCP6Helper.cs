@@ -139,6 +139,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             {
                 uint buffSize = 0;
                 GetOwnerModuleFromTcp6Entry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
+                if (buffSize == 0)
+                {
+                    //Nothing to do here...
+                    return ret;
+                }
                 buffer = Marshal.AllocHGlobal((int)buffSize);
 
                 //GetOwnerModuleFromTcp6Entry needs the fields of TCPIP_OWNER_MODULE_INFO_BASIC to be NULL
