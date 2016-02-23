@@ -14,7 +14,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         public static extern bool WTSQueryUserToken(uint SessionId, ref IntPtr phToken);
 
         [DllImport("kernel32.dll", SetLastError = true, EntryPoint = "WTSGetActiveConsoleSessionId")]
-        public static extern ulong WTSGetActiveConsoleSessionId();
+        public static extern uint WTSGetActiveConsoleSessionId();
 
         [DllImport("kernel32.dll")]
         static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTargetPath, int ucchMax);
