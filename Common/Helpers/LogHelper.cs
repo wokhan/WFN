@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Windows;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
@@ -29,13 +30,21 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             CurrentLogsPath = AppDomain.CurrentDomain.BaseDirectory;
             logFilePath = Path.Combine(CurrentLogsPath, assemblyName + ".log");
 
-            using (var fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Write))
+            locker.WaitOne();
+            try
             {
-                if (!fs.CanWrite)
+                using (var fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Write))
                 {
-                    CurrentLogsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN");
-                    logFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN", assemblyName + ".log");
+                    if (!fs.CanWrite)
+                    {
+                        CurrentLogsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN");
+                        logFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN", assemblyName + ".log");
+                    }
                 }
+            }
+            finally
+            {
+                locker.Set();
             }
 
             if (Settings.Default.FirstRun)
@@ -70,12 +79,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             writeLog("ERROR", msg + "\r\n" + (e != null ? e.Message + "\r\n" + e.StackTrace : ""));
         }
 
-        public static readonly object locker = new object();
+        public static readonly EventWaitHandle locker = new EventWaitHandle(true, EventResetMode.AutoReset, "WFN_Log_Sync_Lock");
         private static void writeLog(string type, string msg)
         {
             System.Diagnostics.Debug.WriteLine(msg);
 
-            lock (locker)
+            locker.WaitOne();
+            try
             {
                 StreamWriter sw = null;
                 try
@@ -90,6 +100,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                         sw.Close();
                     }
                 }
+            }
+            finally
+            {
+                locker.Set();
             }
         }
     }
