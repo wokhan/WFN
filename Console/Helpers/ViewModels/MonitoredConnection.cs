@@ -15,7 +15,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 
         public string Name { get; set; }
 
-        private TCPHelper.TCP_ESTATS_BANDWIDTH_RW_v0 prevState;
+        //private TCPHelper.TCP_ESTATS_BANDWIDTH_RW_v0 prevState;
         private object rawrow;
 
         public MonitoredConnection(IPHelper.I_OWNER_MODULE row) : base(row)
