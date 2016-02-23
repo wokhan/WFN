@@ -30,7 +30,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 Dictionary<string, string> pars = ProcessHelper.ParseParameters(argv);
                 int pid = int.Parse(pars["pid"]);
 
-                // Check if impersonation has already taken place (to avoir repeated relaunched and infinite loops)
+                // Check if impersonation has already taken place (to avoid repeated relaunched and infinite loops)
                 string impersonated = "0";
                 pars.TryGetValue("impersonated", out impersonated);
                 if (impersonated != "1")
