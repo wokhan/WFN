@@ -58,7 +58,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         [StructLayout(LayoutKind.Sequential)] public struct STARTUPINFO
 		{
-			public int cb;
+			public uint cb;
 			public String lpReserved;
 			public String lpDesktop;
 			public String lpTitle;
@@ -78,7 +78,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 			public IntPtr hStdError;
 		}
 
-        [DllImport("advapi32.dll", EntryPoint = "DuplicateTokenEx", SetLastError = true)]
+        [DllImport("advapi32.dll", SetLastError = true)]
         private static extern bool DuplicateTokenEx(
             IntPtr hExistingToken,
             uint dwDesiredAccess,

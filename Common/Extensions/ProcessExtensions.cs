@@ -12,10 +12,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Extensions
 {
     public static class ProcessExtensions
     {
-        [DllImport("kernel32.dll")]
-        private static extern bool QueryFullProcessImageName(IntPtr hprocess, int dwFlags, StringBuilder lpExeName, out int size);
-        [DllImport("kernel32.dll")]
-        private static extern IntPtr OpenProcess(ProcessHelper.ProcessAccessFlags dwDesiredAccess, bool bInheritHandle, int dwProcessId);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool QueryFullProcessImageName(IntPtr hprocess, uint dwFlags, StringBuilder lpExeName, out uint size);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern IntPtr OpenProcess(ProcessHelper.ProcessAccessFlags dwDesiredAccess, bool bInheritHandle, uint dwProcessId);
 
         public static string GetModulePath(this Process src)
         {
