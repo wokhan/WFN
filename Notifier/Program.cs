@@ -72,7 +72,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 // If the target Session ID is still unknown or if it belongs to SYSTEM, the currently active session is retrieved.
                 if (targetSessionID == uint.MaxValue || targetSessionID == 0 || targetSessionID == 4)
                 {
-                    targetSessionID = (uint)CommonHelper.WTSGetActiveConsoleSessionId();
+                    targetSessionID = CommonHelper.WTSGetActiveConsoleSessionId();
                     if (targetSessionID == 0xFFFFFFFF)
                     {
                         throw new Exception("No active session found. Aborting.");
@@ -84,19 +84,17 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 {
                     throw new Exception("WFN can not start in the SYSTEM session.");
                 }
-                // Else if the target Session ID is found, impersonation can take place.
-                else 
+
+                // Because the target Session ID is found, impersonation can take place.
+                if (!CommonHelper.WTSQueryUserToken(targetSessionID, ref userToken))
                 {
-                    if (!CommonHelper.WTSQueryUserToken(targetSessionID, ref userToken))
-                    {
-                        throw new Win32Exception(Marshal.GetLastWin32Error(), "Unable to retrieve the current user token.");
-                    }
-
-                    string argstr = String.Join(" ", argv.Select(a => a.Contains(" ") ? "\"" + a + "\"" : a).ToArray()) + " -impersonated 1";
-                    LogHelper.Debug("Impersonating. Parameters: " + argstr);
-
-                    Impersonation.LaunchProcessAsUser(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe"), argstr, userToken);
+                    throw new Win32Exception(Marshal.GetLastWin32Error(), "Unable to retrieve the current user token.");
                 }
+
+                string argstr = String.Join(" ", argv.Select(a => a.Contains(" ") ? "\"" + a + "\"" : a).ToArray()) + " -impersonated 1";
+                LogHelper.Debug("Impersonating. Parameters: " + argstr);
+
+                Impersonation.LaunchProcessAsUser(Process.GetCurrentProcess().MainModule.FileName, argstr, userToken);
 
                 Environment.Exit(0);
             }
