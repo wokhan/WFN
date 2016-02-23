@@ -60,6 +60,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
         }
 
+        public static void Warning(string msg)
+        {
+            writeLog("WARNING", msg);
+        }
+
         public static void Error(string msg, Exception e)
         {
             writeLog("ERROR", msg + "\r\n" + (e != null ? e.Message + "\r\n" + e.StackTrace : ""));
