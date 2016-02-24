@@ -397,9 +397,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     firewallRule.serviceName = service;
                 }
 
-                if (!String.IsNullOrEmpty(localport))
+                if (protocol != -1)
                 {
                     firewallRule.Protocol = getProtocol(protocol);
+                }
+
+                if (!String.IsNullOrEmpty(localport))
+                {
                     firewallRule.LocalPorts = localport;
 
                     if (!isTemp)
@@ -420,7 +424,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
                 if (!String.IsNullOrEmpty(targetPort))
                 {
-                    firewallRule.Protocol = getProtocol(protocol);
                     firewallRule.RemotePorts = targetPort;
 
                     if (!isTemp)
