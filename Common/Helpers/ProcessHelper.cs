@@ -160,7 +160,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }*/
 
 
-            LogHelper.Error("Unable to retrieve the service name, falling back to previous method.", null);
+            LogHelper.Warning("Unable to retrieve the service name, falling back to previous method.");
 
             // And if it still fails, fall backs to the most ugly way ever I am not able to get rid of :-P
             // Retrieves corresponding existing rules
@@ -273,7 +273,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
                 return ret;
             }
-            catch
+            catch (ArgumentException)
             {
                 return String.Empty;
             }
