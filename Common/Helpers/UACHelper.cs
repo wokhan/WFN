@@ -29,6 +29,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         private static extern bool CloseHandle(IntPtr hObject);
 
         [DllImport("advapi32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool GetTokenInformation(IntPtr TokenHandle, TOKEN_INFORMATION_CLASS TokenInformationClass, IntPtr TokenInformation, uint TokenInformationLength, out uint ReturnLength);
 
         private enum TOKEN_INFORMATION_CLASS
