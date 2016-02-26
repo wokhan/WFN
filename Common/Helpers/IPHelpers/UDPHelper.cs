@@ -17,6 +17,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         [DllImport("iphlpapi.dll", SetLastError = true)]
         public static extern uint GetExtendedUdpTable(IntPtr pUdpTable, ref int dwOutBufLen, bool sort, AF_INET ipVersion, UDP_TABLE_CLASS tblClass, int reserved);
 
+        protected const uint NO_ERROR = 0;
 
         public enum UDP_TABLE_CLASS
         {
@@ -123,10 +124,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             try
             {
                 uint buffSize = 0;
-                GetOwnerModuleFromUdpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
+                if (GetOwnerModuleFromUdpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize) != NO_ERROR)
+                {
+                    //Cannot get owning module for this connection
+                    return ret;
+                }
                 if (buffSize == 0)
                 {
-                    //Nothing to do here...
+                    //No buffer? Probably means we can't retrieve any information about this connection; skip it
                     return ret;
                 }
                 buffer = Marshal.AllocHGlobal((int)buffSize);

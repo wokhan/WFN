@@ -11,6 +11,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
     public class CommonHelper
     {
         [DllImport("Wtsapi32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool WTSQueryUserToken(uint SessionId, ref IntPtr phToken);
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -41,7 +42,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 foreach (string drive in drives)
                 {
                     trimmedDrive = drive.TrimEnd('\\');
-                    QueryDosDevice(trimmedDrive, sb, (uint)sb.Capacity);
+                    if (QueryDosDevice(trimmedDrive, sb, (uint)sb.Capacity) == 0)
+                    {
+                        throw new Exception("Call to QueryDosDevice failed!");
+                    }
                     deviceNameMap.Add(sb.ToString().ToLower() + "\\", trimmedDrive);
                 }
             }

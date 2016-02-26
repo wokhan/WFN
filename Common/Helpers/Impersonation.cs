@@ -43,6 +43,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         }
 
         [DllImport("advapi32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool CreateProcessAsUser(
             IntPtr hToken,
             string lpApplicationName,
@@ -79,6 +80,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 		}
 
         [DllImport("advapi32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool DuplicateTokenEx(
             IntPtr hExistingToken,
             uint dwDesiredAccess,
@@ -88,6 +90,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             ref IntPtr phNewToken);
 
         [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool CloseHandle(IntPtr hObject);
 
         private const uint TOKEN_QUERY = 0x0008;

@@ -138,10 +138,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             try
             {
                 uint buffSize = 0;
-                GetOwnerModuleFromTcp6Entry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
+                if (GetOwnerModuleFromTcp6Entry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize) != NO_ERROR)
+                {
+                    //Cannot get owning module for this connection
+                    return ret;
+                }
                 if (buffSize == 0)
                 {
-                    //Nothing to do here...
+                    //No buffer? Probably means we can't retrieve any information about this connection; skip it
                     return ret;
                 }
                 buffer = Marshal.AllocHGlobal((int)buffSize);
@@ -229,12 +233,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                 }
                 else
                 {
-                    throw we;
+                    throw;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             finally
             {

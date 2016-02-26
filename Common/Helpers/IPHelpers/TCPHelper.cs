@@ -23,6 +23,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         [DllImport("iphlpapi.dll", SetLastError = true)]
         public static extern uint SetPerTcpConnectionEStats(ref MIB_TCPROW Row, TCP_ESTATS_TYPE EstatsType, IntPtr Rw, uint RwVersion, uint RwSize, uint Offset);
 
+        protected const uint NO_ERROR = 0;
+
         public enum TCP_TABLE_CLASS
         {
             TCP_TABLE_BASIC_LISTENER,
@@ -277,13 +279,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                 }
                 else
                 {
-                    throw we;
+                    throw;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-
-                throw e;
+                throw;
             }
             finally
             {
@@ -350,10 +351,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             try
             {
                 uint buffSize = 0;
-                GetOwnerModuleFromTcpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
+                if (GetOwnerModuleFromTcpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize) != NO_ERROR)
+                {
+                    //Cannot get owning module for this connection
+                    return ret;
+                }
                 if (buffSize == 0)
                 {
-                    //Nothing to do here...
+                    //No buffer? Probably means we can't retrieve any information about this connection; skip it
                     return ret;
                 }
                 buffer = Marshal.AllocHGlobal((int)buffSize);
