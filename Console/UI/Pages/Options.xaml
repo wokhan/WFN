@@ -40,7 +40,7 @@
         <StackPanel>
             <Label Content="Notifier settings" Background="{DynamicResource AccentColorBrush}" FontWeight="Bold" />
             <StackPanel Margin="10">
-                <TextBlock Margin="0,0,0,10" TextWrapping="Wrap" Text="The following options only apply if you choosed 'Block and prompt' for the outgoing connections in the Firewall settings page, as they target the WFN notification window." />
+                <TextBlock Margin="0,0,0,10" TextWrapping="Wrap" Text="The following options only apply if you chose 'Block and prompt' for the outgoing connections in the Firewall settings page, as they target the WFN notification window." />
                 <!--<Border BorderThickness="0" Background="#FFFF7B7B">
                     <Border.Style>
                         <Style TargetType="Border" BasedOn="{StaticResource InfoPanel}">
