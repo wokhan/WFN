@@ -22,6 +22,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         //private static extern IntPtr LoadLibraryEx(string lpFileName, [In] IntPtr hFile, uint dwFlags);
 
         //[DllImport("kernel32.dll", SetLastError = true)]
+        //[return: MarshalAs(UnmanagedType.Bool)]
         //private static extern bool FreeLibrary([In] IntPtr hModule);
 
         public class Rule
@@ -436,9 +437,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
                 return true;
             }
-            catch (UnauthorizedAccessException uae)
+            catch (UnauthorizedAccessException)
             {
-                throw uae;
+                throw;
             }
             catch (Exception e)
             {
@@ -685,7 +686,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 { false, "Allow"}
             };
 
-            public Dictionary<bool, string> Actions { get { return _actions; } }
+            public static Dictionary<bool, string> Actions { get { return _actions; } }
 
             public enum Status
             {
