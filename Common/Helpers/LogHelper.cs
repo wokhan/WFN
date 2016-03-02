@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
 
@@ -21,8 +22,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         private static bool isAdmin = UacHelper.CheckProcessElevated();
 
+        private static object _wfnLogSyncLock;
+        
         static LogHelper()
         {
+            _wfnLogSyncLock = new object();
             var assembly = Assembly.GetCallingAssembly().GetName();
             appVersion = assembly.Version.ToString();
             assemblyName = assembly.Name;
@@ -30,8 +34,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             CurrentLogsPath = AppDomain.CurrentDomain.BaseDirectory;
             logFilePath = Path.Combine(CurrentLogsPath, assemblyName + ".log");
 
-            locker.WaitOne();
-            try
+            lock (_wfnLogSyncLock)
             {
                 using (var fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Write))
                 {
@@ -42,10 +45,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     }
                 }
             }
-            finally
-            {
-                locker.Set();
-            }
 
             if (Settings.Default.FirstRun)
             {
@@ -53,57 +52,73 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
         }
 
-        public static void Debug(string msg)
+        public static void Debug(string msg,
+            [CallerMemberName] string memberName = null,
+            [CallerFilePath] string filePath = null,
+            [CallerLineNumber] int lineNumber = -1)
         {
             if (Settings.Default.EnableVerboseLogging)
             {
-                writeLog("DEBUG", msg);
+                writeLog("DEBUG", msg, memberName, filePath, lineNumber);
             }
         }
 
-        public static void Info(string msg)
+        public static void Info(string msg,
+            [CallerMemberName] string memberName = null,
+            [CallerFilePath] string filePath = null,
+            [CallerLineNumber] int lineNumber = -1)
         {
             if (Settings.Default.EnableVerboseLogging)
             {
-                writeLog("INFO", msg);
+                writeLog("INFO", msg, memberName, filePath, lineNumber);
             }
         }
 
-        public static void Warning(string msg)
+        public static void Warning(string msg,
+            [CallerMemberName] string memberName = null,
+            [CallerFilePath] string filePath = null,
+            [CallerLineNumber] int lineNumber = -1)
         {
-            writeLog("WARNING", msg);
+            writeLog("WARNING", msg, memberName, filePath, lineNumber);
         }
 
-        public static void Error(string msg, Exception e)
+        public static void Error(string msg, Exception e,
+            [CallerMemberName] string memberName = null,
+            [CallerFilePath] string filePath = null,
+            [CallerLineNumber] int lineNumber = -1)
         {
-            writeLog("ERROR", msg + "\r\n" + (e != null ? e.Message + "\r\n" + e.StackTrace : ""));
+            writeLog("ERROR", msg + "\r\n" + (e != null ? e.Message + "\r\n" + e.StackTrace : ""), memberName, filePath, lineNumber);
         }
 
-        private static readonly EventWaitHandle locker = new EventWaitHandle(true, EventResetMode.AutoReset, "WFN_Log_Sync_Lock");
-        private static void writeLog(string type, string msg)
+        private static void writeLog(string type, string msg,
+            string memberName = null,
+            string filePath = null,
+            int lineNumber = -1)
         {
             System.Diagnostics.Debug.WriteLine(msg);
 
-            locker.WaitOne();
-            try
+            lock (_wfnLogSyncLock)
             {
-                StreamWriter sw = null;
-                try
+                using (var sw = new StreamWriter(logFilePath, true))
                 {
-                    sw = new StreamWriter(logFilePath, true);
-                    sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}] - {4}", DateTime.Now, Environment.UserName, isAdmin, type, msg);
-                }
-                finally
-                {
-                    if (sw != null)
+                    var codeLocation = string.Empty;
+                    if (!string.IsNullOrWhiteSpace(memberName)
+                        || !string.IsNullOrWhiteSpace(filePath))
                     {
-                        sw.Close();
+                        codeLocation = string.Format(" [{0}() in {1}, line {2}]",
+                            memberName,
+                            filePath,
+                            lineNumber);
                     }
+
+                    sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}]{5}\n{4}",
+                        DateTime.Now,
+                        Environment.UserName,
+                        isAdmin,
+                        type,
+                        msg,
+                        codeLocation);
                 }
-            }
-            finally
-            {
-                locker.Set();
             }
         }
     }
