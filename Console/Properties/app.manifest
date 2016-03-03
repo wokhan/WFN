@@ -2,19 +2,15 @@
 <assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3">
   <assemblyIdentity
     type="win32" 
-    name="Windows Firewall Rule Manager"
+    name="Windows Firewall Notifier Console"
     version="2.0.0.0"
     processorArchitecture="*"
   />
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
     <security>
       <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
-        <requestedExecutionLevel level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
       </requestedPrivileges>
-      <applicationRequestMinimum>
-        <defaultAssemblyRequest permissionSetReference="Custom" />
-        <PermissionSet class="System.Security.PermissionSet" version="1" ID="Custom" SameSite="site" Unrestricted="true" />
-      </applicationRequestMinimum>
     </security>
   </trustInfo>
   <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
