@@ -19,8 +19,16 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
         {
             try
             {
-                bool keepOpen = false;
+                if (args.Count() != 1)
+                {
+                    throw new Exception("Wrong number of arguments!");
+                }
                 string[] param = Encoding.Unicode.GetString(Convert.FromBase64String(args[0])).Split(new string[] { "#$#" }, StringSplitOptions.None);
+
+                if (param.Count() != 9)
+                {
+                    throw new Exception("Invalid argument!");
+                }
 
                 string rname = param[0];
                 path = param[1];
@@ -32,6 +40,7 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
                 string localPort = param[6];
                 bool useCurrentProfile = bool.Parse(param[7]);
                 string action = param[8];
+                bool keepOpen = false;
                 bool ret = false;
 
                 switch (action)
@@ -61,7 +70,7 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
                     ni.Click += new EventHandler(ni_Click);
                     ni.BalloonTipIcon = ToolTipIcon.Info;
                     ni.BalloonTipTitle = "Temporary rule";
-                    ni.BalloonTipText = "A temporary rule has been created.\r\nPath: " + param[8] + "\r\nClick on the shield icon to disable back this connection.";
+                    ni.BalloonTipText = "A temporary rule has been created." + Environment.NewLine + "Path: " + param[8] + Environment.NewLine + "Click on the shield icon to remove this rule.";
                     ni.Icon = new Icon(SystemIcons.Shield, new Size(16, 16));
                     ni.Visible = true;
                     ni.ShowBalloonTip(2000);
