@@ -87,7 +87,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             [CallerFilePath] string filePath = null,
             [CallerLineNumber] int lineNumber = -1)
         {
-            writeLog("ERROR", msg + "\r\n" + (e != null ? e.Message + "\r\n" + e.StackTrace : ""), memberName, filePath, lineNumber);
+            writeLog("ERROR", msg + Environment.NewLine + (e != null ? e.Message + Environment.NewLine + e.StackTrace : ""), memberName, filePath, lineNumber);
         }
 
         private static void writeLog(string type, string msg,
@@ -105,13 +105,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     if (!string.IsNullOrWhiteSpace(memberName)
                         || !string.IsNullOrWhiteSpace(filePath))
                     {
-                        codeLocation = string.Format(" [{0}() in {1}, line {2}]",
+                        codeLocation = Environment.NewLine + string.Format(" [{0}() in {1}, line {2}]",
                             memberName,
                             filePath,
                             lineNumber);
                     }
 
-                    sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}]{5}\n{4}",
+                    sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}]{5}{4}",
                         DateTime.Now,
                         Environment.UserName,
                         isAdmin,
