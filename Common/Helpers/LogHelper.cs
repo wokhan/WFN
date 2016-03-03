@@ -22,11 +22,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         private static bool isAdmin = UacHelper.CheckProcessElevated();
 
-        private static object _wfnLogSyncLock;
-        
         static LogHelper()
         {
-            _wfnLogSyncLock = new object();
             var assembly = Assembly.GetCallingAssembly().GetName();
             appVersion = assembly.Version.ToString();
             assemblyName = assembly.Name;
@@ -34,7 +31,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             CurrentLogsPath = AppDomain.CurrentDomain.BaseDirectory;
             logFilePath = Path.Combine(CurrentLogsPath, assemblyName + ".log");
 
-            lock (_wfnLogSyncLock)
+            locker.WaitOne();
+            try
             {
                 using (var fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Write))
                 {
@@ -44,6 +42,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                         logFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN", assemblyName + ".log");
                     }
                 }
+            }
+            finally
+            {
+                locker.Set();
             }
 
             if (Settings.Default.FirstRun)
@@ -90,6 +92,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             writeLog("ERROR", msg + Environment.NewLine + (e != null ? e.Message + Environment.NewLine + e.StackTrace : ""), memberName, filePath, lineNumber);
         }
 
+        private static readonly EventWaitHandle locker = new EventWaitHandle(true, EventResetMode.AutoReset, "WFN_Log_Sync_Lock");
         private static void writeLog(string type, string msg,
             string memberName = null,
             string filePath = null,
@@ -97,7 +100,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             System.Diagnostics.Debug.WriteLine(msg);
 
-            lock (_wfnLogSyncLock)
+            locker.WaitOne();
+            try
             {
                 using (var sw = new StreamWriter(logFilePath, true))
                 {
@@ -105,13 +109,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     if (!string.IsNullOrWhiteSpace(memberName)
                         || !string.IsNullOrWhiteSpace(filePath))
                     {
-                        codeLocation = Environment.NewLine + string.Format(" [{0}() in {1}, line {2}]",
+                        codeLocation = string.Format(" [{0}() in {1}, line {2}]",
                             memberName,
                             filePath,
                             lineNumber);
                     }
 
-                    sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}]{5}{4}",
+                    sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}]{5} {4}",
                         DateTime.Now,
                         Environment.UserName,
                         isAdmin,
@@ -119,6 +123,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                         msg,
                         codeLocation);
                 }
+            }
+            finally
+            {
+                locker.Set();
             }
         }
     }
