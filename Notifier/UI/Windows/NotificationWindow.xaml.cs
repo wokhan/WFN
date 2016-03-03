@@ -304,7 +304,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 }
                 else
                 {
-                    for (int i = ((App)Application.Current).Connections.Count - 1; i > 0; i--)
+                    for (int i = ((App)Application.Current).Connections.Count - 1; i >= 0; i--)
                     {
                         var c = ((App)Application.Current).Connections[i];
                         if (c.CurrentPath == ((CurrentConn)lstConnections.SelectedItem).CurrentPath)
