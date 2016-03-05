@@ -2,6 +2,10 @@
 using System.IO;
 using System.Reflection;
 using System.Threading;
+#if DEBUG
+using System.Runtime.CompilerServices;
+#endif
+
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
