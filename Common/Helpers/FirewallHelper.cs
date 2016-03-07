@@ -475,7 +475,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     return "UDP";
 
                 default:
-                    return null;
+                    return "Unknown";
             }
         }
 
