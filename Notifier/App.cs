@@ -39,6 +39,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         {
             try
             {
+                if (!Settings.Default.UseBlockRules && exclusions == null) //@wokhan: WHY NOT~Settings.Default.UseBlockRules ??
                 if (!Settings.Default.UseBlockRules && exclusions == null)
                 {
                     string exclusionsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exclusions.set");
@@ -54,6 +55,17 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             }
         }
 
+        /// <summary>
+        /// Add item to internal query list (asking user whether to allow this connection request), if there is no block rule available.
+        /// </summary>
+        /// <param name="pid"></param>
+        /// <param name="threadid"></param>
+        /// <param name="path"></param>
+        /// <param name="target"></param>
+        /// <param name="protocol"></param>
+        /// <param name="targetPort"></param>
+        /// <param name="localport"></param>
+        /// <returns>false if item is blocked and was thus not added ti internal query list</returns>
         public bool AddItem(int pid, string threadid, string path, string target, string protocol, string targetPort, string localport)
         {
             try
@@ -66,7 +78,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 var existing = this.Connections.FirstOrDefault(c => c.CurrentPath == path && c.Target == target && c.TargetPort == targetPort);// && (int.Parse(localport) >= 49152 || c.LocalPort == localport));
                 if (existing != null)
                 {
-                    if (int.Parse(localport) < 49152)
+                    //there exist already the same type of connection request.
+                    if (int.Parse(localport) < 49152) //wokhan: What is this "magic" good for? Port 49152??
                     {
                         existing.LocalPortArray.Add(localport);
                         existing.LocalPort += "," + localport;
@@ -91,6 +104,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                             if (File.Exists(path))
                             {
                                 app = FileVersionInfo.GetVersionInfo(path).FileDescription;
+                                if(String.IsNullOrEmpty(app))
+                                {
+                                    app = path.Substring(path.LastIndexOf('\\') + 1);
+                                }
                             }
                             else
                             {
@@ -203,34 +220,43 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
         internal void NextInstance(ReadOnlyCollection<string> argv)
         {
-            Dictionary<string, string> pars = ProcessHelper.ParseParameters(argv);
-            int pid = int.Parse(pars["pid"]);
-            string currentTarget = pars["ip"];
-            string currentTargetPort = pars["port"];
-            string currentProtocol = pars["protocol"];
-            string currentLocalPort = pars["localport"];
-            string currentPath = pars["path"];
-            string threadid = pars["threadid"];
-            pars = null;
-
-            initExclusions();
-
-            if (!AddItem(pid, threadid, currentPath, currentTarget, currentProtocol, currentTargetPort, currentLocalPort))
+            try
             {
-                return;
+				Dictionary<string, string> pars = ProcessHelper.ParseParameters(argv);
+				int pid = int.Parse(pars["pid"]);
+				string currentTarget = pars["ip"];
+				string currentTargetPort = pars["port"];
+				string currentProtocol = pars["protocol"];
+				string currentLocalPort = pars["localport"];
+				string currentPath = pars["path"];
+				string threadid = pars["threadid"];
+				pars = null;
+
+				initExclusions();
+
+				if (!AddItem(pid, threadid, currentPath, currentTarget, currentProtocol, currentTargetPort, currentLocalPort))
+				{
+					//item is blocked. not action necessary.
+					return;
+				}
+
+				if (window == null)
+				{
+					window = new NotificationWindow();
+					this.ShutdownMode = ShutdownMode.OnMainWindowClose;
+					//this.Run(window);
+				}
+
+				if (window.WindowState == WindowState.Minimized)
+				{
+					window.WindowState = WindowState.Normal;
+				}
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("Error in NextInstance", e);             
             }
 
-            if (window == null)
-            {
-                window = new NotificationWindow();
-                this.ShutdownMode = ShutdownMode.OnMainWindowClose;
-                //this.Run(window);
-            }
-
-            if (window.WindowState == WindowState.Minimized)
-            {
-                window.WindowState = WindowState.Normal;
-            }
         }
     }
 }

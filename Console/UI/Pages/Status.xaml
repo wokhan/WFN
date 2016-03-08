@@ -138,19 +138,19 @@
                 </StackPanel>
                 <Label Grid.Row="6" Content="Outbound" FontWeight="Bold" />
                 <StackPanel Grid.Row="6" Grid.Column="1" IsEnabled="{Binding PrivateIsEnabled}">
-                    <RadioButton GroupName="rdbOutPrv" Padding="0,0,0,10" IsChecked="True" Content="Allow" />
+                    <RadioButton GroupName="rdbOutPrv" Padding="0,0,0,10" IsChecked="{Binding PrivateIsOutAllowed}" Content="Allow" />
                     <RadioButton GroupName="rdbOutPrv" IsChecked="{Binding PrivateIsOutBlocked}" Content="Block silently" />
                     <RadioButton GroupName="rdbOutPrv" Padding="0,10,0,0" IsChecked="{Binding PrivateIsOutBlockedNotif}" Content="Block and prompt*" />
                 </StackPanel>
                 <StackPanel Grid.Row="6" Grid.Column="2" IsEnabled="{Binding PublicIsEnabled}">
-                    <RadioButton GroupName="rdbOutPub" Padding="0,0,0,10" IsChecked="True" Content="Allow" />
+                    <RadioButton GroupName="rdbOutPub" Padding="0,0,0,10" IsChecked="{Binding PublicIsOutAllowed}" Content="Allow" />
                     <RadioButton GroupName="rdbOutPub" IsChecked="{Binding PublicIsOutBlocked}" Content="Block silently" />
-                    <RadioButton GroupName="rdbOutPub" Padding="0,10,0,0" IsChecked="{Binding PublicIsOutBlockedNotif}" Content="Block and prompt*" />
+                    <RadioButton GroupName="rdbOutPub" Padding="0,10,0,0" IsChecked="{Binding PrivateIsOutBlockedNotif}" Content="Block and prompt*" />
                 </StackPanel>
                 <StackPanel Grid.Row="6" Grid.Column="3" IsEnabled="{Binding DomainIsEnabled}">
-                    <RadioButton GroupName="rdbOutDom" Padding="0,0,0,10" IsChecked="True" Content="Allow" />
+                    <RadioButton GroupName="rdbOutDom" Padding="0,0,0,10" IsChecked="{Binding DomainIsOutAllowed}" Content="Allow" />
                     <RadioButton GroupName="rdbOutDom" IsChecked="{Binding DomainIsOutBlocked}" Content="Block silently" />
-                    <RadioButton GroupName="rdbOutDom" Padding="0,10,0,0" IsChecked="{Binding DomainIsOutBlockedNotif}" Content="Block and prompt*" />
+                    <RadioButton GroupName="rdbOutDom" Padding="0,10,0,0" IsChecked="{Binding PrivateIsOutBlockedNotif}" Content="Block and prompt*" />
                 </StackPanel>
             </Grid>
             <TextBlock Margin="10" FontStyle="Italic" TextWrapping="Wrap" Text="* The outgoing notifications are handled by WFN and cannot be applied to a specific profile. Selecting 'Block and prompt' for at least one profile will enable notifications for all of them. It also means that you'll need to disable them for all profiles at once if you wish to." />

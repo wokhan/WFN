@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 
@@ -40,6 +41,19 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
+            //PrivateIsOutBlockedNotif is also valid for public and domain
+            status.PublicIsOutBlockedNotif = status.PrivateIsOutBlockedNotif;
+            status.DomainIsOutBlockedNotif = status.PrivateIsOutBlockedNotif;
+            if (status.PrivateIsOutBlockedNotif == false)
+            {
+                //if not blocked, allowed must be true
+                if (status.PrivateIsOutBlocked == false)
+                    status.PrivateIsOutAllowed = true;
+                if (status.PublicIsOutBlocked == false)
+                    status.PublicIsOutAllowed = true;
+                if (status.DomainIsOutBlocked == false)
+                    status.DomainIsOutAllowed = true;
+            }
             status.Save();
 
             if (!isInstalled &&
@@ -47,6 +61,18 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 || (status.PublicIsEnabled && status.PublicIsOutBlockedNotif)
                 || (status.DomainIsEnabled && status.DomainIsOutBlockedNotif)))
             {
+                if (Settings.Default.EnableServiceDetection)
+                {
+                    //todo: check result of tasklist for this process (should return N/A or similar)
+                    var result = ProcessHelper.GetAllServices(System.Diagnostics.Process.GetCurrentProcess().Id);
+                    if (result != null && result.Length >= 1)
+                    {
+                        //did not understand output of taskkill. disable service detection.
+                        Settings.Default.EnableServiceDetection = false;
+                        MessageBox.Show("WFN does not support your OS language. Please report issue to add \"" + result[0] + "\". Service detection has been disabled.", "Detecting services not supported");
+                        Settings.Default.Save();
+                    }
+                }
                 InstallHelper.EnableProgram(true, callback);
             }
             else if (isInstalled && (!status.PrivateIsEnabled || !status.PrivateIsOutBlockedNotif) && (!status.PublicIsEnabled || !status.PublicIsOutBlockedNotif) && (!status.DomainIsEnabled || !status.DomainIsOutBlockedNotif))

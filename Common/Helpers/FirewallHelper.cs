@@ -7,6 +7,7 @@ using System.Text;
 using System.IO;
 using System.ServiceProcess;
 using System.Windows.Media;
+using System.Diagnostics;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -616,10 +617,20 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         public static IEnumerable<Rule> GetMatchingRules(string path, string protocol, string target, string targetPort, string localport, IEnumerable<string> svc, bool blockOnly)
         {
-            var ret = GetRules().Where(r => RuleMatches(r, path, svc, protocol, localport, target, targetPort));
+            IEnumerable<Rule> ret = GetRules().Where(r => RuleMatches(r, path, svc, protocol, localport, target, targetPort));
             if (blockOnly)
             {
                 ret = ret.Where(r => r.Action == NET_FW_ACTION_.NET_FW_ACTION_BLOCK);
+                if (ret.Count<Rule>() > 0)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append("Blocked by: ");
+                    foreach (Rule s in ret)
+                    {
+                        sb.Append(s.Name + ": " + s.ApplicationName + " " + s.Description + " " + s.ActionStr + " " + s.serviceName + " " + s.Enabled + ", ");
+                    }
+                    LogHelper.Debug("pid:" + Process.GetCurrentProcess().Id + " GetMatchingRules: " + path + ", " + protocol + ", " + target + ", " + targetPort + ", " + localport + ", " + svc + ", " + blockOnly + "  -> " + sb + " any: " + ret.Any());
+                }
             }
 
             return ret;
@@ -707,18 +718,21 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             public bool PrivateIsEnabled { get; set; }
             public bool PrivateIsInBlocked { get; set; }
             public bool PrivateIsOutBlocked { get; set; }
+            public bool PrivateIsOutAllowed { get; set; }
             public bool PrivateIsInBlockedNotif { get; set; }
             public bool PrivateIsOutBlockedNotif { get; set; }
 
             public bool PublicIsEnabled { get; set; }
             public bool PublicIsInBlocked { get; set; }
             public bool PublicIsOutBlocked { get; set; }
+            public bool PublicIsOutAllowed { get; set; }
             public bool PublicIsInBlockedNotif { get; set; }
             public bool PublicIsOutBlockedNotif { get; set; }
 
             public bool DomainIsEnabled { get; set; }
             public bool DomainIsInBlocked { get; set; }
             public bool DomainIsOutBlocked { get; set; }
+            public bool DomainIsOutAllowed { get; set; }
             public bool DomainIsInBlockedNotif { get; set; }
             public bool DomainIsOutBlockedNotif { get; set; }
 
@@ -734,16 +748,19 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 PrivateIsInBlocked = (privateInStatus == Status.ENABLED_BLOCK);
                 PrivateIsInBlockedNotif = (privateInStatus == Status.ENABLED_NOTIFY);
                 PrivateIsOutBlocked = (privateOutStatus == Status.ENABLED_BLOCK);
+                PrivateIsOutAllowed = !PrivateIsOutBlocked && !PrivateIsOutBlockedNotif;
 
                 PublicIsEnabled = (publicInStatus != Status.DISABLED);
                 PublicIsInBlocked = (publicInStatus == Status.ENABLED_BLOCK);
                 PublicIsInBlockedNotif = (publicInStatus == Status.ENABLED_NOTIFY);
                 PublicIsOutBlocked = (publicOutStatus == Status.ENABLED_BLOCK);
+                PublicIsOutAllowed = !PublicIsOutBlocked && !PublicIsOutBlockedNotif;
 
                 DomainIsEnabled = (domainInStatus != Status.DISABLED);
                 DomainIsInBlocked = (domainInStatus == Status.ENABLED_BLOCK);
                 DomainIsInBlockedNotif = (domainInStatus == Status.ENABLED_NOTIFY);
                 DomainIsOutBlocked = (domainOutStatus == Status.ENABLED_BLOCK);
+                DomainIsOutAllowed = !DomainIsOutBlocked && !DomainIsOutBlockedNotif;
             }
 
             private void updateStatus(NET_FW_PROFILE_TYPE2_ profile, ref Status stat, ref Status statOut)

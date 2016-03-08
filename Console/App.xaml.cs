@@ -54,7 +54,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console
         internal void RestartAsAdmin()
         {
             ProcessHelper.ElevateCurrentProcess();
-            this.MainWindow.Close();
+            Environment.Exit(0);            
         }
     }
 }

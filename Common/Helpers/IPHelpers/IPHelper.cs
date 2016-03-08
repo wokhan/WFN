@@ -112,13 +112,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
 
         /// <summary>
-        /// 
+        /// Returns details about connection of localPort by process identified by pid.
         /// </summary>
         /// <param name="row"></param>
         /// <returns></returns>
         public static Owner GetOwner(int pid, int localPort)
         {
-            var ret = GetAllConnections().FirstOrDefault(r => r.LocalPort == localPort && r.OwningPid == pid);
+            var allConn = GetAllConnections();
+            var ret = allConn.FirstOrDefault(r => r.LocalPort == localPort && r.OwningPid == pid);
             return ret != null ? ret.OwnerModule : null;
         }
 
