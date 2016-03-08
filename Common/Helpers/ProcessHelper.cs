@@ -66,15 +66,36 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         private static Dictionary<string, ImageSource> procIconLst = new Dictionary<string, ImageSource>();
 
+        public static string[] GetAllServices(String exeName)
+        {
+            return GetTasklistResponse("Imagename eq " + exeName);
+        }
+
         public static string[] GetAllServices(int pid)
         {
-            string resp = ProcessHelper.getProcessResponse("tasklist", "/svc /fi \"pid eq " + pid + "\" /nh /fo csv");
+            return GetTasklistResponse("pid eq " + pid);
+        }
+        private static string[] GetTasklistResponse(String filterString)
+        {
+            string resp = ProcessHelper.getProcessResponse("tasklist", "/svc /fi \""+filterString+"\" /nh /fo csv");
             if (resp != null)
             {
                 string[] resplit = resp.Split(new char[] { ',' }, 3);
                 if (resplit.Length == 3)
                 {
-                    return (resplit[2] == "\"N/A\"\r\n" ? null : resplit[2].Substring(1, resplit[2].Length - 4).Split(','));
+                    String svc = resplit[2].Substring(1, resplit[2].Length - 4);
+
+					//add here more language for tasklist "N/A" output
+                    string[] notAvailableStrings = new string[] { "N/A", "Nicht zutreffend" };
+
+                    if (notAvailableStrings.Contains(svc))
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        return svc.Split(',');
+                    }
                 }
             }
 
@@ -104,6 +125,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             LogHelper.Debug("GetService found the following services: " + String.Join(",", svcs));
 
+            //tries to lookup details about connection to localport.
+            //@wokhan: how is this supposed to work since connection is blocked by firewall??
             var ret = IPHelper.GetOwner(pid, int.Parse(localport));
             if (ret != null && !String.IsNullOrEmpty(ret.ModuleName))
             {
@@ -364,17 +387,19 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         public static Dictionary<string, string> ParseParameters(IList<string> args)
         {
             Dictionary<string, string> ret = null;
+            String key = "";
             try
             {
                 ret = new Dictionary<string, string>(args.Count / 2);
-                for (int i = 0; i < args.Count(); i += 2)
+                for (int i = args.Count % 2; i < args.Count(); i += 2)
                 {
-                    ret.Add(args[i].TrimStart('-'), args[i + 1]);
+                    key = args[i].TrimStart('-');
+                    ret.Add(key, args[i + 1]);
                 }
             }
             catch (Exception e)
             {
-                LogHelper.Error("Unable to parse the parameters: argv = " + String.Join(" ", args), e);
+                LogHelper.Error("Unable to parse the parameters: key = "+ key + " argv = " + String.Join(" ", args), e);
             }
 
             return ret;
