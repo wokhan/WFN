@@ -40,8 +40,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             try
             {
                 if (!Settings.Default.UseBlockRules && exclusions == null) //@wokhan: WHY NOT~Settings.Default.UseBlockRules ??
-                if (!Settings.Default.UseBlockRules && exclusions == null)
-                {
+                    {
                     string exclusionsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exclusions.set");
                     if (File.Exists(exclusionsPath))
                     {
@@ -79,7 +78,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 if (existing != null)
                 {
                     //there exist already the same type of connection request.
-                    if (int.Parse(localport) < 49152) //wokhan: What is this "magic" good for? Port 49152??
+                    if (int.Parse(localport) < 49152) //ToDo: Un-hardcode the dynamic port range.
                     {
                         existing.LocalPortArray.Add(localport);
                         existing.LocalPort += "," + localport;
