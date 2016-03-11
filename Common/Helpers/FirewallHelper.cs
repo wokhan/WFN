@@ -582,10 +582,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 var keyStatic = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\RestrictedServices\Static\System");
                 var keyConfig = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\RestrictedServices\Configurable\System");
 
-                var allkeyvalues = keyStatic.GetValueNames()
-                                            .Select(s => (string)keyStatic.GetValue(s))
-                                            .Concat(keyConfig.GetValueNames()
-                                                              .Select(s => (string)keyConfig.GetValue(s)));
+                IEnumerable<string> allkeyvalues = Enumerable.Empty<string>();
+                if (keyStatic != null)
+                {
+                    allkeyvalues = allkeyvalues.Concat(keyStatic.GetValueNames().Select(s => (string)keyStatic.GetValue(s)));
+                }
+                if (keyConfig != null)
+                {
+                    allkeyvalues = allkeyvalues.Concat(keyConfig.GetValueNames().Select(s => (string)keyConfig.GetValue(s)));
+                }
 
                 // Windows 8 or higher (ignoring Metro apps)
                 if ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 2) || (Environment.OSVersion.Version.Major > 6))
@@ -595,8 +600,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
                 wshRulesCache = allkeyvalues.Select(s => new Rule(s)).ToArray();
 
-                keyStatic.Close();
-                keyConfig.Close();
+                if (keyStatic != null)
+                {
+                    keyStatic.Close();
+                }
+                if (keyConfig != null)
+                {
+                    keyConfig.Close();
+                }
             }
 
             return firewallPolicy.Rules.Cast<INetFwRule>()
