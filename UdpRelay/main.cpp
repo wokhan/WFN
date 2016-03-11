@@ -19,7 +19,7 @@
 int wmain(int argc, wchar_t* argv[]) //use Microsoft's wmain to get wide chars.
 {
 	struct sockaddr_in si_other;
-	int s, slen = sizeof(si_other);
+	SOCKET s;
 	char buf[BUFLEN];
 	char message[BUFLEN];
 	WSADATA wsa;
@@ -41,15 +41,15 @@ int wmain(int argc, wchar_t* argv[]) //use Microsoft's wmain to get wide chars.
 	}
 
 	//setup address structure
-	memset((char *)&si_other, 0, sizeof(si_other));
+	ZeroMemory(&si_other, sizeof(si_other));
 	si_other.sin_family = AF_INET;
 	si_other.sin_port = htons(PORT);
 	si_other.sin_addr.S_un.S_addr = inet_addr(SERVER);
 
 	//get command line
 	LPTSTR cmd = GetCommandLine();
-	size_t   i;
-	int len = wcslen(cmd);
+	size_t i;
+	size_t len = wcslen(cmd);
 
 	//extract parameters from command line
 	if (argc == 1) {
@@ -58,7 +58,7 @@ int wmain(int argc, wchar_t* argv[]) //use Microsoft's wmain to get wide chars.
 	else if (len < BUFLEN)
 	{
 		wcstombs_s(&i, buf, BUFLEN, cmd, BUFLEN);
-		int l = wcslen(argv[0]);
+		size_t l = wcslen(argv[0]);
 		char* arg = buf;
 		if (arg[0] == '\"') {
 			arg += l + 2; //wcslen does not count enclosing quotes, add explicitly if needed
@@ -66,14 +66,14 @@ int wmain(int argc, wchar_t* argv[]) //use Microsoft's wmain to get wide chars.
 		else {
 			arg += l;
 		}
-		sprintf_s(message, "%s (%i)", arg, l);
+		sprintf_s(message, "%s (%zi)", arg, l);
 	}
 	else {
-		sprintf_s(message, "Too long argument passed. (%i>=%i)", len, BUFLEN);
+		sprintf_s(message, "Too long argument passed. (%zi>=%i)", len, BUFLEN);
 	}
 
 	//send the message
-	if (sendto(s, message, strlen(message), 0, (struct sockaddr *) &si_other, slen) == SOCKET_ERROR)
+	if (sendto(s, message, (int)strlen(message), 0, (struct sockaddr *) &si_other, sizeof(si_other)) == SOCKET_ERROR)
 	{
 		printf("sendto() failed with error code : %d", WSAGetLastError());
 		exit(EXIT_FAILURE);
