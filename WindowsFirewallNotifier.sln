@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notifier", "Notifier\Notifier.csproj", "{B0777CD1-8F34-4370-8D9F-C4F896AD542B}"
 EndProject
@@ -10,8 +10,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "Console\Console.csproj", "{95C82925-3B3C-4AD5-840E-55A2C4EA28A2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{94028C5E-9B0E-4D15-966A-9FA766A20821}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UdpRelay", "UdpRelay\UdpRelay.vcxproj", "{2D8B2BB4-40E2-43DC-9648-13F39EFE6E41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,22 +63,12 @@ Global
 		{94028C5E-9B0E-4D15-966A-9FA766A20821}.Release|x64.ActiveCfg = Release|x64
 		{94028C5E-9B0E-4D15-966A-9FA766A20821}.Release|x64.Build.0 = Release|x64
 		{94028C5E-9B0E-4D15-966A-9FA766A20821}.Release|x86.ActiveCfg = Release|x86
-		{2D8B2BB4-40E2-43DC-9648-13F39EFE6E41}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{2D8B2BB4-40E2-43DC-9648-13F39EFE6E41}.Debug|x64.ActiveCfg = Debug|x64
-		{2D8B2BB4-40E2-43DC-9648-13F39EFE6E41}.Debug|x64.Build.0 = Debug|x64
-		{2D8B2BB4-40E2-43DC-9648-13F39EFE6E41}.Debug|x86.ActiveCfg = Debug|Win32
-		{2D8B2BB4-40E2-43DC-9648-13F39EFE6E41}.Debug|x86.Build.0 = Debug|Win32
-		{2D8B2BB4-40E2-43DC-9648-13F39EFE6E41}.Release|Any CPU.ActiveCfg = Release|Win32
-		{2D8B2BB4-40E2-43DC-9648-13F39EFE6E41}.Release|x64.ActiveCfg = Release|x64
-		{2D8B2BB4-40E2-43DC-9648-13F39EFE6E41}.Release|x64.Build.0 = Release|x64
-		{2D8B2BB4-40E2-43DC-9648-13F39EFE6E41}.Release|x86.ActiveCfg = Release|Win32
-		{2D8B2BB4-40E2-43DC-9648-13F39EFE6E41}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 6
+		SccNumberOfProjects = 5
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs34
 		SccLocalPath0 = .
@@ -96,8 +84,5 @@ Global
 		SccProjectUniqueName4 = Common\\Common.csproj
 		SccProjectName4 = Common
 		SccLocalPath4 = Common
-		SccProjectUniqueName5 = UdpRelay\\UdpRelay.vcxproj
-		SccProjectName5 = UdpRelay
-		SccLocalPath5 = UdpRelay
 	EndGlobalSection
 EndGlobal
