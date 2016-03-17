@@ -72,15 +72,15 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 AddOrUpdateConnection(c);
             }
 
-            for (int i = lstConnections.Count - 1; i > 0; i--)
+            for (int i = lstConnections.Count - 1; i >= 0; i--)
             {
                 var item = lstConnections[i];
                 double elapsed = DateTime.Now.Subtract(item.LastSeen).TotalSeconds;
-                if (elapsed > 5)
+                if (elapsed > 5.0)
                 {
                     lstConnections.Remove(item);
                 }
-                else if (elapsed > 2)
+                else if (elapsed > 2.0)
                 {
                     item.IsDying = true;
                 }
