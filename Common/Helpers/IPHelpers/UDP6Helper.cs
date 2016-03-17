@@ -107,7 +107,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             try
             {
                 uint buffSize = 0;
-                if (GetOwnerModuleFromUdp6Entry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize) != NO_ERROR)
+                var retn = GetOwnerModuleFromUdp6Entry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
+                if ((retn != NO_ERROR) && (retn != ERROR_INSUFFICIENT_BUFFER))
                 {
                     //Cannot get owning module for this connection
                     return ret;

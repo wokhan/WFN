@@ -18,6 +18,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         public static extern uint GetExtendedUdpTable(IntPtr pUdpTable, ref int dwOutBufLen, bool sort, AF_INET ipVersion, UDP_TABLE_CLASS tblClass, int reserved);
 
         protected const uint NO_ERROR = 0;
+        protected const uint ERROR_INSUFFICIENT_BUFFER = 122;
 
         public enum UDP_TABLE_CLASS
         {
@@ -124,7 +125,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             try
             {
                 uint buffSize = 0;
-                if (GetOwnerModuleFromUdpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize) != NO_ERROR)
+                var retn = GetOwnerModuleFromUdpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
+                if ((retn != NO_ERROR) && (retn != ERROR_INSUFFICIENT_BUFFER))
                 {
                     //Cannot get owning module for this connection
                     return ret;

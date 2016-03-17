@@ -24,6 +24,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         public static extern uint SetPerTcpConnectionEStats(ref MIB_TCPROW Row, TCP_ESTATS_TYPE EstatsType, IntPtr Rw, uint RwVersion, uint RwSize, uint Offset);
 
         protected const uint NO_ERROR = 0;
+        protected const uint ERROR_INSUFFICIENT_BUFFER = 122;
 
         public enum TCP_TABLE_CLASS
         {
@@ -71,8 +72,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             public int dwOutRsts;
             public int dwNumConns;
         }
-
-
 
         [StructLayout(LayoutKind.Sequential)]
         public struct TCP_ESTATS_DATA_RW_v0
@@ -351,14 +350,17 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
             try
             {
                 uint buffSize = 0;
-                if (GetOwnerModuleFromTcpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize) != NO_ERROR)
+                var retn = GetOwnerModuleFromTcpEntry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
+                if ((retn != NO_ERROR) && (retn != ERROR_INSUFFICIENT_BUFFER))
                 {
                     //Cannot get owning module for this connection
+                    LogHelper.Info("Unable to get the connection owner.");
                     return ret;
                 }
                 if (buffSize == 0)
                 {
                     //No buffer? Probably means we can't retrieve any information about this connection; skip it
+                    LogHelper.Info("Unable to get the connection owner.");
                     return ret;
                 }
                 buffer = Marshal.AllocHGlobal((int)buffSize);
