@@ -85,8 +85,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 {
                     String svc = resplit[2].Substring(1, resplit[2].Length - 4);
 
-					//add here more language for tasklist "N/A" output
-                    string[] notAvailableStrings = new string[] { "N/A", "Nicht zutreffend" };
+                    //add here more language for tasklist "N/A" output
+                    string[] notAvailableStrings = new string[] { "N/A", "Nicht zutreffend" }; //FIXME: This is a terrible way to do this
 
                     if (notAvailableStrings.Contains(svc))
                     {
