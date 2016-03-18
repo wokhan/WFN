@@ -172,19 +172,27 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
         }
 
+        private const int buffer_size = 32;
+        private const int max_hops = 30;
+        private const int ping_timeout = 4000;
         public static async Task<IEnumerable<IPAddress>> GetFullRoute(string adr)
         {
             Ping pong = new Ping();
             PingOptions po = new PingOptions(1, true);
             List<IPAddress> ret = new List<IPAddress>();
             PingReply r = null;
-            for (int i = 1; i < 30; i++)
+            byte[] buffer = new byte[buffer_size];
+            for (int i = 0; i < buffer.Length; i++)
+            {
+                buffer[i] = 0;
+            }
+            for (int i = 1; i < max_hops; i++)
             {
                 if (r != null && r.Status != IPStatus.TimedOut)
                 {
                     po.Ttl = i;
                 }
-                r = await pong.SendPingAsync(adr, 4000, new byte[32], po);
+                r = await pong.SendPingAsync(adr, ping_timeout, buffer, po);
 
                 if (r.Status == IPStatus.TtlExpired)
                 {

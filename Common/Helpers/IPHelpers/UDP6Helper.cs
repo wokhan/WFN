@@ -130,7 +130,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                 {
                     ret = new Owner((TCPIP_OWNER_MODULE_BASIC_INFO)Marshal.PtrToStructure(buffer, typeof(TCPIP_OWNER_MODULE_BASIC_INFO)));
                 }
-                else if (resp != 1168) // Ignore closed connections 
+                else if (resp != ERROR_NOT_FOUND) // Ignore closed connections 
                 {
                     LogHelper.Error("Unable to get the connection owner.", new Win32Exception((int)resp));
                 }
