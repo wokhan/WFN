@@ -19,6 +19,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
 
         protected const uint NO_ERROR = 0;
         protected const uint ERROR_INSUFFICIENT_BUFFER = 122;
+        protected const uint ERROR_NOT_FOUND = 1168;
 
         public enum UDP_TABLE_CLASS
         {
@@ -148,7 +149,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                 {
                     ret = new Owner((TCPIP_OWNER_MODULE_BASIC_INFO)Marshal.PtrToStructure(buffer, typeof(TCPIP_OWNER_MODULE_BASIC_INFO)));
                 }
-                else if (resp != 1168) // Ignore closed connections 
+                else if (resp != ERROR_NOT_FOUND) // Ignore closed connections 
                 {
                     LogHelper.Error("Unable to get the connection owner.", new Win32Exception((int)resp));
                 }
