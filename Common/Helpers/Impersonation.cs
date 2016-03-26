@@ -93,6 +93,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool CloseHandle(IntPtr hObject);
 
+        //[DllImport("kernel32.dll", EntryPoint = "RtlZeroMemory", SetLastError = false)]
+        //public static extern void ZeroMemory(IntPtr dest, uint size);
+
         private const uint TOKEN_QUERY = 0x0008;
         private const uint TOKEN_DUPLICATE = 0x0002;
         private const uint TOKEN_ASSIGN_PRIMARY = 0x0001;
@@ -108,30 +111,31 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             PROCESS_INFORMATION pi = new PROCESS_INFORMATION();
             STARTUPINFO si = new STARTUPINFO();
-           
+            //ZeroMemory(si, (uint)Marshal.SizeOf(si));
+            si.cb = (uint)Marshal.SizeOf(si);
+
             bool retdup = DuplicateTokenEx(token, TOKEN_ASSIGN_PRIMARY | TOKEN_DUPLICATE | TOKEN_QUERY, ref sa,
                                       (int)SECURITY_IMPERSONATION_LEVEL.SecurityIdentification, (int)TOKEN_TYPE.TokenPrimary,
                                       ref primaryToken);
-
-            CloseHandle(token);
-
             if (!retdup)
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error(), "Unable to duplicate the current user's token.");
             }
 
-            string cmd = "\"" + app + "\" " + args;
-            bool retimper = CreateProcessAsUser(primaryToken, null, cmd, ref sa, ref sa, false, 0, IntPtr.Zero, null, ref si, out pi);
-            
-            CloseHandle(primaryToken);
-
-            if (!retimper)
+            try
             {
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "Unable to impersonate. Command was: " + cmd);
+                string cmd = "\"" + app + "\" " + args;
+                bool retimper = CreateProcessAsUser(primaryToken, null, cmd, ref sa, ref sa, false, 0, IntPtr.Zero, null, ref si, out pi);
+                if (!retimper)
+                {
+                    throw new Win32Exception(Marshal.GetLastWin32Error(), "Unable to impersonate. Command was: " + cmd);
+                }
+            }
+            finally
+            {
+                CloseHandle(primaryToken);
             }
         }
-
-
     }
 }
 

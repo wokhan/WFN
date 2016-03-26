@@ -128,7 +128,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
             else
             {
-                WindowsPrincipal principal = (WindowsPrincipal)ClaimsPrincipal.Current;// new WindowsPrincipal(identity);
+                WindowsPrincipal principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
                 return principal.IsInRole(WindowsBuiltInRole.Administrator) || principal.IsInRole(0x200); //Domain Administrator
             }
         }

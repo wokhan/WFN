@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
@@ -14,6 +13,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
     static class Program
     {
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool CloseHandle(IntPtr hObject);
+
         /// <summary>
         /// Point d'entrée principal de l'application.
         /// </summary>
@@ -91,10 +94,17 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     throw new Win32Exception(Marshal.GetLastWin32Error(), "Unable to retrieve the current user token.");
                 }
 
-                string argstr = String.Join(" ", argv.Select(a => a.Contains(" ") ? "\"" + a + "\"" : a).ToArray()) + " -impersonated 1";
-                LogHelper.Debug("Impersonating. Parameters: " + argstr);
+                try
+                {
+                    string argstr = String.Join(" ", argv.Select(a => a.Contains(" ") ? "\"" + a + "\"" : a).ToArray()) + " -impersonated 1";
+                    LogHelper.Debug("Impersonating. Parameters: " + argstr);
 
-                Impersonation.LaunchProcessAsUser(Process.GetCurrentProcess().MainModule.FileName, argstr, userToken);
+                    Impersonation.LaunchProcessAsUser(Process.GetCurrentProcess().MainModule.FileName, argstr, userToken);
+                }
+                finally
+                {
+                    CloseHandle(userToken);
+                }
 
                 Environment.Exit(0);
             }
