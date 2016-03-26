@@ -44,6 +44,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             var r = new SettingsPropertyValueCollection();// base.GetPropertyValues(context, collection);
 
             var cfg = GetSharedConfiguration();
+            if (!cfg.HasFile)
+            {
+                throw new ApplicationException("Configuration file missing!");
+            }
 
             ClientSettingsSection appSettings = GetApplicationSettingsSection(cfg);
             var sets = collection.Cast<SettingsProperty>().Where(x => !IsUserSetting(x));
