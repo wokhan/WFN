@@ -17,6 +17,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// </summary>
     public partial class EventsLog : Page
     {
+        private const int MaxEventsToLoad = 500;
 
         public bool IsTrackingEnabled
         {
@@ -77,14 +78,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 using (EventLog securityLog = new EventLog("security"))
                 {
                     int i = securityLog.Entries.Count - 1;
-                    int cpt = 500;
+                    int cpt = MaxEventsToLoad;
                     EventLogEntry entry;
                     string friendlyPath;
                     bool isAppending = (_logEntries.Any());
                     DateTime lastDateLocal = DateTime.MinValue;
                     int indexLocal = 0;
 
-                    while (i > 0 && cpt > 0)
+                    while (i >= 0 && cpt > 0)
                     {
                         entry = securityLog.Entries[i--];
 
@@ -117,7 +118,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                             }
                         }
 
-                        if (cpt >= 499)
+                        if (cpt >= MaxEventsToLoad - 1)
                         {
                             lastDateLocal = securityLog.Entries[i].TimeWritten;
                             indexLocal = securityLog.Entries[i].Index;

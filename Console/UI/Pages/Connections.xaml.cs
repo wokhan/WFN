@@ -17,6 +17,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// </summary>
     public partial class Connections : Page
     {
+        private const double ConnectionTimeoutRemove = 5.0; //seconds
+        private const double ConnectionTimeoutDying = 2.0; //seconds
+        private const double ConnectionTimeoutNew = 1000.0; //milliseconds
+
         public bool IsTrackingEnabled
         {
             get { return timer.IsEnabled; }
@@ -76,11 +80,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             {
                 var item = lstConnections[i];
                 double elapsed = DateTime.Now.Subtract(item.LastSeen).TotalSeconds;
-                if (elapsed > 5.0)
+                if (elapsed > ConnectionTimeoutRemove)
                 {
                     lstConnections.Remove(item);
                 }
-                else if (elapsed > 2.0)
+                else if (elapsed > ConnectionTimeoutDying)
                 {
                     item.IsDying = true;
                 }
@@ -93,7 +97,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
             if (lvi != null)
             {
-                if (DateTime.Now.Subtract(lvi.LastSeen).TotalMilliseconds > 1000)
+                if (DateTime.Now.Subtract(lvi.LastSeen).TotalMilliseconds > ConnectionTimeoutNew)
                 {
                     lvi.IsNew = false;
                 }

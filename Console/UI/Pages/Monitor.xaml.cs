@@ -22,6 +22,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// </summary>
     public partial class Monitor : Page, INotifyPropertyChanged
     {
+        private const double GroupTimeoutRemove = 1000.0; //milliseconds
+
         public bool IsTrackingEnabled
         {
             get { return timer.IsEnabled; }
@@ -179,7 +181,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
             }
 
-            var removableGr = _groupedConnections.Where(gr => DateTime.Now.Subtract(gr.LastSeen).TotalMilliseconds > 1000).ToList();
+            var removableGr = _groupedConnections.Where(gr => DateTime.Now.Subtract(gr.LastSeen).TotalMilliseconds > GroupTimeoutRemove).ToList();
             foreach (var g in removableGr)
             {
                 g.LastIn = "-";

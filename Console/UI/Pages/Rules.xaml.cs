@@ -35,9 +35,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             get
             {
                 return new Dictionary<int, string> { { 0, "Show all" }, 
-                                                       { 1, "Active rules" }, 
-                                                       { 2, "WFN rules" }, 
-                                                       { 3, "WSH rules (Windows hidden rules)" } };
+                                                     { 1, "Active rules" }, 
+                                                     { 2, "WFN rules" }, 
+                                                     { 3, "WSH rules (Windows hidden rules)" } };
             }
         }
 

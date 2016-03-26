@@ -11,6 +11,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
     /// </summary>
     public partial class MainWindow
     {
+        private const uint ERROR_PRIVILEGE_NOT_HELD = 1314;
+
         private Uri previousUri = null;
 
         public void GoBack()
@@ -46,7 +48,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
 
         void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            if (e.Exception is InvalidOperationException && e.Exception.InnerException != null && e.Exception.InnerException is Win32Exception && ((Win32Exception)e.Exception.InnerException).NativeErrorCode == 1314)
+            if (e.Exception is InvalidOperationException && e.Exception.InnerException != null && e.Exception.InnerException is Win32Exception && ((Win32Exception)e.Exception.InnerException).NativeErrorCode == ERROR_PRIVILEGE_NOT_HELD)
             {
                 ForceDialog("You must run the Windows Firewall Notifier console as an administrator to be able to use this feature.", "Insufficient privileges");
             }
