@@ -85,7 +85,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     DateTime lastDateLocal = DateTime.MinValue;
                     int indexLocal = 0;
 
-                    while (i >= 0 && cpt > 0)
+                    while (i > 0 && cpt > 0)
                     {
                         entry = securityLog.Entries[i--];
 
