@@ -129,7 +129,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             /*
             var killduration = Math.Max(5, 3 * _interval);
             var dieduration = Math.Max(2, 2 * _interval);
-            for (int i = Connections.Count - 1; i > 0; i--)
+            for (int i = Connections.Count - 1; i >= 0; i--)
             {
                 var item = Connections[i];
                 double elapsed = DateTime.Now.Subtract(item.LastSeen).TotalSeconds;
