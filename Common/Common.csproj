@@ -159,9 +159,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>del WFN.config
-ren $(TargetPath).config WFN.config
-if "$(ConfigurationName)" == "Release" (copy $(TargetPath) $(TargetDir)..\Published)
-if "$(ConfigurationName)" == "Release" (copy $(TargetDir)Options.dat $(TargetDir)..\Published)
+ren "$(TargetPath).config" WFN.config
+if "$(ConfigurationName)" == "Release" (copy "$(TargetPath)" "$(TargetDir)..\Published")
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
