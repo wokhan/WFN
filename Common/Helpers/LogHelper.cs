@@ -19,8 +19,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         private static string appVersion;
         private static string assemblyName;
-
+        private static TimeSpan _timeoutLogFileLock = TimeSpan.FromMilliseconds(1000);
         private static string logFilePath;
+        private static readonly Mutex logFileMutex = new Mutex(false, "WindowsFirewallNotifier_Common_LogFile_Mutex");
 
         private static bool isAdmin = UacHelper.CheckProcessElevated();
 
@@ -33,21 +34,23 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             CurrentLogsPath = AppDomain.CurrentDomain.BaseDirectory;
             logFilePath = Path.Combine(CurrentLogsPath, assemblyName + ".log");
 
-            locker.WaitOne();
             try
             {
-                using (var fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Write))
+                if (logFileMutex.WaitOne(_timeoutLogFileLock))
                 {
-                    if (!fs.CanWrite)
+                    using (var fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Write))
                     {
-                        CurrentLogsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN");
-                        logFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN", assemblyName + ".log");
+                        if (!fs.CanWrite)
+                        {
+                            CurrentLogsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN");
+                            logFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN", assemblyName + ".log");
+                        }
                     }
                 }
             }
             finally
             {
-                locker.Set();
+                logFileMutex.ReleaseMutex();
             }
 
             if (Settings.Default.FirstRun)
@@ -126,7 +129,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 );
         }
 
-        private static readonly EventWaitHandle locker = new EventWaitHandle(true, EventResetMode.AutoReset, "WFN_Log_Sync_Lock");
 #if DEBUG
         private static void writeLog(string type, string msg,
             string memberName = null,
@@ -138,42 +140,44 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             System.Diagnostics.Debug.WriteLine(msg);
 
-            locker.WaitOne();
             try
             {
-                using (var sw = new StreamWriter(logFilePath, true))
+                if (logFileMutex.WaitOne(_timeoutLogFileLock))
                 {
-#if DEBUG
-                    var codeLocation = string.Empty;
-                    if (!string.IsNullOrWhiteSpace(memberName)
-                        || !string.IsNullOrWhiteSpace(filePath))
+                    using (var sw = new StreamWriter(logFilePath, true))
                     {
-                        codeLocation = string.Format(" [{0}() in {1}, line {2}]",
-                            memberName,
-                            filePath,
-                            lineNumber);
-                    }
+#if DEBUG
+                        var codeLocation = string.Empty;
+                        if (!string.IsNullOrWhiteSpace(memberName)
+                            || !string.IsNullOrWhiteSpace(filePath))
+                        {
+                            codeLocation = string.Format(" [{0}() in {1}, line {2}]",
+                                memberName,
+                                filePath,
+                                lineNumber);
+                        }
 
-                    sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}]{5} {4}",
-                        DateTime.Now,
-                        Environment.UserName,
-                        isAdmin,
-                        type,
-                        msg,
-                        codeLocation);
+                        sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}]{5} {4}",
+                            DateTime.Now,
+                            Environment.UserName,
+                            isAdmin,
+                            type,
+                            msg,
+                            codeLocation);
 #else
-                    sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}] {4}",
-                        DateTime.Now,
-                        Environment.UserName,
-                        isAdmin,
-                        type,
-                        msg);
+                        sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}] {4}",
+                            DateTime.Now,
+                            Environment.UserName,
+                            isAdmin,
+                            type,
+                            msg);
 #endif
+                    }
                 }
             }
             finally
             {
-                locker.Set();
+                logFileMutex.ReleaseMutex();
             }
         }
     }
