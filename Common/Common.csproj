@@ -160,6 +160,7 @@
   <PropertyGroup>
     <PostBuildEvent>del WFN.config
 ren "$(TargetPath).config" WFN.config
+if "$(ConfigurationName)" == "Release" (mkdir "$(TargetDir)..\Published")
 if "$(ConfigurationName)" == "Release" (copy "$(TargetPath)" "$(TargetDir)..\Published")
 </PostBuildEvent>
   </PropertyGroup>
