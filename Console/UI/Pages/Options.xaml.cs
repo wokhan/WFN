@@ -56,25 +56,5 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             Process.Start("explorer.exe", LogHelper.CurrentLogsPath);
         }
-        private void ToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            if(sender is System.Windows.Controls.Primitives.ToggleButton)
-            {
-                System.Windows.Controls.Primitives.ToggleButton tb = (System.Windows.Controls.Primitives.ToggleButton)sender;
-                if(tb.IsChecked == true)
-                {
-                    //todo: check result of tasklist for this process (should return N/A or similar)
-                    var result = ProcessHelper.GetAllServices(Process.GetCurrentProcess().Id);
-                    if (result != null && result.Length >= 1)
-                    {
-                        //did not understand output of taskkill. disable service detection.
-                        tb.IsChecked = false;
-                        MessageBox.Show("WFN does not support your OS language. Please report issue to add \"" + result[0] + "\". Service detection cannot be enabled.", "Detecting services not supported");
-                    }
-                    
-                }
-            }
-            
-        }
     }
 }
