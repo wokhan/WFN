@@ -61,18 +61,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 || (status.PublicIsEnabled && status.PublicIsOutBlockedNotif)
                 || (status.DomainIsEnabled && status.DomainIsOutBlockedNotif)))
             {
-                if (Settings.Default.EnableServiceDetection)
-                {
-                    //todo: check result of tasklist for this process (should return N/A or similar)
-                    var result = ProcessHelper.GetAllServices(System.Diagnostics.Process.GetCurrentProcess().Id);
-                    if (result != null && result.Length >= 1)
-                    {
-                        //did not understand output of taskkill. disable service detection.
-                        Settings.Default.EnableServiceDetection = false;
-                        MessageBox.Show("WFN does not support your OS language. Please report issue to add \"" + result[0] + "\". Service detection has been disabled.", "Detecting services not supported");
-                        Settings.Default.Save();
-                    }
-                }
                 InstallHelper.EnableProgram(true, callback);
             }
             else if (isInstalled && (!status.PrivateIsEnabled || !status.PrivateIsOutBlockedNotif) && (!status.PublicIsEnabled || !status.PublicIsOutBlockedNotif) && (!status.DomainIsEnabled || !status.DomainIsOutBlockedNotif))
