@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-//using Windows.ApplicationModel.Resources.Core;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -78,7 +77,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             if (src != null && src.StartsWith("@"))
             {
-                StringBuilder sb = new StringBuilder(1024);
+                StringBuilder sb = new StringBuilder(1024); //FIXME: Hardcoded maximum string size!
                 if (0 == SHLoadIndirectString(Environment.ExpandEnvironmentVariables(src), sb, (uint)sb.Capacity, IntPtr.Zero))
                 {
                     src = sb.ToString();
@@ -89,20 +88,23 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         }
 
-
         public static string FormatBytes(double size, string suffix = null)
         {
-            if (size >= 1073741824)
+            if (size >= 1024.0 * 1024.0 * 1024.0 * 1024.0)
             {
-                return String.Format("{0:##.##}GB{1}", size / 1073741824.0, suffix);
+                return String.Format("{0:##.##}TiB{1}", size / (1024.0 * 1024.0 * 1024.0 * 1024.0), suffix);
             }
-            else if (size >= 1048576)
+            else if (size >= 1024.0 * 1024.0 * 1024.0)
             {
-                return String.Format("{0:##.##}MB{1}", size / 1048576.0, suffix);
+                return String.Format("{0:##.##}GiB{1}", size / (1024.0 * 1024.0 * 1024.0), suffix);
             }
-            else if (size >= 1024)
+            else if (size >= 1024.0 * 1024.0)
             {
-                return String.Format("{0:##.##}KB{1}", size / 1024.0, suffix);
+                return String.Format("{0:##.##}MiB{1}", size / (1024.0 * 1024.0), suffix);
+            }
+            else if (size >= 1024.0)
+            {
+                return String.Format("{0:##.##}KiB{1}", size / 1024.0, suffix);
             }
 
             return String.Format("{0:#0.##}B{1}", size, suffix);
