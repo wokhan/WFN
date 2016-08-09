@@ -93,14 +93,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             public static readonly int SizeOf = Marshal.SizeOf(typeof(SERVICE_STATUS_PROCESS));
 
-            public int dwServiceType;  
-            public int dwCurrentState;  
-            public int dwControlsAccepted;  
-            public int dwWin32ExitCode;  
-            public int dwServiceSpecificExitCode;  
-            public int dwCheckPoint;  
-            public int dwWaitHint;  
-            public int dwProcessId;  
+            public int dwServiceType;
+            public int dwCurrentState;
+            public int dwControlsAccepted;
+            public int dwWin32ExitCode;
+            public int dwServiceSpecificExitCode;
+            public int dwCheckPoint;
+            public int dwWaitHint;
+            public int dwProcessId;
             public int dwServiceFlags;
         }
 
