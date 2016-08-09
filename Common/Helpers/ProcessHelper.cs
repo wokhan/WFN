@@ -48,10 +48,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             Process.Start(proc);
         }
 
-        [DllImport("advapi32.dll", SetLastError = true)]
+        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         private static extern IntPtr OpenSCManager(string machineName, string databaseName, uint dwAccess);
 
-        [DllImport("advapi32.dll", SetLastError = true)]
+        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         private static extern uint EnumServicesStatusEx(IntPtr hSCManager,
                int infoLevel, uint dwServiceType,
                uint dwServiceState, IntPtr lpServices, uint cbBufSize,
@@ -79,11 +79,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             public static readonly int SizeOf = Marshal.SizeOf(typeof(ENUM_SERVICE_STATUS_PROCESS));
 
-            [MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPWStr)]
-            public string pServiceName;
+            [MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPTStr)]
+            public string lpServiceName;
 
-            [MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPWStr)]
-            public string pDisplayName;
+            [MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPTStr)]
+            public string lpDisplayName;
 
             public SERVICE_STATUS_PROCESS ServiceStatus;
         }
@@ -215,7 +215,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     if (pid == service.ServiceStatus.dwProcessId)
                     {
                         //We have found one of the services we're looking for!
-                        result.Add(service.pServiceName);
+                        result.Add(service.lpServiceName);
                     }
                 }
 
@@ -245,6 +245,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             if (svcs == null)
             {
+                LogHelper.Debug("No services running in process " + pid.ToString() + " found!");
                 return;
             }
 
@@ -331,6 +332,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 svc = svcs;
                 svcdsc = svcs.Select(s => getServiceDesc(s)).ToArray();
             }
+
+            LogHelper.Debug("Identified service as: " + String.Join(",", svcdsc) + " (unsure)");
 
             return;
         }
@@ -423,6 +426,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
             catch (ArgumentException)
             {
+                LogHelper.Debug("Couldn't get description for service: " + service);
                 return String.Empty;
             }
         }
