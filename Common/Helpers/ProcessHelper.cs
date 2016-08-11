@@ -237,22 +237,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         // private static string[] prioSvcs = new string[] { "wuauserv", "BITS", "aelookupsvc", "CryptSvc", "dnscache", "LanmanWorkstation", "TapiSrv" };  
         public static void GetService(int pid, string threadid, string path, string protocolStr, string localport, string target, string remoteport, out string[] svc, out string[] svcdsc, out bool unsure)
         {
-            string[] svcs = GetAllServices(pid);
-            //int protocol = (int)Enum.Parse(typeof(NET_FW_IP_PROTOCOL_), protocolStr);
-            svc = new string[0];
-            svcdsc = new string[0];
-            unsure = false;
-
-            if (svcs == null)
-            {
-                LogHelper.Debug("No services running in process " + pid.ToString() + " found!");
-                return;
-            }
-
-            LogHelper.Debug("GetService found the following services: " + String.Join(",", svcs));
-
             //tries to lookup details about connection to localport.
             //@wokhan: how is this supposed to work since connection is blocked by firewall??
+            LogHelper.Info("Trying to retrieve service name through connection information.");
             var ret = IPHelper.GetOwner(pid, int.Parse(localport));
             if (ret != null && !String.IsNullOrEmpty(ret.ModuleName))
             {
@@ -260,14 +247,16 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 //if (svcs.Contains(ret.ModuleName))
                 svc = new[] { ret.ModuleName };
                 svcdsc = new[] { getServiceDesc(ret.ModuleName) };
-
+                unsure = false;
+                LogHelper.Debug("Identified service as: " + String.Join(",", svcdsc));
                 return;
             }
 
             // If it fails, tries to retrieve the module name from the calling thread id
             // /!\ Unfortunately, retrieving the proper thread ID requires another log to be enabled and parsed.
             // I don't want to get things too complicated since not that many users actually bother about services.
-            /*var p = Process.GetProcessById(pid);
+            /*LogHelper.Info("Trying to retrieve service name through thread information.");
+            var p = Process.GetProcessById(pid);
             int threadidint;
             if (int.TryParse(threadid, out threadidint))
             {
@@ -299,6 +288,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                             svcdsc = null;
                         }
 
+                        unsure = false;
+                        LogHelper.Debug("Identified service as: " + String.Join(",", svcdsc));
                         return;
                     }
                 }
@@ -308,11 +299,32 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 LogHelper.Error("Unable to parse the Thread ID / value = " + threadid, null);
             }*/
 
+            LogHelper.Info("Trying to retrieve service name through process information.");
+            string[] svcs = GetAllServices(pid);
+            //int protocol = (int)Enum.Parse(typeof(NET_FW_IP_PROTOCOL_), protocolStr);
+            svc = new string[0];
+            svcdsc = new string[0];
 
-            LogHelper.Warning("Unable to retrieve the service name, falling back to previous method.");
+            if (svcs == null)
+            {
+                LogHelper.Debug("No services running in process " + pid.ToString() + " found!");
+                unsure = false;
+                return;
+            }
+
+            //Only one service? Then we've found our guy!
+            if (svcs.Length == 1)
+            {
+                svc = svcs;
+                svcdsc = svcs.Select(s => getServiceDesc(s)).ToArray();
+                unsure = false;
+                LogHelper.Debug("Identified service as: " + String.Join(",", svcdsc));
+                return;
+            }
 
             // And if it still fails, fall backs to the most ugly way ever I am not able to get rid of :-P
             // Retrieves corresponding existing rules
+            LogHelper.Info("Trying to retrieve service name through rule information.");
             int profile = FirewallHelper.GetCurrentProfile();
             var cRules = FirewallHelper.GetMatchingRules(path, protocolStr, target, remoteport, localport, svc, true)
                                        .Select(r => r.serviceName)
@@ -328,12 +340,16 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             if (svcs.Length > 0)
             {
-                unsure = true;
                 svc = svcs;
                 svcdsc = svcs.Select(s => getServiceDesc(s)).ToArray();
+                unsure = true;
+                LogHelper.Debug("Identified service as: " + String.Join(",", svcdsc) + " (unsure)");
             }
-
-            LogHelper.Debug("Identified service as: " + String.Join(",", svcdsc) + " (unsure)");
+            else
+            {
+                unsure = false;
+                LogHelper.Debug("No service found!" + String.Join(",", svcdsc));
+            }
 
             return;
         }
