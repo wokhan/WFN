@@ -38,7 +38,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             {
                 if (logFileMutex.WaitOne(_timeoutLogFileLock))
                 {
-                    using (var fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Write))
+                    using (var fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Read))
                     {
                         if (!fs.CanWrite)
                         {
