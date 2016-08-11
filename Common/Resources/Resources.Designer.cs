@@ -220,7 +220,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
         /// <summary>
         ///   Looks up a localized string similar to The temporary rule could not be removed.
         ///The application outgoing connections are still allowed.
-        ///Please check the Windows firewall for a rule named {0}..
+        ///Please check the Windows Firewall for a rule named {0}..
         /// </summary>
         public static string MSG_RULE_RM_FAILED {
             get {
