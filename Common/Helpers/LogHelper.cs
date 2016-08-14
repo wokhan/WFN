@@ -19,7 +19,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         private static string appVersion;
         private static string assemblyName;
-        private static TimeSpan _timeoutLogFileLock = TimeSpan.FromMilliseconds(1000);
         private static string logFilePath;
         private static readonly Mutex logFileMutex = new Mutex(false, "WindowsFirewallNotifier_Common_LogFile_Mutex");
 
@@ -36,7 +35,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             try
             {
-                if (logFileMutex.WaitOne(_timeoutLogFileLock))
+                if (logFileMutex.WaitOne())
                 {
                     using (var fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Read))
                     {
@@ -142,7 +141,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             try
             {
-                if (logFileMutex.WaitOne(_timeoutLogFileLock))
+                if (logFileMutex.WaitOne())
                 {
                     using (var sw = new StreamWriter(logFilePath, true))
                     {
