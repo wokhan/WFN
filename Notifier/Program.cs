@@ -73,7 +73,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 }
 
                 // If the target Session ID is still unknown or if it belongs to SYSTEM, the currently active session is retrieved.
-                if (targetSessionID == uint.MaxValue || targetSessionID == 0 || targetSessionID == 4)
+                if (targetSessionID == uint.MaxValue || targetSessionID == 0)
                 {
                     targetSessionID = CommonHelper.WTSGetActiveConsoleSessionId();
                     if (targetSessionID == 0xFFFFFFFF)
@@ -83,7 +83,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 }
 
                 // If the active Session ID is still a SYSTEM one, cannot continue.
-                if (targetSessionID == 0 || targetSessionID == 4)
+                if (targetSessionID == 0)
                 {
                     throw new Exception("WFN can not start in the SYSTEM session.");
                 }
