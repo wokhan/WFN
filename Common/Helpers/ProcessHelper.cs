@@ -235,7 +235,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                                                               "lanmanserver", "browser", "schedule" };
         */
         // private static string[] prioSvcs = new string[] { "wuauserv", "BITS", "aelookupsvc", "CryptSvc", "dnscache", "LanmanWorkstation", "TapiSrv" };  
-        public static void GetService(int pid, string threadid, string path, string protocolStr, string localport, string target, string remoteport, out string[] svc, out string[] svcdsc, out bool unsure)
+        public static void GetService(int pid, int threadid, string path, string protocolStr, string localport, string target, string remoteport, out string[] svc, out string[] svcdsc, out bool unsure)
         {
             //tries to lookup details about connection to localport.
             //@wokhan: how is this supposed to work since connection is blocked by firewall??
@@ -255,15 +255,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             // If it fails, tries to retrieve the module name from the calling thread id
             // /!\ Unfortunately, retrieving the proper thread ID requires another log to be enabled and parsed.
             // I don't want to get things too complicated since not that many users actually bother about services.
-            /*LogHelper.Info("Trying to retrieve service name through thread information.");
-            var p = Process.GetProcessById(pid);
-            int threadidint;
-            if (int.TryParse(threadid, out threadidint))
+            LogHelper.Info("Trying to retrieve service name through thread information.");
+            if (threadid != 0)
             {
-                var thread = p.Threads.Cast<ProcessThread>().SingleOrDefault(t => t.Id == threadidint);
+                var p = Process.GetProcessById(pid);
+                var thread = p.Threads.Cast<ProcessThread>().SingleOrDefault(t => t.Id == threadid);
                 if (thread == null)
                 {
-                    LogHelper.Debug("The thread " + threadidint + " has not been found for PID " + pid);
+                    LogHelper.Debug("The thread " + threadid + " has not been found for PID " + pid);
                 }
                 else
                 {
@@ -277,27 +276,23 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     {
                         LogHelper.Debug("The thread has been found for module " + module.ModuleName);
 
-                        svc = module.ModuleName;
-                        svcdsc = getServiceDesc(svc);
+                        string ServiceDesc = getServiceDesc(module.ModuleName);
 
-                        if (String.IsNullOrEmpty(svcdsc))
+                        if (String.IsNullOrEmpty(ServiceDesc))
                         {
                             LogHelper.Debug("But no service description matches...");
-                            
                             svc = null;
                             svcdsc = null;
                         }
 
+                        svc = new[] { module.ModuleName };
+                        svcdsc = new[] { getServiceDesc(module.ModuleName) };
                         unsure = false;
                         LogHelper.Debug("Identified service as: " + String.Join(",", svcdsc));
                         return;
                     }
                 }
             }
-            else
-            {
-                LogHelper.Error("Unable to parse the Thread ID / value = " + threadid, null);
-            }*/
 
             LogHelper.Info("Trying to retrieve service name through process information.");
             string[] svcs = GetAllServices(pid);

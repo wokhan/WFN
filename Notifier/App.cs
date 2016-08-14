@@ -65,7 +65,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         /// <param name="targetPort"></param>
         /// <param name="localport"></param>
         /// <returns>false if item is blocked and was thus not added ti internal query list</returns>
-        public bool AddItem(int pid, string threadid, string path, string target, string protocol, string targetPort, string localport)
+        public bool AddItem(int pid, int threadid, string path, string target, string protocol, string targetPort, string localport)
         {
             try
             {
@@ -171,11 +171,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
                     if (unsure)
                     {
+                        //LogHelper.Debug("Adding services (unsure): " + String.Join(",", svc));
                         conn.PossibleServices = svc;
                         conn.PossibleServicesDesc = svcdsc;
                     }
                     else
                     {
+                        //LogHelper.Debug("Adding services: " + svc.FirstOrDefault());
                         conn.CurrentService = svc.FirstOrDefault();
                         conn.CurrentServiceDesc = svcdsc.FirstOrDefault();
                     }
@@ -221,39 +223,39 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         {
             try
             {
-				Dictionary<string, string> pars = ProcessHelper.ParseParameters(argv);
-				int pid = int.Parse(pars["pid"]);
-				string currentTarget = pars["ip"];
-				string currentTargetPort = pars["port"];
-				string currentProtocol = pars["protocol"];
-				string currentLocalPort = pars["localport"];
-				string currentPath = pars["path"];
-				string threadid = pars["threadid"];
-				pars = null;
+                Dictionary<string, string> pars = ProcessHelper.ParseParameters(argv);
+                int pid = int.Parse(pars["pid"]);
+                int threadid = int.Parse(pars["threadid"]);
+                string currentTarget = pars["ip"];
+                string currentTargetPort = pars["port"];
+                string currentProtocol = pars["protocol"];
+                string currentLocalPort = pars["localport"];
+                string currentPath = pars["path"];
+                pars = null;
 
-				initExclusions();
+                initExclusions();
 
-				if (!AddItem(pid, threadid, currentPath, currentTarget, currentProtocol, currentTargetPort, currentLocalPort))
-				{
-					//item is blocked. not action necessary.
-					return;
-				}
+                if (!AddItem(pid, threadid, currentPath, currentTarget, currentProtocol, currentTargetPort, currentLocalPort))
+                {
+                    //item is blocked. not action necessary.
+                    return;
+                }
 
-				if (window == null)
-				{
-					window = new NotificationWindow();
-					this.ShutdownMode = ShutdownMode.OnMainWindowClose;
-					//this.Run(window);
-				}
+                if (window == null)
+                {
+                    window = new NotificationWindow();
+                    this.ShutdownMode = ShutdownMode.OnMainWindowClose;
+                    //this.Run(window);
+                }
 
-				if (window.WindowState == WindowState.Minimized)
-				{
-					window.WindowState = WindowState.Normal;
-				}
+                if (window.WindowState == WindowState.Minimized)
+                {
+                    window.WindowState = WindowState.Normal;
+                }
             }
             catch (Exception e)
             {
-                LogHelper.Error("Error in NextInstance", e);             
+                LogHelper.Error("Error in NextInstance", e);
             }
 
         }
