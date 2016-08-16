@@ -20,12 +20,12 @@
             <Label Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Content="Services selection" />
             <TextBlock Background="LightYellow" Padding="10"  TextWrapping="Wrap" Grid.Row="1">
             Windows Firewall Notifier was not able to determine which service actually attempted to create an outgoing connection.
-<LineBreak />Please pick up the service(s) you would like to allow, or chose the first option to create an application rule instead of a service one.
+<LineBreak />Please pick up the service(s) you would like to allow, or choose the first option to create an application rule instead of a service one.
 <LineBreak />If you are unsure of what you should do, picking them all would be the best option (and the default one).
             </TextBlock>
             <RadioButton Grid.Row="2" Margin="5" GroupName="rdbType" IsChecked="{Binding CreateAppRule}" Content="Create an application rule and ignore the services."/>
             <RadioButton Grid.Row="3" Margin="5" GroupName="rdbType" Content="Create rules for the specified services (recommended)." IsChecked="True" x:Name="rdbTypeService" />
-            <DataGrid Margin="10,0,10,10" IsEnabled="{Binding IsChecked,ElementName=rdbTypeService}" Grid.Row="4" ItemsSource="{Binding Services}" SelectedValue="{Binding SelectedServices}">
+            <DataGrid Margin="10,0,10,10" IsEnabled="{Binding IsChecked,ElementName=rdbTypeService}" Grid.Row="4" ItemsSource="{Binding Services}" SelectedValue="{Binding SelectedServices}" SelectedValuePath="@Name">
                 <DataGrid.Columns>
                     <DataGridCheckBoxColumn Binding="{Binding IsSelected}" />
                     <DataGridTextColumn Header="Service" Binding="{Binding Name}" />
