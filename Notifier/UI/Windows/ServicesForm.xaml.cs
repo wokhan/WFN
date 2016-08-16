@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+//using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
@@ -24,13 +26,17 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         public ServicesForm(CurrentConn activeConn)
         {
-            InitializeComponent();
-
             this.activeConn = activeConn;
             this._services = activeConn.PossibleServices.Select((s, i) => new ServiceView { Name = s, Description = activeConn.PossibleServicesDesc[i], IsSelected = true }).ToList();
+
+            InitializeComponent();
         }
 
         public bool CreateAppRule { get; set; }
-        public string[] SelectedServices { get { return Services.Where(s => s.IsSelected).Select(s => s.Name).ToArray(); } }
+        public string[] SelectedServices
+        {
+            get { return Services.Where(s => s.IsSelected).Select(s => s.Name).ToArray(); }
+            set { foreach (ServiceView Service in Services) { Service.IsSelected = value.Contains<String>(Service.Name); } }
+        }
     }
 }
