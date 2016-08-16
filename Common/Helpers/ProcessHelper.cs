@@ -227,17 +227,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return result.ToArray();
         }
 
-        private static string[] filteredsvcs = new string[] { };/*// offline
-                                                              "appinfo", "gpsvc", "shellhwdetection", "themes", "winmgmt", "sens",
-                                                              //already ok
-                                                              "dnscache", "nlasvc", "eventsystem", "ssdpsrv", "fdrespub", "ikeext", "EventLog", "dhcp",
-                                                              // detected
-                                                              "lanmanserver", "browser", "schedule" };
-        */
-        // private static string[] prioSvcs = new string[] { "wuauserv", "BITS", "aelookupsvc", "CryptSvc", "dnscache", "LanmanWorkstation", "TapiSrv" };  
         public static void GetService(int pid, int threadid, string path, string protocolStr, string localport, string target, string remoteport, out string[] svc, out string[] svcdsc, out bool unsure)
         {
-            //tries to lookup details about connection to localport.
+            // Try to lookup details about connection to localport.
             //@wokhan: how is this supposed to work since connection is blocked by firewall??
             LogHelper.Info("Trying to retrieve service name through connection information.");
             var ret = IPHelper.GetOwner(pid, int.Parse(localport));
@@ -252,9 +244,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 return;
             }
 
-            // If it fails, tries to retrieve the module name from the calling thread id
-            // /!\ Unfortunately, retrieving the proper thread ID requires another log to be enabled and parsed.
-            // I don't want to get things too complicated since not that many users actually bother about services.
+            // Try to retrieve the module name from the calling thread id.
             LogHelper.Info("Trying to retrieve service name through thread information.");
             if (threadid != 0)
             {
@@ -327,8 +317,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                                        .ToList();
 
             // Trying to guess the corresponding service if not found with the previous method and if not already filtered
-            svcs = svcs//.Except(filteredsvcs, StringComparer.CurrentCultureIgnoreCase)
-                       .Except(cRules, StringComparer.CurrentCultureIgnoreCase)
+            svcs = svcs.Except(cRules, StringComparer.CurrentCultureIgnoreCase)
                        .ToArray();
 
             LogHelper.Debug("Excluding " + String.Join(",", cRules) + " // Remains " + String.Join(",", svcs));
