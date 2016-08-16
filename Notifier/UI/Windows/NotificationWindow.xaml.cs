@@ -94,6 +94,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             this.Loaded += NotificationWindow_Loaded;
 
+            //Make sure the showConn function is triggered on initial load.
+            showConn();
+            NotifyPropertyChanged("NbConnectionsAfter");
+            NotifyPropertyChanged("NbConnectionsBefore");
+
             this.Show();
             //this.Activate();
 
@@ -148,26 +153,39 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             var activeConn = (CurrentConn)lstConnections.SelectedItem;
 
+            //FIXME: Should use the DataBindings! But actually, they ARE NOT WORKING! That's the problem with the Service code right now!!!
             chkPort.IsEnabled = FirewallHelper.IsIPProtocol(activeConn.Protocol);
-            chkLPort.IsEnabled = (activeConn.LocalPortArray.Count == 1 && int.Parse(activeConn.LocalPortArray[0]) < 49152);
+            chkLPort.IsEnabled = (activeConn.LocalPortArray.Count == 1 && int.Parse(activeConn.LocalPortArray[0]) < 49152); //FIXME: Hardcoded magic number; ephemeral ports again!
 
             if (!String.IsNullOrEmpty(activeConn.CurrentService))
             {
                 OptionsView.IsService = true;
                 OptionsView.IsServiceMultiple = false;
                 OptionsView.IsServiceRuleChecked = true;
+
+                chkService.IsEnabled = true;
+                chkService.Content = "Service: " + activeConn.CurrentServiceDesc;
+                //chkService.Foreground = "";
             }
             else if (activeConn.PossibleServices != null && activeConn.PossibleServices.Length > 0)
             {
                 OptionsView.IsService = true;
                 OptionsView.IsServiceMultiple = true;
                 OptionsView.IsServiceRuleChecked = true;
+
+                chkService.IsEnabled = true;
+                chkService.Content = "Multiple services found";
+                //chkService.Foreground = "Red";
             }
             else
             {
                 OptionsView.IsService = false;
                 OptionsView.IsServiceMultiple = false;
                 OptionsView.IsServiceRuleChecked = false;
+
+                chkService.IsEnabled = false;
+                chkService.Content = "No service found.";
+                //chkService.Foreground = "";
             }
         }
 
