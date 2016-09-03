@@ -99,9 +99,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             NotifyPropertyChanged("NbConnectionsAfter");
             NotifyPropertyChanged("NbConnectionsBefore");
 
-            this.Show();
-            //this.Activate();
-
             /*ttip.SetToolTip(btnAlwaysAllow, Resources.MSG_ALLOW);
             ttip.SetToolTip(btnAlwaysBlock, Resources.MSG_BLOCK);
             */
