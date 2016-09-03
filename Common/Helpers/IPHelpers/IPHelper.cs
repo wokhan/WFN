@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,9 +17,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     public class IPHelper
     {
+        private const string maxUserPortRegistryKey = "SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters";
+        private const string maxUserPortRegistryValue = "MaxUserPort";
 
         #region Enums
-
 
         public enum TCPIP_OWNER_MODULE_INFO_CLASS
         {
@@ -110,6 +112,21 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return new IPAddress(_remoteAddress).ToString();
         }
 
+
+        public static int GetMaxUserPort()
+        {
+            using (RegistryKey maxUserPortKey = Registry.LocalMachine.OpenSubKey(maxUserPortRegistryKey, false))
+            {
+                var maxUserPortValue = maxUserPortKey.GetValue(maxUserPortRegistryValue);
+                if (maxUserPortValue == null)
+                {
+                    //Default from Windows Vista and up
+                    return 49152;
+                }
+
+                return Convert.ToInt32(maxUserPortValue);
+            }
+        }
 
         /// <summary>
         /// Returns details about connection of localPort by process identified by pid.

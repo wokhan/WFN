@@ -152,7 +152,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             //FIXME: Should use the DataBindings! But actually, they ARE NOT WORKING! That's the problem with the Service code right now!!!
             chkPort.IsEnabled = FirewallHelper.IsIPProtocol(activeConn.Protocol);
-            chkLPort.IsEnabled = (activeConn.LocalPortArray.Count == 1 && int.Parse(activeConn.LocalPortArray[0]) < 49152); //FIXME: Hardcoded magic number; ephemeral ports again!
+            chkLPort.IsEnabled = (activeConn.LocalPortArray.Count == 1 && int.Parse(activeConn.LocalPortArray[0]) < IPHelper.GetMaxUserPort());
 
             if (!String.IsNullOrEmpty(activeConn.CurrentService))
             {
