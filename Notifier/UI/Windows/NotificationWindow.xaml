@@ -19,7 +19,7 @@
         UseLayoutRounding="True"
         BorderThickness="0" 
         ScrollViewer.CanContentScroll="False"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" Visibility="Visible">
     <Window.Resources>
         <Storyboard x:Key="animate" BeginTime="0" Duration="0:0:1" SpeedRatio="2">
             <ThicknessAnimation Storyboard.TargetProperty="Margin" From="250,0,-250,0" To="0,0,0,0" />
