@@ -205,7 +205,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 {
                     if (_icon == null)
                     {
-                        _icon = ProcessHelper.GetIcon(InnerRule.ApplicationName);
+                        _icon = IconHelper.GetIcon(InnerRule.ApplicationName);
                     }
 
                     return _icon;

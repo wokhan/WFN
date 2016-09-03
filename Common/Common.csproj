@@ -105,6 +105,7 @@
     <Compile Include="Helpers\CommonHelper.cs" />
     <Compile Include="Helpers\CustomSettingsProvider.cs" />
     <Compile Include="Helpers\FirewallHelper.cs" />
+    <Compile Include="Helpers\IconHelper.cs" />
     <Compile Include="Helpers\Impersonation.cs" />
     <Compile Include="Helpers\IPHelpers\TCP6Helper.cs" />
     <Compile Include="Helpers\IPHelpers\TCPHelper.cs" />

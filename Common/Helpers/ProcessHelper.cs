@@ -1,16 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
 using System.ServiceProcess;
-using System.Windows.Media;
 using System.Collections.Generic;
-using System.Windows.Interop;
 using System.Runtime.InteropServices;
-using System.Windows;
-using System.Windows.Media.Imaging;
-using System.Threading.Tasks;
 using System.IO;
 using System.Reflection;
 using System.Management;
@@ -141,8 +135,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             return previousCache[owningPid];
         }
-
-        private static Dictionary<string, ImageSource> procIconLst = new Dictionary<string, ImageSource>();
 
         public static string[] GetAllServices(int pid)
         {
@@ -337,75 +329,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             return;
         }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static ImageSource GetIcon(string path, bool defaultIfNotFound = false)
-        {
-            Icon ic = null;
-            switch (path)
-            {
-                case "System":
-                    ic = SystemIcons.WinLogo;
-                    break;
-
-                case "?error":
-                    ic = SystemIcons.Error;
-                    break;
-
-                default:
-                    if (File.Exists(path))
-                    {
-                        ic = Icon.ExtractAssociatedIcon(path) ?? (defaultIfNotFound ? SystemIcons.Application : null);
-                    }
-                    else
-                    {
-                        ic = SystemIcons.Warning;
-                    }
-                    break;
-            }
-
-            if (ic != null)
-            {
-                return Imaging.CreateBitmapSourceFromHIcon(ic.Handle, new Int32Rect(0, 0, ic.Width, ic.Height), BitmapSizeOptions.FromEmptyOptions());
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-
-        public static async Task<ImageSource> GetIconAsync(string path, bool defaultIfNotFound = false)
-        {
-            return await Task<ImageSource>.Run(() => GetIcon(path, defaultIfNotFound));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static ImageSource GetCachedIcon(string path, bool defaultIfNotFound = false)
-        {
-            ImageSource icon;
-            if (!procIconLst.ContainsKey(path))
-            {
-                icon = GetIcon(path, defaultIfNotFound);//.ToBitmap().GetThumbnailImage(18, 18, null, IntPtr.Zero);
-                procIconLst.Add(path, icon);
-            }
-            else
-            {
-                icon = procIconLst[path];
-            }
-
-            return icon;
-        }
-
 
         /// <summary>
         /// 
