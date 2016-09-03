@@ -153,7 +153,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     {
                         fileinfo = FileVersionInfo.GetVersionInfo(path);
                     }
-                    catch { }
+                    catch (FileNotFoundException)
+                    { }
 
                     var conn = new CurrentConn
                     {
