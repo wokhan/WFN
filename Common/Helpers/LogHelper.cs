@@ -33,17 +33,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             CurrentLogsPath = AppDomain.CurrentDomain.BaseDirectory;
             logFilePath = Path.Combine(CurrentLogsPath, assemblyName + ".log");
 
+            logFileMutex.WaitOne();
             try
             {
-                if (logFileMutex.WaitOne())
+                using (var fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Read))
                 {
-                    using (var fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Read))
+                    if (!fs.CanWrite)
                     {
-                        if (!fs.CanWrite)
-                        {
-                            CurrentLogsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN");
-                            logFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN", assemblyName + ".log");
-                        }
+                        CurrentLogsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN");
+                        logFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN", assemblyName + ".log");
                     }
                 }
             }
@@ -56,6 +54,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             {
                 writeLog("INIT", String.Format("OS: {0} ({1} bit) / .Net CLR: {2} / Path: {3} / Version: {4} ({5} bit)", Environment.OSVersion, Environment.Is64BitOperatingSystem ? 64 : 32, Environment.Version, AppDomain.CurrentDomain.BaseDirectory, appVersion, Environment.Is64BitProcess ? 64 : 32));
             }
+        }
+
+        ~LogHelper()
+        {
+            logFileMutex.Dispose();
         }
 
 #if DEBUG
@@ -139,39 +142,37 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             System.Diagnostics.Debug.WriteLine(msg);
 
+            logFileMutex.WaitOne();
             try
             {
-                if (logFileMutex.WaitOne())
+                using (var sw = new StreamWriter(logFilePath, true))
                 {
-                    using (var sw = new StreamWriter(logFilePath, true))
-                    {
 #if DEBUG
-                        var codeLocation = string.Empty;
-                        if (!string.IsNullOrWhiteSpace(memberName)
-                            || !string.IsNullOrWhiteSpace(filePath))
-                        {
-                            codeLocation = string.Format(" [{0}() in {1}, line {2}]",
-                                memberName,
-                                filePath,
-                                lineNumber);
-                        }
-
-                        sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}]{5} {4}",
-                            DateTime.Now,
-                            Environment.UserName,
-                            isAdmin,
-                            type,
-                            msg,
-                            codeLocation);
-#else
-                        sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}] {4}",
-                            DateTime.Now,
-                            Environment.UserName,
-                            isAdmin,
-                            type,
-                            msg);
-#endif
+                    var codeLocation = string.Empty;
+                    if (!string.IsNullOrWhiteSpace(memberName)
+                        || !string.IsNullOrWhiteSpace(filePath))
+                    {
+                        codeLocation = string.Format(" [{0}() in {1}, line {2}]",
+                            memberName,
+                            filePath,
+                            lineNumber);
                     }
+
+                    sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}]{5} {4}",
+                        DateTime.Now,
+                        Environment.UserName,
+                        isAdmin,
+                        type,
+                        msg,
+                        codeLocation);
+#else
+                    sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}] {4}",
+                        DateTime.Now,
+                        Environment.UserName,
+                        isAdmin,
+                        type,
+                        msg);
+#endif
                 }
             }
             finally
