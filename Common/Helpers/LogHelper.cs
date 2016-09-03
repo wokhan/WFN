@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Threading;
+using System.Windows;
 #if DEBUG
 using System.Runtime.CompilerServices;
 #endif
@@ -16,6 +17,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             get;
             private set;
         }
+
+        private const int RetryDelay = 200; //ms
+        private const int Retries = 3;
 
         private static string appVersion;
         private static string assemblyName;
@@ -36,12 +40,37 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             logFileMutex.WaitOne();
             try
             {
-                using (var fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Read))
+                //Every once in a while, some external program holds on to our logfile (probably anti-virus suites). So we have a retry-structure here.
+                bool success = false;
+                int RetryCount = 0;
+                while (true)
                 {
-                    if (!fs.CanWrite)
+                    try
                     {
-                        CurrentLogsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN");
-                        logFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN", assemblyName + ".log");
+                        using (var fs = new FileStream(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Read))
+                        {
+                            if (!fs.CanWrite)
+                            {
+                                CurrentLogsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN");
+                                logFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN", assemblyName + ".log");
+                            }
+                        }
+                        success = true;
+                    }
+                    catch (IOException)
+                    {
+                        if (RetryCount == Retries)
+                        {
+                            MessageBox.Show(Common.Resources.MSG_LOG_FAILED, Common.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                            //throw would create an endless loop, so let's just ignore all of this mess...
+                            break;
+                        }
+                        RetryCount++;
+                        Thread.Sleep(RetryDelay);
+                    }
+                    if (success)
+                    {
+                        break;
                     }
                 }
             }
@@ -145,34 +174,58 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             logFileMutex.WaitOne();
             try
             {
-                using (var sw = new StreamWriter(logFilePath, true))
+                //Every once in a while, some external program holds on to our logfile (probably anti-virus suites). So we have a retry-structure here.
+                bool success = false;
+                int RetryCount = 0;
+                while (true)
                 {
-#if DEBUG
-                    var codeLocation = string.Empty;
-                    if (!string.IsNullOrWhiteSpace(memberName)
-                        || !string.IsNullOrWhiteSpace(filePath))
+                    try
                     {
-                        codeLocation = string.Format(" [{0}() in {1}, line {2}]",
-                            memberName,
-                            filePath,
-                            lineNumber);
-                    }
+                        using (var sw = new StreamWriter(logFilePath, true))
+                        {
+#if DEBUG
+                            var codeLocation = string.Empty;
+                            if (!string.IsNullOrWhiteSpace(memberName)
+                                || !string.IsNullOrWhiteSpace(filePath))
+                            {
+                                codeLocation = string.Format(" [{0}() in {1}, line {2}]",
+                                    memberName,
+                                    filePath,
+                                    lineNumber);
+                            }
 
-                    sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}]{5} {4}",
-                        DateTime.Now,
-                        Environment.UserName,
-                        isAdmin,
-                        type,
-                        msg,
-                        codeLocation);
+                            sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}]{5} {4}",
+                                DateTime.Now,
+                                Environment.UserName,
+                                isAdmin,
+                                type,
+                                msg,
+                                codeLocation);
 #else
-                    sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}] {4}",
-                        DateTime.Now,
-                        Environment.UserName,
-                        isAdmin,
-                        type,
-                        msg);
+                            sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}] {4}",
+                                DateTime.Now,
+                                Environment.UserName,
+                                isAdmin,
+                                type,
+                                msg);
 #endif
+                        }
+                    }
+                    catch (IOException)
+                    {
+                        if (RetryCount == Retries)
+                        {
+                            MessageBox.Show(Common.Resources.MSG_LOG_FAILED, Common.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                            //throw would create an endless loop, so let's just ignore all of this mess...
+                            break;
+                        }
+                        RetryCount++;
+                        Thread.Sleep(RetryDelay);
+                    }
+                    if (success)
+                    {
+                        break;
+                    }
                 }
             }
             finally

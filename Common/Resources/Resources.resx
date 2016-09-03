@@ -186,4 +186,7 @@ to prevent any further notification, or creates a blocking rule for the Windows 
   <data name="ICON_SHIELD" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>shield.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="MSG_LOG_FAILED" xml:space="preserve">
+    <value>Failed to write to log file.</value>
+  </data>
 </root>
