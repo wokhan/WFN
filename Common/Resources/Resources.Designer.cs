@@ -190,6 +190,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to write to log file..
+        /// </summary>
+        public static string MSG_LOG_FAILED {
+            get {
+                return ResourceManager.GetString("MSG_LOG_FAILED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The corresponding rule has been created..
         /// </summary>
         public static string MSG_RULE_CREATED {
