@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
-using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
-using Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.Managers
 {
