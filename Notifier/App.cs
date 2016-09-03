@@ -74,11 +74,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     path = CommonHelper.GetFriendlyPath(path);
                 }
 
-                var existing = this.Connections.FirstOrDefault(c => c.CurrentPath == path && c.Target == target && c.TargetPort == targetPort);// && (int.Parse(localport) >= 49152 || c.LocalPort == localport));
+                var existing = this.Connections.FirstOrDefault(c => c.CurrentPath == path && c.Target == target && c.TargetPort == targetPort);// && (int.Parse(localport) >= IPHelper.GetMaxUserPort() || c.LocalPort == localport));
                 if (existing != null)
                 {
                     //there exist already the same type of connection request.
-                    if (int.Parse(localport) < 49152) //ToDo: Un-hardcode the dynamic port range.
+                    if (int.Parse(localport) < IPHelper.GetMaxUserPort())
                     {
                         existing.LocalPortArray.Add(localport);
                         existing.LocalPort += "," + localport;
