@@ -189,4 +189,7 @@ to prevent any further notification, or creates a blocking rule for the Windows 
   <data name="MSG_LOG_FAILED" xml:space="preserve">
     <value>Failed to write to log file.</value>
   </data>
+  <data name="MSG_RULE_PROTOCOL_NEEDED" xml:space="preserve">
+    <value>A protocol must be specified in order to be able to base rules on ports.</value>
+  </data>
 </root>
