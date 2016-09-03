@@ -628,7 +628,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         public static IEnumerable<Rule> GetMatchingRules(string path, string protocol, string target, string targetPort, string localport, IEnumerable<string> svc, bool blockOnly)
         {
-            IEnumerable<Rule> ret = GetRules().Where(r => RuleMatches(r, path, svc, protocol, localport, target, targetPort));
+            int currentProfile = GetCurrentProfile(); //This call is relatively slow, and calling it many times causes a startup delay. Let's cache it!
+            IEnumerable<Rule> ret = GetRules().Where(r => RuleMatches(r, path, svc, protocol, localport, target, targetPort, currentProfile));
             if (blockOnly)
             {
                 ret = ret.Where(r => r.Action == NET_FW_ACTION_.NET_FW_ACTION_BLOCK);
@@ -648,10 +649,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         }
 
 
-        public static bool RuleMatches(Rule r, string path, IEnumerable<string> svc, string protocol, string localport, string target, string remoteport)
+        private static bool RuleMatches(Rule r, string path, IEnumerable<string> svc, string protocol, string localport, string target, string remoteport, int currentProfile)
         {
             bool ret = r.Enabled
-                       && (((r.Profiles & GetCurrentProfile()) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0))
+                       && (((r.Profiles & currentProfile) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0))
                        && (String.IsNullOrEmpty(r.ApplicationName) || StringComparer.CurrentCultureIgnoreCase.Compare(r.ApplicationName, path) == 0)
                        && ((String.IsNullOrEmpty(r.serviceName) && (svc == null || !svc.Any())) || svc.Contains(r.serviceName, StringComparer.CurrentCultureIgnoreCase))
                        && (r.Protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY || r.Protocol.ToString() == protocol)
