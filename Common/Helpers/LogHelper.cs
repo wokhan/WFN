@@ -210,6 +210,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                                 msg);
 #endif
                         }
+                        success = true;
                     }
                     catch (IOException)
                     {
