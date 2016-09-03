@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using System.Linq;
 using System.Collections.Generic;
@@ -59,12 +59,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
                     ProcName = "System";
                     Owner = "System";
                     Path = "System";
-                    Icon = ProcessHelper.GetCachedIcon("System", true);
+                    Icon = IconHelper.GetIcon("System", true);
                 }
                 else
                 {
                     Owner = "Unknown";
-                    Icon = ProcessHelper.GetCachedIcon("?error", true);
+                    Icon = IconHelper.GetIcon("?error", true);
                 }
             }
             else
@@ -105,11 +105,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         }
 
         public string GroupKey { get; private set; }
-        public ImageSource Icon { get; private set; }
-        public long PID { get; private set; }
+        public BitmapSource Icon { get; private set; }
+        public uint PID { get; private set; }
         public string ProcName { get; private set; }
         public string Path { get; private set; }
-        public IEnumerable<FirewallHelper.Rule> FirewallRule { get { return FirewallHelper.GetMatchingRules(Path, Protocol, RemoteAddress, RemotePort, LocalPort, (Owner != ProcName ? new[] { Owner } : null), false).ToList(); } }
+        //public IEnumerable<FirewallHelper.Rule> FirewallRule { get { return FirewallHelper.GetMatchingRules(Path, Protocol, RemoteAddress, RemotePort, LocalPort, (Owner != ProcName ? new[] { Owner } : null), false).ToList(); } }
 
         internal void UpdateValues(IPHelper.I_OWNER_MODULE b)
         {

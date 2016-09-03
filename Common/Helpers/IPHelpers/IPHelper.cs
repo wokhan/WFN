@@ -9,7 +9,7 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Wokhan.WindowsFirewallNotifier.Common.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers;
 
@@ -85,8 +85,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             public string ModuleName;
             public string ModulePath;
 
-            private ImageSource _icon = null;
-            public ImageSource Icon { get { return _icon = _icon ?? ProcessHelper.GetCachedIcon(ModulePath, true); } }
+            private BitmapSource _icon = null;
+            public BitmapSource Icon { get { return _icon = _icon ?? IconHelper.GetIcon(ModulePath, true); } }
 
             public Owner(TCPIP_OWNER_MODULE_BASIC_INFO inf)
             {
