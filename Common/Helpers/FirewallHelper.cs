@@ -399,10 +399,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     firewallRule.serviceName = service;
                 }
 
-                if (protocol != -1)
-                {
-                    firewallRule.Protocol = getProtocol(protocol);
-                }
+                //protocol -1 will trigger an ANY value.
+                firewallRule.Protocol = getProtocol(protocol);
 
                 if (!String.IsNullOrEmpty(localport))
                 {
