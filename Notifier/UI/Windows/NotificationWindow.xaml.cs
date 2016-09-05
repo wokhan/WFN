@@ -150,9 +150,17 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             var activeConn = (CurrentConn)lstConnections.SelectedItem;
 
-            OptionsView.IsProtocolChecked = true; //On by default. Also: needed to be able to specify port!
+            if (FirewallHelper.getProtocolAsString(activeConn.Protocol) == "Unknown") //FIXME: No string comparison, please!
+            {
+                OptionsView.IsProtocolChecked = false;
+            }
+            else
+            {
+                //On by default. Also: needed to be able to specify port!
+                OptionsView.IsProtocolChecked = true;
+            }
             OptionsView.IsTargetPortChecked = FirewallHelper.IsIPProtocol(activeConn.Protocol);
-            OptionsView.IsLocalPortChecked = (activeConn.LocalPortArray.Count == 1 && int.Parse(activeConn.LocalPortArray[0]) < IPHelper.GetMaxUserPort());
+            OptionsView.IsLocalPortChecked = (activeConn.LocalPortArray.Count == 1 && int.Parse(activeConn.LocalPortArray[0]) != 0 && int.Parse(activeConn.LocalPortArray[0]) < IPHelper.GetMaxUserPort());
 
             if (!String.IsNullOrEmpty(activeConn.CurrentService))
             {
