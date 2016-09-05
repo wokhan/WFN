@@ -234,16 +234,22 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 string currentPath = pars["path"];
                 pars = null;
 
+                LogHelper.Debug("Initializing exclusions...");
                 initExclusions();
 
+                LogHelper.Debug("Adding item...");
                 if (!AddItem(pid, threadid, currentPath, currentTarget, currentProtocol, currentTargetPort, currentLocalPort))
                 {
                     //item is blocked. not action necessary.
+                    LogHelper.Debug("Item is blocked.");
+                    //FIXME: Shut down the notifier, if it's not display anything right now?
                     return;
                 }
 
+                LogHelper.Debug("Displaying notification window...");
                 if (window == null)
                 {
+                    LogHelper.Debug("No notification window loaded; creating a new one...");
                     window = new NotificationWindow();
                     this.ShutdownMode = ShutdownMode.OnMainWindowClose;
                     //this.Run(window);
