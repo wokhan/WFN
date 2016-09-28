@@ -33,7 +33,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Extensions
                 {
                     try
                     {
-                        int size = 1024;
+                        uint size = buffer.Capacity;
                         if (QueryFullProcessImageName(hprocess, 0, buffer, out size))
                         {
                             return buffer.ToString();
