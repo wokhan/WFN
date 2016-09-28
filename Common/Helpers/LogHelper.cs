@@ -7,7 +7,6 @@ using System.Windows;
 using System.Runtime.CompilerServices;
 #endif
 
-
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     public class LogHelper
@@ -19,7 +18,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         }
 
         private const int RetryDelay = 200; //ms
-        private const int Retries = 3;
+        private const int Retries = 5;
 
         private static string appVersion;
         private static string assemblyName;
@@ -37,7 +36,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             CurrentLogsPath = AppDomain.CurrentDomain.BaseDirectory;
             logFilePath = Path.Combine(CurrentLogsPath, assemblyName + ".log");
 
-            logFileMutex.WaitOne();
+            try
+            {
+                logFileMutex.WaitOne();
+            }
+            catch (AbandonedMutexException /*ex*/)
+            {
+                //Mutex was abandoned; previous instance probably crashed while holding it.
+                //Console.WriteLine("Exception on return from WaitOne." + "\r\n\tMessage: {0}", ex.Message);
+            }
             try
             {
                 //Every once in a while, some external program holds on to our logfile (probably anti-virus suites). So we have a retry-structure here.
@@ -171,7 +178,17 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             System.Diagnostics.Debug.WriteLine(msg);
 
-            logFileMutex.WaitOne();
+            bool LoggingFailed = false;
+
+            try
+            {
+                logFileMutex.WaitOne();
+            }
+            catch (AbandonedMutexException /*ex*/)
+            {
+                //Mutex was abandoned; previous instance probably crashed while holding it.
+                //Console.WriteLine("Exception on return from WaitOne." + "\r\n\tMessage: {0}", ex.Message);
+            }
             try
             {
                 //Every once in a while, some external program holds on to our logfile (probably anti-virus suites). So we have a retry-structure here.
@@ -216,7 +233,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     {
                         if (RetryCount == Retries)
                         {
-                            MessageBox.Show(Common.Resources.MSG_LOG_FAILED, Common.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                            LoggingFailed = true; //Let's release the Mutex before showing the messagebox.
                             //throw would create an endless loop, so let's just ignore all of this mess...
                             break;
                         }
@@ -232,6 +249,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             finally
             {
                 logFileMutex.ReleaseMutex();
+            }
+
+            if (LoggingFailed)
+            {
+                MessageBox.Show(Common.Resources.MSG_LOG_FAILED, Common.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
