@@ -64,7 +64,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         /// <param name="protocol"></param>
         /// <param name="targetPort"></param>
         /// <param name="localport"></param>
-        /// <returns>false if item is blocked and was thus not added ti internal query list</returns>
+        /// <returns>false if item is blocked and was thus not added to internal query list</returns>
         public bool AddItem(int pid, int threadid, string path, string target, string protocol, string targetPort, string localport)
         {
             try
@@ -242,7 +242,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 {
                     //item is blocked. not action necessary.
                     LogHelper.Debug("Item is blocked.");
-                    //FIXME: Shut down the notifier, if it's not display anything right now?
+                    //FIXME: Shut down the notifier, if it's not displaying anything right now?
                     return;
                 }
 
