@@ -240,8 +240,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 LogHelper.Debug("Adding item...");
                 if (!AddItem(pid, threadid, currentPath, currentTarget, currentProtocol, currentTargetPort, currentLocalPort))
                 {
-                    //item is blocked. not action necessary.
-                    LogHelper.Debug("Item is blocked.");
+                    //This connection is blocked. No action necessary.
+                    LogHelper.Info("Connection is blocked.");
                     //FIXME: Shut down the notifier, if it's not displaying anything right now?
                     return;
                 }
