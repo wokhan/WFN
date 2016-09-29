@@ -17,7 +17,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Extensions
         private static extern bool QueryFullProcessImageName(IntPtr hprocess, uint dwFlags, StringBuilder lpExeName, out uint size);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern IntPtr OpenProcess(ProcessHelper.ProcessAccessFlags dwDesiredAccess, bool bInheritHandle, uint dwProcessId);
+        private static extern IntPtr OpenProcess(ProcessHelper.ProcessAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, uint dwProcessId);
 
         public static string GetModulePath(this Process src)
         {
