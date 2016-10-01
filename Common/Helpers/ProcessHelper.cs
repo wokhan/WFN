@@ -240,38 +240,49 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             LogHelper.Info("Trying to retrieve service name through thread information.");
             if (threadid != 0)
             {
-                var p = Process.GetProcessById(pid);
-                var thread = p.Threads.Cast<ProcessThread>().SingleOrDefault(t => t.Id == threadid);
-                if (thread == null)
+                Process p;
+                try
                 {
-                    LogHelper.Debug("The thread " + threadid + " has not been found for PID " + pid);
+                    p = Process.GetProcessById(pid);
                 }
-                else
+                catch (ArgumentException)
                 {
-                    var thaddr = thread.StartAddress.ToInt64();
-                    var module = p.Modules.Cast<ProcessModule>().FirstOrDefault(m => thaddr >= (m.BaseAddress.ToInt64() + m.ModuleMemorySize));
-                    if (module == null)
+                    p = null;
+                }
+                if (p != null)
+                {
+                    var thread = p.Threads.Cast<ProcessThread>().SingleOrDefault(t => t.Id == threadid);
+                    if (thread == null)
                     {
-                        LogHelper.Debug("The thread has been found, but no module matches.");
+                        LogHelper.Debug("The thread " + threadid + " has not been found for PID " + pid);
                     }
                     else
                     {
-                        LogHelper.Debug("The thread has been found for module " + module.ModuleName);
-
-                        string ServiceDesc = getServiceDesc(module.ModuleName);
-
-                        if (String.IsNullOrEmpty(ServiceDesc))
+                        var thaddr = thread.StartAddress.ToInt64();
+                        var module = p.Modules.Cast<ProcessModule>().FirstOrDefault(m => thaddr >= (m.BaseAddress.ToInt64() + m.ModuleMemorySize));
+                        if (module == null)
                         {
-                            LogHelper.Debug("But no service description matches...");
-                            svc = null;
-                            svcdsc = null;
+                            LogHelper.Debug("The thread has been found, but no module matches.");
                         }
+                        else
+                        {
+                            LogHelper.Debug("The thread has been found for module " + module.ModuleName);
 
-                        svc = new[] { module.ModuleName };
-                        svcdsc = new[] { getServiceDesc(module.ModuleName) };
-                        unsure = false;
-                        LogHelper.Debug("Identified service as: " + String.Join(",", svcdsc));
-                        return;
+                            string ServiceDesc = getServiceDesc(module.ModuleName);
+
+                            if (String.IsNullOrEmpty(ServiceDesc))
+                            {
+                                LogHelper.Debug("But no service description matches...");
+                                svc = null;
+                                svcdsc = null;
+                            }
+
+                            svc = new[] { module.ModuleName };
+                            svcdsc = new[] { getServiceDesc(module.ModuleName) };
+                            unsure = false;
+                            LogHelper.Debug("Identified service as: " + String.Join(",", svcdsc));
+                            return;
+                        }
                     }
                 }
             }
