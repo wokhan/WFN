@@ -18,7 +18,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         }
 
         private const int RetryDelay = 200; //ms
-        private const int Retries = 5;
+        private const uint Retries = 5;
 
         private static string appVersion;
         private static string assemblyName;
@@ -49,7 +49,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             {
                 //Every once in a while, some external program holds on to our logfile (probably anti-virus suites). So we have a retry-structure here.
                 bool success = false;
-                int RetryCount = 0;
+                uint RetryCount = 0;
                 while (true)
                 {
                     try
