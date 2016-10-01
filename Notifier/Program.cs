@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using Microsoft.VisualBasic.ApplicationServices;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Notifier.Managers;
 
@@ -17,8 +18,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool CloseHandle(IntPtr hObject);
 
+        const uint RetrySingleInstance = 3;
+
         /// <summary>
-        /// Point d'entrée principal de l'application.
+        /// Main entrypoint of the application.
         /// </summary>
         [STAThread]
         static void Main(string[] argv)
@@ -41,7 +44,33 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     EnsureUserSession(pid, argv);
                 }
 
-                new SingletonManager().Run(argv);
+                //There's a race condition when the previous instance is shutting down, so we have to retry a couple of times.
+                bool success = false;
+                uint RetryCount = 0;
+                while (true)
+                {
+                    try
+                    {
+                        new SingletonManager().Run(argv);
+                        success = true;
+                    }
+                    catch (CantStartSingleInstanceException)
+                    {
+                        if (RetryCount == RetrySingleInstance)
+                        {
+                            break;
+                        }
+                        RetryCount++;
+                    }
+                    if (success)
+                    {
+                        break;
+                    }
+                }
+                if (!success)
+                {
+                    throw new Exception("Repeated failure to connect to previous instance. Aborting.");
+                }
             }
             catch (Exception e)
             {
