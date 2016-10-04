@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Security.Principal;
 using System.Threading;
 using System.Windows;
 #if DEBUG
@@ -253,7 +254,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             if (LoggingFailed)
             {
-                MessageBox.Show(Common.Resources.MSG_LOG_FAILED, Common.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                if (!WindowsIdentity.GetCurrent().IsSystem) //Don't try to display a messagebox when we're SYSTEM, as this is not allowed.
+                {
+                    MessageBox.Show(Common.Resources.MSG_LOG_FAILED, Common.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
     }
