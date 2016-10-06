@@ -99,28 +99,29 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 catch (ArgumentException)
                 {
                     LogHelper.Warning("Unable to retrieve the target process SessionID. Process may have already exited.");
+                    targetSessionID = uint.MaxValue;
                 }
 
-                // If the target Session ID is still unknown or if it belongs to SYSTEM, the currently active session is retrieved.
-                if (targetSessionID == uint.MaxValue || targetSessionID == 0)
+                // If the target Session ID is still unknown or if it belongs to SYSTEM, or the session doesn't work, the currently active session is retrieved.
+                if (targetSessionID == uint.MaxValue || targetSessionID == 0 || (!CommonHelper.WTSQueryUserToken(targetSessionID, ref userToken)))
                 {
                     targetSessionID = CommonHelper.WTSGetActiveConsoleSessionId();
                     if (targetSessionID == 0xFFFFFFFF)
                     {
                         throw new Exception("No active session found. Aborting.");
                     }
-                }
 
-                // If the active Session ID is still a SYSTEM one, cannot continue.
-                if (targetSessionID == 0)
-                {
-                    throw new Exception("WFN can not start in the SYSTEM session.");
-                }
+                    // If the active Session ID is still a SYSTEM one, cannot continue.
+                    if (targetSessionID == 0)
+                    {
+                        throw new Exception("WFN can not start in the SYSTEM session.");
+                    }
 
-                // Because the target Session ID is found, impersonation can take place.
-                if (!CommonHelper.WTSQueryUserToken(targetSessionID, ref userToken))
-                {
-                    throw new Win32Exception(Marshal.GetLastWin32Error(), "Unable to retrieve the current user token.");
+                    // Because the target Session ID is found, impersonation can take place.
+                    if (!CommonHelper.WTSQueryUserToken(targetSessionID, ref userToken))
+                    {
+                        throw new Win32Exception(Marshal.GetLastWin32Error(), "Unable to retrieve the current user token.");
+                    }
                 }
 
                 try
