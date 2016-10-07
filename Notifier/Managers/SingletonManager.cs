@@ -28,6 +28,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Managers
             //Give focus to the main instance
             e.BringToForeground = true;
 
+            if (application == null)
+            {
+                //There is a race condition where the original program might already have shutdown. Let's try and work around that.
+                application = new App(e.CommandLine);
+                application.Run();
+                return;
+            }
             application.NextInstance(e.CommandLine);
         }
 
