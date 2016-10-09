@@ -190,7 +190,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to write to log file..
+        ///   Looks up a localized string similar to Failed to write to log file. Please make sure the log file is not in use by another program..
         /// </summary>
         public static string MSG_LOG_FAILED {
             get {
