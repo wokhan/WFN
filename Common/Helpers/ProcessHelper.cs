@@ -363,6 +363,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 LogHelper.Debug("Couldn't get description for service: " + service);
                 return String.Empty;
             }
+            //There's an undocumented feature/bug where instead of ArgumentException, an InvalidOperationException is thrown.
+            catch (InvalidOperationException) //FIXME: Add undocumented System. ?
+            {
+                LogHelper.Debug("Couldn't get description for service: " + service);
+                return String.Empty;
+            }
         }
 
         public static bool getProcessFeedback(string cmd, string args)
