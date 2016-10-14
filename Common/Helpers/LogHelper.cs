@@ -161,7 +161,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         public static void Error(string msg, Exception e)
 #endif
         {
-            writeLog("ERROR", msg + Environment.NewLine + (e != null ? e.Message + Environment.NewLine + e.StackTrace : "")
+            writeLog("ERROR", msg + Environment.NewLine + (e != null ? e.GetType().ToString() + ": " + e.Message + Environment.NewLine + e.StackTrace : "")
 #if DEBUG
 , memberName, filePath, lineNumber
 #endif
