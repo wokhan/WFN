@@ -17,17 +17,18 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
         [STAThread]
         static void Main(string[] args)
         {
+            LogHelper.Debug("Starting RuleManager: " + Environment.CommandLine);
             try
             {
                 if (args.Count() != 1)
                 {
-                    throw new Exception("Wrong number of arguments!");
+                    throw new ArgumentException("Wrong number of arguments!");
                 }
                 string[] param = Encoding.Unicode.GetString(Convert.FromBase64String(args[0])).Split(new string[] { "#$#" }, StringSplitOptions.None);
 
                 if (param.Count() != 9)
                 {
-                    throw new Exception("Invalid argument!");
+                    throw new ArgumentException("Invalid argument!");
                 }
 
                 string rname = param[0];
