@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
 using System.Windows;
-using System.Windows.Media;
 using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
@@ -12,6 +9,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console
     {
         public App() : base()
         {
+            LogHelper.Debug("Starting Console: " + Environment.CommandLine);
             CommonHelper.OverrideSettingsFile("WFN.config");
 
             if (Settings.Default.AlwaysRunAs && !UacHelper.CheckProcessElevated())
@@ -54,7 +52,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console
         internal void RestartAsAdmin()
         {
             ProcessHelper.ElevateCurrentProcess();
-            Environment.Exit(0);            
+            Environment.Exit(0);
         }
     }
 }

@@ -26,6 +26,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         [STAThread]
         static void Main(string[] argv)
         {
+            LogHelper.Debug("Starting Notifier: " + Environment.CommandLine);
             try
             {
                 if (argv.Length == 0 || argv[1].Contains("$"))
@@ -75,9 +76,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             catch (Exception e)
             {
                 LogHelper.Error("Unable to initialize WFN", e);
-
-                Environment.Exit(0);
+                Environment.Exit(1);
             }
+            Environment.Exit(0);
         }
 
         private static void EnsureUserSession(int pid, string[] argv)
