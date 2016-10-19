@@ -105,6 +105,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             IntPtr primaryToken = IntPtr.Zero;
 
             SECURITY_ATTRIBUTES sa = new SECURITY_ATTRIBUTES();
+            //ZeroMemory(sa, (uint)Marshal.SizeOf(sa));
             sa.nLength = Marshal.SizeOf(sa);
             sa.bInheritHandle = false;
             sa.lpSecurityDescriptor = IntPtr.Zero;
@@ -130,6 +131,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 {
                     throw new Win32Exception(Marshal.GetLastWin32Error(), "Unable to impersonate. Command was: " + cmd);
                 }
+                CloseHandle(pi.hThread);
+                CloseHandle(pi.hProcess);
             }
             finally
             {
