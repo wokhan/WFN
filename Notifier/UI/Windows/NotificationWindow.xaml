@@ -247,7 +247,8 @@
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding OptionsView.IsService, ElementName=NotifWindow}" Value="True">
                                         <Setter Property="IsEnabled" Value="True" />
-                                        <Setter Property="Content" Value="{Binding CurrentServiceDesc, FallbackValue='N/A',StringFormat='Service: {0}'}" />
+                                        <Setter Property="Content" Value="{Binding CurrentServiceDesc, FallbackValue='N/A'}"/>
+                                        <Setter Property="ContentStringFormat" Value="Service: {0}"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding OptionsView.IsServiceMultiple, ElementName=NotifWindow}" Value="True">
                                         <Setter Property="IsEnabled" Value="True" />
