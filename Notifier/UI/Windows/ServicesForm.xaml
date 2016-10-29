@@ -6,23 +6,23 @@
         xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows"
         mc:Ignorable="d" ShowInTaskbar="False" WindowStyle="None" 
         Title="Service selection" Height="350" Width="500" WindowStartupLocation="CenterScreen"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" ResizeMode="CanResizeWithGrip">
     <Border BorderBrush="Black" BorderThickness="1">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Label Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Content="Services selection" />
             <TextBlock Background="LightYellow" Padding="10"  TextWrapping="Wrap" Grid.Row="1">
             Windows Firewall Notifier was not able to determine which service actually attempted to create an outgoing connection.
-<LineBreak />Please pick up the service(s) you would like to allow, or choose the first option to create an application rule instead of a service one.
+<LineBreak />Please pick up the service(s) you would like to allow.
             </TextBlock>
-            <DataGrid Margin="10,0,10,10" IsEnabled="{Binding IsChecked,ElementName=rdbTypeService}" CanUserAddRows="false" Grid.Row="4" ItemsSource="{Binding Services}" SelectedValue="{Binding SelectedServices}" SelectedValuePath="@Name">
+            <DataGrid Margin="10,0,10,10" CanUserAddRows="false" Grid.Row="4" ItemsSource="{Binding Services}" SelectedValue="{Binding SelectedServices}" SelectedValuePath="@Name">
                 <DataGrid.Columns>
                     <DataGridCheckBoxColumn Binding="{Binding IsSelected}" />
                     <DataGridTextColumn Header="Service" Binding="{Binding Name}" />
