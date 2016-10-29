@@ -658,7 +658,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                        && (r.Protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY || r.Protocol.ToString() == protocol)
                        && CheckRuleMultivalue(r.RemoteAddresses, target)
                        && CheckRuleMultivalue(r.RemotePorts, remoteport)
-                       && CheckRuleMultivalue(r.LocalPorts, localport);
+                       && CheckRuleMultivalue(r.LocalPorts, localport)
+                       //&& (r.Direction == NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT) //@
+                       //&& r.EdgeTraversal == //@
+                       //&& r.Interfaces == //@
+                       //&& r.LocalAddresses //@
+                       ;
 
             return ret;
         }
