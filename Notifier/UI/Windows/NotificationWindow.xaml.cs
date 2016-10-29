@@ -290,10 +290,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 if (activeConn.PossibleServices != null && activeConn.PossibleServices.Length > 0)
                 {
                     ServicesForm sf = new ServicesForm(activeConn);
-                    sf.ShowDialog();
-                    if (sf.DialogResult.Value)
+                    if ((bool)sf.ShowDialog())
                     {
-                        services = sf.CreateAppRule ? null : sf.SelectedServices;
+                        services = sf.SelectedServices;
                     }
                     else
                     {
