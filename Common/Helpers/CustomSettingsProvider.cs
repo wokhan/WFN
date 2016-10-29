@@ -6,10 +6,7 @@ using System.Configuration;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Linq;
-using System.Reflection;
 using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -28,14 +25,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         public override string ApplicationName
         {
-            get { return "WFNPotato"; }
+            get { return "WFNPotato"; } //FIXME: Erm...?
             set { }
         }
-
-        /*public override SettingsPropertyValue GetPreviousVersion(SettingsContext context, SettingsProperty property)
-        {
-            return base.GetPreviousVersion(context, property);
-        }*/
 
         public override SettingsPropertyValueCollection GetPropertyValues(SettingsContext context, SettingsPropertyCollection collection)
         {
@@ -134,7 +126,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return false;
         }
 
-
         public override void Initialize(string name, NameValueCollection values)
         {
             if (String.IsNullOrEmpty(name))
@@ -145,12 +136,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             base.Initialize(name, values);
         }
 
-        public void Initialize()
+        /*public override SettingsPropertyValue GetPreviousVersion(SettingsContext context, SettingsProperty property)
         {
-
+            return base.GetPreviousVersion(context, property);
         }
 
-        /*public new void Reset(SettingsContext context)
+        public new void Reset(SettingsContext context)
         {
             base.Reset(context);
         }
@@ -158,8 +149,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         public new void Upgrade(SettingsContext context, SettingsPropertyCollection properties)
         {
             base.Upgrade(context, properties);
-        }
-        */
+        }*/
+
         public override void SetPropertyValues(SettingsContext context, SettingsPropertyValueCollection collection)
         {
             //base.SetPropertyValues(context, collection);
