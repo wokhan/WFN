@@ -12,12 +12,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common
     {
         public Settings() : base()
         {
-            //if (!this.IsUpgraded)
-            //{
-            //    this.Upgrade();
-            //    this.IsUpgraded = true;
-            //    this.Save();
-            //}
             //this.SettingsLoaded += Settings_SettingsLoaded;
         }
 
