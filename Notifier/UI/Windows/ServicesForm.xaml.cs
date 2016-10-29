@@ -38,5 +38,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             get { return Services.Where(s => s.IsSelected).Select(s => s.Name).ToArray(); }
             set { foreach (ServiceView Service in Services) { Service.IsSelected = value.Contains<String>(Service.Name); } }
         }
+
+        private void btnOK_Click(object sender, RoutedEventArgs e)
+        {
+            //FIXME: Handle!
+            this.Close();
+        }
     }
 }
