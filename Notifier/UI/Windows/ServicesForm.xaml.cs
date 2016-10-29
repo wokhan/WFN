@@ -32,7 +32,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             InitializeComponent();
         }
 
-        public bool CreateAppRule { get; set; }
         public string[] SelectedServices
         {
             get { return Services.Where(s => s.IsSelected).Select(s => s.Name).ToArray(); }
@@ -41,7 +40,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
-            //FIXME: Handle!
+            this.DialogResult = true;
             this.Close();
         }
     }
