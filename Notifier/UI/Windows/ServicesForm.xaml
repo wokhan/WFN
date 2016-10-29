@@ -25,7 +25,7 @@
             </TextBlock>
             <RadioButton Grid.Row="2" Margin="5" GroupName="rdbType" IsChecked="{Binding CreateAppRule}" Content="Create an application rule and ignore the services."/>
             <RadioButton Grid.Row="3" Margin="5" GroupName="rdbType" Content="Create rules for the specified services (recommended)." IsChecked="True" x:Name="rdbTypeService" />
-            <DataGrid Margin="10,0,10,10" IsEnabled="{Binding IsChecked,ElementName=rdbTypeService}" Grid.Row="4" ItemsSource="{Binding Services}" SelectedValue="{Binding SelectedServices}" SelectedValuePath="@Name">
+            <DataGrid Margin="10,0,10,10" IsEnabled="{Binding IsChecked,ElementName=rdbTypeService}" CanUserAddRows="false" Grid.Row="4" ItemsSource="{Binding Services}" SelectedValue="{Binding SelectedServices}" SelectedValuePath="@Name">
                 <DataGrid.Columns>
                     <DataGridCheckBoxColumn Binding="{Binding IsSelected}" />
                     <DataGridTextColumn Header="Service" Binding="{Binding Name}" />
@@ -33,7 +33,7 @@
                 </DataGrid.Columns>
             </DataGrid>
             <WrapPanel Grid.Row="5" HorizontalAlignment="Center">
-                <Button HorizontalAlignment="Center" Margin="5" Width="75" Content="OK" />
+                <Button x:Name="btnOK" HorizontalAlignment="Center" Margin="5" Width="75" Content="OK" IsDefault="True" Click="btnOK_Click" />
                 <Button HorizontalAlignment="Center" Margin="5" Width="75" Content="Cancel" IsCancel="True" />
             </WrapPanel>
         </Grid>
