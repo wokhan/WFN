@@ -641,7 +641,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     {
                         sb.Append(s.Name + ": " + s.ApplicationName + " " + s.Description + " " + s.ActionStr + " " + s.serviceName + " " + s.Enabled + ", ");
                     }
-                    LogHelper.Debug("pid:" + Process.GetCurrentProcess().Id + " GetMatchingRules: " + path + ", " + protocol + ", " + target + ", " + targetPort + ", " + localport + ", " + svc + ", " + blockOnly + "  -> " + sb + " any: " + ret.Any());
+                    LogHelper.Debug("pid:" + Process.GetCurrentProcess().Id + " GetMatchingRules: " + path + ", " + protocol + ", " + target + ", " + targetPort + ", " + localport + ", " + String.Join(",", svc) + ", " + blockOnly + "  -> " + sb + " any: " + ret.Any());
                 }
             }
 
