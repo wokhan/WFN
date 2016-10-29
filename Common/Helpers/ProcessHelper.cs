@@ -227,12 +227,23 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             var ret = IPHelper.GetOwner(pid, int.Parse(localport));
             if (ret != null && !String.IsNullOrEmpty(ret.ModuleName))
             {
-                // Returns the owner only if it's indeed a service (hence contained in the previously retrieved list)
-                //if (svcs.Contains(ret.ModuleName))
-                svc = new[] { ret.ModuleName };
-                svcdsc = new[] { getServiceDesc(ret.ModuleName) };
-                unsure = false;
-                LogHelper.Debug("Identified service as: " + String.Join(",", svcdsc));
+                // Returns the owner only if it's indeed a service.
+                string ServiceDesc = getServiceDesc(ret.ModuleName);
+
+                if (String.IsNullOrEmpty(ServiceDesc))
+                {
+                    LogHelper.Debug("But no service description matches...");
+                    svc = new string[0];
+                    svcdsc = new string[0];
+                    unsure = false;
+                }
+                else
+                {
+                    svc = new[] { ret.ModuleName };
+                    svcdsc = new[] { getServiceDesc(ret.ModuleName) };
+                    unsure = false;
+                    LogHelper.Debug("Identified service as: " + String.Join(",", svcdsc));
+                }
                 return;
             }
 
@@ -273,14 +284,17 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                             if (String.IsNullOrEmpty(ServiceDesc))
                             {
                                 LogHelper.Debug("But no service description matches...");
-                                svc = null;
-                                svcdsc = null;
+                                svc = new string[0];
+                                svcdsc = new string[0];
+                                unsure = false;
                             }
-
-                            svc = new[] { module.ModuleName };
-                            svcdsc = new[] { getServiceDesc(module.ModuleName) };
-                            unsure = false;
-                            LogHelper.Debug("Identified service as: " + String.Join(",", svcdsc));
+                            else
+                            {
+                                svc = new[] { module.ModuleName };
+                                svcdsc = new[] { ServiceDesc };
+                                unsure = false;
+                                LogHelper.Debug("Identified service as: " + String.Join(",", svcdsc));
+                            }
                             return;
                         }
                     }
@@ -290,12 +304,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             LogHelper.Info("Trying to retrieve service name through process information.");
             string[] svcs = GetAllServices(pid);
             //int protocol = (int)Enum.Parse(typeof(NET_FW_IP_PROTOCOL_), protocolStr);
-            svc = new string[0];
-            svcdsc = new string[0];
 
             if (svcs == null)
             {
                 LogHelper.Debug("No services running in process " + pid.ToString() + " found!");
+                svc = new string[0];
+                svcdsc = new string[0];
                 unsure = false;
                 return;
             }
@@ -309,6 +323,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 LogHelper.Debug("Identified service as: " + String.Join(",", svcdsc));
                 return;
             }
+
+            svc = new string[0];
 
             // And if it still fails, fall backs to the most ugly way ever I am not able to get rid of :-P
             // Retrieves corresponding existing rules
@@ -334,6 +350,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
             else
             {
+                svcdsc = new string[0];
                 unsure = false;
                 LogHelper.Debug("No service found!" + String.Join(",", svcdsc));
             }

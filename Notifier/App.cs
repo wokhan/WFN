@@ -125,6 +125,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                         }
                     }
 
+                    // Check whether this connection has been excluded.
                     if (exclusions != null)
                     {
                         // WARNING: check for regressions
@@ -142,7 +143,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                         }
                     }
 
-                    // WARNING: check for regressions
+                    // Check whether this connection is blocked by a rule.
                     if (FirewallHelper.GetMatchingRules(path, protocol, target, targetPort, localport, unsure ? svc : svc.Take(1), true).Any())
                     {
                         return false;
