@@ -96,46 +96,48 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
         {
             bool ret = true;
             var rules = FirewallHelper.GetRules();
-            ServiceController sc = new ServiceController();
-            string rname;
-
-            // Windows 8 or higher
-            if ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 2) || (Environment.OSVersion.Version.Major > 6))
+            using (ServiceController sc = new ServiceController())
             {
-                rname = String.Format(Common.Resources.RULE_NAME_FORMAT, "Windows Applications (auto)");
-                if (rules.All(r => r.Name != rname))
+                string rname;
+
+                // Windows 8 or higher
+                if ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 2) || (Environment.OSVersion.Version.Major > 6))
                 {
-                    ret = ret && FirewallHelper.AddAllowRule(rname, Environment.SystemDirectory + "\\wwahost.exe", null, (int)FirewallHelper.Protocols.ANY, null, null, null, false);
+                    rname = String.Format(Common.Resources.RULE_NAME_FORMAT, "Windows Applications (auto)");
+                    if (rules.All(r => r.Name != rname))
+                    {
+                        ret = ret && FirewallHelper.AddAllowRule(rname, Environment.SystemDirectory + "\\wwahost.exe", null, (int)FirewallHelper.Protocols.ANY, null, null, null, false);
+                    }
                 }
-            }
 
-            sc.ServiceName = "wuauserv";
-            rname = String.Format(Common.Resources.RULE_NAME_FORMAT, sc.DisplayName + " (auto)");
-            if (rules.All(r => r.Name != rname + " [R:80,443]"))
-            {
-                ret = ret && FirewallHelper.AddAllowRule(rname, Environment.SystemDirectory + "\\svchost.exe", "wuauserv", (int)FirewallHelper.Protocols.TCP, null, "80,443", null, false);
-            }
+                sc.ServiceName = "wuauserv";
+                rname = String.Format(Common.Resources.RULE_NAME_FORMAT, sc.DisplayName + " (auto)");
+                if (rules.All(r => r.Name != rname + " [R:80,443]"))
+                {
+                    ret = ret && FirewallHelper.AddAllowRule(rname, Environment.SystemDirectory + "\\svchost.exe", "wuauserv", (int)FirewallHelper.Protocols.TCP, null, "80,443", null, false);
+                }
 
-            sc.ServiceName = "bits";
-            rname = String.Format(Common.Resources.RULE_NAME_FORMAT, sc.DisplayName + "(auto)");
-            if (rules.All(r => r.Name != rname + " [R:80,443]"))
-            {
-                ret = ret && FirewallHelper.AddAllowRule(rname, Environment.SystemDirectory + "\\svchost.exe", "bits", (int)FirewallHelper.Protocols.TCP, null, "80,443", null, false);
-            }
+                sc.ServiceName = "bits";
+                rname = String.Format(Common.Resources.RULE_NAME_FORMAT, sc.DisplayName + "(auto)");
+                if (rules.All(r => r.Name != rname + " [R:80,443]"))
+                {
+                    ret = ret && FirewallHelper.AddAllowRule(rname, Environment.SystemDirectory + "\\svchost.exe", "bits", (int)FirewallHelper.Protocols.TCP, null, "80,443", null, false);
+                }
 
-            sc.ServiceName = "cryptsvc";
-            rname = String.Format(Common.Resources.RULE_NAME_FORMAT, sc.DisplayName + "(auto)");
-            if (rules.All(r => r.Name != rname + " [R:80]"))
-            {
-                ret = ret && FirewallHelper.AddAllowRule(rname, Environment.SystemDirectory + "\\svchost.exe", "cryptsvc", (int)FirewallHelper.Protocols.TCP, null, "80", null, false);
-            }
+                sc.ServiceName = "cryptsvc";
+                rname = String.Format(Common.Resources.RULE_NAME_FORMAT, sc.DisplayName + "(auto)");
+                if (rules.All(r => r.Name != rname + " [R:80]"))
+                {
+                    ret = ret && FirewallHelper.AddAllowRule(rname, Environment.SystemDirectory + "\\svchost.exe", "cryptsvc", (int)FirewallHelper.Protocols.TCP, null, "80", null, false);
+                }
 
-            //sc.ServiceName = "aelookupsvc";
-            //rname = String.Format(Resources.RULE_NAME_FORMAT, sc.DisplayName + "(auto)");
-            //if (rules.All(r => r.Name != rname + " [R:80]"))
-            //{
-            //    ret = ret && AddRule(rname, Environment.SystemDirectory + "\\svchost.exe", "aelookupsvc", (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP, null, "80", null);
-            //}
+                //sc.ServiceName = "aelookupsvc";
+                //rname = String.Format(Resources.RULE_NAME_FORMAT, sc.DisplayName + "(auto)");
+                //if (rules.All(r => r.Name != rname + " [R:80]"))
+                //{
+                //    ret = ret && AddRule(rname, Environment.SystemDirectory + "\\svchost.exe", "aelookupsvc", (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP, null, "80", null);
+                //}
+            }
 
             return ret;
         }
