@@ -61,6 +61,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         private void ExtractSettings(IEnumerable<SettingsProperty> sets, SettingsPropertyValueCollection r, ClientSettingsSection userInitialSettings)
         {
+            if (userInitialSettings == null)
+            {
+                throw new ApplicationException("Configuration file is corrupt!");
+            }
             foreach (var s in sets)
             {
                 var value = userInitialSettings.Settings.Get(s.Name).Value.ValueXml.FirstChild.Value;
