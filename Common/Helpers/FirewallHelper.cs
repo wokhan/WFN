@@ -410,7 +410,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
                     if (!isTemp)
                     {
-                        firewallRule.Name += " [L:" + targetPort + "]";
+                        firewallRule.Name += " [L:" + localport + "]";
                     }
                 }
 
