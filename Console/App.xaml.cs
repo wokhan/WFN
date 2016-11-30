@@ -23,12 +23,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console
 
         private void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            MessageBox.Show(e.Exception.Message, "FATAL ERROR");
+            MessageBox.Show(e.Exception.Message, Common.Resources.MSG_DLG_ERR_TITLE);
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            MessageBox.Show(((Exception)e.ExceptionObject).Message, "FATAL ERROR");
+            MessageBox.Show(((Exception)e.ExceptionObject).Message, Common.Resources.MSG_DLG_ERR_TITLE);
         }
 
         private bool? _isElevated = null;
