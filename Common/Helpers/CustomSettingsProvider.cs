@@ -170,6 +170,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         private void SaveModifiedSettings(ClientSettingsSection settings, IEnumerable<SettingsPropertyValue> sets)
         {
+            if (settings == null)
+            {
+                throw new ApplicationException("Configuration settings are corrupt!");
+            }
             bool ismod = false;
             foreach (var s in sets.Where(x => HasChanged(x)))
             {
