@@ -52,7 +52,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 {
                     try
                     {
-                        new SingletonManager().Run(argv);
+                        using (SingletonManager app = new SingletonManager())
+                        {
+                            app.Run(argv);
+                        }
                         success = true;
                     }
                     catch (CantStartSingleInstanceException)
