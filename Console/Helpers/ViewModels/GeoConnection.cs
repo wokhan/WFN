@@ -6,6 +6,7 @@ using System.IO;
 using System.Globalization;
 using System;
 using System.Net;
+using System.Numerics;
 using System.Windows.Media;
 using System.Threading.Tasks;
 using System.IO.Compression;
@@ -62,8 +63,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 
         private static Location IPToLocation(IPAddress address)
         {
-            ulong ipnum;
-
             byte[] addrBytes = address.GetAddressBytes();
 
             if (BitConverter.IsLittleEndian)
@@ -74,31 +73,44 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             if (address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
             {
                 //IPv6
+                BigInteger ipnum;
                 ipnum = BitConverter.ToUInt64(addrBytes, 8);
                 ipnum <<= 64;
                 ipnum += BitConverter.ToUInt64(addrBytes, 0);
-            }
-            else
-            {
-                //IPv4
-                ipnum = BitConverter.ToUInt32(addrBytes, 0);
-            }
 
-            if (allCoords != null)
-            {
-                var m = allCoords.AsParallel().FirstOrDefault(c => ipnum >= c.Start && ipnum < c.End);
+                if (allCoordsIPv6 == null)
+                {
+                    return null;
+                }
+                var m = allCoordsIPv6.AsParallel().FirstOrDefault(c => ipnum >= c.Start && ipnum < c.End);
                 //if (m != null)
                 {
                     return new Location(m.Latitude, m.Longitude);
                 }
                 /* else
-                 {
-                     return new Location();
-                 }*/
+                {
+                    return new Location();
+                }*/
             }
             else
             {
-                return null;
+                //IPv4
+                uint ipnum;
+                ipnum = BitConverter.ToUInt32(addrBytes, 0);
+
+                if (allCoordsIPv4 == null)
+                {
+                    return null;
+                }
+                var m = allCoordsIPv4.AsParallel().FirstOrDefault(c => ipnum >= c.Start && ipnum < c.End);
+                //if (m != null)
+                {
+                    return new Location(m.Latitude, m.Longitude);
+                }
+                /* else
+                {
+                    return new Location();
+                }*/
             }
         }
 
@@ -149,31 +161,44 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             public double Latitude;
         }
 
-        private static List<Coords> allCoords = new List<Coords>(1956497);
+        public struct Coords6
+        {
+            public BigInteger Start;
+            public BigInteger End;
+            public double Longitude;
+            public double Latitude;
+        }
+
+        private static List<Coords> allCoordsIPv4 = new List<Coords>();
+        private static List<Coords6> allCoordsIPv6 = new List<Coords6>();
 
         public GeoConnection(IPHelper.I_OWNER_MODULE ownerMod) : base(ownerMod)
         {
         }
 
+        private const string IPv4Database = "IPDatabase.gz";
+        private const string IPv6Database = "IPv6Database.gz";
+
         public static bool CheckDB()
         {
-            return File.Exists(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "IPDatabase.gz"));
+            return File.Exists(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, IPv4Database));
         }
 
         public static async Task<bool> InitCache()
         {
+            //FIXME: Read in IPv6 database as well...
             return await Task.Run(() =>
             {
-                using (var file = new FileStream(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "IPDatabase.gz"), FileMode.Open))
+                using (var file = new FileStream(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, IPv4Database), FileMode.Open))
                 {
                     using (var gz = new GZipStream(file, CompressionMode.Decompress))
                     {
                         using (var sr = new StreamReader(gz))
                         {
-                            allCoords = sr.ReadLines()
-                                          .Select(l => l.Split(','))
-                                          .Select(l => new Coords() { Start = uint.Parse(l[0]), End = uint.Parse(l[1]), Latitude = double.Parse(l[2], CultureInfo.InvariantCulture), Longitude = double.Parse(l[3], CultureInfo.InvariantCulture) })
-                                          .ToList();
+                            allCoordsIPv4 = sr.ReadLines()
+                                              .Select(l => l.Split(','))
+                                              .Select(l => new Coords() { Start = uint.Parse(l[0]), End = uint.Parse(l[1]), Latitude = double.Parse(l[2], CultureInfo.InvariantCulture), Longitude = double.Parse(l[3], CultureInfo.InvariantCulture) })
+                                              .ToList();
                         }
                     }
                 }
