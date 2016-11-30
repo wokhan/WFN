@@ -363,9 +363,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                                    (_optionsView.IsLocalPortChecked ? ";" + activeConn.LocalPort : ";") +
                                    (_optionsView.IsTargetIPChecked ? ";" + activeConn.Target : ";") +
                                    (_optionsView.IsTargetPortChecked ? ";" + activeConn.TargetPort : ";");
-                    StreamWriter sw = new StreamWriter(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exclusions.set"), true);
-                    sw.WriteLine(entry);
-                    sw.Close();
+                    using (StreamWriter sw = new StreamWriter(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exclusions.set"), true))
+                    {
+                        sw.WriteLine(entry);
+                    }
 
                     success = true;
                 }
