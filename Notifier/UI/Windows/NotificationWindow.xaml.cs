@@ -19,11 +19,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
     {
         private bool isDetailsExpanded;
 
-        public double StartLeft
-        {
-            get { return SystemParameters.WorkArea.Width; }
-        }
-
         public double ExpectedTop
         {
             get { return SystemParameters.WorkArea.Height - this.ActualHeight; }
@@ -68,7 +63,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
         }
 
-
         /// <summary>
         /// Initializes the form
         /// </summary>
@@ -92,8 +86,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             ((ObservableCollection<CurrentConn>)lstConnections.ItemsSource).CollectionChanged += NotificationWindow_CollectionChanged;
             lstConnections.SelectedIndex = 0;
 
-            this.Loaded += NotificationWindow_Loaded;
-
             //Make sure the showConn function is triggered on initial load.
             showConn();
             NotifyPropertyChanged("NbConnectionsAfter");
@@ -102,12 +94,29 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             /*ttip.SetToolTip(btnAlwaysAllow, Resources.MSG_ALLOW);
             ttip.SetToolTip(btnAlwaysBlock, Resources.MSG_BLOCK);
             */
+
+            if (WindowHelper.isSomeoneFullscreen())
+            {
+                ShowActivated = false;
+                Topmost = false;
+            }
         }
 
         private void NotificationWindow_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             NotifyPropertyChanged("NbConnectionsAfter");
             NotifyPropertyChanged("NbConnectionsBefore");
+        }
+
+        private void NotificationWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.Top = ExpectedTop;
+            this.Left = ExpectedLeft;
+
+            if (Settings.Default.UseAnimation)
+            {
+                Dispatcher.InvokeAsync(() => ((Storyboard)this.Resources["animate"]).Begin(Main));
+            }
         }
 
         private void LstConnections_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -129,19 +138,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 this.Close();
             }
         }
-
-
-        private void NotificationWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.Top = ExpectedTop;
-            this.Left = ExpectedLeft;
-
-            if (Settings.Default.UseAnimation)
-            {
-                Dispatcher.InvokeAsync(() => ((Storyboard)this.Resources["animate"]).Begin(Main));
-            }
-        }
-
 
         /// <summary>
         /// Updates all controls contents according to the currently selected blocked connection
@@ -193,7 +189,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             createRule(true, false);
         }
-
 
         /// <summary>
         /// Adds the application to the exceptions list so that no further notifications will be displayed

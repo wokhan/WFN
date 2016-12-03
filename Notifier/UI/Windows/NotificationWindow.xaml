@@ -19,11 +19,11 @@
         UseLayoutRounding="True"
         BorderThickness="0"
         ScrollViewer.CanContentScroll="False"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}" Visibility="Visible">
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" Visibility="Visible" Loaded="NotificationWindow_Loaded">
     <Window.Resources>
-        <Storyboard x:Key="animate" BeginTime="0" Duration="0:0:1" SpeedRatio="2">
-            <ThicknessAnimation Storyboard.TargetProperty="Margin" From="250,0,-250,0" To="0,0,0,0" />
-            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1"/>
+        <Storyboard x:Key="animate">
+            <ThicknessAnimation Storyboard.TargetProperty="Margin" From="250,0,-250,0" To="0,0,0,0" Duration="0:0:0.5" />
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5" />
         </Storyboard>
         <SolidColorBrush x:Key="AccentColorBrush" Color="Coral" />
         <WFN:Settings x:Key="WFN" />
