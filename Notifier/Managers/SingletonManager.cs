@@ -6,9 +6,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Managers
 {
     class SingletonManager : WindowsFormsApplicationBase, IDisposable
     {
-        private App application;
+        private static App application;
 
-        private Mutex mutex = new Mutex();
+        private static Mutex mutex = new Mutex();
 
         public SingletonManager()
         {
