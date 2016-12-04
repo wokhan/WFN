@@ -70,11 +70,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             InitializeComponent();
 
-            if (Settings.Default.UseAnimation)
-            {
-                this.Margin = new Thickness(250, 0, -250, 0);
-            }
-
             this.isDetailsExpanded = expand.IsExpanded;
 
             if (Settings.Default.AccentColor != null)
@@ -94,18 +89,26 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             /*ttip.SetToolTip(btnAlwaysAllow, Resources.MSG_ALLOW);
             ttip.SetToolTip(btnAlwaysBlock, Resources.MSG_BLOCK);
             */
-
-            if (WindowHelper.isSomeoneFullscreen())
-            {
-                ShowActivated = false;
-                Topmost = false;
-            }
         }
 
         private void NotificationWindow_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             NotifyPropertyChanged("NbConnectionsAfter");
             NotifyPropertyChanged("NbConnectionsBefore");
+        }
+
+        private void NotificationWindow_Initialized(object sender, EventArgs e)
+        {
+            if (Settings.Default.UseAnimation)
+            {
+                this.Margin = new Thickness(250, 0, -250, 0);
+            }
+
+            if (WindowHelper.isSomeoneFullscreen())
+            {
+                ShowActivated = false;
+                Topmost = false;
+            }
         }
 
         private void NotificationWindow_Loaded(object sender, RoutedEventArgs e)
@@ -115,8 +118,17 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             if (Settings.Default.UseAnimation)
             {
-                Dispatcher.InvokeAsync(() => ((Storyboard)this.Resources["animate"]).Begin(Main));
+                ((Storyboard)this.Resources["animate"]).Begin(Main, true);
             }
+        }
+
+        private void NotificationWindow_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (Settings.Default.UseAnimation)
+            {
+                ((Storyboard)this.Resources["animate"]).Stop(Main);
+            }
+            this.Opacity = 1.0; //@
         }
 
         private void LstConnections_SelectionChanged(object sender, SelectionChangedEventArgs e)
