@@ -77,7 +77,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 var existing = this.Connections.FirstOrDefault(c => c.CurrentPath == path && c.Target == target && c.TargetPort == targetPort);// && (int.Parse(localport) >= IPHelper.GetMaxUserPort() || c.LocalPort == localport));
                 if (existing != null)
                 {
-                    //there exist already the same type of connection request.
+                    LogHelper.Debug("Matches an already existing connection request.");
                     if (int.Parse(localport) < IPHelper.GetMaxUserPort())
                     {
                         existing.LocalPortArray.Add(localport);
@@ -129,6 +129,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     if (exclusions != null)
                     {
                         // WARNING: check for regressions
+                        LogHelper.Debug("Checking exclusions...");
                         var exclusion = exclusions.FirstOrDefault(e => e.StartsWith(/*svc ??*/path, StringComparison.CurrentCultureIgnoreCase) || svc != null && svc.All(s => e.StartsWith(s, StringComparison.CurrentCultureIgnoreCase)));
                         if (exclusion != null)
                         {
@@ -138,6 +139,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                                      (esplit[2] == String.Empty || esplit[2] == target) &&
                                      (esplit[3] == String.Empty || esplit[3] == targetPort)))
                             {
+                                LogHelper.Info("Connection is excluded!");
                                 return false;
                             }
                         }
@@ -146,6 +148,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     // Check whether this connection is blocked by a rule.
                     if (FirewallHelper.GetMatchingRules(path, protocol, target, targetPort, localport, unsure ? svc : svc.Take(1), true).Any())
                     {
+                        LogHelper.Info("Connection matches a block-rule!");
                         return false;
                     }
 
