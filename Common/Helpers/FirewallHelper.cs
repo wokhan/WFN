@@ -626,10 +626,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return (protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP || protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_UDP);
         }
 
-        public static IEnumerable<Rule> GetMatchingRules(string path, string protocol, string target, string targetPort, string localport, IEnumerable<string> svc, bool blockOnly)
+        public static IEnumerable<Rule> GetMatchingRules(string path, string protocol, string target, string targetPort, string localPort, IEnumerable<string> svc, bool blockOnly)
         {
             int currentProfile = GetCurrentProfile(); //This call is relatively slow, and calling it many times causes a startup delay. Let's cache it!
-            IEnumerable<Rule> ret = GetRules().Where(r => RuleMatches(r, path, svc, protocol, localport, target, targetPort, currentProfile));
+            IEnumerable<Rule> ret = GetRules().Where(r => RuleMatches(r, path, svc, protocol, localPort, target, targetPort, currentProfile));
             if (blockOnly)
             {
                 ret = ret.Where(r => r.Action == NET_FW_ACTION_.NET_FW_ACTION_BLOCK);
@@ -641,7 +641,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     {
                         sb.Append(s.Name + ": " + s.ApplicationName + " " + s.Description + " " + s.ActionStr + " " + s.serviceName + " " + s.Enabled + ", ");
                     }
-                    LogHelper.Debug("pid:" + Process.GetCurrentProcess().Id + " GetMatchingRules: " + path + ", " + protocol + ", " + target + ", " + targetPort + ", " + localport + ", " + String.Join(",", svc) + ", " + blockOnly + "  -> " + sb + " any: " + ret.Any());
+                    LogHelper.Debug("pid:" + Process.GetCurrentProcess().Id + " GetMatchingRules: " + path + ", " + protocol + ", " + target + ", " + targetPort + ", " + localPort + ", " + String.Join(",", svc) + ", " + blockOnly + "  -> " + sb + " any: " + ret.Any());
                 }
             }
 
