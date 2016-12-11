@@ -180,7 +180,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             {
                 OptionsView.IsService = true;
                 OptionsView.IsServiceMultiple = true;
-                OptionsView.IsServiceRuleChecked = true;
+                OptionsView.IsServiceRuleChecked = false; //If we're unsure, let's choose the safe option. There are executables out there that run services but also open connections outside of those services. A false positive in such a case would create a rule that doesn't work.
             }
             else
             {
