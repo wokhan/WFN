@@ -318,7 +318,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
                 <Canvas>
-                    <Border Canvas.Top="20" Canvas.Left="145" Width="{Binding ActualWidth,ElementName=sbIgnore}" CornerRadius="0,0,20,20" Padding="0,15,0,0" Background="{DynamicResource AccentColorBrush}">
+                    <Border Canvas.Top="20" Canvas.Left="144" Width="{Binding ActualWidth,ElementName=sbIgnore}" CornerRadius="0,0,20,20" Padding="0,15,0,0" Background="{DynamicResource AccentColorBrush}">
                         <Border.Style>
                             <Style TargetType="Border">
                                 <Setter Property="Visibility" Value="Collapsed" />
