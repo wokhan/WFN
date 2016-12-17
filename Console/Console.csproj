@@ -249,34 +249,33 @@
     </Compile>
     <None Include="app.config" />
     <None Include="Properties\app.manifest" />
-    <None Include="Resources\Images\WFN Logo.png" />
-    <Resource Include="Resources\Images\WFN.ico" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="DisableWFN.cmd">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="packages.config" />
     <AppDesigner Include="Properties\" />
-    <Content Include="IPDatabase.gz">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Images\WFN Logo.png" />
+    <Resource Include="Resources\Images\WFN.ico" />
     <Resource Include="Resources\Shield.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\TaskTemplate.xml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="DisableWFN.cmd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="IPDatabase.gz">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="LICENSE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="lisezmoi.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
     <None Include="readme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
