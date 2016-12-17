@@ -256,6 +256,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to RuleManager cannot be run manually..
+        /// </summary>
+        public static string MSG_RULEMANAGER_ARGUMENTS_ERR {
+            get {
+                return ResourceManager.GetString("MSG_RULEMANAGER_ARGUMENTS_ERR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Custom Rule - {0}.
         /// </summary>
         public static string RULE_NAME_FORMAT {
