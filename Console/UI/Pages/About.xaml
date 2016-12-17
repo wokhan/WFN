@@ -49,7 +49,7 @@
         <Label Content="External libraries and components" Background="{DynamicResource AccentColorBrush}" FontWeight="Bold" />
         <StackPanel Margin="10">
             <TextBlock TextAlignment="Justify" TextWrapping="Wrap" Text="WFN uses XAML icons from http://modernuiicons.com and http://materialdesignicons.com." />
-            <TextBlock Margin="0,10" TextAlignment="Justify" TextWrapping="Wrap" Text="This site or product includes IP2Location LITE data available from http://lite.ip2location.com." />
+            <TextBlock Margin="0,10" TextAlignment="Justify" TextWrapping="Wrap" Text="This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com." />
         </StackPanel>
     </StackPanel>
 </Page>
