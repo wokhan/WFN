@@ -20,6 +20,11 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
             LogHelper.Debug("Starting RuleManager: " + Environment.CommandLine);
             try
             {
+                if (args.Count() == 0)
+                {
+                    MessageBox.Show(Resources.MSG_RULEMANAGER_ARGUMENTS_ERR, Resources.MSG_DLG_ERR_TITLE, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Environment.Exit(1);
+                }
                 if (args.Count() != 1)
                 {
                     throw new ArgumentException("Wrong number of arguments!");
