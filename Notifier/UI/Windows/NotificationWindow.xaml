@@ -75,7 +75,7 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ToggleButton}">
-                                <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0,20,20,0" Width="35">
+                                <Border Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0,20,20,0" Width="35">
                                     <Border.Style>
                                         <Style TargetType="Border">
                                             <Setter Property="Background" Value="{Binding Background,RelativeSource={RelativeSource Mode=TemplatedParent}}" />
@@ -91,6 +91,11 @@
                                     </Border.Style>
                                     <Path Height="10" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="Gray" Stretch="Uniform" Data="F1 M 37.8516,39.5833L 52.1016,24.9375L 52.1016,35.2292L 37.8516,50.2708L 23.6016,35.2292L 23.6016,24.9375L 37.8516,39.5833 Z "/>
                                 </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="Button.IsPressed" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="{DynamicResource PressedColorBrush}" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
