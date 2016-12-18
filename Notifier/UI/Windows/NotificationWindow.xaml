@@ -26,6 +26,7 @@
             <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5" />
         </Storyboard>
         <SolidColorBrush x:Key="AccentColorBrush" Color="Coral" />
+        <SolidColorBrush x:Key="PressedColorBrush" Color="OrangeRed" />
         <WFN:Settings x:Key="WFN" />
         <Style x:Key="SplitButton" TargetType="Grid">
             <Setter Property="VerticalAlignment" Value="Stretch" />
@@ -43,7 +44,7 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type Button}">
-                                <Border VerticalAlignment="Stretch" CornerRadius="20,0,0,20" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                <Border Name="border" VerticalAlignment="Stretch" CornerRadius="20,0,0,20" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                                     <Border.Style>
                                         <Style TargetType="Border">
                                             <Setter Property="Background" Value="{Binding Background,RelativeSource={RelativeSource Mode=TemplatedParent}}" />
@@ -56,6 +57,11 @@
                                     </Border.Style>
                                     <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True" />
                                 </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="Button.IsPressed" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="{DynamicResource PressedColorBrush}" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
