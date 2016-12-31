@@ -633,16 +633,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             if (blockOnly)
             {
                 ret = ret.Where(r => r.Action == NET_FW_ACTION_.NET_FW_ACTION_BLOCK);
-                if (ret.Count<Rule>() > 0)
-                {
-                    StringBuilder sb = new StringBuilder();
-                    sb.Append("Blocked by: ");
-                    foreach (Rule s in ret)
-                    {
-                        sb.Append(s.Name + ": " + s.ApplicationName + " " + s.Description + " " + s.ActionStr + " " + s.serviceName + " " + s.Enabled + ", ");
-                    }
-                    LogHelper.Debug("pid:" + Process.GetCurrentProcess().Id + " GetMatchingRules: " + path + ", " + protocol + ", " + target + ", " + targetPort + ", " + localPort + ", " + String.Join(",", svc) + ", " + blockOnly + "  -> " + sb + " any: " + ret.Any());
-                }
             }
 
             return ret;
@@ -672,13 +662,48 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         private static bool CheckRuleAddresses(string ruleAddresses, string checkedAddress)
         {
             //FIXME: Parse properly! See: https://technet.microsoft.com/en-us/aa365366
-            return String.IsNullOrEmpty(ruleAddresses) || ruleAddresses == "*" || ruleAddresses.Split(',').Contains(checkedAddress);
+            if (String.IsNullOrEmpty(ruleAddresses) || ruleAddresses == "*")
+            {
+                return true;
+            }
+            if (!checkedAddress.Contains('/'))
+            {
+                checkedAddress += "/255.255.255.255";
+            }
+            foreach (string token in ruleAddresses.Split(','))
+            {
+                if (token == checkedAddress)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static bool CheckRulePorts(string rulePorts, string checkedPort)
         {
             //FIXME: Also allow for ranges. Example: 1-100
-            return String.IsNullOrEmpty(rulePorts) || rulePorts == "*" || rulePorts.Split(',').Contains(checkedPort);
+            if (String.IsNullOrEmpty(rulePorts) || rulePorts == "*")
+            {
+                return true;
+            }
+            foreach (string token in rulePorts.Split(','))
+            {
+                if (token == checkedPort)
+                {
+                    return true;
+                }
+                int checkedPortInt;
+                if (checkedPort.Contains('-') && Int32.TryParse(checkedPort, out checkedPortInt))
+                {
+                    string[] portRange = checkedPort.Split(new Char[] { '-' }, 1);
+                    if ((Int32.Parse(portRange[0]) >= checkedPortInt) && (checkedPortInt >= Int32.Parse(portRange[1])))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         public static string GetCurrentProfileAsText()

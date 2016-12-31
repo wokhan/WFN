@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Windows;
 using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
@@ -63,9 +64,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         /// <param name="target"></param>
         /// <param name="protocol"></param>
         /// <param name="targetPort"></param>
-        /// <param name="localport"></param>
+        /// <param name="localPort"></param>
         /// <returns>false if item is blocked and was thus not added to internal query list</returns>
-        public bool AddItem(int pid, int threadid, string path, string target, string protocol, string targetPort, string localport)
+        public bool AddItem(int pid, int threadid, string path, string target, string protocol, string targetPort, string localPort)
         {
             try
             {
@@ -78,10 +79,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 if (existing != null)
                 {
                     LogHelper.Debug("Matches an already existing connection request.");
-                    if (int.Parse(localport) < IPHelper.GetMaxUserPort())
+                    if (int.Parse(localPort) < IPHelper.GetMaxUserPort())
                     {
-                        existing.LocalPortArray.Add(localport);
-                        existing.LocalPort += "," + localport;
+                        existing.LocalPortArray.Add(localPort);
+                        existing.LocalPort += "," + localPort;
                     }
                     existing.TentativesCounter++;
                 }
@@ -121,7 +122,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
                         if (Settings.Default.EnableServiceDetection)
                         {
-                            ProcessHelper.GetService(pid, threadid, path, protocol, localport, target, targetPort, out svc, out svcdsc, out unsure);
+                            ProcessHelper.GetService(pid, threadid, path, protocol, localPort, target, targetPort, out svc, out svcdsc, out unsure);
                         }
                     }
 
@@ -135,7 +136,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                         {
                             string[] esplit = exclusion.Split(';');
                             if (esplit.Length == 1 ||
-                                    ((esplit[1] == String.Empty || esplit[1] == localport) &&
+                                    ((esplit[1] == String.Empty || esplit[1] == localPort) &&
                                      (esplit[2] == String.Empty || esplit[2] == target) &&
                                      (esplit[3] == String.Empty || esplit[3] == targetPort)))
                             {
@@ -146,9 +147,19 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     }
 
                     // Check whether this connection is blocked by a rule.
-                    if (FirewallHelper.GetMatchingRules(path, protocol, target, targetPort, localport, unsure ? svc : svc.Take(1), true).Any())
+                    var blockingRules = FirewallHelper.GetMatchingRules(path, protocol, target, targetPort, localPort, unsure ? svc : svc.Take(1), true);
+                    if (blockingRules.Any())
                     {
                         LogHelper.Info("Connection matches a block-rule!");
+
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append("Blocked by: ");
+                        foreach (FirewallHelper.Rule s in blockingRules)
+                        {
+                            sb.Append(s.Name + ": " + s.ApplicationName + ", " + s.Description + ", " + s.ActionStr + ", " + s.serviceName + ", " + s.Enabled);
+                        }
+                        LogHelper.Debug("pid: " + Process.GetCurrentProcess().Id + " GetMatchingRules: " + path + ", " + protocol + ", " + target + ", " + targetPort + ", " + localPort + ", " + String.Join(",", svc));
+
                         return false;
                     }
 
@@ -169,10 +180,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                         TargetPort = targetPort,
                         RuleName = String.Format(Common.Resources.RULE_NAME_FORMAT, unsure || String.IsNullOrEmpty(svcdsc.FirstOrDefault()) ? app : svcdsc.FirstOrDefault()),
                         Target = target,
-                        LocalPort = localport
+                        LocalPort = localPort
                     };
 
-                    conn.LocalPortArray.Add(localport);
+                    conn.LocalPortArray.Add(localPort);
 
                     if (unsure)
                     {
