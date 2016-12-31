@@ -330,7 +330,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             // Retrieves corresponding existing rules
             LogHelper.Info("Trying to retrieve service name through rule information.");
             int profile = FirewallHelper.GetCurrentProfile();
-            var cRules = FirewallHelper.GetMatchingRules(path, protocolStr, target, remoteport, localport, svc, true)
+            var cRules = FirewallHelper.GetMatchingRules(path, protocolStr, target, remoteport, localport, svc, false)
                                        .Select(r => r.serviceName)
                                        .Distinct()
                                        .ToList();
