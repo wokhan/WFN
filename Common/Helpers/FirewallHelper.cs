@@ -656,9 +656,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                        && (String.IsNullOrEmpty(r.ApplicationName) || StringComparer.CurrentCultureIgnoreCase.Compare(r.ApplicationName, path) == 0)
                        && ((String.IsNullOrEmpty(r.serviceName) && (svc == null || !svc.Any())) || svc.Contains(r.serviceName, StringComparer.CurrentCultureIgnoreCase))
                        && (r.Protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY || r.Protocol.ToString() == protocol)
-                       && CheckRuleMultivalue(r.RemoteAddresses, target)
-                       && CheckRuleMultivalue(r.RemotePorts, remoteport)
-                       && CheckRuleMultivalue(r.LocalPorts, localport)
+                       && CheckRuleAddresses(r.RemoteAddresses, target)
+                       && CheckRulePorts(r.RemotePorts, remoteport)
+                       && CheckRulePorts(r.LocalPorts, localport)
                        //&& (r.Direction == NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT) //@
                        //&& r.EdgeTraversal == //@
                        //&& r.Interfaces == //@
@@ -669,9 +669,16 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         }
 
 
-        private static bool CheckRuleMultivalue(string rulePorts, string checkedport)
+        private static bool CheckRuleAddresses(string ruleAddresses, string checkedAddress)
         {
-            return String.IsNullOrEmpty(rulePorts) || rulePorts == "*" || rulePorts.Split(',').Contains(checkedport);
+            //FIXME: Parse properly! See: https://technet.microsoft.com/en-us/aa365366
+            return String.IsNullOrEmpty(ruleAddresses) || ruleAddresses == "*" || ruleAddresses.Split(',').Contains(checkedAddress);
+        }
+
+        private static bool CheckRulePorts(string rulePorts, string checkedPort)
+        {
+            //FIXME: Also allow for ranges. Example: 1-100
+            return String.IsNullOrEmpty(rulePorts) || rulePorts == "*" || rulePorts.Split(',').Contains(checkedPort);
         }
 
         public static string GetCurrentProfileAsText()
