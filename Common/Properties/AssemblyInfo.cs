@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Wokhan Solutions")]
 [assembly: AssemblyProduct("Windows Firewall Notifier - Common Library")]
-[assembly: AssemblyCopyright("2011-2016 Wokhan (http://wfn.codeplex.com)")]
+[assembly: AssemblyCopyright("2011-2017 Wokhan (http://wfn.codeplex.com)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
