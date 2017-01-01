@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -323,24 +324,26 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             if (success)
             {
-                if (_optionsView.IsLocalPortChecked)
+                LogHelper.Info("New rule for connection successfully created!");
+                for (int i = ((App)Application.Current).Connections.Count - 1; i >= 0; i--)
                 {
-                    ((App)Application.Current).Connections.Remove(activeConn);
-                }
-                else
-                {
-                    for (int i = ((App)Application.Current).Connections.Count - 1; i >= 0; i--)
+                    var c = ((App)Application.Current).Connections[i];
+                    string[] svc = new string[0];
+                    if (!String.IsNullOrEmpty(c.CurrentService))
                     {
-                        var c = ((App)Application.Current).Connections[i];
-                        if (c.CurrentPath == ((CurrentConn)lstConnections.SelectedItem).CurrentPath)
-                        {
-                            ((App)Application.Current).Connections.Remove(c);
-                        }
+                        svc = new[] { c.CurrentService };
+                    }
+                    //FIXME: This false-positives a lot...
+                    if (FirewallHelper.GetMatchingRules(c.CurrentPath, c.ProtocolAsString, c.Target, c.TargetPort, c.LocalPort, svc, false).Any()) //FIXME: LocalPort may have multiple!)
+                    {
+                        LogHelper.Debug("Auto-removing a similar connection...");
+                        ((App)Application.Current).Connections.Remove(c);
                     }
                 }
 
                 if (((App)Application.Current).Connections.Count == 0)
                 {
+                    LogHelper.Debug("No connections left; closing notification window.");
                     this.Close();
                 }
             }
