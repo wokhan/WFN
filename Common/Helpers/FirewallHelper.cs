@@ -635,6 +635,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 ret = ret.Where(r => r.Action == NET_FW_ACTION_.NET_FW_ACTION_BLOCK);
             }
 
+            //Note: This fills up the logfile quite quickly...
+            /*LogHelper.Debug("GetMatchingRules: Matched the following rule:");
+            LogHelper.Debug("ToMatch: " + path + ", " + protocol + ", " + target + ", " + targetPort + ", " + localPort + ", " + String.Join(",", svc) + ", " + blockOnly.ToString());
+            foreach (var r in ret)
+            {
+                LogHelper.Debug("Matched rule: " + r.ApplicationName + ", " + r.Protocol + ", " + r.RemoteAddresses + ", " + r.RemotePorts + ", " + r.LocalPorts + ", " + r.serviceName);
+            }*/
+
             return ret;
         }
 
@@ -682,7 +690,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         private static bool CheckRulePorts(string rulePorts, string checkedPort)
         {
-            //FIXME: Also allow for ranges. Example: 1-100
+            //FIXME: Untested!
             if (String.IsNullOrEmpty(rulePorts) || rulePorts == "*")
             {
                 return true;
