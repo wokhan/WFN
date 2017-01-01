@@ -626,13 +626,17 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return (protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP || protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_UDP);
         }
 
-        public static IEnumerable<Rule> GetMatchingRules(string path, string protocol, string target, string targetPort, string localPort, IEnumerable<string> svc, bool blockOnly)
+        public static IEnumerable<Rule> GetMatchingRules(string path, string protocol, string target, string targetPort, string localPort, IEnumerable<string> svc, bool blockOnly, bool outgoingOnly = true)
         {
             int currentProfile = GetCurrentProfile(); //This call is relatively slow, and calling it many times causes a startup delay. Let's cache it!
             IEnumerable<Rule> ret = GetRules().Where(r => RuleMatches(r, path, svc, protocol, localPort, target, targetPort, currentProfile));
             if (blockOnly)
             {
                 ret = ret.Where(r => r.Action == NET_FW_ACTION_.NET_FW_ACTION_BLOCK);
+            }
+            if (outgoingOnly)
+            {
+                ret = ret.Where(r => r.Direction == NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT);
             }
 
             //Note: This fills up the logfile quite quickly...
@@ -657,7 +661,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                        && CheckRuleAddresses(r.RemoteAddresses, target)
                        && CheckRulePorts(r.RemotePorts, remoteport)
                        && CheckRulePorts(r.LocalPorts, localport)
-                       //&& (r.Direction == NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT) //@
                        //&& r.EdgeTraversal == //@
                        //&& r.Interfaces == //@
                        //&& r.LocalAddresses //@
