@@ -41,7 +41,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             try
             {
                 if (!Settings.Default.UseBlockRules && exclusions == null) //@wokhan: WHY NOT~Settings.Default.UseBlockRules ??
-                    {
+                {
                     string exclusionsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exclusions.set");
                     if (File.Exists(exclusionsPath))
                     {
@@ -257,7 +257,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 {
                     //This connection is blocked. No action necessary.
                     LogHelper.Info("Connection is blocked.");
-                    //FIXME: Shut down the notifier, if it's not displaying anything right now?
+                    if (window == null)
+                    {
+                        LogHelper.Debug("No notification window loaded; shutting down...");
+                        this.Shutdown();
+                    }
                     return;
                 }
 
