@@ -644,7 +644,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             bool ret = r.Enabled
                        && (((r.Profiles & currentProfile) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0))
                        && (String.IsNullOrEmpty(r.ApplicationName) || StringComparer.CurrentCultureIgnoreCase.Compare(r.ApplicationName, path) == 0)
-                       && ((String.IsNullOrEmpty(r.serviceName) && (svc == null || !svc.Any())) || svc.Contains(r.serviceName, StringComparer.CurrentCultureIgnoreCase))
+                       && (String.IsNullOrEmpty(r.serviceName) || (svc.Any() && (r.serviceName == "*")) || svc.Contains(r.serviceName, StringComparer.CurrentCultureIgnoreCase))
                        && (r.Protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY || r.Protocol.ToString() == protocol)
                        && CheckRuleAddresses(r.RemoteAddresses, target)
                        && CheckRulePorts(r.RemotePorts, remoteport)
