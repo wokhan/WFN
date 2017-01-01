@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Wokhan Solutions")]
 [assembly: AssemblyProduct("WFN")]
-[assembly: AssemblyCopyright("2011-2016 Wokhan (http://wfn.codeplex.com)")]
+[assembly: AssemblyCopyright("2011-2017 Wokhan (http://wfn.codeplex.com)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -50,6 +50,3 @@ using System.Windows;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("2.0.*")]
 [assembly: AssemblyFileVersion("2.0.0.0")]
-
-
-
