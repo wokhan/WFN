@@ -75,11 +75,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     path = CommonHelper.GetFriendlyPath(path);
                 }
 
-                var existing = this.Connections.FirstOrDefault(c => c.CurrentPath == path && c.Target == target && c.TargetPort == targetPort);// && (int.Parse(localport) >= IPHelper.GetMaxUserPort() || c.LocalPort == localport));
+                var existing = this.Connections.FirstOrDefault(c => c.CurrentPath == path && c.Target == target && c.TargetPort == targetPort && (int.Parse(localPort) >= IPHelper.GetMaxUserPort() || c.LocalPort == localPort));
                 if (existing != null)
                 {
                     LogHelper.Debug("Matches an already existing connection request.");
-                    if (int.Parse(localPort) < IPHelper.GetMaxUserPort())
+                    if (!existing.LocalPortArray.Contains(localPort))
                     {
                         existing.LocalPortArray.Add(localPort);
                         existing.LocalPort += "," + localPort;
