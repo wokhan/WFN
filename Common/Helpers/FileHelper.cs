@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -33,7 +34,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     trimmedDrive = drive.TrimEnd('\\');
                     if (QueryDosDevice(trimmedDrive, sb, (uint)sb.Capacity) == 0)
                     {
-                        throw new Exception("Call to QueryDosDevice failed!");
+                        throw new Win32Exception(Marshal.GetLastWin32Error(), "Call to QueryDosDevice failed!");
                     }
                     deviceNameMap.Add(sb.ToString().ToLower() + "\\", trimmedDrive);
                 }
