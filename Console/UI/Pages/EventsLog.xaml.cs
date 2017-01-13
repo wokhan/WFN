@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Threading;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
@@ -80,7 +79,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     int i = securityLog.Entries.Count - 1;
                     int cpt = MaxEventsToLoad;
                     EventLogEntry entry;
-                    string friendlyPath;
                     bool isAppending = (_logEntries.Any());
                     DateTime lastDateLocal = DateTime.MinValue;
                     int indexLocal = 0;
@@ -97,12 +95,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                         if (entry.InstanceId == 5157 && entry.EntryType == EventLogEntryType.FailureAudit)
                         {
                             cpt--;
-                            friendlyPath = CommonHelper.GetFriendlyPath(entry.ReplacementStrings[1]);
                             var le = new LogEntryViewModel()
                             {
                                 CreationTime = entry.TimeWritten,
-                                Icon = IconHelper.GetIcon(CommonHelper.GetFriendlyPath(entry.ReplacementStrings[1])),
-                                FriendlyPath = CommonHelper.GetFriendlyPath(entry.ReplacementStrings[1]),
+                                Icon = IconHelper.GetIcon(entry.ReplacementStrings[1]),
+                                FriendlyPath = FileHelper.GetFriendlyPath(entry.ReplacementStrings[1]),
                                 Replacement5 = entry.ReplacementStrings[5],
                                 Protocol = getProtocol(entry.ReplacementStrings[7]),
                                 Replacement6 = entry.ReplacementStrings[6]

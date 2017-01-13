@@ -72,7 +72,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             {
                 if (path != "System")
                 {
-                    path = CommonHelper.GetFriendlyPath(path);
+                    path = FileHelper.GetFriendlyPath(path);
                 }
 
                 var existing = this.Connections.FirstOrDefault(c => c.CurrentPath == path && c.Target == target && c.TargetPort == targetPort && (int.Parse(localPort) >= IPHelper.GetMaxUserPort() || c.LocalPort == localPort));
