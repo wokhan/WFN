@@ -467,13 +467,20 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         public static string getProtocolAsString(int protocol)
         {
+            //These are the IANA protocol numbers.
             switch (protocol)
             {
-                case (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP:
+                case 1:
+                    return "ICMP";
+
+                case (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP: //6
                     return "TCP";
 
-                case (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_UDP:
+                case (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_UDP: //17
                     return "UDP";
+
+                case 136:
+                    return "UDPLite";
 
                 default:
                     return "Unknown";
