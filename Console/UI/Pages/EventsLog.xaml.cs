@@ -101,7 +101,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                                 Icon = IconHelper.GetIcon(entry.ReplacementStrings[1]),
                                 FriendlyPath = FileHelper.GetFriendlyPath(entry.ReplacementStrings[1]),
                                 Replacement5 = entry.ReplacementStrings[5],
-                                Protocol = getProtocol(entry.ReplacementStrings[7]),
+                                Protocol = FirewallHelper.getProtocolAsString(entry.ReplacementStrings[7]),
                                 Replacement6 = entry.ReplacementStrings[6]
                             };
 
@@ -139,29 +139,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 LogHelper.Error("Unable to load the event log", e);
             }
         }
-
-        private string getProtocol(string p)
-        {
-            try
-            {
-                switch (int.Parse(p))
-                {
-                    case 6:
-                        return "TCP";
-
-                    case 17:
-                        return "UDP";
-
-                    default:
-                        return "Other";
-                }
-            }
-            catch
-            {
-                return "Unknown";
-            }
-        }
-
 
         private void btnLocate_Click(object sender, RoutedEventArgs e)
         {
