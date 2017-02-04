@@ -273,7 +273,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                 var rodS = Marshal.SizeOf(typeof(TCP_ESTATS_DATA_ROD_v0));
                 rod = Marshal.AllocHGlobal(rodS);
 
-                GetPerTcp6ConnectionEStats(ref row, TCP_ESTATS_TYPE.TcpConnectionEstatsData, rw, (uint)0, (uint)rwS, IntPtr.Zero, (uint)0, (uint)0, rod, (uint)0, (uint)rodS);
+                var resp = GetPerTcp6ConnectionEStats(ref row, TCP_ESTATS_TYPE.TcpConnectionEstatsData, rw, 0, (uint)rwS, IntPtr.Zero, 0, 0, rod, 0, (uint)rodS);
+                if (resp != NO_ERROR)
+                {
+                    LogHelper.Error("Unable to get the connection statistics.", new Win32Exception((int)resp));
+                }
 
                 var parsedRW = (TCP_ESTATS_DATA_RW_v0)Marshal.PtrToStructure(rw, typeof(TCP_ESTATS_DATA_RW_v0));
                 var parsedROD = (TCP_ESTATS_DATA_ROD_v0)Marshal.PtrToStructure(rod, typeof(TCP_ESTATS_DATA_ROD_v0));

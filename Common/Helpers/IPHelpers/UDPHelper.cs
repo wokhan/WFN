@@ -15,7 +15,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         public static extern uint GetOwnerModuleFromUdpEntry(ref MIB_UDPROW_OWNER_MODULE pUdpEntry, TCPIP_OWNER_MODULE_INFO_CLASS Class, IntPtr Buffer, ref uint pdwSize);
 
         [DllImport("iphlpapi.dll", SetLastError = true)]
-        public static extern uint GetExtendedUdpTable(IntPtr pUdpTable, ref int dwOutBufLen, bool sort, AF_INET ipVersion, UDP_TABLE_CLASS tblClass, int reserved);
+        public static extern uint GetExtendedUdpTable(IntPtr pUdpTable, ref int dwOutBufLen, bool sort, AF_INET ipVersion, UDP_TABLE_CLASS tblClass, uint reserved);
 
         protected const uint NO_ERROR = 0;
         protected const uint ERROR_INSUFFICIENT_BUFFER = 122;
@@ -149,7 +149,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                 {
                     ret = new Owner((TCPIP_OWNER_MODULE_BASIC_INFO)Marshal.PtrToStructure(buffer, typeof(TCPIP_OWNER_MODULE_BASIC_INFO)));
                 }
-                else if (resp != ERROR_NOT_FOUND) // Ignore closed connections 
+                else if (resp != ERROR_NOT_FOUND) // Ignore closed connections
                 {
                     LogHelper.Error("Unable to get the connection owner.", new Win32Exception((int)resp));
                 }
