@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
@@ -26,16 +26,20 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     ic = SystemIcons.WinLogo;
                     break;
 
-                case "?error":
+                case "?error": //FIXME: Use something else?
                     ic = SystemIcons.Error;
                     break;
 
                 default:
-                    if (File.Exists(path))
+                    try
                     {
                         ic = Icon.ExtractAssociatedIcon(path) ?? (defaultIfNotFound ? SystemIcons.Application : null);
                     }
-                    else
+                    catch (ArgumentException)
+                    {
+                        ic = SystemIcons.Warning;
+                    }
+                    catch (System.IO.FileNotFoundException) //Undocumented exception
                     {
                         ic = SystemIcons.Warning;
                     }
