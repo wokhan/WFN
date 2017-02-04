@@ -334,7 +334,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                         svc = new[] { c.CurrentService };
                     }
                     //FIXME: This false-positives a lot...
-                    if (FirewallHelper.GetMatchingRules(c.CurrentPath, c.ProtocolAsString, c.Target, c.TargetPort, c.LocalPort, svc, false).Any()) //FIXME: LocalPort may have multiple!)
+                    if (FirewallHelper.GetMatchingRules(c.CurrentPath, c.Protocol, c.Target, c.TargetPort, c.LocalPort, svc, false).Any()) //FIXME: LocalPort may have multiple!)
                     {
                         LogHelper.Debug("Auto-removing a similar connection...");
                         ((App)Application.Current).Connections.Remove(c);
@@ -410,7 +410,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void hlkPath_Navigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
-            Process.Start("explorer.exe", "/select," + e.Uri);
+            LogHelper.Debug("Calling external program: explorer.exe /select,\"" + e.Uri + "\"");
+            Process.Start("explorer.exe", String.Format("/select,\"{0}\"", e.Uri));
         }
     }
 }
