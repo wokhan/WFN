@@ -142,6 +142,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Windows Firewall has blocked an outgoing connection.
+        /// </summary>
+        public static string FW_TITLE {
+            get {
+                return ResourceManager.GetString("FW_TITLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         public static System.Drawing.Icon ICON_SHIELD {

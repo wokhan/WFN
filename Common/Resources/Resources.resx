@@ -195,4 +195,7 @@ to prevent any further notification, or creates a blocking rule for the Windows 
   <data name="MSG_RULEMANAGER_ARGUMENTS_ERR" xml:space="preserve">
     <value>RuleManager cannot be run manually.</value>
   </data>
+  <data name="FW_TITLE" xml:space="preserve">
+    <value>Windows Firewall has blocked an outgoing connection</value>
+  </data>
 </root>
