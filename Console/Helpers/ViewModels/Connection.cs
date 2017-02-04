@@ -43,13 +43,13 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             {
                 // Mainly for non-admin users, could use Process.GetProcessById for admins...
                 var r = ProcessHelper.GetProcessOwnerWMI((int)ownerMod.OwningPid, ref LocalOwnerWMICache);
-                Path = r[1] ?? "Unknown";
-                ProcName = r[0] ?? "Unknown";
+                Path = r[1] ?? "Unknown"; //FIXME: Move to resources!
+                ProcName = r[0] ?? "Unknown"; //FIXME: Use something else?
             }
             catch
             {
-                ProcName = "[Unknown or closed process]";
-                Path = "Unresolved";
+                ProcName = "[Unknown or closed process]"; //FIXME: Move to resources!
+                Path = "Unresolved"; //FIXME: Use something else?
             }
 
             if (ownerMod.OwnerModule == null)
