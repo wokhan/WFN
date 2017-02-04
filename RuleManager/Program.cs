@@ -74,8 +74,8 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
                     NotifyIcon ni = new NotifyIcon();
                     ni.Click += new EventHandler(ni_Click);
                     ni.BalloonTipIcon = ToolTipIcon.Info;
-                    ni.BalloonTipTitle = "Temporary rule";
-                    ni.BalloonTipText = "A temporary rule has been created." + Environment.NewLine + "Path: " + param[8] + Environment.NewLine + "Click on the shield icon to remove this rule.";
+                    ni.BalloonTipTitle = "Temporary rule"; //FIXME: Move to resources!
+                    ni.BalloonTipText = "A temporary rule has been created." + Environment.NewLine + "Path: " + param[8] + Environment.NewLine + "Click on the shield icon to remove this rule."; //FIXME: Move to resources!
                     ni.Icon = new Icon(SystemIcons.Shield, new Size(16, 16));
                     ni.Visible = true;
                     ni.ShowBalloonTip(2000);
