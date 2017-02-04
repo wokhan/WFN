@@ -62,5 +62,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         }
 
         //FIXME: Clear the cache if there's some change with the drives!
+        //WM_DEVICECHANGE
+        //DBT_CONFIGCHANGED
+        //DBT_DEVICEARRIVAL
+        //DBT_DEVICEREMOVECOMPLETE
+        //DBT_DEVICEREMOVEPENDING
+        //DBT_DEVNODES_CHANGED
+        //http://stackoverflow.com/questions/16245706/check-for-device-change-add-remove-events
     }
 }
