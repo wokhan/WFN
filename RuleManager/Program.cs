@@ -11,7 +11,6 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
 {
     class Program
     {
-        private static string path;
         private static Dictionary<string, string> tmpnames;
 
         [STAThread]
@@ -37,7 +36,7 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
                 }
 
                 string rname = param[0];
-                path = param[1];
+                string path = param[1];
                 string sv = param[2];
                 string[] services = (sv != null ? sv.Split(',') : new string[] { });
                 int protocol = int.Parse(param[3]);
