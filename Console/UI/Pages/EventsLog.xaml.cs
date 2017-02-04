@@ -101,7 +101,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                                 Icon = IconHelper.GetIcon(entry.ReplacementStrings[1]),
                                 FriendlyPath = FileHelper.GetFriendlyPath(entry.ReplacementStrings[1]),
                                 Replacement5 = entry.ReplacementStrings[5],
-                                Protocol = FirewallHelper.getProtocolAsString(entry.ReplacementStrings[7]),
+                                Protocol = FirewallHelper.getProtocolAsString(int.Parse(entry.ReplacementStrings[7])),
                                 Replacement6 = entry.ReplacementStrings[6]
                             };
 

@@ -66,7 +66,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         /// <param name="targetPort"></param>
         /// <param name="localPort"></param>
         /// <returns>false if item is blocked and was thus not added to internal query list</returns>
-        public bool AddItem(int pid, int threadid, string path, string target, string protocol, string targetPort, string localPort)
+        public bool AddItem(int pid, int threadid, string path, string target, int protocol, string targetPort, string localPort)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     path = FileHelper.GetFriendlyPath(path);
                 }
 
-                var existing = this.Connections.FirstOrDefault(c => c.CurrentPath == path && c.Target == target && c.TargetPort == targetPort && (int.Parse(localPort) >= IPHelper.GetMaxUserPort() || c.LocalPort == localPort));
+                var existing = this.Connections.FirstOrDefault(c => c.CurrentPath == path && c.Target == target && c.TargetPort == targetPort && (int.Parse(localPort) >= IPHelper.GetMaxUserPort() || c.LocalPort == localPort) && c.Protocol == protocol);
                 if (existing != null)
                 {
                     LogHelper.Debug("Matches an already existing connection request.");
@@ -176,7 +176,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                         CurrentProd = app,
                         Editor = fileinfo != null ? fileinfo.CompanyName : String.Empty,
                         CurrentPath = path,
-                        Protocol = int.Parse(protocol),
+                        Protocol = protocol,
                         TargetPort = targetPort,
                         RuleName = String.Format(Common.Resources.RULE_NAME_FORMAT, unsure || String.IsNullOrEmpty(svcdsc.FirstOrDefault()) ? app : svcdsc.FirstOrDefault()),
                         Target = target,
@@ -244,7 +244,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 int threadid = int.Parse(pars["threadid"]);
                 string currentTarget = pars["ip"];
                 string currentTargetPort = pars["port"];
-                string currentProtocol = pars["protocol"];
+                int currentProtocol = int.Parse(pars["protocol"]);
                 string currentLocalPort = pars["localport"];
                 string currentPath = pars["path"];
                 pars = null;

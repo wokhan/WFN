@@ -245,11 +245,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             /// <summary>
             /// 
             /// </summary>
-            /// <param name="nET_FW_ACTION_"></param>
+            /// <param name="action"></param>
             /// <returns></returns>
-            private static string getAction(NET_FW_ACTION_ nET_FW_ACTION_)
+            private static string getAction(NET_FW_ACTION_ action)
             {
-                switch (nET_FW_ACTION_)
+                switch (action)
                 {
                     case NET_FW_ACTION_.NET_FW_ACTION_ALLOW:
                         return Resources.FW_RULE_ALLOW;
@@ -265,11 +265,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             /// <summary>
             /// 
             /// </summary>
-            /// <param name="nET_FW_PROFILE_TYPE2_"></param>
+            /// <param name="profile_type"></param>
             /// <returns></returns>
-            internal static string getProfile(int nET_FW_PROFILE_TYPE2_)
+            internal static string getProfile(int profile_type)
             {
-                return FirewallHelper.GetProfileAsText(nET_FW_PROFILE_TYPE2_);
+                return FirewallHelper.GetProfileAsText(profile_type);
             }
         }
 
@@ -363,11 +363,17 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return AddRule(ruleName, currentPath, service, protocol, target, targetPort, localport, NET_FW_ACTION_.NET_FW_ACTION_ALLOW, false, useCurrentProfile);
         }
 
+        public static bool AddTempRuleIndirect(string ruleName,string currentPath, string[] services, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
+        {
+            string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, services != null ? String.Join(",", services) : null, protocol, target, targetPort, localport, useCurrentProfile, "T")));
+            return ProcessHelper.getProcessFeedback(WFNRuleManagerEXE, param, true, true);
+        }
 
         public static bool AddTempRule(string ruleName, string currentPath, string service, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
         {
             return AddRule(ruleName, currentPath, service, protocol, target, targetPort, localport, NET_FW_ACTION_.NET_FW_ACTION_ALLOW, true, useCurrentProfile);
         }
+
 
         /// <summary>
         /// 
@@ -401,7 +407,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
                 if (protocol != -1)
                 {
-                    firewallRule.Protocol = getProtocol(protocol);
+                    firewallRule.Protocol = normalizeProtocol(protocol);
                 }
 
                 if (!String.IsNullOrEmpty(localport))
@@ -460,11 +466,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return Enum.GetName(typeof(NET_FW_PROFILE_TYPE2_), type);
         }
 
-        public static string getProtocolAsString(string protocol)
-        {
-            return getProtocolAsString(int.Parse(protocol));
-        }
-
         public static string getProtocolAsString(int protocol)
         {
             //These are the IANA protocol numbers.
@@ -479,6 +480,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 case (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_UDP: //17
                     return "UDP";
 
+                case 58:
+                    return "ICMPv6";
+
                 case 136:
                     return "UDPLite";
 
@@ -487,7 +491,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
         }
 
-        public static int getProtocol(int protocol)
+        /// <summary>
+        /// Converts the protocol integer to its NET_FW_IP_PROTOCOL_ representation.
+        /// </summary>
+        /// <returns></returns>
+        public static int normalizeProtocol(int protocol)
         {
             try
             {
@@ -497,12 +505,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             {
                 return (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY;
             }
-        }
-
-        public static bool AddTempRuleIndirect(string ruleName, string currentPath, string[] services, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
-        {
-            string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, services != null ? String.Join(",", services) : null, protocol, target, targetPort, localport, useCurrentProfile, "T")));
-            return ProcessHelper.getProcessFeedback(WFNRuleManagerEXE, param, true, true);
         }
 
         public static bool CheckFirewallEnabled()
@@ -633,7 +635,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return (protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP || protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_UDP);
         }
 
-        public static IEnumerable<Rule> GetMatchingRules(string path, string protocol, string target, string targetPort, string localPort, IEnumerable<string> svc, bool blockOnly, bool outgoingOnly = true)
+        public static IEnumerable<Rule> GetMatchingRules(string path, int protocol, string target, string targetPort, string localPort, IEnumerable<string> svc, bool blockOnly, bool outgoingOnly = true)
         {
             int currentProfile = GetCurrentProfile(); //This call is relatively slow, and calling it many times causes a startup delay. Let's cache it!
             IEnumerable<Rule> ret = GetRules().Where(r => RuleMatches(r, path, svc, protocol, localPort, target, targetPort, currentProfile));
@@ -658,13 +660,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         }
 
 
-        private static bool RuleMatches(Rule r, string path, IEnumerable<string> svc, string protocol, string localport, string target, string remoteport, int currentProfile)
+        private static bool RuleMatches(Rule r, string path, IEnumerable<string> svc, int protocol, string localport, string target, string remoteport, int currentProfile)
         {
             bool ret = r.Enabled
                        && (((r.Profiles & currentProfile) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0))
                        && (String.IsNullOrEmpty(r.ApplicationName) || StringComparer.CurrentCultureIgnoreCase.Compare(r.ApplicationName, path) == 0)
                        && (String.IsNullOrEmpty(r.serviceName) || (svc.Any() && (r.serviceName == "*")) || svc.Contains(r.serviceName, StringComparer.CurrentCultureIgnoreCase))
-                       && (r.Protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY || r.Protocol.ToString() == protocol)
+                       && (r.Protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY || r.Protocol == protocol)
                        && CheckRuleAddresses(r.RemoteAddresses, target)
                        && CheckRulePorts(r.RemotePorts, remoteport)
                        && CheckRulePorts(r.LocalPorts, localport)
@@ -730,26 +732,26 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         }
 
 
-        public static string GetProfileAsText(int nET_FW_PROFILE_TYPE2_)
+        public static string GetProfileAsText(int profile_type)
         {
 
             string[] ret = new string[3];
             int i = 0;
-            if (nET_FW_PROFILE_TYPE2_ == (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL)
+            if (profile_type == (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL)
             {
                 ret[i] = Resources.FW_PROFILE_ALL;
             }
             else
             {
-                if ((nET_FW_PROFILE_TYPE2_ & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN) != 0)
+                if ((profile_type & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN) != 0)
                 {
                     ret[i++] = Resources.FW_PROFILE_DOMAIN;
                 }
-                if ((nET_FW_PROFILE_TYPE2_ & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE) != 0)
+                if ((profile_type & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE) != 0)
                 {
                     ret[i++] = Resources.FW_PROFILE_PRIVATE;
                 }
-                if ((nET_FW_PROFILE_TYPE2_ & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC) != 0)
+                if ((profile_type & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC) != 0)
                 {
                     ret[i++] = Resources.FW_PROFILE_PUBLIC;
                 }
