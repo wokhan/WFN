@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Threading;
 using System.Windows;
@@ -24,7 +25,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         private static string appVersion;
         private static string assemblyName;
         private static string logFilePath;
-        private static readonly Mutex logFileMutex = new Mutex(false, "WindowsFirewallNotifier_Common_LogFile_Mutex");
+        private static readonly Mutex logFileMutex = null;
 
         private static bool isAdmin = UacHelper.CheckProcessElevated();
 
@@ -36,6 +37,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             CurrentLogsPath = AppDomain.CurrentDomain.BaseDirectory;
             logFilePath = Path.Combine(CurrentLogsPath, assemblyName + ".log");
+
+            MutexSecurity logFileMutexSecurity = new MutexSecurity();
+            MutexAccessRule rule = new MutexAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), MutexRights.Synchronize | MutexRights.Modify, AccessControlType.Allow);
+            logFileMutexSecurity.AddAccessRule(rule);
+            rule = new MutexAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), MutexRights.ChangePermissions | MutexRights.TakeOwnership, AccessControlType.Deny);
+            logFileMutexSecurity.AddAccessRule(rule);
+            bool createdNew; //Not used
+            logFileMutex = new Mutex(false, "WindowsFirewallNotifier_Common_LogFile_Mutex", out createdNew, logFileMutexSecurity);
 
             try
             {
