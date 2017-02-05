@@ -1,8 +1,7 @@
-﻿using System;
-using System.Configuration;
-using System.IO;
-using System.Xml;
-using System.Xml.Serialization;
+﻿using System.Configuration;
+//using System.IO;
+//using System.Xml;
+//using System.Xml.Serialization;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Common
