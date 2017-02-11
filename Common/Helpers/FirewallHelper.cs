@@ -258,6 +258,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                         return Resources.FW_RULE_BLOCK;
 
                     default:
+                        LogHelper.Warning("Unknown action type:" + action.ToString());
                         return "?";
                 }
             }
@@ -480,6 +481,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 case (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_UDP: //17
                     return "UDP";
 
+                case 47:
+                    return "GRE"; //Used by PPTP, for example.
+
                 case 58:
                     return "ICMPv6";
 
@@ -487,6 +491,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     return "UDPLite";
 
                 default:
+                    LogHelper.Warning("Unknown protocol type: " + protocol.ToString());
                     return "Unknown";
             }
         }
