@@ -7,6 +7,7 @@ using System.IO;
 using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Security.Policy;
+using System.Security.Principal;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -95,6 +96,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         private static ClientSettingsSection GetUserSettings(bool createIfNone = false)
         {
+            if (WindowsIdentity.GetCurrent().IsSystem)
+            {
+                //No user settings for SYSTEM
+                return null;
+            }
             if (!File.Exists(UserConfigurationPath))
             {
                 if (createIfNone)
