@@ -23,7 +23,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         [StructLayout(LayoutKind.Sequential)]
         internal struct SECURITY_ATTRIBUTES
         {
-            public int nLength;
+            public uint nLength;
             public IntPtr lpSecurityDescriptor;
             public bool bInheritHandle;
         }
@@ -106,7 +106,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             SECURITY_ATTRIBUTES sa = new SECURITY_ATTRIBUTES();
             //ZeroMemory(sa, (uint)Marshal.SizeOf(sa));
-            sa.nLength = Marshal.SizeOf(sa);
+            sa.nLength = (uint)Marshal.SizeOf(sa);
             sa.bInheritHandle = false;
             sa.lpSecurityDescriptor = IntPtr.Zero;
 
