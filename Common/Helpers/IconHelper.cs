@@ -37,7 +37,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     }
                     catch (ArgumentException)
                     {
-                        ic = SystemIcons.Warning;
+                        ic = SystemIcons.Warning; //FIXME: Use some generic application icon?
                     }
                     catch (System.IO.FileNotFoundException) //Undocumented exception
                     {
