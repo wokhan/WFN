@@ -42,6 +42,18 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             TokenImpersonation
         }
 
+        [DllImport("userenv.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool CreateEnvironmentBlock(
+            out IntPtr lpEnvironment,
+            IntPtr hToken,
+            [MarshalAs(UnmanagedType.Bool)] bool bInherit);
+
+        [DllImport("userenv.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool DestroyEnvironmentBlock(
+            IntPtr lpEnvironment);
+
         [DllImport("advapi32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool CreateProcessAsUser(
@@ -50,7 +62,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             string lpCommandLine,
             ref SECURITY_ATTRIBUTES lpProcessAttributes,
             ref SECURITY_ATTRIBUTES lpThreadAttributes,
-            [MarshalAs(UnmanagedType.Bool)] bool bInheritHandles ,
+            [MarshalAs(UnmanagedType.Bool)] bool bInheritHandles,
             uint dwCreationFlags,
             IntPtr lpEnvironment,
             string lpCurrentDirectory,
@@ -100,6 +112,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         private const uint TOKEN_DUPLICATE = 0x0002;
         private const uint TOKEN_ASSIGN_PRIMARY = 0x0001;
 
+        private const uint CREATE_UNICODE_ENVIRONMENT = 0x00000400;
+
         public static void LaunchProcessAsUser(string app, string args, IntPtr token)
         {
             IntPtr primaryToken = IntPtr.Zero;
@@ -125,14 +139,28 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             try
             {
-                string cmd = "\"" + app + "\" " + args;
-                bool retimper = CreateProcessAsUser(primaryToken, null, cmd, ref sa, ref sa, false, 0, IntPtr.Zero, null, ref si, out pi);
-                if (!retimper)
+                IntPtr UserEnvironment;
+                bool retenviron = CreateEnvironmentBlock(out UserEnvironment, token, false);
+                if (!retenviron)
                 {
-                    throw new Win32Exception(Marshal.GetLastWin32Error(), "Unable to impersonate. Command was: " + cmd);
+                    throw new Win32Exception(Marshal.GetLastWin32Error(), "Unable to create user environment.");
                 }
-                CloseHandle(pi.hThread);
-                CloseHandle(pi.hProcess);
+
+                try
+                {
+                    string cmd = "\"" + app + "\" " + args;
+                    bool retimper = CreateProcessAsUser(primaryToken, null, cmd, ref sa, ref sa, false, CREATE_UNICODE_ENVIRONMENT, UserEnvironment, null, ref si, out pi);
+                    if (!retimper)
+                    {
+                        throw new Win32Exception(Marshal.GetLastWin32Error(), "Unable to impersonate. Command was: " + cmd);
+                    }
+                    CloseHandle(pi.hThread);
+                    CloseHandle(pi.hProcess);
+                }
+                finally
+                {
+                    DestroyEnvironmentBlock(UserEnvironment);
+                }
             }
             finally
             {
