@@ -132,27 +132,25 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="CheckBox">
-                        <StackPanel Margin="{TemplateBinding Padding}" Orientation="Horizontal" VerticalAlignment="Center">
+                        <DockPanel Margin="{TemplateBinding Padding}" VerticalAlignment="Center" LastChildFill="True">
                             <Border Margin="0,0,5,0" VerticalAlignment="Center" CornerRadius="7" Width="30" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
-                                <Grid>
-                                    <Ellipse Margin="2" Width="7" Height="7" Fill="{TemplateBinding Foreground}">
-                                        <Ellipse.Style>
-                                            <Style TargetType="Ellipse">
-                                                <Setter Property="HorizontalAlignment" Value="Left" />
-                                                <Setter Property="Opacity" Value="0.3" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsChecked,RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="True">
-                                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                                        <Setter Property="Opacity" Value="1" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Ellipse.Style>
-                                    </Ellipse>
-                                </Grid>
+                                <Ellipse Margin="2" Width="7" Height="7" Fill="{TemplateBinding Foreground}">
+                                    <Ellipse.Style>
+                                        <Style TargetType="Ellipse">
+                                            <Setter Property="HorizontalAlignment" Value="Left" />
+                                            <Setter Property="Opacity" Value="0.3" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsChecked,RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="True">
+                                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                                    <Setter Property="Opacity" Value="1" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Ellipse.Style>
+                                </Ellipse>
                             </Border>
                             <ContentPresenter Margin="{TemplateBinding Padding}" />
-                        </StackPanel>
+                        </DockPanel>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -240,7 +238,7 @@
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.5*" />
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="0.5*" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Margin="3" Grid.ColumnSpan="2">
                         <Hyperlink TextDecorations="" NavigateUri="{Binding CurrentPath}" RequestNavigate="hlkPath_Navigate">
@@ -249,7 +247,15 @@
                     </TextBlock>
                     <CheckBox Grid.Row="1" Margin="3" IsChecked="{Binding OptionsView.IsCurrentProfileChecked, ElementName=NotifWindow}" Content="{Binding CurrentProfile, ElementName=NotifWindow, FallbackValue='Unknown'}" ContentStringFormat="Profile: {0}" />
                     <CheckBox Grid.Row="1" Grid.Column="1" Margin="3" IsChecked="{Binding OptionsView.IsProtocolChecked, ElementName=NotifWindow}" Content="{Binding ProtocolAsString,FallbackValue='Unknown'}" ContentStringFormat="Protocol: {0}" />
-                    <CheckBox Grid.Row="2" x:Name="chkLPort" Margin="3" IsChecked="{Binding OptionsView.IsLocalPortChecked, ElementName=NotifWindow}" Content="{Binding LocalPort,FallbackValue='N/A'}" ContentStringFormat="Local port: {0}" />
+                    <CheckBox Grid.Row="2" Margin="3" IsChecked="{Binding OptionsView.IsLocalPortChecked, ElementName=NotifWindow}" ToolTipService.ShowOnDisabled="True">
+                        <TextBlock Text="{Binding LocalPort,FallbackValue='N/A', StringFormat='Local port: {0}'}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                        <CheckBox.ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Local ports:</TextBlock>
+                                <TextBlock Text="{Binding LocalPort}" />
+                            </StackPanel>
+                        </CheckBox.ToolTip>
+                    </CheckBox>
                     <CheckBox Grid.Row="2" Grid.Column="1" x:Name="chkService" Margin="3" IsChecked="{Binding OptionsView.IsServiceRuleChecked, ElementName=NotifWindow}">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
