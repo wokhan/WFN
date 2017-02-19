@@ -609,7 +609,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 }
 
                 // Windows 8 or higher (ignoring Metro apps)
-                if ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 2) || (Environment.OSVersion.Version.Major > 6)) 
+                if (Environment.OSVersion.Version >= new System.Version(6, 2))
                 {
                     allkeyvalues = allkeyvalues.Where(r => !r.Contains("AppPkgId"));
                 }
