@@ -5,9 +5,7 @@ using Microsoft.Win32;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using System.ServiceProcess;
 using System.Windows.Media;
-using System.Diagnostics;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -28,177 +26,43 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         //private const uint LOAD_LIBRARY_AS_DATAFILE = 0&00000002;
 
-        public class Rule
+        private static INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
+        private const string indParamFormat = "{0}#$#{1}#$#{2}#$#{3}#$#{4}#$#{5}#$#{6}#$#{7}#$#{8}";
+        private static string WFNRuleManagerEXE = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RuleManager.exe");
+
+        public abstract class Rule
         {
-            private class WSHRule : INetFwRule
-            {
-                public WSHRule(string regRule)
-                {
-                    ILookup<string, string> parsed = regRule.TrimEnd('|').Split('|').Skip(1).Select(s => s.Split('=')).ToLookup(s => s[0].ToLower(), s => s[1]);
+            public abstract NET_FW_ACTION_ Action { get; }
+            public abstract bool Active { get; }
+            public abstract string ApplicationName { get; }
+            public abstract string Description { get; }
+            public abstract NET_FW_RULE_DIRECTION_ Direction { get; }
+            public abstract bool EdgeTraversal { get; }
+            public abstract bool Enabled { get; }
+            public abstract string Grouping { get; }
+            public abstract string IcmpTypesAndCodes { get; }
+            public abstract object Interfaces { get; }
+            public abstract string InterfaceTypes { get; }
+            public abstract string LocalAddresses { get; }
+            public abstract string LocalPorts { get; }
+            public abstract string Name { get; }
+            public abstract int Profiles { get; }
+            public abstract int Protocol { get; }
+            public abstract string RemoteAddresses { get; }
+            public abstract string RemotePorts { get; }
+            public abstract string serviceName { get; }
 
-                    this.Action = parsed["action"].FirstOrDefault() == "Block" ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
-                    this.ApplicationName = parsed["app"].FirstOrDefault();
-                    this.Description = parsed["desc"].FirstOrDefault();
-                    this.Direction = parsed["dir"].FirstOrDefault() == "In" ? NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_IN : NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
-                    this.Enabled = parsed.Contains("active") ? bool.Parse(parsed["active"].FirstOrDefault()) : true;
+            //FIXME: v2.10?
+            public abstract int EdgeTraversalOptions { get; }
 
-                    this.Name = "WSH - " + CommonHelper.GetMSResourceString(parsed["name"].FirstOrDefault());
-                    this.LocalPorts = parsed["lport"].FirstOrDefault();
-                    this.LocalAddresses = String.Join(", ", parsed["la4"].Concat(parsed["la6"]).ToArray());
-                    this.RemotePorts = parsed["rport"].FirstOrDefault();
-                    this.RemoteAddresses = String.Join(", ", parsed["ra4"].Concat(parsed["ra6"]).ToArray());
+            // For metro apps (v2.20)
+            //public abstract string AppPkgId { get; } //FIXME: !!!
+            //public abstract string Security { get; }
+            //public abstract string LUOwn { get; }
+            //public abstract string LUAuth { get; }
+            //public abstract string EmbedCtxt { get; }
 
-                    if (parsed.Contains("protocol") && parsed["protocol"].Any())
-                    {
-                        this.Protocol = int.Parse(parsed["protocol"].First());
-                    }
-                    else
-                    {
-                        this.Protocol = (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY;
-                    }
-
-                    this.serviceName = parsed["svc"].FirstOrDefault();
-
-                    //// Win 8 ?
-                    //if (regRule.StartsWith("v2.20"))
-                    //{
-                    //    this.AppPkgId = parsed["apppkdid"].FirstOrDefault();
-                    //    this.Security = parsed["security"].FirstOrDefault();
-                    //    this.LUAuth = parsed["luauth"].FirstOrDefault();
-                    //    this.LUOwn = parsed["luown"].FirstOrDefault();
-                    //}
-                }
-
-                //private string resolveString(string p)
-                //{
-                //    if (p != null && p.StartsWith("@"))
-                //    {
-                //        string[] res = p.Substring(1).Split(',');
-
-                //        IntPtr lib = LoadLibraryEx(res[0], IntPtr.Zero, LOAD_LIBRARY_AS_DATAFILE);
-                //        //IntPtr strh = FindResource(lib, int.Parse(res[1]), 6);
-                //        //if (strh != IntPtr.Zero)
-                //        {
-                //            StringBuilder sb = new StringBuilder(255);
-                //            LoadString(lib, (UInt16)int.Parse(res[1]), sb, sb.Capacity);
-
-                //            FreeLibrary(lib);
-
-                //            return (sb.Length > 0 ? sb.ToString() : p);
-                //        }
-                //        //else
-                //        {
-                //            FreeLibrary(lib);
-
-                //            return p;
-                //        }
-                //    }
-                //    else
-                //    {
-                //        return p;
-                //    }
-                //}
-
-                public NET_FW_ACTION_ Action { get; set; }
-                public string ApplicationName { get; set; }
-                public string Description { get; set; }
-                public NET_FW_RULE_DIRECTION_ Direction { get; set; }
-                public bool EdgeTraversal { get; set; }
-                //public int EdgeTraversalOptions { get; set; }
-                public bool Enabled { get; set; }
-                public string Grouping { get; set; }
-                public string IcmpTypesAndCodes { get; set; }
-                public object Interfaces { get; set; }
-                public string InterfaceTypes { get; set; }
-                public string LocalAddresses { get; set; }
-                public string LocalPorts { get; set; }
-                public string Name { get; set; }
-                public int Profiles { get; set; }
-                public int Protocol { get; set; }
-                public string RemoteAddresses { get; set; }
-                public string RemotePorts { get; set; }
-                public string serviceName { get; set; }
-
-                //// For metro apps only (v2.20)
-                //public string AppPkgId { get; set; }
-                //public string Security { get; set; }
-                //public string LUOwn { get; set; }
-                //public string LUAuth { get; set; }
-                //public string EmbedCtxt { get; set; }
-            }
-
-            private NetFwTypeLib.INetFwRule InnerRule;
-
-            public Rule(INetFwRule innerRule)
-            {
-                InnerRule = innerRule;
-            }
-
-            public Rule(string regRule)
-            {
-                InnerRule = new WSHRule(regRule);
-            }
-
-            public NET_FW_ACTION_ Action { get { return InnerRule.Action; } }
-
-            private string _applicationName = null;
-            public string ApplicationName
-            {
-                get
-                {
-                    if (_applicationName == null)
-                    {
-                        _applicationName = (InnerRule.ApplicationName != null ? Environment.ExpandEnvironmentVariables(InnerRule.ApplicationName) : String.Empty);
-
-                    }
-                    return _applicationName;
-                }
-            }
-
-            private string _description = null;
-            public string Description
-            {
-                get
-                {
-                    if (_description == null)
-                    {
-                        _description = CommonHelper.GetMSResourceString(InnerRule.Description);
-                    }
-
-                    return _description;
-                }
-            }
-
-            public NET_FW_RULE_DIRECTION_ Direction { get { return InnerRule.Direction; } }
-            public bool EdgeTraversal { get { return InnerRule.EdgeTraversal; } }
-            //public int EdgeTraversalOptions { get { return InnerRule.EdgeTraversalOptions; } }
-            public bool Enabled { get { return InnerRule.Enabled; } }
-            public string Grouping { get { return InnerRule.Grouping; } }
-            public string IcmpTypesAndCodes { get { return InnerRule.IcmpTypesAndCodes; } }
-            public object Interfaces { get { return InnerRule.Interfaces; } }
-            public string InterfaceTypes { get { return InnerRule.InterfaceTypes; } }
-            public string LocalAddresses { get { return InnerRule.LocalAddresses; } }
-            public string LocalPorts { get { return InnerRule.LocalPorts; } }
-
-            private string _name = null;
-            public string Name
-            {
-                get
-                {
-                    if (_name == null)
-                    {
-                        _name = CommonHelper.GetMSResourceString(InnerRule.Name);
-                    }
-
-                    return _name;
-                }
-            }
-
-            public int Profiles { get { return InnerRule.Profiles; } }
-            public int Protocol { get { return InnerRule.Protocol; } }
-            public string RemoteAddresses { get { return InnerRule.RemoteAddresses; } }
-            public string RemotePorts { get { return InnerRule.RemotePorts; } }
-            public string serviceName { get { return InnerRule.serviceName; } }
+            //FIXME: Need to parse: (RA42=) RmtIntrAnet
 
             private ImageSource _icon = null;
             public ImageSource Icon
@@ -207,27 +71,27 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 {
                     if (_icon == null)
                     {
-                        _icon = IconHelper.GetIcon(InnerRule.ApplicationName);
+                        _icon = IconHelper.GetIcon(this.ApplicationName); //FIXME: This is now expanded... Is that a problem?!?
                     }
 
                     return _icon;
                 }
             }
 
-            public string ProfilesStr { get { return getProfile(InnerRule.Profiles); } }
+            public string ProfilesStr { get { return getProfile(this.Profiles); } }
 
-            public string ActionStr { get { return getAction(InnerRule.Action); } }
+            public string ActionStr { get { return getAction(this.Action); } }
 
-            public string DirectionStr { get { return getDirection(InnerRule.Direction); } }
+            public string DirectionStr { get { return getDirection(this.Direction); } }
 
             /// <summary>
             /// 
             /// </summary>
-            /// <param name="nET_FW_RULE_DIRECTION_"></param>
+            /// <param name="direction"></param>
             /// <returns></returns>
-            private static string getDirection(NET_FW_RULE_DIRECTION_ nET_FW_RULE_DIRECTION_)
+            private static string getDirection(NET_FW_RULE_DIRECTION_ direction)
             {
-                switch (nET_FW_RULE_DIRECTION_)
+                switch (direction)
                 {
                     case NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_IN:
                         return Resources.FW_DIR_IN;
@@ -239,10 +103,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                         return Resources.FW_DIR_BOTH;
 
                     default:
+                        LogHelper.Warning("Unknown direction type: " + direction.ToString());
                         return "?";
                 }
             }
-
 
             /// <summary>
             /// 
@@ -260,7 +124,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                         return Resources.FW_RULE_BLOCK;
 
                     default:
-                        LogHelper.Warning("Unknown action type:" + action.ToString());
+                        LogHelper.Warning("Unknown action type: " + action.ToString());
                         return "?";
                 }
             }
@@ -276,9 +140,349 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
         }
 
-        private static INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
-        private const string indParamFormat = "{0}#$#{1}#$#{2}#$#{3}#$#{4}#$#{5}#$#{6}#$#{7}#$#{8}";
-        private static string WFNRuleManagerEXE = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RuleManager.exe");
+        public class WSHRule : Rule
+        {
+            private ILookup<string, string> parsed;
+
+            private Version version;
+
+            public WSHRule(string regRule)
+            {
+                var parts = regRule.TrimEnd('|').Split('|');
+                if (!(parts[0].StartsWith("v") || parts[0].StartsWith("V")))
+                {
+                    throw new Exception("Unknown rule versioning scheme: " + parts[0]);
+                }
+                this.version = new Version(parts[0].Substring(1));
+                parsed = parts.Skip(1).Select(s => s.Split('=')).ToLookup(s => s[0].ToLower(), s => s[1]);
+            }
+
+            public override NET_FW_ACTION_ Action
+            {
+                get
+                {
+                    return parsed["action"].FirstOrDefault() == "Block" ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
+                }
+            }
+
+            public override bool Active //FIXME: Start using this!
+            {
+                get
+                {
+                    if (parsed["AppPkgId"].FirstOrDefault() != "")
+                        return false;
+                    return parsed["active"].FirstOrDefault() == "TRUE";
+                }
+            }
+
+            public override string ApplicationName
+            {
+                get
+                {
+                    return parsed["app"].FirstOrDefault();
+                }
+            }
+
+            public override string Description
+            {
+                get
+                {
+                    return parsed["desc"].FirstOrDefault();
+                }
+            }
+
+            public override NET_FW_RULE_DIRECTION_ Direction
+            {
+                get
+                {
+                    return parsed["dir"].FirstOrDefault() == "In" ? NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_IN : NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
+                }
+            }
+
+            public override bool EdgeTraversal
+            {
+                get
+                {
+                    return true; //FIXME: !
+                }
+            }
+
+            public override int EdgeTraversalOptions
+            {
+                get
+                {
+                    return 0; //FIXME: !
+                }
+            }
+
+            public override bool Enabled
+            {
+                get
+                {
+                    return parsed.Contains("active") ? bool.Parse(parsed["active"].FirstOrDefault()) : true;
+                }
+            }
+
+            public override string Grouping
+            {
+                get
+                {
+                    return ""; //FIXME: !
+                }
+            }
+
+            public override string IcmpTypesAndCodes
+            {
+                get
+                {
+                    return ""; //FIXME: !
+                }
+            }
+
+            public override object Interfaces
+            {
+                get
+                {
+                    return null; //FIXME: !
+                }
+            }
+
+            public override string InterfaceTypes
+            {
+                get
+                {
+                    return ""; //FIXME: !
+                }
+            }
+
+            public override string LocalAddresses
+            {
+                get
+                {
+                    return String.Join(", ", parsed["la4"].Concat(parsed["la6"]).ToArray());
+                }
+            }
+
+            public override string LocalPorts
+            {
+                get
+                {
+                    return parsed["lport"].FirstOrDefault();
+                }
+            }
+
+            public override string Name
+            {
+                get
+                {
+                    return "WSH - " + CommonHelper.GetMSResourceString(parsed["name"].FirstOrDefault());
+                }
+            }
+
+            public override int Profiles
+            {
+                get
+                {
+                    if (parsed["profile"].Count() == 0)
+                    {
+                        return (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL;
+                    }
+                    int profiles = 0;
+                    foreach (var profile in parsed["profile"])
+                    {
+                        switch (profile)
+                        {
+                            case "Public":
+                                profiles += (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC;
+                                break;
+
+                            case "Domain":
+                                profiles += (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN;
+                                break;
+
+                            case "Private":
+                                profiles += (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE;
+                                break;
+
+                            default:
+                                LogHelper.Warning("Unknown profile type: " + profile);
+                                break;
+                        }
+                    }
+                    return profiles;
+                }
+            }
+
+            public override int Protocol
+            {
+                get
+                {
+                    if (parsed.Contains("protocol") && parsed["protocol"].Any())
+                    {
+                        return int.Parse(parsed["protocol"].First());
+                    }
+                    else
+                    {
+                        return (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY;
+                    }
+                }
+            }
+
+            public override string RemoteAddresses
+            {
+                get
+                {
+                    return String.Join(", ", parsed["ra4"].Concat(parsed["ra6"]).ToArray());
+                }
+            }
+
+            public override string RemotePorts
+            {
+                get
+                {
+                    return parsed["rport"].FirstOrDefault();
+                }
+            }
+
+            public override string serviceName
+            {
+                get
+                {
+                    return parsed["svc"].FirstOrDefault();
+                }
+            }
+
+            //FIXME: v2.10?
+            //public int EdgeTraversalOptions { get; set; }
+
+            //// Win 8 ?
+            //if (this.version >= new Version(2, 20))
+            //{
+            //    this.AppPkgId = parsed["apppkdid"].FirstOrDefault();
+            //    this.Security = parsed["security"].FirstOrDefault();
+            //    this.LUAuth = parsed["luauth"].FirstOrDefault();
+            //    this.LUOwn = parsed["luown"].FirstOrDefault();
+            //}
+
+            //private string resolveString(string p)
+            //{
+            //    if (p != null && p.StartsWith("@"))
+            //    {
+            //        string[] res = p.Substring(1).Split(',');
+
+            //        IntPtr lib = LoadLibraryEx(res[0], IntPtr.Zero, LOAD_LIBRARY_AS_DATAFILE);
+            //        try
+            //        {
+            //            //IntPtr strh = FindResource(lib, int.Parse(res[1]), 6);
+            //            //if (strh != IntPtr.Zero)
+            //            {
+            //                StringBuilder sb = new StringBuilder(255); //FIXME: Hardcoded string size!
+            //                LoadString(lib, (UInt16)int.Parse(res[1]), sb, sb.Capacity);
+
+            //                return (sb.Length > 0 ? sb.ToString() : p);
+            //            }
+            //            //else
+            //            {
+            //                return p;
+            //            }
+            //        }
+            //        finally
+            //        {
+            //            FreeLibrary(lib);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        return p;
+            //    }
+            //}
+        }
+
+        public class FwRule : Rule
+        {
+            private NetFwTypeLib.INetFwRule InnerRule;
+
+            public FwRule(INetFwRule innerRule)
+            {
+                InnerRule = innerRule;
+            }
+
+            public override NET_FW_ACTION_ Action { get { return InnerRule.Action; } }
+
+            public override bool Active { get { return true; } }
+
+            private string _applicationName = null;
+            public override string ApplicationName
+            {
+                get
+                {
+                    if (_applicationName == null)
+                    {
+                        _applicationName = (InnerRule.ApplicationName != null ? Environment.ExpandEnvironmentVariables(InnerRule.ApplicationName) : String.Empty);
+
+                    }
+                    return _applicationName;
+                }
+            }
+
+            private string _description = null;
+            public override string Description
+            {
+                get
+                {
+                    if (_description == null)
+                    {
+                        _description = CommonHelper.GetMSResourceString(InnerRule.Description);
+                    }
+
+                    return _description;
+                }
+            }
+
+            public override NET_FW_RULE_DIRECTION_ Direction { get { return InnerRule.Direction; } }
+            public override bool EdgeTraversal { get { return InnerRule.EdgeTraversal; } }
+            public override int EdgeTraversalOptions
+            {
+                get
+                {
+                    if (InnerRule is INetFwRule2)
+                    {
+                        return ((INetFwRule2)InnerRule).EdgeTraversalOptions;
+                    }
+                    else
+                    {
+                        return 0; //FIXME: https://msdn.microsoft.com/en-us/library/windows/desktop/dd607258(v=vs.85).aspx   Proper default value...?
+                    }
+                }
+            }
+            public override bool Enabled { get { return InnerRule.Enabled; } }
+            public override string Grouping { get { return InnerRule.Grouping; } }
+            public override string IcmpTypesAndCodes { get { return InnerRule.IcmpTypesAndCodes; } }
+            public override object Interfaces { get { return InnerRule.Interfaces; } }
+            public override string InterfaceTypes { get { return InnerRule.InterfaceTypes; } }
+            public override string LocalAddresses { get { return InnerRule.LocalAddresses; } }
+            public override string LocalPorts { get { return InnerRule.LocalPorts; } }
+
+            private string _name = null;
+            public override string Name
+            {
+                get
+                {
+                    if (_name == null)
+                    {
+                        _name = CommonHelper.GetMSResourceString(InnerRule.Name);
+                    }
+
+                    return _name;
+                }
+            }
+
+            public override int Profiles { get { return InnerRule.Profiles; } }
+            public override int Protocol { get { return InnerRule.Protocol; } }
+            public override string RemoteAddresses { get { return InnerRule.RemoteAddresses; } }
+            public override string RemotePorts { get { return InnerRule.RemotePorts; } }
+            public override string serviceName { get { return InnerRule.serviceName; } }
+        }
 
         /// <summary>
         /// 
@@ -550,7 +754,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
             catch
             {
-
+                //FIXME: Log the error?
             }
 
             return false;
@@ -576,7 +780,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
             catch
             {
-
+                //FIXME: Log the error?
             }
 
             return false;
@@ -591,7 +795,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             ANY = NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY
         }
 
-        public static Rule[] GetRules()
+        public static Rule[] GetRules(bool AlsoGetInactive = false)
         {
             if (wshRulesCache == null)
             {
@@ -608,13 +812,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     allkeyvalues = allkeyvalues.Concat(keyConfig.GetValueNames().Select(s => (string)keyConfig.GetValue(s)));
                 }
 
-                // Windows 8 or higher (ignoring Metro apps)
-                if (Environment.OSVersion.Version >= new System.Version(6, 2))
+                if (AlsoGetInactive)
                 {
-                    allkeyvalues = allkeyvalues.Where(r => !r.Contains("AppPkgId"));
+                    wshRulesCache = allkeyvalues.Select(s => new WSHRule(s)).ToArray();
                 }
-
-                wshRulesCache = allkeyvalues.Select(s => new Rule(s)).ToArray();
+                else
+                {
+                    wshRulesCache = allkeyvalues.Select(s => new WSHRule(s)).Where(r => r.Active).ToArray();
+                }
 
                 if (keyStatic != null)
                 {
@@ -627,7 +832,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
 
             return firewallPolicy.Rules.Cast<INetFwRule>()
-                                       .Select(r => new Rule(r))
+                                       .Select(r => new FwRule(r))
                                        .Concat(wshRulesCache)
                                        .ToArray();
         }
@@ -639,6 +844,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         public static bool IsIPProtocol(int protocol)
         {
+            //Used to check whether this protocol supports ports.
             return (protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP || protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_UDP);
         }
 
@@ -737,7 +943,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             return GetProfileAsText(GetCurrentProfile());
         }
-
 
         public static string GetProfileAsText(int profile_type)
         {
