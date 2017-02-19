@@ -26,6 +26,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         //[return: MarshalAs(UnmanagedType.Bool)]
         //private static extern bool FreeLibrary([In] IntPtr hModule);
 
+        //private const uint LOAD_LIBRARY_AS_DATAFILE = 0&00000002;
+
         public class Rule
         {
             private class WSHRule : INetFwRule
@@ -73,7 +75,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 //    {
                 //        string[] res = p.Substring(1).Split(',');
 
-                //        IntPtr lib = LoadLibraryEx(res[0], IntPtr.Zero, 0&00000002);
+                //        IntPtr lib = LoadLibraryEx(res[0], IntPtr.Zero, LOAD_LIBRARY_AS_DATAFILE);
                 //        //IntPtr strh = FindResource(lib, int.Parse(res[1]), 6);
                 //        //if (strh != IntPtr.Zero)
                 //        {
@@ -607,7 +609,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 }
 
                 // Windows 8 or higher (ignoring Metro apps)
-                if ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 2) || (Environment.OSVersion.Version.Major > 6))
+                if ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 2) || (Environment.OSVersion.Version.Major > 6)) 
                 {
                     allkeyvalues = allkeyvalues.Where(r => !r.Contains("AppPkgId"));
                 }
