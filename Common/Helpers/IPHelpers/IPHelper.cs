@@ -112,6 +112,64 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return new IPAddress(_remoteAddress).ToString();
         }
 
+        public static string MergePorts(List<int> ports)
+        {
+            string result = "";
+            int BeginRange = -2; //-2 to make sure it never matches any starting port (0 or larger).
+            int EndRange = -2; //Initialization strictly speaking not necessary, but it shuts up a compiler warning.
+            foreach (var port in ports)
+            {
+                if (port == EndRange + 1)
+                {
+                    //Part of the currently running range
+                    EndRange = port;
+                    continue;
+                }
+                else
+                {
+                    if (BeginRange != -2)
+                    {
+                        //Save the running range, because this port isn't part of it!
+                        if (result != "")
+                        {
+                            result += ",";
+                        }
+                        if (BeginRange != EndRange)
+                        {
+                            //Actual range.
+                            result += BeginRange.ToString() + "-" + EndRange.ToString();
+                        }
+                        else
+                        {
+                            //Lonely port.
+                            result += BeginRange.ToString();
+                        }
+                    }
+                    BeginRange = port;
+                    EndRange = port;
+                }
+            }
+            //Save the last running range, if any.
+            if (BeginRange != -2)
+            {
+                //Save the running range, because this port isn't part of it!
+                if (result != "")
+                {
+                    result += ",";
+                }
+                if (BeginRange != EndRange)
+                {
+                    //Actual range.
+                    result += BeginRange.ToString() + "-" + EndRange.ToString();
+                }
+                else
+                {
+                    //Lonely port.
+                    result += BeginRange.ToString();
+                }
+            }
+            return result;
+        }
 
         public static int GetMaxUserPort()
         {

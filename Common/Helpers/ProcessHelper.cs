@@ -219,12 +219,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return result.ToArray();
         }
 
-        public static void GetService(int pid, int threadid, string path, int protocol, string localport, string target, string remoteport, out string[] svc, out string[] svcdsc, out bool unsure)
+        public static void GetService(int pid, int threadid, string path, int protocol, int localport, string target, int remoteport, out string[] svc, out string[] svcdsc, out bool unsure)
         {
             // Try to lookup details about connection to localport.
             //@wokhan: how is this supposed to work since connection is blocked by firewall??
             LogHelper.Info("Trying to retrieve service name through connection information.");
-            var ret = IPHelper.GetOwner(pid, int.Parse(localport));
+            var ret = IPHelper.GetOwner(pid, localport);
             if (ret != null && !String.IsNullOrEmpty(ret.ModuleName))
             {
                 // Returns the owner only if it's indeed a service.
@@ -330,7 +330,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             // Retrieves corresponding existing rules
             LogHelper.Info("Trying to retrieve service name through rule information.");
             int profile = FirewallHelper.GetCurrentProfile();
-            var cRules = FirewallHelper.GetMatchingRules(path, protocol, target, remoteport, localport, svc, false, false)
+            var cRules = FirewallHelper.GetMatchingRules(path, protocol, target, remoteport.ToString(), localport.ToString(), svc, false, false)
                                        .Select(r => r.serviceName)
                                        .Distinct()
                                        .ToList();

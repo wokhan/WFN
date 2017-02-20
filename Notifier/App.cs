@@ -66,7 +66,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         /// <param name="targetPort"></param>
         /// <param name="localPort"></param>
         /// <returns>false if item is blocked and was thus not added to internal query list</returns>
-        public bool AddItem(int pid, int threadid, string path, string target, int protocol, string targetPort, string localPort)
+        public bool AddItem(int pid, int threadid, string path, string target, int protocol, int targetPort, int localPort)
         {
             try
             {
@@ -75,14 +75,15 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     path = FileHelper.GetFriendlyPath(path);
                 }
 
-                var existing = this.Connections.FirstOrDefault(c => c.CurrentPath == path && c.Target == target && c.TargetPort == targetPort && (int.Parse(localPort) >= IPHelper.GetMaxUserPort() || c.LocalPort == localPort) && c.Protocol == protocol);
+                var existing = this.Connections.FirstOrDefault(c => c.CurrentPath == path && c.Target == target && c.TargetPort == targetPort.ToString() && (localPort >= IPHelper.GetMaxUserPort() || c.LocalPort == localPort.ToString()) && c.Protocol == protocol);
                 if (existing != null)
                 {
                     LogHelper.Debug("Matches an already existing connection request.");
                     if (!existing.LocalPortArray.Contains(localPort))
                     {
                         existing.LocalPortArray.Add(localPort);
-                        existing.LocalPort += "," + localPort;
+                        existing.LocalPortArray.Sort(); //Note: Unfortunately, C# doesn't have a simple List that automatically sorts... :(
+                        existing.LocalPort = IPHelper.MergePorts(existing.LocalPortArray);
                     }
                     existing.TentativesCounter++;
                 }
@@ -136,9 +137,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                         {
                             string[] esplit = exclusion.Split(';');
                             if (esplit.Length == 1 ||
-                                    ((esplit[1] == String.Empty || esplit[1] == localPort) &&
+                                    ((esplit[1] == String.Empty || esplit[1] == localPort.ToString()) &&
                                      (esplit[2] == String.Empty || esplit[2] == target) &&
-                                     (esplit[3] == String.Empty || esplit[3] == targetPort)))
+                                     (esplit[3] == String.Empty || esplit[3] == targetPort.ToString())))
                             {
                                 LogHelper.Info("Connection is excluded!");
                                 return false;
@@ -147,7 +148,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     }
 
                     // Check whether this connection is blocked by a rule.
-                    var blockingRules = FirewallHelper.GetMatchingRules(path, protocol, target, targetPort, localPort, unsure ? svc : svc.Take(1), true);
+                    var blockingRules = FirewallHelper.GetMatchingRules(path, protocol, target, targetPort.ToString(), localPort.ToString(), unsure ? svc : svc.Take(1), true);
                     if (blockingRules.Any())
                     {
                         LogHelper.Info("Connection matches a block-rule!");
@@ -177,10 +178,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                         Editor = fileinfo != null ? fileinfo.CompanyName : String.Empty,
                         CurrentPath = path,
                         Protocol = protocol,
-                        TargetPort = targetPort,
+                        TargetPort = targetPort.ToString(),
                         RuleName = String.Format(Common.Resources.RULE_NAME_FORMAT, unsure || String.IsNullOrEmpty(svcdsc.FirstOrDefault()) ? app : svcdsc.FirstOrDefault()),
                         Target = target,
-                        LocalPort = localPort
+                        LocalPort = localPort.ToString()
                     };
 
                     conn.LocalPortArray.Add(localPort);
@@ -243,9 +244,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 int pid = int.Parse(pars["pid"]);
                 int threadid = int.Parse(pars["threadid"]);
                 string currentTarget = pars["ip"];
-                string currentTargetPort = pars["port"];
+                int currentTargetPort = int.Parse(pars["port"]);
                 int currentProtocol = int.Parse(pars["protocol"]);
-                string currentLocalPort = pars["localport"];
+                int currentLocalPort = int.Parse(pars["localport"]);
                 string currentPath = pars["path"];
                 pars = null;
 

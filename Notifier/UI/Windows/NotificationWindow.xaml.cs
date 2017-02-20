@@ -169,7 +169,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 OptionsView.IsProtocolChecked = true;
             }
             OptionsView.IsTargetPortChecked = FirewallHelper.IsIPProtocol(activeConn.Protocol);
-            OptionsView.IsLocalPortChecked = (activeConn.LocalPortArray.Count == 1 && int.Parse(activeConn.LocalPortArray[0]) != 0 && int.Parse(activeConn.LocalPortArray[0]) < IPHelper.GetMaxUserPort());
+            OptionsView.IsLocalPortChecked = (activeConn.LocalPortArray.Count == 1 && activeConn.LocalPortArray[0] != 0 && activeConn.LocalPortArray[0] < IPHelper.GetMaxUserPort());
 
             if (!String.IsNullOrEmpty(activeConn.CurrentService))
             {
