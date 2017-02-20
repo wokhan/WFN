@@ -32,8 +32,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
         public string CurrentService { get; set; }
         public string CurrentServiceDesc { get; set; }
         public string RuleName { get; set; }
-        private List<string> _localPortArray = new List<string>();
-        public List<string> LocalPortArray { get { return _localPortArray; } }
+        private List<int> _localPortArray = new List<int>();
+        public List<int> LocalPortArray { get { return _localPortArray; } }
         public string LocalPort { get; set; }
         public string Target { get; set; }
         public string TargetPort { get; set; }
