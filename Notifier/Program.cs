@@ -11,7 +11,6 @@ using Wokhan.WindowsFirewallNotifier.Notifier.Managers;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier
 {
-
     static class Program
     {
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -52,10 +51,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 {
                     try
                     {
-                        using (SingletonManager app = new SingletonManager())
-                        {
-                            app.Run(argv);
-                        }
+                        SingletonManager app = new SingletonManager();
+                        app.Run(argv);
                         success = true;
                     }
                     catch (CantStartSingleInstanceException)

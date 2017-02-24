@@ -1,14 +1,10 @@
 ﻿using Microsoft.VisualBasic.ApplicationServices;
-using System;
-using System.Threading;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.Managers
 {
-    class SingletonManager : WindowsFormsApplicationBase, IDisposable
+    class SingletonManager : WindowsFormsApplicationBase
     {
         private static App application;
-
-        private static Mutex mutex = new Mutex();
 
         public SingletonManager()
         {
@@ -16,54 +12,22 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Managers
             EnableVisualStyles = false;
         }
 
-        protected override bool OnStartup(Microsoft.VisualBasic.ApplicationServices.StartupEventArgs e)
+        protected override bool OnStartup(StartupEventArgs e)
         {
-            mutex.WaitOne();
-            try
-            {
-                application = new App(e.CommandLine);
-                application.Run();
-            }
-            finally
-            {
-                mutex.ReleaseMutex();
-            }
+            application = new App(e.CommandLine);
+            application.Run();
 
             return false;
         }
 
         protected override void OnStartupNextInstance(StartupNextInstanceEventArgs e)
         {
-            base.OnStartupNextInstance(e);
-
             //Give focus to the main instance
             e.BringToForeground = true;
 
-            //There is a race condition where the original program might already have shutdown. Let's try and work around that.
-            //Note: Using double-checked locking here.
-            if (application == null)
-            {
-                mutex.WaitOne();
-                try
-                {
-                    if (application == null)
-                    {
-                        application = new App(e.CommandLine);
-                        application.Run();
-                        return;
-                    }
-                }
-                finally
-                {
-                    mutex.ReleaseMutex();
-                }
-            }
-            application.NextInstance(e.CommandLine);
-        }
+            base.OnStartupNextInstance(e);
 
-        public void Dispose()
-        {
-            mutex.Dispose();
+            application.NextInstance(e.CommandLine);
         }
     }
 }
