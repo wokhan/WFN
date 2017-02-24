@@ -25,6 +25,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
         public App()
         {
+            this.ShutdownMode = ShutdownMode.OnMainWindowClose;
             CommonHelper.OverrideSettingsFile("WFN.config");
         }
 
@@ -271,7 +272,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 {
                     LogHelper.Debug("No notification window loaded; creating a new one...");
                     window = new NotificationWindow();
-                    this.ShutdownMode = ShutdownMode.OnMainWindowClose;
                     //this.Run(window);
                 }
 
