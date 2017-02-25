@@ -330,8 +330,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             // Retrieves corresponding existing rules
             LogHelper.Info("Trying to retrieve service name through rule information.");
             int profile = FirewallHelper.GetCurrentProfile();
-            var cRules = FirewallHelper.GetMatchingRules(path, protocol, target, remoteport.ToString(), localport.ToString(), svc, false, false)
-                                       .Select(r => r.serviceName)
+            var cRules = FirewallHelper.GetMatchingRules(path, getAppPkgId(pid), protocol, target, remoteport.ToString(), localport.ToString(), svc, false, false)
+                                       .Select(r => r.ServiceName)
                                        .Distinct()
                                        .ToList();
 
@@ -388,6 +388,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
         }
 
+        public static string getAppPkgId(int pid)
+        {
+            //@
+            return String.Empty;
+        }
+
         public static bool getProcessFeedback(string cmd, string args)
         {
             return getProcessFeedback(cmd, args, false, false);
@@ -438,31 +444,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             {
                 return false;
             }
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cmd"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public static string getProcessResponse(string cmd, string args)
-        {
-            ProcessStartInfo psiTaskTest = new ProcessStartInfo(cmd, args);
-            psiTaskTest.CreateNoWindow = true;
-            psiTaskTest.UseShellExecute = false;
-            psiTaskTest.RedirectStandardOutput = true;
-
-            Process procTaskTest = Process.Start(psiTaskTest);
-
-            string ret = procTaskTest.StandardOutput.ReadToEnd();
-            procTaskTest.Close();
-            //procTaskTest.WaitForExit();
-
-            //Application.DoEvents();
-
-            return ret;
         }
 
         /// <summary>
