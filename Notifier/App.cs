@@ -149,7 +149,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     }
 
                     // Check whether this connection is blocked by a rule.
-                    var blockingRules = FirewallHelper.GetMatchingRules(path, protocol, target, targetPort.ToString(), localPort.ToString(), unsure ? svc : svc.Take(1), true);
+                    var blockingRules = FirewallHelper.GetMatchingRules(path, ProcessHelper.getAppPkgId(pid), protocol, target, targetPort.ToString(), localPort.ToString(), unsure ? svc : svc.Take(1), true);
                     if (blockingRules.Any())
                     {
                         LogHelper.Info("Connection matches a block-rule!");
@@ -158,7 +158,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                         sb.Append("Blocked by: ");
                         foreach (FirewallHelper.Rule s in blockingRules)
                         {
-                            sb.Append(s.Name + ": " + s.ApplicationName + ", " + s.Description + ", " + s.ActionStr + ", " + s.serviceName + ", " + s.Enabled);
+                            sb.Append(s.Name + ": " + s.ApplicationName + ", " + s.Description + ", " + s.ActionStr + ", " + s.ServiceName + ", " + s.Enabled);
                         }
                         LogHelper.Debug("pid: " + Process.GetCurrentProcess().Id + " GetMatchingRules: " + path + ", " + protocol + ", " + target + ", " + targetPort + ", " + localPort + ", " + String.Join(",", svc));
 
@@ -176,6 +176,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     var conn = new CurrentConn
                     {
                         CurrentProd = app,
+                        CurrentAppPkgId = ProcessHelper.getAppPkgId(pid),
                         Editor = fileinfo != null ? fileinfo.CompanyName : String.Empty,
                         CurrentPath = path,
                         Protocol = protocol,
@@ -249,7 +250,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 int currentProtocol = int.Parse(pars["protocol"]);
                 int currentLocalPort = int.Parse(pars["localport"]);
                 string currentPath = pars["path"];
-                pars = null;
+                pars = null; //Release memory for GC
 
                 LogHelper.Debug("Initializing exclusions...");
                 initExclusions();

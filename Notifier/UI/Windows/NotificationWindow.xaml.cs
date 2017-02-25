@@ -37,6 +37,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             public bool IsTempRuleChecked { get; set; }
             public bool IsLocalPortChecked { get; set; }
+            public bool IsTargetPortEnabled { get; set; } //FIXME: Search for IsIPProtocol, and MAKE THIS WORK!
             public bool IsTargetPortChecked { get; set; }
             public bool IsCurrentProfileChecked { get; set; }
             public bool IsServiceRuleChecked { get; set; }
@@ -325,6 +326,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             if (success)
             {
                 LogHelper.Info("New rule for connection successfully created!");
+
                 for (int i = ((App)Application.Current).Connections.Count - 1; i >= 0; i--)
                 {
                     var c = ((App)Application.Current).Connections[i];
@@ -333,8 +335,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                     {
                         svc = new[] { c.CurrentService };
                     }
-                    //FIXME: This false-positives a lot...
-                    if (FirewallHelper.GetMatchingRules(c.CurrentPath, c.Protocol, c.Target, c.TargetPort, c.LocalPort, svc, false).Any()) //FIXME: LocalPort may have multiple!)
+                    if (FirewallHelper.GetMatchingRules(c.CurrentPath, c.CurrentAppPkgId, c.Protocol, c.Target, c.TargetPort, c.LocalPort, svc, false).Any()) //FIXME: LocalPort may have multiple!)
                     {
                         LogHelper.Debug("Auto-removing a similar connection...");
                         ((App)Application.Current).Connections.Remove(c);

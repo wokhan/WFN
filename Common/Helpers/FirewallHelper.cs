@@ -33,12 +33,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         public abstract class Rule
         {
             public abstract NET_FW_ACTION_ Action { get; }
-            public abstract bool Active { get; }
             public abstract string ApplicationName { get; }
             public abstract string Description { get; }
             public abstract NET_FW_RULE_DIRECTION_ Direction { get; }
             public abstract bool EdgeTraversal { get; }
-            public abstract bool Enabled { get; }
+            public abstract bool Enabled { get; } //Active
             public abstract string Grouping { get; }
             public abstract string IcmpTypesAndCodes { get; }
             public abstract object Interfaces { get; }
@@ -50,13 +49,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             public abstract int Protocol { get; }
             public abstract string RemoteAddresses { get; }
             public abstract string RemotePorts { get; }
-            public abstract string serviceName { get; }
+            public abstract string ServiceName { get; }
 
             //FIXME: v2.10?
             public abstract int EdgeTraversalOptions { get; }
 
             // For metro apps (v2.20)
-            //public abstract string AppPkgId { get; } //FIXME: !!!
+            public abstract string AppPkgId { get; }
             //public abstract string Security { get; }
             //public abstract string LUOwn { get; }
             //public abstract string LUAuth { get; }
@@ -165,21 +164,19 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 }
             }
 
-            public override bool Active //FIXME: Start using this!
-            {
-                get
-                {
-                    if (parsed["AppPkgId"].FirstOrDefault() != "")
-                        return false;
-                    return parsed["active"].FirstOrDefault() == "TRUE";
-                }
-            }
-
             public override string ApplicationName
             {
                 get
                 {
                     return parsed["app"].FirstOrDefault();
+                }
+            }
+
+            public override string AppPkgId
+            {
+                get
+                {
+                    return parsed["apppkgid"].FirstOrDefault();
                 }
             }
 
@@ -344,7 +341,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 }
             }
 
-            public override string serviceName
+            public override string ServiceName
             {
                 get
                 {
@@ -409,8 +406,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             public override NET_FW_ACTION_ Action { get { return InnerRule.Action; } }
 
-            public override bool Active { get { return true; } }
-
             private string _applicationName = null;
             public override string ApplicationName
             {
@@ -422,6 +417,21 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
                     }
                     return _applicationName;
+                }
+            }
+
+            public override string AppPkgId
+            {
+                get
+                {
+                    if (InnerRule is INetFwRule3)
+                    {
+                        return ((INetFwRule3)InnerRule).LocalAppPackageId;
+                    }
+                    else
+                    {
+                        return String.Empty;
+                    }
                 }
             }
 
@@ -481,7 +491,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             public override int Protocol { get { return InnerRule.Protocol; } }
             public override string RemoteAddresses { get { return InnerRule.RemoteAddresses; } }
             public override string RemotePorts { get { return InnerRule.RemotePorts; } }
-            public override string serviceName { get { return InnerRule.serviceName; } }
+            public override string ServiceName { get { return InnerRule.serviceName; } }
         }
 
         /// <summary>
@@ -812,14 +822,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     allkeyvalues = allkeyvalues.Concat(keyConfig.GetValueNames().Select(s => (string)keyConfig.GetValue(s)));
                 }
 
-                if (AlsoGetInactive)
-                {
-                    wshRulesCache = allkeyvalues.Select(s => new WSHRule(s)).ToArray();
-                }
-                else
-                {
-                    wshRulesCache = allkeyvalues.Select(s => new WSHRule(s)).Where(r => r.Active).ToArray();
-                }
+                wshRulesCache = allkeyvalues.Select(s => new WSHRule(s)).ToArray();
 
                 if (keyStatic != null)
                 {
@@ -831,10 +834,18 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 }
             }
 
-            return firewallPolicy.Rules.Cast<INetFwRule>()
+            var ret = firewallPolicy.Rules.Cast<INetFwRule>()
                                        .Select(r => new FwRule(r))
-                                       .Concat(wshRulesCache)
-                                       .ToArray();
+                                       .Concat(wshRulesCache);
+
+            if (!AlsoGetInactive)
+            {
+                return ret.Where(r => r.Enabled).ToArray();
+            }
+            else
+            {
+                return ret.ToArray();
+            }
         }
 
         public static int GetCurrentProfile()
@@ -848,10 +859,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return (protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP || protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_UDP);
         }
 
-        public static IEnumerable<Rule> GetMatchingRules(string path, int protocol, string target, string targetPort, string localPort, IEnumerable<string> svc, bool blockOnly, bool outgoingOnly = true)
+        public static IEnumerable<Rule> GetMatchingRules(string path, string appPkgId, int protocol, string target, string targetPort, string localPort, IEnumerable<string> svc, bool blockOnly, bool outgoingOnly = true)
         {
             int currentProfile = GetCurrentProfile(); //This call is relatively slow, and calling it many times causes a startup delay. Let's cache it!
-            IEnumerable<Rule> ret = GetRules().Where(r => RuleMatches(r, path, svc, protocol, localPort, target, targetPort, currentProfile));
+            IEnumerable<Rule> ret = GetRules().Where(r => RuleMatches(r, path, svc, protocol, localPort, target, targetPort, appPkgId, currentProfile));
             if (blockOnly)
             {
                 ret = ret.Where(r => r.Action == NET_FW_ACTION_.NET_FW_ACTION_BLOCK);
@@ -862,23 +873,37 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
 
             //Note: This fills up the logfile quite quickly...
-            /*LogHelper.Debug("GetMatchingRules: Matched the following rule:");
-            LogHelper.Debug("ToMatch: " + path + ", " + protocol + ", " + target + ", " + targetPort + ", " + localPort + ", " + String.Join(",", svc) + ", " + blockOnly.ToString());
+            /*LogHelper.Debug("GetMatchingRules: Matching the following rule:");
+            LogHelper.Debug("ToMatch: " + path + ", " + protocol + ", " + target + ", " + targetPort + ", " + localPort + ", " + String.Join(",", svc) + ", " + appPkgId + ", " + blockOnly.ToString(), ", " + outgoingOnly.ToString());
             foreach (var r in ret)
             {
-                LogHelper.Debug("Matched rule: " + r.ApplicationName + ", " + r.Protocol + ", " + r.RemoteAddresses + ", " + r.RemotePorts + ", " + r.LocalPorts + ", " + r.serviceName);
+                LogHelper.Debug("Matched rule: " + r.ApplicationName + ", " + r.Protocol + ", " + r.RemoteAddresses + ", " + r.RemotePorts + ", " + r.LocalPorts + ", " + r.ServiceName + ", " + r.AppPkgId);
+                LogHelper.Debug(r.ActionStr + ", " + r.Description + ", " + r.Enabled);
             }*/
 
             return ret;
         }
 
 
-        private static bool RuleMatches(Rule r, string path, IEnumerable<string> svc, int protocol, string localport, string target, string remoteport, int currentProfile)
+        private static bool RuleMatches(Rule r, string path, IEnumerable<string> svc, int protocol, string localport, string target, string remoteport, string appPkgId, int currentProfile)
         {
+            //Note: This outputs *really* a lot, so use the if-statement to filter!
+            /*if (!String.IsNullOrEmpty(r.ApplicationName) && r.ApplicationName.Contains("winword.exe"))
+            {
+                LogHelper.Debug(r.Enabled.ToString());
+                LogHelper.Debug(r.Profiles.ToString() + " <--> " + currentProfile.ToString() + "   " + (((r.Profiles & currentProfile) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0)).ToString());
+                LogHelper.Debug(r.ApplicationName + " <--> " + path + "   " + ((String.IsNullOrEmpty(r.ApplicationName) || StringComparer.CurrentCultureIgnoreCase.Compare(r.ApplicationName, path) == 0)).ToString());
+                LogHelper.Debug(r.ServiceName + " <--> " + String.Join(",", svc) + "   " + ((String.IsNullOrEmpty(r.ServiceName) || (svc.Any() && (r.ServiceName == "*")) || svc.Contains(r.ServiceName, StringComparer.CurrentCultureIgnoreCase))).ToString());
+                LogHelper.Debug(r.Protocol.ToString() + " <--> " + protocol.ToString() + "   " + (r.Protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY || r.Protocol == protocol).ToString());
+                LogHelper.Debug(r.RemoteAddresses + " <--> " + target + "   " + CheckRuleAddresses(r.RemoteAddresses, target).ToString());
+                LogHelper.Debug(r.RemotePorts + " <--> " + remoteport + "   " + CheckRulePorts(r.RemotePorts, remoteport).ToString());
+                LogHelper.Debug(r.LocalPorts + " <--> " + localport + "   " + CheckRulePorts(r.LocalPorts, localport).ToString());
+                LogHelper.Debug(r.AppPkgId + " <--> " + appPkgId + "   " + (String.IsNullOrEmpty(r.AppPkgId) || (r.AppPkgId == appPkgId)).ToString());
+            }*/
             bool ret = r.Enabled
                        && (((r.Profiles & currentProfile) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0))
-                       && (String.IsNullOrEmpty(r.ApplicationName) || StringComparer.CurrentCultureIgnoreCase.Compare(r.ApplicationName, path) == 0)
-                       && (String.IsNullOrEmpty(r.serviceName) || (svc.Any() && (r.serviceName == "*")) || svc.Contains(r.serviceName, StringComparer.CurrentCultureIgnoreCase))
+                       && ((String.IsNullOrEmpty(r.ApplicationName) || StringComparer.CurrentCultureIgnoreCase.Compare(r.ApplicationName, path) == 0))
+                       && ((String.IsNullOrEmpty(r.ServiceName) || (svc.Any() && (r.ServiceName == "*")) || svc.Contains(r.ServiceName, StringComparer.CurrentCultureIgnoreCase)))
                        && (r.Protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY || r.Protocol == protocol)
                        && CheckRuleAddresses(r.RemoteAddresses, target)
                        && CheckRulePorts(r.RemotePorts, remoteport)
@@ -886,6 +911,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                        //&& r.EdgeTraversal == //@
                        //&& r.Interfaces == //@
                        //&& r.LocalAddresses //@
+                       && (String.IsNullOrEmpty(r.AppPkgId) || (r.AppPkgId == appPkgId))
                        ;
 
             return ret;
