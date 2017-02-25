@@ -44,6 +44,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     EnsureUserSession(pid, argv);
                 }
 
+                pars = null; //Release for GC
+
                 //There's a race condition when the previous instance is shutting down, so we have to retry a couple of times.
                 bool success = false;
                 uint RetryCount = 0;
