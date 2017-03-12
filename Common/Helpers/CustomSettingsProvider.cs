@@ -17,6 +17,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         private Dictionary<string, object> _valuesCache = new Dictionary<string, object>();
 
         private static readonly string SectionName = "Wokhan.WindowsFirewallNotifier.Configuration";
+        private static readonly string applicationSectionName = "applicationSettings";
+        private static readonly string userSectionName = "userSettings";
         public static readonly string SharedConfigurationPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "WFN.config");
         public static readonly string UserConfigurationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Wokhan Solutions", "WFN", "user.config");
         public static readonly string UserLocalConfigurationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN", "user.config");
@@ -85,7 +87,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             try
             {
-                return (ClientSettingsSection)cfg.GetSectionGroup("applicationSettings").Sections[SectionName];
+                return (ClientSettingsSection)cfg.GetSectionGroup(applicationSectionName).Sections[SectionName];
             }
             catch (ConfigurationErrorsException e)
             {
@@ -102,7 +104,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             try
             {
-                return (ClientSettingsSection)cfg.GetSectionGroup("userSettings").Sections[SectionName];
+                return (ClientSettingsSection)cfg.GetSectionGroup(userSectionName).Sections[SectionName];
             }
             catch (ConfigurationErrorsException e)
             {
@@ -127,7 +129,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 if (createIfNone)
                 {
                     var sharedcfg = GetSharedConfiguration();
-                    sharedcfg.SectionGroups.Remove("applicationSettings");
+                    sharedcfg.SectionGroups.Remove(applicationSectionName);
                     sharedcfg.SaveAs(UserConfigurationPath, ConfigurationSaveMode.Minimal);
                 }
                 else
