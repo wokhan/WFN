@@ -11,37 +11,37 @@
     <Setting Name="ConsoleState" Type="System.Windows.WindowState" Scope="User">
       <Value Profile="(Default)">Normal</Value>
     </Setting>
-    <Setting Name="UseAnimation" Type="System.Boolean" Scope="User">
+    <Setting Name="UseAnimation" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="FirstRun" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="EnableForAllAccounts" Type="System.Boolean" Scope="User">
+    <Setting Name="EnableForAllAccounts" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="UseBlockRulesGlobal" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="EnableFor" Type="System.Int32" Scope="User">
+    <Setting Name="EnableFor" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="AlwaysShowDetails" Type="System.Boolean" Scope="User">
+    <Setting Name="AlwaysShowDetails" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="MinimizeToTray" Type="System.Boolean" Scope="User">
+    <Setting Name="MinimizeToTray" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ConsoleSizeWidth" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">850</Value>
     </Setting>
-    <Setting Name="AccentColor" Type="System.Windows.Media.SolidColorBrush" Scope="User">
+    <Setting Name="AccentColor" Roaming="true" Type="System.Windows.Media.SolidColorBrush" Scope="User">
       <Value Profile="(Default)">#FFFF7F50</Value>
     </Setting>
-    <Setting Name="EnableVerboseLogging" Type="System.Boolean" Scope="User">
+    <Setting Name="EnableVerboseLogging" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="AlwaysRunAs" Type="System.Boolean" Scope="User">
+    <Setting Name="AlwaysRunAs" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>

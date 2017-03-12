@@ -59,6 +59,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool UseAnimation {
             get {
                 return ((bool)(this["UseAnimation"]));
@@ -83,6 +84,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool EnableForAllAccounts {
             get {
                 return ((bool)(this["EnableForAllAccounts"]));
@@ -104,6 +106,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public int EnableFor {
             get {
                 return ((int)(this["EnableFor"]));
@@ -116,6 +119,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool AlwaysShowDetails {
             get {
                 return ((bool)(this["AlwaysShowDetails"]));
@@ -128,6 +132,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool MinimizeToTray {
             get {
                 return ((bool)(this["MinimizeToTray"]));
@@ -152,6 +157,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("#FFFF7F50")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Windows.Media.SolidColorBrush AccentColor {
             get {
                 return ((global::System.Windows.Media.SolidColorBrush)(this["AccentColor"]));
@@ -164,6 +170,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool EnableVerboseLogging {
             get {
                 return ((bool)(this["EnableVerboseLogging"]));
@@ -176,6 +183,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool AlwaysRunAs {
             get {
                 return ((bool)(this["AlwaysRunAs"]));
