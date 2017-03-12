@@ -13,16 +13,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     public class CustomSettingsProvider : SettingsProvider, IApplicationSettingsProvider
     {
+        //Note: .NET framework has no easy way to get the types right, so our cache will be filled with strings.
         private Dictionary<string, object> _valuesCache = new Dictionary<string, object>();
 
-        private static string SectionName = "Wokhan.WindowsFirewallNotifier.Configuration";
-        public static string UserConfigurationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN", "user.config");
-
-        public static string SharedConfigurationPath
-        {
-            get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "WFN.config"); }
-            set { }
-        }
+        private static readonly string SectionName = "Wokhan.WindowsFirewallNotifier.Configuration";
+        public static readonly string SharedConfigurationPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "WFN.config");
+        public static readonly string UserConfigurationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Wokhan Solutions", "WFN", "user.config");
+        public static readonly string UserLocalConfigurationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN", "user.config");
 
         public override string ApplicationName
         {
@@ -84,14 +81,38 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
         }
 
-        private static ClientSettingsSection GetUserSettingsSection(Configuration cfg)
-        {
-            return (ClientSettingsSection)cfg.GetSectionGroup("userSettings").Sections[SectionName];
-        }
-
         private static ClientSettingsSection GetApplicationSettingsSection(Configuration cfg)
         {
-            return (ClientSettingsSection)cfg.GetSectionGroup("applicationSettings").Sections[SectionName];
+            try
+            {
+                return (ClientSettingsSection)cfg.GetSectionGroup("applicationSettings").Sections[SectionName];
+            }
+            catch (ConfigurationErrorsException e)
+            {
+                LogHelper.Warning("Errors while loading application settings:");
+                foreach (var error in e.Errors)
+                {
+                    LogHelper.Warning(error.ToString());
+                }
+                throw;
+            }
+        }
+
+        private static ClientSettingsSection GetUserSettingsSection(Configuration cfg)
+        {
+            try
+            {
+                return (ClientSettingsSection)cfg.GetSectionGroup("userSettings").Sections[SectionName];
+            }
+            catch (ConfigurationErrorsException e)
+            {
+                LogHelper.Warning("Error while loading user settings:");
+                foreach (var error in e.Errors)
+                {
+                    LogHelper.Warning(error.ToString());
+                }
+                throw;
+            }
         }
 
         private static ClientSettingsSection GetUserSettings(bool createIfNone = false)
@@ -117,7 +138,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             ExeConfigurationFileMap configMap = new ExeConfigurationFileMap();
             configMap.ExeConfigFilename = UserConfigurationPath;
-            configMap.LocalUserConfigFilename = UserConfigurationPath;
+            configMap.LocalUserConfigFilename = UserLocalConfigurationPath;
             configMap.RoamingUserConfigFilename = UserConfigurationPath;
             var cfg = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.PerUserRoamingAndLocal);
 
@@ -189,13 +210,25 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             if (ismod)
             {
-                settings.CurrentConfiguration.Save(ConfigurationSaveMode.Modified);
+                try
+                {
+                    settings.CurrentConfiguration.Save(ConfigurationSaveMode.Modified);
+                }
+                catch (ConfigurationErrorsException e)
+                {
+                    LogHelper.Warning("Error while saving user settings:");
+                    foreach (var error in e.Errors)
+                    {
+                        LogHelper.Warning(error.ToString());
+                    }
+                    throw;
+                }
             }
         }
 
         private bool HasChanged(SettingsPropertyValue x)
         {
-            return _valuesCache[x.Name] != x.PropertyValue;
+            return !x.PropertyValue.ToString().Equals(_valuesCache[x.Name]);
         }
 
         private void OverwriteSetting(ClientSettingsSection section, string settingName, string newValue)
