@@ -26,6 +26,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         private static string assemblyName;
         private static string logFilePath;
         private static readonly Mutex logFileMutex = null;
+        private static readonly String logFileMutexName = @"WindowsFirewallNotifier_Common_LogFile_Mutex";
 
         private static bool isAdmin = UacHelper.CheckProcessElevated();
 
@@ -44,7 +45,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             rule = new MutexAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), MutexRights.ChangePermissions | MutexRights.TakeOwnership, AccessControlType.Deny);
             logFileMutexSecurity.AddAccessRule(rule);
             bool createdNew; //Not used
-            logFileMutex = new Mutex(false, "WindowsFirewallNotifier_Common_LogFile_Mutex", out createdNew, logFileMutexSecurity);
+            logFileMutex = new Mutex(false, logFileMutexName, out createdNew, logFileMutexSecurity);
+
+            bool LoggingFailed = false;
 
             try
             {
@@ -58,7 +61,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             try
             {
                 //Every once in a while, some external program holds on to our logfile (probably anti-virus suites). So we have a retry-structure here.
-                bool success = false;
                 uint RetryCount = 0;
                 while (true)
                 {
@@ -69,31 +71,35 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                             if (!fs.CanWrite)
                             {
                                 CurrentLogsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN");
-                                logFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN", assemblyName + ".log");
+                                logFilePath = Path.Combine(CurrentLogsPath, assemblyName + ".log");
                             }
                         }
-                        success = true;
+                        break;
                     }
                     catch (IOException)
                     {
                         if (RetryCount == Retries)
                         {
-                            MessageBox.Show(Common.Resources.MSG_LOG_FAILED, Common.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                            LoggingFailed = true; //Let's release the Mutex before showing the messagebox.
                             //throw would create an endless loop, so let's just ignore all of this mess...
                             break;
                         }
                         RetryCount++;
                         Thread.Sleep(RetryDelay);
                     }
-                    if (success)
-                    {
-                        break;
-                    }
                 }
             }
             finally
             {
                 logFileMutex.ReleaseMutex();
+            }
+
+            if (LoggingFailed)
+            {
+                if (!WindowsIdentity.GetCurrent().IsSystem) //Don't try to display a messagebox when we're SYSTEM, as this is not allowed.
+                {
+                    MessageBox.Show(Common.Resources.MSG_LOG_FAILED, Common.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
 
             if (Settings.Default.FirstRun)
@@ -170,11 +176,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         public static void Error(string msg, Exception e)
 #endif
         {
-            writeLog("ERROR", msg + Environment.NewLine + (e != null ? e.GetType().ToString() + ": " + e.Message + Environment.NewLine + e.StackTrace : "")
 #if DEBUG
-, memberName, filePath, lineNumber
+            writeLog("ERROR", msg + Environment.NewLine + (e != null ? e.GetType().ToString() + ": " + e.Message + Environment.NewLine + e.StackTrace : ""), memberName, filePath, lineNumber);
+#else
+            writeLog("ERROR", msg + Environment.NewLine + (e != null ? e.GetType().ToString() + ": " + e.Message + Environment.NewLine + e.StackTrace : ""));
 #endif
-                );
         }
 
 #if DEBUG
@@ -209,8 +215,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 try
                 {
                     //Every once in a while, some external program holds on to our logfile (probably anti-virus suites). So we have a retry-structure here.
-                    bool success = false;
-                    int RetryCount = 0;
+                    uint RetryCount = 0;
                     while (true)
                     {
                         try
@@ -244,7 +249,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                                     msg);
 #endif
                             }
-                            success = true;
+                            break;
                         }
                         catch (IOException)
                         {
@@ -256,10 +261,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                             }
                             RetryCount++;
                             Thread.Sleep(RetryDelay);
-                        }
-                        if (success)
-                        {
-                            break;
                         }
                     }
                 }
