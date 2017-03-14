@@ -222,7 +222,6 @@
                                     </Style>
                                 </TextBlock.Style>
                             </TextBlock>
-                            <Path />
                         </WrapPanel>
                     </Button>
                     <Button Foreground="White" Style="{StaticResource RoundedButton}" Background="{DynamicResource AccentColorBrush}" BorderBrush="White" BorderThickness="2" Content="0" FontFamily="Marlett" FontSize="20" Width="30" Height="30" HorizontalAlignment="Right" Click="btnMin_Click" Margin="2,0" Padding="5,0" />
@@ -324,7 +323,7 @@
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Image Margin="5,0,0,0"  Grid.Column="0" Height="32" MinWidth="32" RenderOptions.BitmapScalingMode="HighQuality"  Source="{Binding Icon}" />
+                                <Image Margin="5,0,0,0"  Grid.Column="0" Height="32" MinWidth="32" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Icon}" />
                                 <StackPanel Margin="5" Grid.Column="1">
                                     <TextBlock FontWeight="Bold" Text="{Binding CurrentProd}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
                                     <TextBlock Text="{Binding Editor}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" FontSize="10" />
