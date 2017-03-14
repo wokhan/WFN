@@ -56,6 +56,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                         SingletonManager app = new SingletonManager();
                         app.Run(argv);
                         success = true;
+                        break;
                     }
                     catch (CantStartSingleInstanceException)
                     {
@@ -64,10 +65,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                             break;
                         }
                         RetryCount++;
-                    }
-                    if (success)
-                    {
-                        break;
                     }
                 }
                 if (!success)
