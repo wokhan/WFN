@@ -102,7 +102,21 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                         if (GetTokenInformation(tokenHandle, TOKEN_INFORMATION_CLASS.TokenElevationType, elevationTypePtr, returnedSize, out returnedSize))
                         {
                             TOKEN_ELEVATION_TYPE elevationResult = (TOKEN_ELEVATION_TYPE)Marshal.ReadInt32(elevationTypePtr);
-                            return (elevationResult == TOKEN_ELEVATION_TYPE.TokenElevationTypeFull);
+                            switch (elevationResult)
+                            {
+                                case TOKEN_ELEVATION_TYPE.TokenElevationTypeDefault:
+                                    //Token is not split; if user is admin, we're admin.
+                                    WindowsPrincipal principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
+                                    return principal.IsInRole(WindowsBuiltInRole.Administrator) || principal.IsInRole(0x200); //Domain Administrator
+                                case TOKEN_ELEVATION_TYPE.TokenElevationTypeFull:
+                                    //Token is split, but we're admin.
+                                    return true;
+                                case TOKEN_ELEVATION_TYPE.TokenElevationTypeLimited:
+                                    //Token is split, and we're limited.
+                                    return false;
+                                default:
+                                    throw new Exception("Unknown elevation type!");
+                            }
                         }
                         else
                         {
