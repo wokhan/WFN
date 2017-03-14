@@ -9,6 +9,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console
     {
         public App() : base()
         {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            this.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+
             LogHelper.Debug("Starting Console: " + Environment.CommandLine);
             CommonHelper.OverrideSettingsFile("WFN.config");
 
@@ -16,9 +19,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console
             {
                 RestartAsAdmin();
             }
-
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            this.DispatcherUnhandledException += Current_DispatcherUnhandledException;
         }
 
         private void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
