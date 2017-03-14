@@ -1,5 +1,7 @@
-﻿/* This code has been borrowed from http://stackoverflow.com/questions/1220213/detect-if-running-as-administrator-with-or-without-elevated-privileges
+﻿/* This code has based on http://stackoverflow.com/questions/1220213/detect-if-running-as-administrator-with-or-without-elevated-privileges
    Assumed author: Scott Chamberlain
+
+   With additions from https://code.msdn.microsoft.com/windowsdesktop/CSUACSelfElevation-644673d3/
 */
 using Microsoft.Win32;
 using System;
@@ -85,24 +87,21 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             if (CheckUAC())
             {
                 IntPtr tokenHandle = IntPtr.Zero;
-                if (!OpenProcessToken(Process.GetCurrentProcess().Handle, TOKEN_READ, out tokenHandle))
+                if (!OpenProcessToken(Process.GetCurrentProcess().Handle, TOKEN_QUERY, out tokenHandle))
                 {
                     throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not get process token.");
                 }
 
                 try
                 {
-                    TOKEN_ELEVATION_TYPE elevationResult = TOKEN_ELEVATION_TYPE.TokenElevationTypeDefault;
+                    uint returnedSize = sizeof(TOKEN_ELEVATION_TYPE);
 
-                    int elevationResultSize = Marshal.SizeOf((int)elevationResult);
-                    uint returnedSize = 0;
-
-                    IntPtr elevationTypePtr = Marshal.AllocHGlobal(elevationResultSize);
+                    IntPtr elevationTypePtr = Marshal.AllocHGlobal((int)returnedSize);
                     try
                     {
-                        if (GetTokenInformation(tokenHandle, TOKEN_INFORMATION_CLASS.TokenElevationType, elevationTypePtr, (uint)elevationResultSize, out returnedSize))
+                        if (GetTokenInformation(tokenHandle, TOKEN_INFORMATION_CLASS.TokenElevationType, elevationTypePtr, returnedSize, out returnedSize))
                         {
-                            elevationResult = (TOKEN_ELEVATION_TYPE)Marshal.ReadInt32(elevationTypePtr);
+                            TOKEN_ELEVATION_TYPE elevationResult = (TOKEN_ELEVATION_TYPE)Marshal.ReadInt32(elevationTypePtr);
                             return (elevationResult == TOKEN_ELEVATION_TYPE.TokenElevationTypeFull);
                         }
                         else
