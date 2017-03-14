@@ -190,75 +190,83 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             bool LoggingFailed = false;
 
-            try
+            if (logFileMutex == null)
             {
-                logFileMutex.WaitOne();
+                //Probably crashed in the initialization of LogHelper!
+                LoggingFailed = true;
             }
-            catch (AbandonedMutexException /*ex*/)
+            else
             {
-                //Mutex was abandoned; previous instance probably crashed while holding it.
-                //Console.WriteLine("Exception on return from WaitOne." + "\r\n\tMessage: {0}", ex.Message);
-            }
-            try
-            {
-                //Every once in a while, some external program holds on to our logfile (probably anti-virus suites). So we have a retry-structure here.
-                bool success = false;
-                int RetryCount = 0;
-                while (true)
+                try
                 {
-                    try
+                    logFileMutex.WaitOne();
+                }
+                catch (AbandonedMutexException /*ex*/)
+                {
+                    //Mutex was abandoned; previous instance probably crashed while holding it.
+                    //Console.WriteLine("Exception on return from WaitOne." + "\r\n\tMessage: {0}", ex.Message);
+                }
+                try
+                {
+                    //Every once in a while, some external program holds on to our logfile (probably anti-virus suites). So we have a retry-structure here.
+                    bool success = false;
+                    int RetryCount = 0;
+                    while (true)
                     {
-                        using (var sw = new StreamWriter(logFilePath, true))
+                        try
                         {
-#if DEBUG
-                            var codeLocation = string.Empty;
-                            if (!string.IsNullOrWhiteSpace(memberName)
-                                || !string.IsNullOrWhiteSpace(filePath))
+                            using (var sw = new StreamWriter(logFilePath, true))
                             {
-                                codeLocation = string.Format(" [{0}() in {1}, line {2}]",
-                                    memberName,
-                                    filePath,
-                                    lineNumber);
-                            }
+#if DEBUG
+                                var codeLocation = string.Empty;
+                                if (!string.IsNullOrWhiteSpace(memberName)
+                                    || !string.IsNullOrWhiteSpace(filePath))
+                                {
+                                    codeLocation = string.Format(" [{0}() in {1}, line {2}]",
+                                        memberName,
+                                        filePath,
+                                        lineNumber);
+                                }
 
-                            sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}]{5} {4}",
-                                DateTime.Now,
-                                Environment.UserName,
-                                isAdmin,
-                                type,
-                                msg,
-                                codeLocation);
+                                sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}]{5} {4}",
+                                    DateTime.Now,
+                                    Environment.UserName,
+                                    isAdmin,
+                                    type,
+                                    msg,
+                                    codeLocation);
 #else
-                            sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}] {4}",
-                                DateTime.Now,
-                                Environment.UserName,
-                                isAdmin,
-                                type,
-                                msg);
+                                sw.WriteLine("{0:yyyy/MM/dd HH:mm:ss} - {1} [{2}] - [{3}] {4}",
+                                    DateTime.Now,
+                                    Environment.UserName,
+                                    isAdmin,
+                                    type,
+                                    msg);
 #endif
+                            }
+                            success = true;
                         }
-                        success = true;
-                    }
-                    catch (IOException)
-                    {
-                        if (RetryCount == Retries)
+                        catch (IOException)
                         {
-                            LoggingFailed = true; //Let's release the Mutex before showing the messagebox.
-                            //throw would create an endless loop, so let's just ignore all of this mess...
+                            if (RetryCount == Retries)
+                            {
+                                LoggingFailed = true; //Let's release the Mutex before showing the messagebox.
+                                //throw would create an endless loop, so let's just ignore all of this mess...
+                                break;
+                            }
+                            RetryCount++;
+                            Thread.Sleep(RetryDelay);
+                        }
+                        if (success)
+                        {
                             break;
                         }
-                        RetryCount++;
-                        Thread.Sleep(RetryDelay);
-                    }
-                    if (success)
-                    {
-                        break;
                     }
                 }
-            }
-            finally
-            {
-                logFileMutex.ReleaseMutex();
+                finally
+                {
+                    logFileMutex.ReleaseMutex();
+                }
             }
 
             if (LoggingFailed)
@@ -266,6 +274,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 if (!WindowsIdentity.GetCurrent().IsSystem) //Don't try to display a messagebox when we're SYSTEM, as this is not allowed.
                 {
                     MessageBox.Show(Common.Resources.MSG_LOG_FAILED, Common.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+#if DEBUG
+                    MessageBox.Show(msg, Common.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+#endif
                 }
             }
         }
