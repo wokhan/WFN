@@ -110,7 +110,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         ~LogHelper()
         {
-            logFileMutex.Dispose();
+            if (logFileMutex != null)
+            {
+                logFileMutex.Dispose();
+            }
         }
 
 #if DEBUG
