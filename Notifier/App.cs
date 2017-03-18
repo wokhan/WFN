@@ -106,7 +106,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                             if (File.Exists(path))
                             {
                                 app = FileVersionInfo.GetVersionInfo(path).FileDescription;
-                                if(String.IsNullOrEmpty(app))
+                                if(String.IsNullOrWhiteSpace(app))
                                 {
                                     app = path.Substring(path.LastIndexOf('\\') + 1);
                                 }
