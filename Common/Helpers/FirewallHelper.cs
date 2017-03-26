@@ -691,6 +691,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 case 1:
                     return "ICMP";
 
+                case 2:
+                    return "IGMP"; //Used by OpenVPN, for example.
+
                 case (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP: //6
                     return "TCP";
 
