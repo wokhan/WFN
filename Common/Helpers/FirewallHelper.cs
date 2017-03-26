@@ -891,7 +891,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         private static bool RuleMatches(Rule r, string path, IEnumerable<string> svc, int protocol, string localport, string target, string remoteport, string appPkgId, int currentProfile)
         {
             //Note: This outputs *really* a lot, so use the if-statement to filter!
-            /*if (!String.IsNullOrEmpty(r.ApplicationName) && r.ApplicationName.Contains("winword.exe"))
+            /*if (!String.IsNullOrEmpty(r.ApplicationName) && r.ApplicationName.Contains("svchost.exe"))
             {
                 LogHelper.Debug(r.Enabled.ToString());
                 LogHelper.Debug(r.Profiles.ToString() + " <--> " + currentProfile.ToString() + "   " + (((r.Profiles & currentProfile) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0)).ToString());
@@ -923,7 +923,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         private static bool CheckRuleAddresses(string ruleAddresses, string checkedAddress)
         {
-            //FIXME: Parse properly! See: https://technet.microsoft.com/en-us/aa365366
             if (String.IsNullOrEmpty(ruleAddresses) || ruleAddresses == "*")
             {
                 return true;
@@ -934,6 +933,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
             foreach (string token in ruleAddresses.Split(','))
             {
+                //FIXME: Handle:
+                //FIXME: See: https://technet.microsoft.com/en-us/aa365366
+                //"Defaultgateway"
+                //"DHCP"
+                //"DNS"
+                //"WINS"
+                //"LocalSubnet"
                 if (token == checkedAddress)
                 {
                     return true;
@@ -944,7 +950,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         private static bool CheckRulePorts(string rulePorts, string checkedPort)
         {
-            //FIXME: Untested!
             if (String.IsNullOrEmpty(rulePorts) || rulePorts == "*")
             {
                 return true;
@@ -955,6 +960,17 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 {
                     return true;
                 }
+                //FIXME: Handle:
+                //FIXME: See: https://msdn.microsoft.com/en-us/library/ff719847.aspx
+                //RPC
+                //RPC-EPMap
+                //Teredo
+                //IPHTTPSOut
+                //IPHTTPSIn
+                //Ply2Disc
+                //FIXME: And: https://msdn.microsoft.com/en-us/library/cc231498.aspx
+                //mDNS
+                //CORTANA_OUT ?
                 int checkedPortInt;
                 if (checkedPort.Contains('-') && Int32.TryParse(checkedPort, out checkedPortInt))
                 {
