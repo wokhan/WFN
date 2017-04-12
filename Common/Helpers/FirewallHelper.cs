@@ -519,15 +519,16 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         /// </summary>
         /// <param name="ruleName"></param>
         /// <param name="currentPath"></param>
+        /// <param name="currentAppPkgId"></param>
         /// <param name="service"></param>
         /// <param name="protocol"></param>
         /// <param name="target"></param>
         /// <param name="targetPort"></param>
         /// <param name="localport"></param>
         /// <returns></returns>
-        public static bool AddBlockRuleIndirect(string ruleName, string currentPath, string[] services, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
+        public static bool AddBlockRuleIndirect(string ruleName, string currentPath, string currentAppPkgId, string[] services, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
         {
-            string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, services != null ? String.Join(",", services) : null, protocol, target, targetPort, localport, useCurrentProfile, "B")));
+            string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, currentAppPkgId, services != null ? String.Join(",", services) : null, protocol, target, targetPort, localport, useCurrentProfile, "B")));
             return ProcessHelper.getProcessFeedback(WFNRuleManagerEXE, param, true, false);
         }
 
@@ -536,15 +537,16 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         /// </summary>
         /// <param name="ruleName"></param>
         /// <param name="currentPath"></param>
+        /// <param name="currentAppPkgId"></param>
         /// <param name="service"></param>
         /// <param name="protocol"></param>
         /// <param name="target"></param>
         /// <param name="targetPort"></param>
         /// <param name="localport"></param>
         /// <returns></returns>
-        public static bool AddBlockRule(string ruleName, string currentPath, string service, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
+        public static bool AddBlockRule(string ruleName, string currentPath, string currentAppPkgId, string service, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
         {
-            return AddRule(ruleName, currentPath, service, protocol, target, targetPort, localport, NET_FW_ACTION_.NET_FW_ACTION_BLOCK, false, useCurrentProfile);
+            return AddRule(ruleName, currentPath, currentAppPkgId, service, protocol, target, targetPort, localport, NET_FW_ACTION_.NET_FW_ACTION_BLOCK, false, useCurrentProfile);
         }
 
         /// <summary>
@@ -552,15 +554,16 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         /// </summary>
         /// <param name="ruleName"></param>
         /// <param name="currentPath"></param>
+        /// <param name="currentAppPkgId"></param>
         /// <param name="service"></param>
         /// <param name="protocol"></param>
         /// <param name="target"></param>
         /// <param name="targetPort"></param>
         /// <param name="localport"></param>
         /// <returns></returns>
-        public static bool AddAllowRuleIndirect(string ruleName, string currentPath, string[] services, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
+        public static bool AddAllowRuleIndirect(string ruleName, string currentPath, string currentAppPkgId, string[] services, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
         {
-            string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, services != null ? String.Join(",", services) : null, protocol, target, targetPort, localport, useCurrentProfile, "A")));
+            string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, currentAppPkgId, services != null ? String.Join(",", services) : null, protocol, target, targetPort, localport, useCurrentProfile, "A")));
             return ProcessHelper.getProcessFeedback(WFNRuleManagerEXE, param, true, false);
         }
 
@@ -569,26 +572,27 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         /// </summary>
         /// <param name="ruleName"></param>
         /// <param name="currentPath"></param>
+        /// <param name="currentAppPkgId"></param>
         /// <param name="service"></param>
         /// <param name="protocol"></param>
         /// <param name="target"></param>
         /// <param name="targetPort"></param>
         /// <param name="localport"></param>
         /// <returns></returns>
-        public static bool AddAllowRule(string ruleName, string currentPath, string service, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
+        public static bool AddAllowRule(string ruleName, string currentPath, string currentAppPkgId, string service, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
         {
-            return AddRule(ruleName, currentPath, service, protocol, target, targetPort, localport, NET_FW_ACTION_.NET_FW_ACTION_ALLOW, false, useCurrentProfile);
+            return AddRule(ruleName, currentPath, currentAppPkgId, service, protocol, target, targetPort, localport, NET_FW_ACTION_.NET_FW_ACTION_ALLOW, false, useCurrentProfile);
         }
 
-        public static bool AddTempRuleIndirect(string ruleName,string currentPath, string[] services, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
+        public static bool AddTempRuleIndirect(string ruleName, string currentPath, string currentAppPkgId, string[] services, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
         {
-            string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, services != null ? String.Join(",", services) : null, protocol, target, targetPort, localport, useCurrentProfile, "T")));
+            string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, currentAppPkgId, services != null ? String.Join(",", services) : null, protocol, target, targetPort, localport, useCurrentProfile, "T")));
             return ProcessHelper.getProcessFeedback(WFNRuleManagerEXE, param, true, true);
         }
 
-        public static bool AddTempRule(string ruleName, string currentPath, string service, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
+        public static bool AddTempRule(string ruleName, string currentPath, string currentAppPkgId, string service, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
         {
-            return AddRule(ruleName, currentPath, service, protocol, target, targetPort, localport, NET_FW_ACTION_.NET_FW_ACTION_ALLOW, true, useCurrentProfile);
+            return AddRule(ruleName, currentPath, currentAppPkgId, service, protocol, target, targetPort, localport, NET_FW_ACTION_.NET_FW_ACTION_ALLOW, true, useCurrentProfile);
         }
 
 
@@ -597,6 +601,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         /// </summary>
         /// <param name="ruleName"></param>
         /// <param name="currentPath"></param>
+        /// <param name="currentAppPkgId"></param>
         /// <param name="service"></param>
         /// <param name="protocol"></param>
         /// <param name="target"></param>
@@ -604,11 +609,21 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         /// <param name="localport"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        public static bool AddRule(string ruleName, string currentPath, string service, int protocol, string target, string targetPort, string localport, NET_FW_ACTION_ action, bool isTemp, bool currentProfile = true)
+        public static bool AddRule(string ruleName, string currentPath, string currentAppPkgId, string service, int protocol, string target, string targetPort, string localport, NET_FW_ACTION_ action, bool isTemp, bool currentProfile = true)
         {
             try
             {
-                INetFwRule firewallRule = (INetFwRule)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule"));
+                INetFwRule firewallRule;
+
+                if (!String.IsNullOrEmpty(currentAppPkgId))
+                {
+                    //Need INetFwRule3
+                    firewallRule = (INetFwRule3)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule3"));
+                }
+                else
+                {
+                    firewallRule = (INetFwRule)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule"));
+                }
                 firewallRule.Action = action;
                 firewallRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
                 firewallRule.Enabled = true;
@@ -616,6 +631,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 firewallRule.InterfaceTypes = "All";
                 firewallRule.Name = ruleName;
                 firewallRule.ApplicationName = currentPath;
+
+                if (!String.IsNullOrEmpty(currentAppPkgId))
+                {
+                    ((INetFwRule3)firewallRule).LocalAppPackageId = currentAppPkgId;
+                }
 
                 if (!String.IsNullOrEmpty(service))
                 {
