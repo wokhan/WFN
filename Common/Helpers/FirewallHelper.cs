@@ -27,7 +27,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         //private const uint LOAD_LIBRARY_AS_DATAFILE = 0&00000002;
 
         private static INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
-        private const string indParamFormat = "{0}#$#{1}#$#{2}#$#{3}#$#{4}#$#{5}#$#{6}#$#{7}#$#{8}";
+        private const string indParamFormat = "{0}#$#{1}#$#{2}#$#{3}#$#{4}#$#{5}#$#{6}#$#{7}#$#{8}#$#{9}";
         private static string WFNRuleManagerEXE = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RuleManager.exe");
 
         public abstract class Rule
@@ -618,7 +618,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 if (!String.IsNullOrEmpty(currentAppPkgId))
                 {
                     //Need INetFwRule3
-                    firewallRule = (INetFwRule3)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule3"));
+                    firewallRule = (INetFwRule3)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule"));
                 }
                 else
                 {
