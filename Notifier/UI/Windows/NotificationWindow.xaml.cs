@@ -37,12 +37,14 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             public bool IsTempRuleChecked { get; set; }
             public bool IsLocalPortChecked { get; set; }
-            public bool IsTargetPortEnabled { get; set; } //FIXME: Search for IsIPProtocol, and MAKE THIS WORK!
+            public bool IsTargetPortEnabled { get; set; }
             public bool IsTargetPortChecked { get; set; }
             public bool IsCurrentProfileChecked { get; set; }
             public bool IsServiceRuleChecked { get; set; }
             public bool IsTargetIPChecked { get; set; }
             public bool IsProtocolChecked { get; set; }
+            public bool IsAppEnabled { get; set; }
+            public bool IsAppChecked { get; set; }
             public bool IsService { get; set; }
             public bool IsServiceMultiple { get; set; }
         }
@@ -169,6 +171,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 //On by default. Also: needed to be able to specify port!
                 OptionsView.IsProtocolChecked = true;
             }
+            OptionsView.IsTargetPortEnabled = FirewallHelper.IsIPProtocol(activeConn.Protocol);
             OptionsView.IsTargetPortChecked = FirewallHelper.IsIPProtocol(activeConn.Protocol);
             OptionsView.IsLocalPortChecked = (activeConn.LocalPortArray.Count == 1 && activeConn.LocalPortArray[0] != 0 && activeConn.LocalPortArray[0] < IPHelper.GetMaxUserPort());
 
@@ -190,6 +193,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 OptionsView.IsServiceMultiple = false;
                 OptionsView.IsServiceRuleChecked = false;
             }
+
+            OptionsView.IsAppEnabled = !String.IsNullOrEmpty(activeConn.CurrentAppPkgId);
 
             NotifyPropertyChanged("OptionsView");
         }
@@ -362,7 +367,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 if (Settings.Default.UseBlockRules)
                 {
                     //Process.Start(new ProcessStartInfo(Application.ExecutablePath, ) { Verb = "runas" });
-                    success = FirewallHelper.AddBlockRuleIndirect(activeConn.RuleName, activeConn.CurrentPath, services, _optionsView.IsProtocolChecked ? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked ? activeConn.Target : null, _optionsView.IsTargetPortChecked ? activeConn.TargetPort : null, _optionsView.IsLocalPortChecked ? activeConn.LocalPort : null, _optionsView.IsCurrentProfileChecked);
+                    success = FirewallHelper.AddBlockRuleIndirect(activeConn.RuleName, activeConn.CurrentPath, activeConn.CurrentAppPkgId, services, _optionsView.IsProtocolChecked ? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked ? activeConn.Target : null, _optionsView.IsTargetPortChecked ? activeConn.TargetPort : null, _optionsView.IsLocalPortChecked ? activeConn.LocalPort : null, _optionsView.IsCurrentProfileChecked);
                     if (!success)
                     {
                         MessageBox.Show(Common.Resources.MSG_RULE_FAILED, Common.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
@@ -373,7 +378,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                     string entry = (!_optionsView.IsServiceRuleChecked || String.IsNullOrEmpty(activeConn.CurrentService) ? activeConn.CurrentPath : activeConn.CurrentService) +
                                    (_optionsView.IsLocalPortChecked ? ";" + activeConn.LocalPort : ";") +
                                    (_optionsView.IsTargetIPChecked ? ";" + activeConn.Target : ";") +
-                                   (_optionsView.IsTargetPortChecked ? ";" + activeConn.TargetPort : ";");
+                                   (_optionsView.IsTargetPortChecked ? ";" + activeConn.TargetPort : ";"); //FIXME: Need to add more?
                     using (StreamWriter sw = new StreamWriter(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exclusions.set"), true))
                     {
                         sw.WriteLine(entry);
@@ -395,11 +400,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             bool success = false;
             if (isTemp)
             {
-                success = FirewallHelper.AddTempRuleIndirect(activeConn.RuleName, activeConn.CurrentPath, services, _optionsView.IsProtocolChecked ? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked ? activeConn.Target : null, _optionsView.IsTargetPortChecked ? activeConn.TargetPort : null, _optionsView.IsLocalPortChecked ? activeConn.LocalPort : null, _optionsView.IsCurrentProfileChecked);
+                success = FirewallHelper.AddTempRuleIndirect(activeConn.RuleName, activeConn.CurrentPath, activeConn.CurrentAppPkgId, services, _optionsView.IsProtocolChecked ? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked ? activeConn.Target : null, _optionsView.IsTargetPortChecked ? activeConn.TargetPort : null, _optionsView.IsLocalPortChecked ? activeConn.LocalPort : null, _optionsView.IsCurrentProfileChecked);
             }
             else
             {
-                success = FirewallHelper.AddAllowRuleIndirect(activeConn.RuleName, activeConn.CurrentPath, services, _optionsView.IsProtocolChecked ? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked ? activeConn.Target : null, _optionsView.IsTargetPortChecked ? activeConn.TargetPort : null, _optionsView.IsLocalPortChecked ? activeConn.LocalPort : null, _optionsView.IsCurrentProfileChecked);
+                success = FirewallHelper.AddAllowRuleIndirect(activeConn.RuleName, activeConn.CurrentPath, activeConn.CurrentAppPkgId, services, _optionsView.IsProtocolChecked ? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked ? activeConn.Target : null, _optionsView.IsTargetPortChecked ? activeConn.TargetPort : null, _optionsView.IsLocalPortChecked ? activeConn.LocalPort : null, _optionsView.IsCurrentProfileChecked);
             }
             return success;
         }

@@ -234,6 +234,7 @@
                         <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.5*" />
@@ -275,9 +276,10 @@
                             </Style>
                         </CheckBox.Style>
                     </CheckBox>
-                    <CheckBox Grid.Row="3" x:Name="chkPort" Margin="3" IsChecked="{Binding OptionsView.IsTargetPortChecked, ElementName=NotifWindow}" Content="{Binding TargetPort,FallbackValue='N/A'}" ContentStringFormat="Target port: {0}" />
+                    <CheckBox Grid.Row="3" Margin="3" IsChecked="{Binding OptionsView.IsTargetPortChecked, ElementName=NotifWindow}" Content="{Binding TargetPort,FallbackValue='N/A'}" ContentStringFormat="Target port: {0}" />
                     <CheckBox Grid.Row="3" Grid.Column="1" Margin="3" IsChecked="{Binding OptionsView.IsTargetIPChecked, ElementName=NotifWindow}" Content="{Binding Target, FallbackValue='N/A'}" ContentStringFormat="Target: {0}" />
-                    <!--<CheckBox Grid.Row="4" Grid.ColumnSpan="2" Margin="3" IsChecked="{Binding OptionsView.IsTempRuleChecked, ElementName=NotifWindow}" Content="Only apply this choice now and ask again the next time" />-->
+                    <CheckBox Grid.Row="4" Grid.ColumnSpan="2" Margin="3" IsEnabled="{Binding OptionsView.IsAppEnabled, ElementName=NotifWindow}" IsChecked="{Binding OptionsView.IsAppChecked, ElementName=NotifWindow}" Content="{Binding CurrentAppPkgId,FallbackValue='N/A'}" ContentStringFormat="App: {0}" /><!--FIXME: Really needs ellipses-->
+                    <!--<CheckBox Grid.Row="5" Grid.ColumnSpan="2" Margin="3" IsChecked="{Binding OptionsView.IsTempRuleChecked, ElementName=NotifWindow}" Content="Only apply this choice now and ask again the next time" />-->
                 </Grid>
             </Expander>
             <Button Grid.Row="2" Style="{StaticResource RoundedButton}" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="6" Margin="2" Background="{DynamicResource AccentColorBrush}" BorderThickness="0" Click="btnOptions_Click" Height="30" Width="30">
