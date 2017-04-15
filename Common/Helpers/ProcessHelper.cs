@@ -129,6 +129,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern IntPtr OpenProcess(ProcessHelper.ProcessAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, uint dwProcessId);
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool CloseHandle(IntPtr hObject);
+
         public static string[] GetProcessOwnerWMI(int owningPid, ref Dictionary<int, string[]> previousCache)
         {
             if (previousCache == null)
@@ -413,28 +417,34 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 LogHelper.Warning("Unable to retrieve process package id: process cannot be found!");
                 return String.Empty;
             }
-
-            //Based on: https://github.com/jimschubert/clr-profiler/blob/master/src/CLRProfiler45Source/WindowsStoreAppHelper/WindowsStoreAppHelper.cs
-            uint packageFullNameLength = 0;
-            StringBuilder packageFullNameBld = new StringBuilder();
-
-            uint ret = GetPackageFullName(hProcess, ref packageFullNameLength, packageFullNameBld);
-            if ((ret == APPMODEL_ERROR_NO_PACKAGE) || (packageFullNameLength == 0))
+            try
             {
-                // Not a WindowsStoreApp process
-                return String.Empty;
-            }
+                //Based on: https://github.com/jimschubert/clr-profiler/blob/master/src/CLRProfiler45Source/WindowsStoreAppHelper/WindowsStoreAppHelper.cs
+                uint packageFullNameLength = 0;
+                StringBuilder packageFullNameBld = new StringBuilder();
 
-            // Call again, now that we know the size
-            packageFullNameBld = new StringBuilder((int)packageFullNameLength);
-            ret = GetPackageFullName(hProcess, ref packageFullNameLength, packageFullNameBld);
-            if (ret != ERROR_SUCCESS)
+                uint ret = GetPackageFullName(hProcess, ref packageFullNameLength, packageFullNameBld);
+                if ((ret == APPMODEL_ERROR_NO_PACKAGE) || (packageFullNameLength == 0))
+                {
+                    // Not a WindowsStoreApp process
+                    return String.Empty;
+                }
+
+                // Call again, now that we know the size
+                packageFullNameBld = new StringBuilder((int)packageFullNameLength);
+                ret = GetPackageFullName(hProcess, ref packageFullNameLength, packageFullNameBld);
+                if (ret != ERROR_SUCCESS)
+                {
+                    LogHelper.Warning("Unable to retrieve process package id: failed to retrieve full package name!");
+                    return String.Empty;
+                }
+
+                return packageFullNameBld.ToString();
+            }
+            finally
             {
-                LogHelper.Warning("Unable to retrieve process package id: failed to retrieve full package name!");
-                return String.Empty;
+                CloseHandle(hProcess);
             }
-
-            return packageFullNameBld.ToString();
         }
 
         public static bool getProcessFeedback(string cmd, string args)
