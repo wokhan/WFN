@@ -30,6 +30,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
 
         public string CurrentPath { get; set; }
         public string CurrentAppPkgId { get; set; }
+        public string CurrentLocalUserOwner { get; set; }
         public string CurrentService { get; set; }
         public string CurrentServiceDesc { get; set; }
         public string RuleName { get; set; }

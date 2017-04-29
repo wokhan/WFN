@@ -32,6 +32,64 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             Synchronize = 0x00100000
         }
 
+        private enum TOKEN_INFORMATION_CLASS
+        {
+            TokenUser = 1,
+            TokenGroups,
+            TokenPrivileges,
+            TokenOwner,
+            TokenPrimaryGroup,
+            TokenDefaultDacl,
+            TokenSource,
+            TokenType,
+            TokenImpersonationLevel,
+            TokenStatistics,
+            TokenRestrictedSids,
+            TokenSessionId,
+            TokenGroupsAndPrivileges,
+            TokenSessionReference,
+            TokenSandBoxInert,
+            TokenAuditPolicy,
+            TokenOrigin,
+            TokenElevationType,
+            TokenLinkedToken,
+            TokenElevation,
+            TokenHasRestrictions,
+            TokenAccessInformation,
+            TokenVirtualizationAllowed,
+            TokenVirtualizationEnabled,
+            TokenIntegrityLevel,
+            TokenUIAccess,
+            TokenMandatoryPolicy,
+            TokenLogonSid,
+            TokenIsAppContainer,
+            TokenCapabilities,
+            TokenAppContainerSid,
+            TokenAppContainerNumber,
+            TokenUserClaimAttributes,
+            TokenDeviceClaimAttributes,
+            TokenRestrictedUserClaimAttributes,
+            TokenRestrictedDeviceClaimAttributes,
+            TokenDeviceGroups,
+            TokenRestrictedDeviceGroups,
+            TokenSecurityAttributes,
+            TokenIsRestricted,
+            MaxTokenInfoClass
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct TOKEN_USER
+        {
+            public SID_AND_ATTRIBUTES User;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct SID_AND_ATTRIBUTES
+        {
+            public IntPtr Sid;
+            public int Attributes;
+        }
+
         public static void ElevateCurrentProcess()
         {
             ProcessStartInfo proc = new ProcessStartInfo();
@@ -120,14 +178,32 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         private const uint ERROR_MORE_DATA = 234;
 
         //Note: Only exists on Windows 8 and higher
+        /*[DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        private static extern uint GetPackageFullName(IntPtr hProcess, ref uint packageFullNameLength, StringBuilder packageFullName);*/
+
+        //Note: Only exists on Windows 8 and higher
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        private static extern uint GetPackageFullName(IntPtr hProcess, ref uint packageFullNameLength, StringBuilder packageFullName);
+        private static extern uint GetPackageFamilyName(IntPtr hProcess, ref uint packageFamilyNameLength, StringBuilder packageFamilyName);
 
         private const uint ERROR_SUCCESS = 0;
         private const uint APPMODEL_ERROR_NO_PACKAGE = 15700;
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern IntPtr OpenProcess(ProcessHelper.ProcessAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, uint dwProcessId);
+
+        private const int TOKEN_QUERY = 0X00000008;
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool OpenProcessToken(IntPtr ProcessHandle, uint DesiredAccess, out IntPtr TokenHandle);
+
+        [DllImport("advapi32", CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool GetTokenInformation(IntPtr hToken, TOKEN_INFORMATION_CLASS TokenInformationClass, IntPtr TokenInformation, uint dwTokenInfoLength, ref uint dwReturnLength);
+
+        [DllImport("advapi32", CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool ConvertSidToStringSid(IntPtr pSID, [MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPTStr)] out string pStringSid);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -159,79 +235,83 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 LogHelper.Warning("Unable to open SCManager.");
                 return null;
             }
-
-            uint dwBufSize = 0;
-            uint dwBufNeed = 0;
-            uint ServicesReturned = 0;
-            uint ResumeHandle = 0;
-
-            var resp = EnumServicesStatusEx(hServiceManager, (int)SC_ENUM_TYPE.SC_ENUM_PROCESS_INFO, (int)SERVICE_TYPES.SERVICE_WIN32, (int)SERVICE_STATE.SERVICE_ACTIVE, IntPtr.Zero, dwBufSize, out dwBufNeed, out ServicesReturned, ref ResumeHandle, null);
-            if (resp != 0)
+            try
             {
-                LogHelper.Warning("Unexpected result from call to EnumServicesStatusEx.");
-                CloseServiceHandle(hServiceManager);
-                return null;
-            }
+                uint dwBufSize = 0;
+                uint dwBufNeed = 0;
+                uint ServicesReturned = 0;
+                uint ResumeHandle = 0;
 
-            if (Marshal.GetLastWin32Error() != ERROR_MORE_DATA)
-            {
-                LogHelper.Warning("Unable to retrieve data from SCManager.");
-                CloseServiceHandle(hServiceManager);
-                return null;
-            }
-
-            List<string> result = new List<string>();
-
-            bool IsThereMore = true;
-            while (IsThereMore)
-            {
-                IsThereMore = false;
-                dwBufSize = dwBufNeed;
-                dwBufNeed = 0;
-                IntPtr buffer = Marshal.AllocHGlobal((int)dwBufSize);
-
-                resp = EnumServicesStatusEx(hServiceManager, (int)SC_ENUM_TYPE.SC_ENUM_PROCESS_INFO, (int)SERVICE_TYPES.SERVICE_WIN32, (int)SERVICE_STATE.SERVICE_ACTIVE, buffer, dwBufSize, out dwBufNeed, out ServicesReturned, ref ResumeHandle, null);
-                if (resp == 0)
+                var resp = EnumServicesStatusEx(hServiceManager, (int)SC_ENUM_TYPE.SC_ENUM_PROCESS_INFO, (int)SERVICE_TYPES.SERVICE_WIN32, (int)SERVICE_STATE.SERVICE_ACTIVE, IntPtr.Zero, dwBufSize, out dwBufNeed, out ServicesReturned, ref ResumeHandle, null);
+                if (resp != 0)
                 {
-                    uint resp2 = (uint)Marshal.GetLastWin32Error();
-                    if (resp2 == ERROR_MORE_DATA)
+                    LogHelper.Warning("Unexpected result from call to EnumServicesStatusEx.");
+                    return null;
+                }
+
+                if (Marshal.GetLastWin32Error() != ERROR_MORE_DATA)
+                {
+                    LogHelper.Warning("Unable to retrieve data from SCManager.");
+                    return null;
+                }
+
+                List<string> result = new List<string>();
+
+                bool IsThereMore = true;
+                while (IsThereMore)
+                {
+                    IsThereMore = false;
+                    dwBufSize = dwBufNeed;
+                    dwBufNeed = 0;
+                    IntPtr buffer = Marshal.AllocHGlobal((int)dwBufSize);
+                    try
                     {
-                        IsThereMore = true;
+                        resp = EnumServicesStatusEx(hServiceManager, (int)SC_ENUM_TYPE.SC_ENUM_PROCESS_INFO, (int)SERVICE_TYPES.SERVICE_WIN32, (int)SERVICE_STATE.SERVICE_ACTIVE, buffer, dwBufSize, out dwBufNeed, out ServicesReturned, ref ResumeHandle, null);
+                        if (resp == 0)
+                        {
+                            uint resp2 = (uint)Marshal.GetLastWin32Error();
+                            if (resp2 == ERROR_MORE_DATA)
+                            {
+                                IsThereMore = true;
+                            }
+                            else
+                            {
+                                LogHelper.Error("Unable to retrieve data from SCManager.", new Win32Exception((int)resp2));
+                                return null;
+                            }
+                        }
+                        for (uint i = 0; i < ServicesReturned; i++)
+                        {
+                            IntPtr buffer2;
+                            if (Environment.Is64BitProcess)
+                            {
+                                //8 byte packing on 64 bit OSes.
+                                buffer2 = IntPtr.Add(buffer, (int)i * (ENUM_SERVICE_STATUS_PROCESS.SizeOf + 4));
+                            }
+                            else
+                            {
+                                buffer2 = IntPtr.Add(buffer, (int)i * ENUM_SERVICE_STATUS_PROCESS.SizeOf);
+                            }
+                            ENUM_SERVICE_STATUS_PROCESS service = (ENUM_SERVICE_STATUS_PROCESS)Marshal.PtrToStructure(buffer2, typeof(ENUM_SERVICE_STATUS_PROCESS));
+                            if (pid == service.ServiceStatus.dwProcessId)
+                            {
+                                //We have found one of the services we're looking for!
+                                result.Add(service.lpServiceName);
+                            }
+                        }
                     }
-                    else
+                    finally
                     {
-                        LogHelper.Error("Unable to retrieve data from SCManager.", new Win32Exception((int)resp2));
                         Marshal.FreeHGlobal(buffer);
-                        CloseServiceHandle(hServiceManager);
-                        return null;
-                    }
-                }
-                for (uint i = 0; i < ServicesReturned; i++)
-                {
-                    IntPtr buffer2;
-                    if (Environment.Is64BitProcess)
-                    {
-                        //8 byte packing on 64 bit OSes.
-                        buffer2 = IntPtr.Add(buffer, (int)i * (ENUM_SERVICE_STATUS_PROCESS.SizeOf + 4));
-                    }
-                    else
-                    {
-                        buffer2 = IntPtr.Add(buffer, (int)i * ENUM_SERVICE_STATUS_PROCESS.SizeOf);
-                    }
-                    ENUM_SERVICE_STATUS_PROCESS service = (ENUM_SERVICE_STATUS_PROCESS)Marshal.PtrToStructure(buffer2, typeof(ENUM_SERVICE_STATUS_PROCESS));
-                    if (pid == service.ServiceStatus.dwProcessId)
-                    {
-                        //We have found one of the services we're looking for!
-                        result.Add(service.lpServiceName);
                     }
                 }
 
-                Marshal.FreeHGlobal(buffer);
+                return result.ToArray();
             }
-
-            CloseServiceHandle(hServiceManager);
-
-            return result.ToArray();
+            finally
+            {
+                CloseServiceHandle(hServiceManager);
+            }
         }
 
         public static void GetService(int pid, int threadid, string path, int protocol, int localport, string target, int remoteport, out string[] svc, out string[] svcdsc, out bool unsure)
@@ -345,7 +425,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             // Retrieves corresponding existing rules
             LogHelper.Info("Trying to retrieve service name through rule information.");
             int profile = FirewallHelper.GetCurrentProfile();
-            var cRules = FirewallHelper.GetMatchingRules(path, getAppPkgId(pid), protocol, target, remoteport.ToString(), localport.ToString(), svc, false, false)
+            var cRules = FirewallHelper.GetMatchingRules(path, getAppPkgId(pid), protocol, target, remoteport.ToString(), localport.ToString(), svc, getLocalUserOwner(pid), false, false)
                                        .Select(r => r.ServiceName)
                                        .Distinct()
                                        .ToList();
@@ -420,26 +500,87 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             try
             {
                 //Based on: https://github.com/jimschubert/clr-profiler/blob/master/src/CLRProfiler45Source/WindowsStoreAppHelper/WindowsStoreAppHelper.cs
-                uint packageFullNameLength = 0;
-                StringBuilder packageFullNameBld = new StringBuilder();
+                uint packageFamilyNameLength = 0;
+                StringBuilder packageFamilyNameBld = new StringBuilder();
 
-                uint ret = GetPackageFullName(hProcess, ref packageFullNameLength, packageFullNameBld);
-                if ((ret == APPMODEL_ERROR_NO_PACKAGE) || (packageFullNameLength == 0))
+                uint ret = GetPackageFamilyName(hProcess, ref packageFamilyNameLength, packageFamilyNameBld);
+                if ((ret == APPMODEL_ERROR_NO_PACKAGE) || (packageFamilyNameLength == 0))
                 {
                     // Not a WindowsStoreApp process
                     return String.Empty;
                 }
 
                 // Call again, now that we know the size
-                packageFullNameBld = new StringBuilder((int)packageFullNameLength);
-                ret = GetPackageFullName(hProcess, ref packageFullNameLength, packageFullNameBld);
+                packageFamilyNameBld = new StringBuilder((int)packageFamilyNameLength);
+                ret = GetPackageFamilyName(hProcess, ref packageFamilyNameLength, packageFamilyNameBld);
                 if (ret != ERROR_SUCCESS)
                 {
-                    LogHelper.Warning("Unable to retrieve process package id: failed to retrieve full package name!");
+                    LogHelper.Warning("Unable to retrieve process package id: failed to retrieve family package name!");
                     return String.Empty;
                 }
 
-                return packageFullNameBld.ToString();
+                return packageFamilyNameBld.ToString();
+            }
+            finally
+            {
+                CloseHandle(hProcess);
+            }
+        }
+
+        public static string getLocalUserOwner(int pid)
+        {
+            //Based on: https://bytes.com/topic/c-sharp/answers/225065-how-call-win32-native-api-gettokeninformation-using-c
+            IntPtr hProcess = OpenProcess(ProcessHelper.ProcessAccessFlags.QueryInformation, false, (uint)pid);
+            if (hProcess == IntPtr.Zero)
+            {
+                LogHelper.Warning("Unable to retrieve process local user owner: process cannot be found!");
+                return String.Empty;
+            }
+            try
+            {
+                IntPtr hToken;
+                if (OpenProcessToken(hProcess, TOKEN_QUERY, out hToken) == false)
+                {
+                    LogHelper.Warning("Unable to retrieve process local user owner: process cannot be opened!");
+                    return String.Empty;
+                }
+                try
+                {
+                    uint dwBufSize = 0;
+
+                    if (GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, IntPtr.Zero, 0, ref dwBufSize) != false)
+                    {
+                        LogHelper.Warning("Unexpected result from call to GetTokenInformation.");
+                        return String.Empty;
+                    }
+
+                    IntPtr hTokenInformation = Marshal.AllocHGlobal((int)dwBufSize);
+                    try
+                    {
+                        if (GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, hTokenInformation, dwBufSize, ref dwBufSize) == false)
+                        {
+                            LogHelper.Warning("Unable to retrieve process local user owner: token cannot be opened!");
+                            return String.Empty;
+                        }
+
+                        string SID;
+                        if (ConvertSidToStringSid(((TOKEN_USER)Marshal.PtrToStructure(hTokenInformation, typeof(TOKEN_USER))).User.Sid, out SID) == false)
+                        {
+                            LogHelper.Warning("Unable to retrieve process local user owner: SID cannot be converted!");
+                            return String.Empty;
+                        }
+
+                        return SID;
+                    }
+                    finally
+                    {
+                        Marshal.FreeHGlobal(hTokenInformation);
+                    }
+                }
+                finally
+                {
+                    CloseHandle(hToken);
+                }
             }
             finally
             {

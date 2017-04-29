@@ -30,7 +30,7 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
                 }
                 string[] param = Encoding.Unicode.GetString(Convert.FromBase64String(args[0])).Split(new string[] { "#$#" }, StringSplitOptions.None);
 
-                if (param.Count() != 10)
+                if (param.Count() != 11)
                 {
                     throw new ArgumentException("Invalid arguments!");
                 }
@@ -38,30 +38,31 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
                 string rname = param[0];
                 string path = param[1];
                 string appPkgId = param[2];
-                string sv = param[3];
+                string localUserOwner = param[3];
+                string sv = param[4];
                 string[] services = (sv != null ? sv.Split(',') : new string[] { });
-                int protocol = int.Parse(param[4]);
-                string target = param[5];
-                string targetPort = param[6];
-                string localPort = param[7];
-                bool useCurrentProfile = bool.Parse(param[8]);
-                string action = param[9];
+                int protocol = int.Parse(param[5]);
+                string target = param[6];
+                string targetPort = param[7];
+                string localPort = param[8];
+                bool useCurrentProfile = bool.Parse(param[9]);
+                string action = param[10];
                 bool keepOpen = false;
                 bool ret = false;
 
                 switch (action)
                 {
                     case "A":
-                        ret = services.All(s => FirewallHelper.AddAllowRule(rname + (s != null ? "[" + s + "]" : ""), path, appPkgId, s, protocol, target, targetPort, localPort, useCurrentProfile));
+                        ret = services.All(s => FirewallHelper.AddAllowRule(rname + (s != null ? "[" + s + "]" : ""), path, appPkgId, localUserOwner, s, protocol, target, targetPort, localPort, useCurrentProfile));
                         break;
 
                     case "B":
-                        ret = services.All(s => FirewallHelper.AddBlockRule(rname + (s != null ? "[" + s + "]" : ""), path, appPkgId, s, protocol, target, targetPort, localPort, useCurrentProfile));
+                        ret = services.All(s => FirewallHelper.AddBlockRule(rname + (s != null ? "[" + s + "]" : ""), path, appPkgId, localUserOwner, s, protocol, target, targetPort, localPort, useCurrentProfile));
                         break;
 
                     case "T":
                         tmpnames = services.ToDictionary(s => s, s => "[WFN Temp Rule] " + Guid.NewGuid().ToString());
-                        ret = services.All(s => FirewallHelper.AddTempRule(tmpnames[s], path, appPkgId, s, protocol, target, targetPort, localPort, useCurrentProfile));
+                        ret = services.All(s => FirewallHelper.AddTempRule(tmpnames[s], path, appPkgId, localUserOwner, s, protocol, target, targetPort, localPort, useCurrentProfile));
                         keepOpen = true;
                         break;
                 }
