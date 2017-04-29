@@ -149,7 +149,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     }
 
                     // Check whether this connection is blocked by a rule.
-                    var blockingRules = FirewallHelper.GetMatchingRules(path, ProcessHelper.getAppPkgId(pid), protocol, target, targetPort.ToString(), localPort.ToString(), unsure ? svc : svc.Take(1), true);
+                    var blockingRules = FirewallHelper.GetMatchingRules(path, ProcessHelper.getAppPkgId(pid), protocol, target, targetPort.ToString(), localPort.ToString(), unsure ? svc : svc.Take(1), ProcessHelper.getLocalUserOwner(pid), true);
                     if (blockingRules.Any())
                     {
                         LogHelper.Info("Connection matches a block-rule!");
@@ -177,6 +177,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     {
                         CurrentProd = app,
                         CurrentAppPkgId = ProcessHelper.getAppPkgId(pid),
+                        CurrentLocalUserOwner = ProcessHelper.getLocalUserOwner(pid),
                         Editor = fileinfo != null ? fileinfo.CompanyName : String.Empty,
                         CurrentPath = path,
                         Protocol = protocol,
