@@ -185,8 +185,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         private static extern uint GetPackageFamilyName(IntPtr hProcess, ref uint packageFamilyNameLength, StringBuilder packageFamilyName);
 
+        //Note: Only exists on Windows 8 and higher
+        [DllImport("userenv.dll", CharSet = CharSet.Unicode)]
+        private static extern uint DeriveAppContainerSidFromAppContainerName(string pszAppContainerName, out IntPtr ppsidAppContainerSid);
+
         private const uint ERROR_SUCCESS = 0;
         private const uint APPMODEL_ERROR_NO_PACKAGE = 15700;
+        private const uint S_OK = 0x00000000;
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern IntPtr OpenProcess(ProcessHelper.ProcessAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, uint dwProcessId);
@@ -204,6 +209,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         [DllImport("advapi32", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool ConvertSidToStringSid(IntPtr pSID, [MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPTStr)] out string pStringSid);
+
+        [DllImport("advapi32", CharSet = CharSet.Auto)]
+        private static extern IntPtr FreeSid(IntPtr pSid);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -519,7 +527,28 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     return String.Empty;
                 }
 
-                return packageFamilyNameBld.ToString();
+                IntPtr pSID;
+                ret = DeriveAppContainerSidFromAppContainerName(packageFamilyNameBld.ToString(), out pSID);
+                if (ret != S_OK)
+                {
+                    LogHelper.Warning("Unable to retrieve process package id: failed to retrieve package SID!");
+                    return String.Empty;
+                }
+                try
+                {
+                    string SID;
+                    if (ConvertSidToStringSid(pSID, out SID) == false)
+                    {
+                        LogHelper.Warning("Unable to retrieve process package id: SID cannot be converted!");
+                        return String.Empty;
+                    }
+
+                    return SID;
+                }
+                finally
+                {
+                    FreeSid(pSID);
+                }
             }
             finally
             {
