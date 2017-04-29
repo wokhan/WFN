@@ -926,8 +926,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             LogHelper.Debug("ToMatch: " + path + ", " + protocol + ", " + target + ", " + targetPort + ", " + localPort + ", " + String.Join(",", svc) + ", " + appPkgId + ", " + blockOnly.ToString(), ", " + outgoingOnly.ToString());
             foreach (var r in ret)
             {
-                LogHelper.Debug("Matched rule: " + r.ApplicationName + ", " + r.Protocol + ", " + r.RemoteAddresses + ", " + r.RemotePorts + ", " + r.LocalPorts + ", " + r.ServiceName + ", " + r.AppPkgId);
-                LogHelper.Debug(r.ActionStr + ", " + r.Description + ", " + r.Enabled);
+                LogHelper.Debug("Matched rule: " + r.ApplicationName + ", " + r.Protocol + ", " + r.RemoteAddresses + ", " + r.RemotePorts + ", " + r.LocalPorts + ", " + r.ServiceName + ", " + r.AppPkgId + ", " + r.LUOwn + ", " + r.ActionStr + ", " + r.Description + ", " + r.Enabled);
             }*/
 
             return ret;
