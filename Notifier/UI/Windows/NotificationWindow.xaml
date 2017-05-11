@@ -336,19 +336,6 @@
                     </ListView.ItemTemplate>
                 </ListView>
                 <Canvas>
-                    <Border Canvas.Top="20" Canvas.Left="144" Width="{Binding ActualWidth,ElementName=sbIgnore}" CornerRadius="0,0,20,20" Padding="0,15,0,0" Background="{DynamicResource AccentColorBrush}">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsChecked,ElementName=tglBlock}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <Button Margin="2" Style="{StaticResource RoundedButton}" Background="WhiteSmoke" Height="{Binding ActualHeight,ElementName=btnIgnore}" x:Name="btnBlockTemp" Click="btnBlockTemp_Click">Block temporarily</Button>
-                    </Border>
                     <Border Canvas.Top="20" Canvas.Left="3" Width="{Binding ActualWidth,ElementName=sbAllow}" CornerRadius="0,0,20,20" Padding="0,15,0,0" Background="{DynamicResource AccentColorBrush}">
                         <Border.Style>
                             <Style TargetType="Border">
@@ -362,7 +349,33 @@
                         </Border.Style>
                         <Button Margin="2" Style="{StaticResource RoundedButton}" Background="WhiteSmoke" Height="{Binding ActualHeight,ElementName=btnIgnore}" x:Name="btnAllowTemp" Click="btnAllowTemp_Click">Allow temporarily</Button>
                     </Border>
-                    <Border Canvas.Top="20" Canvas.Left="285" Width="{Binding ActualWidth,ElementName=sbSkip}" CornerRadius="0,0,20,20" Padding="0,15,0,0" Background="{DynamicResource AccentColorBrush}">
+                    <Border Canvas.Top="20" Canvas.Left="144" Width="{Binding ActualWidth,ElementName=sbIgnore}" CornerRadius="0,0,20,20" Padding="0,15,0,0" Background="{DynamicResource AccentColorBrush}">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsChecked,ElementName=tglBlock}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <Button Margin="2" Style="{StaticResource RoundedButton}" Background="WhiteSmoke" Height="{Binding ActualHeight,ElementName=btnIgnore}" x:Name="btnBlockTemp" Click="btnBlockTemp_Click">Block temporarily</Button>
+                    </Border>
+                    <Border Canvas.Top="20" Canvas.Left="285" Width="{Binding ActualWidth,ElementName=sbSkip}" CornerRadius="0,0,0,0" Padding="0,15,0,0" Background="{DynamicResource AccentColorBrush}">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsChecked,ElementName=tglSkip}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <Button Margin="2" Style="{StaticResource RoundedButton}" Background="WhiteSmoke" Height="{Binding ActualHeight,ElementName=btnSkip}" x:Name="btnSkipProgram" Click="btnSkipProgram_Click">Skip program</Button>
+                    </Border>
+                    <Border Canvas.Top="71" Canvas.Left="285" Width="{Binding ActualWidth,ElementName=sbSkip}" CornerRadius="0,0,20,20" Padding="0,0,0,0" Background="{DynamicResource AccentColorBrush}">
                         <Border.Style>
                             <Style TargetType="Border">
                                 <Setter Property="Visibility" Value="Collapsed" />
