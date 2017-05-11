@@ -259,6 +259,22 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             //Clipboard.SetText(copiedValue);
         }
 
+        private void btnSkipProgram_Click(object sender, RoutedEventArgs e)
+        {
+            String skipPath = ((CurrentConn)lstConnections.SelectedItem).CurrentPath;
+            foreach (var connection in lstConnections.Items)
+            {
+                if (((CurrentConn)connection).CurrentPath == skipPath)
+                {
+                    ((App)Application.Current).Connections.Remove((CurrentConn)connection);
+                }
+            }
+            if (lstConnections.Items.Count == 0)
+            {
+                this.Close();
+            }
+        }
+
         private void btnSkipAll_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
