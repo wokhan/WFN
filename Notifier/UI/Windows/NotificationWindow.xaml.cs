@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -220,7 +221,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         }
 
         /// <summary>
-        /// Quits
+        /// Quits @@@
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -262,12 +263,17 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         private void btnSkipProgram_Click(object sender, RoutedEventArgs e)
         {
             String skipPath = ((CurrentConn)lstConnections.SelectedItem).CurrentPath;
+            List<CurrentConn> toRemove = new List<CurrentConn>(); //Can't remove while iterating.
             foreach (var connection in lstConnections.Items)
             {
                 if (((CurrentConn)connection).CurrentPath == skipPath)
                 {
-                    ((App)Application.Current).Connections.Remove((CurrentConn)connection);
+                    toRemove.Add((CurrentConn)connection);
                 }
+            }
+            foreach (var connection in toRemove)
+            {
+                ((App)Application.Current).Connections.Remove(connection);
             }
             if (lstConnections.Items.Count == 0)
             {
