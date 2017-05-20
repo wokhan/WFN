@@ -150,14 +150,15 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
         private static bool createTask(bool allUsers)
         {
             string tmpXML = Path.GetTempFileName();
-            var taskStr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Wokhan.WindowsFirewallNotifier.Console.Resources.TaskTemplate.xml"));
-            var newtask = String.Format(taskStr.ReadToEnd(),
-                                        allUsers ? "<UserId>NT AUTHORITY\\SYSTEM</UserId>"//"<GroupId>S-1-5-32-545</GroupId>" 
-                                                 : "<UserId><![CDATA[" + WindowsIdentity.GetCurrent().Name + "]]></UserId>",
-                                        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe"),
-                                        DateTime.Now.ToString("s"));
-
-            taskStr.Close();
+            string newtask;
+            using (var taskStr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Wokhan.WindowsFirewallNotifier.Console.Resources.TaskTemplate.xml")))
+            {
+                 newtask = String.Format(taskStr.ReadToEnd(),
+                                         allUsers ? "<UserId>NT AUTHORITY\\SYSTEM</UserId>"//"<GroupId>S-1-5-32-545</GroupId>" 
+                                                  : "<UserId><![CDATA[" + WindowsIdentity.GetCurrent().Name + "]]></UserId>",
+                                         "\"" + Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe") + "\"",
+                                         DateTime.Now.ToString("s"));
+            }
 
             File.WriteAllText(tmpXML, newtask, Encoding.Unicode);
 
