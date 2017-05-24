@@ -549,9 +549,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         /// <param name="targetPort"></param>
         /// <param name="localport"></param>
         /// <returns></returns>
-        public static bool AddBlockRuleIndirect(string ruleName, string currentPath, string currentAppPkgId, string[] services, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
+        public static bool AddBlockRuleIndirect(string ruleName, string currentPath, string currentAppPkgId, string localUserOwner, string[] services, int protocol, string target, string targetPort, string localport, bool useCurrentProfile)
         {
-            string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, currentAppPkgId, services != null ? String.Join(",", services) : null, protocol, target, targetPort, localport, useCurrentProfile, "B")));
+            string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, currentAppPkgId, localUserOwner, services != null ? String.Join(",", services) : null, protocol, target, targetPort, localport, useCurrentProfile, "B")));
             return ProcessHelper.getProcessFeedback(WFNRuleManagerEXE, param, true, false);
         }
 
