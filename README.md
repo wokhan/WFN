@@ -14,7 +14,7 @@ Please read the documentation about the features and limitation of WFN. Especial
 
 ## Last update
 **2017.05.20 - v2.0 beta 1**
-Head to the [release:corresponding page](631360) if you are interested in trying the latest beta version, and **keep in mind, this is work in progress! Read the full description page before downloading!**
+Head to the releases page if you are interested in trying the latest beta version, and **keep in mind, this is work in progress! Read the full description page before downloading!**
 
 ## Requirements
 WFN requires Windows Vista SP2 or later (Windows 7, 8, 8.1, 10...) with Microsoft .NET 4.5.2 or higher. Windows Server 2008 or later are not officially supported, but WFN should work fine on them.
@@ -22,25 +22,32 @@ _Please do not ask for a Windows XP version, since WFN relies on features introd
 
 ## Features / Screenshots
 ### 1.x
+<br>
 ![](http://wokhan.online.fr/progs/wfn/wfnv1.jpg)
 
 ### 2.x
 **Connections listing**
+<br>
 ![](http://wokhan.online.fr/progs/wfn/connections.PNG)
 
 **Real time connections mapping with routes**
+<br>
 ![](http://wokhan.online.fr/progs/wfn/map.PNG)
 
 **Bandwidth monitoring**
+<br>
 ![](http://wokhan.online.fr/progs/wfn/bandwidth.PNG)
 
 **Adapters informations**
+<br>
 ![](http://wokhan.online.fr/progs/wfn/adapters.PNG)
 
 **Windows Firewall status management**
+<br>
 ![](http://wokhan.online.fr/progs/wfn/firewallstatus.PNG)
 
 **Notification popup for unknown outgoing connections (optional)**
+<br>
 ![](http://wokhan.online.fr/progs/wfn/notifier.PNG)
 
 ## Donations (or _"How can I show how much I like this project?"_)
