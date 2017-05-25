@@ -21,11 +21,6 @@ WFN requires Windows Vista SP2 or later (Windows 7, 8, 8.1, 10...) with Microsof
 _Please do not ask for a Windows XP version, since WFN relies on features introduced with Vista, it would require too much work. Well, now that it is open source, maybe someone will port it but keep in mind there are great alternatives out there. And, well, Windows XP is dead now, time to move on!_
 
 ## Features / Screenshots
-### 1.x
-<br>
-![](http://wokhan.online.fr/progs/wfn/wfnv1.jpg)
-
-### 2.x
 **Connections listing**
 <br>
 ![](http://wokhan.online.fr/progs/wfn/connections.PNG)
