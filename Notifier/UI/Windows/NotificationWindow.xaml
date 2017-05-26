@@ -228,7 +228,7 @@
                 </StackPanel>
             </Grid>
             <Expander Grid.Row="2" Background="LightYellow" Margin="0,5,0,0" Header="Advanced" SizeChanged="expand_SizeChanged" DockPanel.Dock="Bottom" x:Name="expand" IsExpanded="{Binding AlwaysShowDetails,Source={x:Static settings:Settings.Default}}">
-                <Grid x:Name="gridExpand" Background="{DynamicResource {x:Static SystemColors.InfoBrushKey}}" DataContext="{Binding SelectedItem, ElementName=lstConnections}">
+                <Grid x:Name="gridExpand" DataContext="{Binding SelectedItem, ElementName=lstConnections}">
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition />
