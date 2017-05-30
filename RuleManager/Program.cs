@@ -4,8 +4,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common.Properties;
 
 namespace Wokhan.WindowsFirewallNotifier.RuleManager
 {
@@ -60,11 +60,11 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
                         ret = services.All(s => FirewallHelper.AddBlockRule(rname + (s != null ? "[" + s + "]" : ""), path, appPkgId, localUserOwner, s, protocol, target, targetPort, localPort, useCurrentProfile));
                         break;
 
-                    case "T":
+                    /*case "T":
                         tmpnames = services.ToDictionary(s => s, s => "[WFN Temp Rule] " + Guid.NewGuid().ToString());
                         ret = services.All(s => FirewallHelper.AddTempRule(tmpnames[s], path, appPkgId, localUserOwner, s, protocol, target, targetPort, localPort, useCurrentProfile));
                         keepOpen = true;
-                        break;
+                        break;*/
                 }
 
                 if (!ret)

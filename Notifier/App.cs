@@ -76,6 +76,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     path = FileHelper.GetFriendlyPath(path);
                 }
 
+                //FIXME: Do a proper path compare...? CASE!
                 var existing = this.Connections.FirstOrDefault(c => c.CurrentPath == path && c.Target == target && c.TargetPort == targetPort.ToString() && (localPort >= IPHelper.GetMaxUserPort() || c.LocalPort == localPort.ToString()) && c.Protocol == protocol);
                 if (existing != null)
                 {
@@ -182,7 +183,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                         CurrentPath = path,
                         Protocol = protocol,
                         TargetPort = targetPort.ToString(),
-                        RuleName = String.Format(Common.Resources.RULE_NAME_FORMAT, unsure || String.IsNullOrEmpty(svcdsc.FirstOrDefault()) ? app : svcdsc.FirstOrDefault()),
+                        RuleName = String.Format(Common.Properties.Resources.RULE_NAME_FORMAT, unsure || String.IsNullOrEmpty(svcdsc.FirstOrDefault()) ? app : svcdsc.FirstOrDefault()),
                         Target = target,
                         LocalPort = localPort.ToString()
                     };

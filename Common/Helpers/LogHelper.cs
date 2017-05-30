@@ -8,6 +8,7 @@ using System.Windows;
 #if DEBUG
 using System.Runtime.CompilerServices;
 #endif
+using Wokhan.WindowsFirewallNotifier.Common.Properties;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -97,7 +98,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             {
                 if (!WindowsIdentity.GetCurrent().IsSystem) //Don't try to display a messagebox when we're SYSTEM, as this is not allowed.
                 {
-                    MessageBox.Show(Common.Resources.MSG_LOG_FAILED, Common.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(Resources.MSG_LOG_FAILED, Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
 
@@ -276,9 +277,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             {
                 if (!WindowsIdentity.GetCurrent().IsSystem) //Don't try to display a messagebox when we're SYSTEM, as this is not allowed.
                 {
-                    MessageBox.Show(Common.Resources.MSG_LOG_FAILED, Common.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(Resources.MSG_LOG_FAILED, Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
 #if DEBUG
-                    MessageBox.Show(msg, Common.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(msg, Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
 #endif
                 }
             }

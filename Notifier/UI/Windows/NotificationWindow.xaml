@@ -2,6 +2,7 @@
         x:Class="Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows.NotificationWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:WFN="clr-namespace:Wokhan.WindowsFirewallNotifier.Common;assembly=Wokhan.WindowsFirewallNotifier.Common"
+        xmlns:resx="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Properties;assembly=Wokhan.WindowsFirewallNotifier.Common"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         xmlns:settings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common;assembly=Wokhan.WindowsFirewallNotifier.Common"
         xmlns:sampleApp="clr-namespace:Wokhan.WindowsFirewallNotifier.Notifier"
@@ -35,6 +36,7 @@
             <Style.Resources>
                 <Style TargetType="{x:Type Button}">
                     <Setter Property="OverridesDefaultStyle" Value="True" />
+                    <Setter Property="Background" Value="LightGray" />
                     <Setter Property="VerticalAlignment" Value="Stretch" />
                     <Setter Property="VerticalContentAlignment" Value="Center" />
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -68,6 +70,7 @@
                 </Style>
                 <Style TargetType="{x:Type ToggleButton}">
                     <Setter Property="OverridesDefaultStyle" Value="True" />
+                    <Setter Property="Background" Value="LightGray" />
                     <Setter Property="VerticalContentAlignment" Value="Center" />
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
                     <Setter Property="BorderBrush" Value="Gray" />
@@ -182,7 +185,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
-                <TextBlock Background="{DynamicResource AccentColorBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Padding="10,5" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" FontWeight="Bold" Text="{Binding Source={x:Static WFN:Resources.FW_TITLE}}" />
+                <TextBlock Background="{DynamicResource AccentColorBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Padding="10,5" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" FontWeight="Bold" Text="{x:Static resx:Resources.FW_TITLE}" />
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="2" Width="30" Height="30" Click="btnPrev_Click">
                         <Button.Style>
@@ -246,7 +249,6 @@
                         <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
-                        <RowDefinition />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.5*" />
@@ -271,7 +273,7 @@
                     <CheckBox Grid.Row="2" Grid.Column="1" x:Name="chkService" Margin="3" IsChecked="{Binding OptionsView.IsServiceRuleChecked, ElementName=NotifWindow}">
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-                                <Setter Property="Content" Value="No service found." />
+                                <Setter Property="Content" Value="{x:Static resx:Resources.SERVICES_NONE}" />
                                 <Setter Property="IsEnabled" Value="{Binding OptionsView.IsService, ElementName=NotifWindow}" />
                                 <Style.Triggers>
                                     <MultiDataTrigger>
@@ -287,7 +289,7 @@
                                             <Condition Binding="{Binding OptionsView.IsService, ElementName=NotifWindow}" Value="True"/>
                                             <Condition Binding="{Binding OptionsView.IsServiceMultiple, ElementName=NotifWindow}" Value="True"/>
                                         </MultiDataTrigger.Conditions>
-                                        <Setter Property="Content" Value="Multiple services found." />
+                                        <Setter Property="Content" Value="{x:Static resx:Resources.SERVICES_MULTIPLE}" />
                                         <Setter Property="Foreground" Value="Red" />
                                     </MultiDataTrigger>
                                 </Style.Triggers>
@@ -297,7 +299,6 @@
                     <CheckBox Grid.Row="3" Margin="3" IsChecked="{Binding OptionsView.IsTargetPortChecked, ElementName=NotifWindow}" Content="{Binding TargetPort,FallbackValue='N/A'}" ContentStringFormat="Target port: {0}" />
                     <CheckBox Grid.Row="3" Grid.Column="1" Margin="3" IsChecked="{Binding OptionsView.IsTargetIPChecked, ElementName=NotifWindow}" Content="{Binding Target, FallbackValue='N/A'}" ContentStringFormat="Target: {0}" />
                     <CheckBox Grid.Row="4" Grid.ColumnSpan="2" Margin="3" IsEnabled="{Binding OptionsView.IsAppEnabled, ElementName=NotifWindow}" IsChecked="{Binding OptionsView.IsAppChecked, ElementName=NotifWindow}" Content="{Binding CurrentAppPkgId,FallbackValue='N/A'}" ContentStringFormat="App: {0}" /><!--FIXME: Really needs ellipses-->
-                    <!--<CheckBox Grid.Row="5" Grid.ColumnSpan="2" Margin="3" IsChecked="{Binding OptionsView.IsTempRuleChecked, ElementName=NotifWindow}" Content="Only apply this choice now and ask again the next time" />-->
                 </Grid>
             </Expander>
             <Button Grid.Row="2" Style="{StaticResource RoundedButton}" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="6" Margin="2" Background="{DynamicResource AccentColorBrush}" BorderThickness="0" Click="btnOptions_Click" Height="30" Width="30">
@@ -365,7 +366,7 @@
                                 </Style.Triggers>
                             </Style>
                         </Border.Style>
-                        <Button Margin="2" Style="{StaticResource BigRoundedButton}" Height="{Binding ActualHeight,ElementName=btnIgnore}" x:Name="btnAllowTemp" Click="btnAllowTemp_Click">Allow temporarily</Button>
+                        <!--Button Margin="2" Style="{StaticResource BigRoundedButton}" Height="{Binding ActualHeight,ElementName=btnIgnore}" x:Name="btnAllowTemp" Click="btnAllowTemp_Click">Allow temporarily</-->
                     </Border>
                     <Border Canvas.Top="20" Canvas.Left="144" Width="{Binding ActualWidth,ElementName=sbIgnore}" CornerRadius="0,0,20,20" Padding="0,15,0,0" Background="{DynamicResource AccentColorBrush}">
                         <Border.Style>
@@ -378,7 +379,7 @@
                                 </Style.Triggers>
                             </Style>
                         </Border.Style>
-                        <Button Margin="2" Style="{StaticResource BigRoundedButton}" Height="{Binding ActualHeight,ElementName=btnIgnore}" x:Name="btnBlockTemp" Click="btnBlockTemp_Click">Block temporarily</Button>
+                        <!--Button Margin="2" Style="{StaticResource BigRoundedButton}" Height="{Binding ActualHeight,ElementName=btnIgnore}" x:Name="btnBlockTemp" Click="btnBlockTemp_Click">Block temporarily</-->
                     </Border>
                     <Border Canvas.Top="20" Canvas.Left="285" Width="{Binding ActualWidth,ElementName=sbSkip}" CornerRadius="0,0,0,0" Padding="0,15,0,0" Background="{DynamicResource AccentColorBrush}">
                         <Border.Style>
@@ -391,7 +392,7 @@
                                 </Style.Triggers>
                             </Style>
                         </Border.Style>
-                        <Button Margin="2" Style="{StaticResource BigRoundedButton}" Height="{Binding ActualHeight,ElementName=btnSkip}" x:Name="btnSkipProgram" Click="btnSkipProgram_Click">Skip program</Button>
+                        <Button Margin="2" Style="{StaticResource BigRoundedButton}" Height="{Binding ActualHeight,ElementName=btnSkip}" x:Name="btnSkipProgram" Click="btnSkipProgram_Click" Content="{x:Static resx:Resources.FW_RULE_SKIP_PROGRAM}"/>
                     </Border>
                     <Border Canvas.Top="71" Canvas.Left="285" Width="{Binding ActualWidth,ElementName=sbSkip}" CornerRadius="0,0,20,20" Padding="0,0,0,0" Background="{DynamicResource AccentColorBrush}">
                         <Border.Style>
@@ -404,7 +405,7 @@
                                 </Style.Triggers>
                             </Style>
                         </Border.Style>
-                        <Button Margin="2" Style="{StaticResource BigRoundedButton}" Height="{Binding ActualHeight,ElementName=btnSkip}" x:Name="btnSkipAll" Click="btnSkipAll_Click">Skip all</Button>
+                        <Button Margin="2" Style="{StaticResource BigRoundedButton}" Height="{Binding ActualHeight,ElementName=btnSkip}" x:Name="btnSkipAll" Click="btnSkipAll_Click" Content="{x:Static resx:Resources.FW_RULE_SKIP_ALL}"/>
                     </Border>
                 </Canvas>
                 <UniformGrid Rows="1" Columns="3">
@@ -413,39 +414,39 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="btnAllow" HorizontalAlignment="Stretch" Background="LightGray" Click="btnAllow_Click" ToolTip="{Binding Source={x:Static WFN:Resources.MSG_ALLOW}}" HorizontalContentAlignment="Center">
-                            <WrapPanel>
+                        <Button x:Name="btnAllow" Click="btnAllow_Click" ToolTip="{x:Static resx:Resources.MSG_ALLOW}">
+                            <StackPanel Orientation="Horizontal">
                                 <Path Height="18" Stretch="Uniform" Fill="#FF4AAA4A" Data="F1 M 32.222,33.4875L 39.1886,40.0582L 51.3802,26.1251L 54.7052,29.0542L 39.5845,47.5L 28.897,36.8125L 32.222,33.4875 Z M 24,27L 48.5,27L 45.5,30L 27,30L 27,49L 46,49L 46,42.5L 49,38.75L 49,52L 24,52L 24,27 Z" />
-                                <Label Content="{Binding Source={x:Static WFN:Resources.FW_RULE_ALLOW}}" VerticalContentAlignment="Center" />
-                            </WrapPanel>
+                                <Label Content="{x:Static resx:Resources.FW_RULE_ALLOW}" VerticalContentAlignment="Center" />
+                            </StackPanel>
                         </Button>
-                        <ToggleButton Grid.Column="1" Background="LightGray" x:Name="tglAllow" />
+                        <ToggleButton Grid.Column="1" x:Name="tglAllow" />
                     </Grid>
                     <Grid Style="{StaticResource SplitButton}" x:Name="sbIgnore">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="btnIgnore" Background="LightGray" Click="btnIgnore_Click" ToolTip="{Binding Source={x:Static WFN:Resources.MSG_BLOCK}}" HorizontalContentAlignment="Center">
-                            <WrapPanel>
+                        <Button x:Name="btnIgnore" Click="btnIgnore_Click" ToolTip="{x:Static resx:Resources.MSG_BLOCK}">
+                            <StackPanel Orientation="Horizontal">
                                 <Path Height="20" Stretch="Uniform" Fill="#FFDE6032" Data="F1 M 31.6667,19L 44.3333,19L 57,31.6667L 57,44.3333L 44.3333,57L 31.6667,57L 19,44.3333L 19,31.6667L 31.6667,19 Z M 26.4762,45.0454L 30.9546,49.5238L 38,42.4783L 45.0454,49.5238L 49.5237,45.0454L 42.4783,38L 49.5238,30.9546L 45.0454,26.4763L 38,33.5217L 30.9546,26.4762L 26.4762,30.9546L 33.5217,38L 26.4762,45.0454 Z"/>
-                                <Label Content="{Binding Source={x:Static WFN:Resources.FW_RULE_BLOCK}}" VerticalContentAlignment="Center" />
-                            </WrapPanel>
+                                <Label Content="{x:Static resx:Resources.FW_RULE_BLOCK}" VerticalContentAlignment="Center" />
+                            </StackPanel>
                         </Button>
-                        <ToggleButton Grid.Column="1" Background="LightGray" x:Name="tglBlock" />
+                        <ToggleButton Grid.Column="1" x:Name="tglBlock" />
                     </Grid>
                     <Grid Style="{StaticResource SplitButton}" x:Name="sbSkip">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="btnSkip" Background="LightGray" Click="btnSkip_Click" HorizontalContentAlignment="Center">
-                            <WrapPanel>
+                        <Button x:Name="btnSkip" Click="btnSkip_Click">
+                            <StackPanel Orientation="Horizontal">
                                 <Path Height="18" Stretch="Uniform" Data="M3,8H5V16H3V8M7,8H9V16H7V8M11,8H13V16H11V8M15,19.25V4.75L22.25,12L15,19.25Z" Fill="#FF599CEC" />
-                                <Label Content="Skip" VerticalContentAlignment="Center" />
-                            </WrapPanel>
+                                <Label Content="{x:Static resx:Resources.FW_RULE_SKIP}" VerticalContentAlignment="Center" />
+                            </StackPanel>
                         </Button>
-                        <ToggleButton Grid.Column="1" Background="LightGray" x:Name="tglSkip" />
+                        <ToggleButton Grid.Column="1" x:Name="tglSkip" />
                     </Grid>
                 </UniformGrid>
             </StackPanel>

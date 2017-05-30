@@ -36,7 +36,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     {
                         throw new Win32Exception(Marshal.GetLastWin32Error(), "Call to QueryDosDevice failed!");
                     }
-                    deviceNameMap.Add(sb.ToString().ToLower() + "\\", trimmedDrive);
+                    deviceNameMap.Add(sb.ToString().ToLower() + "\\", trimmedDrive); //FIXME: Switch to ToUpper?
                 }
             }
             catch (Exception e)
