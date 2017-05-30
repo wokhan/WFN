@@ -119,6 +119,18 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="BigRoundedButton" TargetType="Button" BasedOn="{StaticResource RoundedButton}">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Background" Value="WhiteSmoke"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource PressedColorBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
         <Style TargetType="{x:Type ListView}">
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
@@ -224,7 +236,7 @@
                             </TextBlock>
                         </WrapPanel>
                     </Button>
-                    <Button Foreground="White" Style="{StaticResource RoundedButton}" Background="{DynamicResource AccentColorBrush}" BorderBrush="White" BorderThickness="2" Content="0" FontFamily="Marlett" FontSize="20" Width="30" Height="30" HorizontalAlignment="Right" Click="btnMin_Click" Margin="2,0" Padding="5,0" />
+                    <Button Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" Style="{StaticResource RoundedButton}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="2" Content="0" FontFamily="Marlett" FontSize="20" Width="30" Height="30" HorizontalAlignment="Center" Click="btnMin_Click" Margin="2,0" Padding="5,0"/>
                 </StackPanel>
             </Grid>
             <Expander Grid.Row="2" Background="LightYellow" Margin="0,5,0,0" Header="Advanced" SizeChanged="expand_SizeChanged" DockPanel.Dock="Bottom" x:Name="expand" IsExpanded="{Binding AlwaysShowDetails,Source={x:Static settings:Settings.Default}}">
@@ -353,7 +365,7 @@
                                 </Style.Triggers>
                             </Style>
                         </Border.Style>
-                        <Button Margin="2" Style="{StaticResource RoundedButton}" Background="WhiteSmoke" Height="{Binding ActualHeight,ElementName=btnIgnore}" x:Name="btnAllowTemp" Click="btnAllowTemp_Click">Allow temporarily</Button>
+                        <Button Margin="2" Style="{StaticResource BigRoundedButton}" Height="{Binding ActualHeight,ElementName=btnIgnore}" x:Name="btnAllowTemp" Click="btnAllowTemp_Click">Allow temporarily</Button>
                     </Border>
                     <Border Canvas.Top="20" Canvas.Left="144" Width="{Binding ActualWidth,ElementName=sbIgnore}" CornerRadius="0,0,20,20" Padding="0,15,0,0" Background="{DynamicResource AccentColorBrush}">
                         <Border.Style>
@@ -366,7 +378,7 @@
                                 </Style.Triggers>
                             </Style>
                         </Border.Style>
-                        <Button Margin="2" Style="{StaticResource RoundedButton}" Background="WhiteSmoke" Height="{Binding ActualHeight,ElementName=btnIgnore}" x:Name="btnBlockTemp" Click="btnBlockTemp_Click">Block temporarily</Button>
+                        <Button Margin="2" Style="{StaticResource BigRoundedButton}" Height="{Binding ActualHeight,ElementName=btnIgnore}" x:Name="btnBlockTemp" Click="btnBlockTemp_Click">Block temporarily</Button>
                     </Border>
                     <Border Canvas.Top="20" Canvas.Left="285" Width="{Binding ActualWidth,ElementName=sbSkip}" CornerRadius="0,0,0,0" Padding="0,15,0,0" Background="{DynamicResource AccentColorBrush}">
                         <Border.Style>
@@ -379,7 +391,7 @@
                                 </Style.Triggers>
                             </Style>
                         </Border.Style>
-                        <Button Margin="2" Style="{StaticResource RoundedButton}" Background="WhiteSmoke" Height="{Binding ActualHeight,ElementName=btnSkip}" x:Name="btnSkipProgram" Click="btnSkipProgram_Click">Skip program</Button>
+                        <Button Margin="2" Style="{StaticResource BigRoundedButton}" Height="{Binding ActualHeight,ElementName=btnSkip}" x:Name="btnSkipProgram" Click="btnSkipProgram_Click">Skip program</Button>
                     </Border>
                     <Border Canvas.Top="71" Canvas.Left="285" Width="{Binding ActualWidth,ElementName=sbSkip}" CornerRadius="0,0,20,20" Padding="0,0,0,0" Background="{DynamicResource AccentColorBrush}">
                         <Border.Style>
@@ -392,7 +404,7 @@
                                 </Style.Triggers>
                             </Style>
                         </Border.Style>
-                        <Button Margin="2" Style="{StaticResource RoundedButton}" Background="WhiteSmoke" Height="{Binding ActualHeight,ElementName=btnSkip}" x:Name="btnSkipAll" Click="btnSkipAll_Click">Skip all</Button>
+                        <Button Margin="2" Style="{StaticResource BigRoundedButton}" Height="{Binding ActualHeight,ElementName=btnSkip}" x:Name="btnSkipAll" Click="btnSkipAll_Click">Skip all</Button>
                     </Border>
                 </Canvas>
                 <UniformGrid Rows="1" Columns="3">
