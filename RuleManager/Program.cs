@@ -45,7 +45,7 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
                 string target = param[6];
                 string targetPort = param[7];
                 string localPort = param[8];
-                bool useCurrentProfile = bool.Parse(param[9]);
+                int profile = int.Parse(param[9]);
                 string action = param[10];
                 bool keepOpen = false;
                 bool ret = true;
@@ -56,8 +56,8 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
                     case "B":
                         foreach (var service in services)
                         {
-                            FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(rname + (service != null ? "[" + service + "]" : ""), path, appPkgId, localUserOwner, service, protocol, target, targetPort, localPort, 0, action);
-                            ret = ret && newRule.Apply(false, useCurrentProfile);
+                            FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(rname + (service != null ? "[" + service + "]" : ""), path, appPkgId, localUserOwner, service, protocol, target, targetPort, localPort, profile, action);
+                            ret = ret && newRule.Apply(false);
                         }
                         break;
 
@@ -66,8 +66,8 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
                         foreach (var service in services)
                         {
                             tmpnames.Add(service, "[WFN Temp Rule] " + Guid.NewGuid().ToString());
-                            FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(rname + (service != null ? "[" + service + "]" : ""), path, appPkgId, localUserOwner, service, protocol, target, targetPort, localPort, 0, "A"); //FIXME: Hardcoded action!
-                            ret = ret && newRule.Apply(true, useCurrentProfile);
+                            FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(rname + (service != null ? "[" + service + "]" : ""), path, appPkgId, localUserOwner, service, protocol, target, targetPort, localPort, profile, "A"); //FIXME: Hardcoded action!
+                            ret = ret && newRule.Apply(true);
                         }
                         keepOpen = true;
                         break;

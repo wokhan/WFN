@@ -139,7 +139,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 return FirewallHelper.GetProfileAsText(profile_type);
             }
 
-            public bool ApplyIndirect(bool isTemp, bool currentProfile)
+            public bool ApplyIndirect(bool isTemp)
             {
                 string actionString;
                 switch (Action)
@@ -159,11 +159,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 {
                     actionString = "T";
                 }
-                string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, Name, ApplicationName, AppPkgId, LUOwn, ServiceName, Protocol, RemoteAddresses, RemotePorts, LocalPorts, currentProfile, actionString)));
+                string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, Name, ApplicationName, AppPkgId, LUOwn, ServiceName, Protocol, RemoteAddresses, RemotePorts, LocalPorts, Profiles, actionString)));
                 return ProcessHelper.getProcessFeedback(WFNRuleManagerEXE, param, true, false);
             }
 
-            public abstract bool Apply(bool isTemp, bool currentProfile);
+            public abstract bool Apply(bool isTemp);
         }
 
         public class WSHRule : Rule
@@ -429,7 +429,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             //    }
             //}
 
-            public override bool Apply(bool isTemp, bool currentProfile)
+            public override bool Apply(bool isTemp)
             {
                 try
                 {
@@ -447,7 +447,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     firewallRule.Action = Action;
                     firewallRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
                     firewallRule.Enabled = true;
-                    firewallRule.Profiles = currentProfile ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
+                    firewallRule.Profiles = Profiles;
                     firewallRule.InterfaceTypes = "All";
                     firewallRule.Name = Name;
                     firewallRule.ApplicationName = ApplicationName;
@@ -630,7 +630,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             public override string RemotePorts { get { return InnerRule.RemotePorts; } }
             public override string ServiceName { get { return InnerRule.serviceName; } }
 
-            public override bool Apply(bool isTemp, bool currentProfile)
+            public override bool Apply(bool isTemp)
             {
                 try
                 {
@@ -675,7 +675,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             public override string RemotePorts { get; }
             public override string ServiceName { get; }
 
-            public override bool Apply(bool isTemp, bool currentProfile)
+            public override bool Apply(bool isTemp)
             {
                 try
                 {
@@ -693,7 +693,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     firewallRule.Action = Action;
                     firewallRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
                     firewallRule.Enabled = true;
-                    firewallRule.Profiles = currentProfile ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
+                    firewallRule.Profiles = Profiles;
                     firewallRule.InterfaceTypes = "All";
                     firewallRule.Name = Name;
                     firewallRule.ApplicationName = ApplicationName;
@@ -815,7 +815,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return false;
         }
 
-        private static int GetGlobalProfile()
+        public static int GetGlobalProfile()
         {
             return (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL;
         }

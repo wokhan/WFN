@@ -405,8 +405,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             {
                 if (Settings.Default.UseBlockRules)
                 {
-                    FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(activeConn.RuleName, activeConn.CurrentPath, activeConn.CurrentAppPkgId, activeConn.CurrentLocalUserOwner, services, _optionsView.IsProtocolChecked ? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked ? activeConn.Target : null, _optionsView.IsTargetPortChecked ? activeConn.TargetPort : null, _optionsView.IsLocalPortChecked ? activeConn.LocalPort : null, 0, "B");
-                    success = newRule.ApplyIndirect(isTemp, _optionsView.IsCurrentProfileChecked);
+                    int Profiles = _optionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
+                    FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(activeConn.RuleName, activeConn.CurrentPath, activeConn.CurrentAppPkgId, activeConn.CurrentLocalUserOwner, services, _optionsView.IsProtocolChecked ? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked ? activeConn.Target : null, _optionsView.IsTargetPortChecked ? activeConn.TargetPort : null, _optionsView.IsLocalPortChecked ? activeConn.LocalPort : null, Profiles, "B");
+                    success = newRule.ApplyIndirect(isTemp);
                     if (!success)
                     {
                         MessageBox.Show(Common.Properties.Resources.MSG_RULE_FAILED, Common.Properties.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
@@ -431,8 +432,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private bool createAllowRule(CurrentConn activeConn, string[] services, bool isTemp)
         {
-            FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(activeConn.RuleName, activeConn.CurrentPath, activeConn.CurrentAppPkgId, activeConn.CurrentLocalUserOwner, services, _optionsView.IsProtocolChecked? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked? activeConn.Target: null, _optionsView.IsTargetPortChecked? activeConn.TargetPort: null, _optionsView.IsLocalPortChecked? activeConn.LocalPort: null, 0, "A");
-            return newRule.ApplyIndirect(isTemp, _optionsView.IsCurrentProfileChecked);
+            int Profiles = _optionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
+            FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(activeConn.RuleName, activeConn.CurrentPath, activeConn.CurrentAppPkgId, activeConn.CurrentLocalUserOwner, services, _optionsView.IsProtocolChecked? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked? activeConn.Target: null, _optionsView.IsTargetPortChecked? activeConn.TargetPort: null, _optionsView.IsLocalPortChecked? activeConn.LocalPort: null, Profiles, "A");
+            return newRule.ApplyIndirect(isTemp);
         }
 
         private void btnSkip_Click(object sender, RoutedEventArgs e)
