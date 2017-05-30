@@ -417,12 +417,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 return;
             }
 
-            //Only one service? Then we've found our guy!
+            //Only one service? Then we've probably found our guy!
             if (svcs.Length == 1)
             {
                 svc = svcs;
                 svcdsc = svcs.Select(s => getServiceDesc(s)).ToArray();
-                unsure = false;
+                unsure = true;
                 LogHelper.Debug("Identified service as: " + String.Join(",", svcdsc));
                 return;
             }
