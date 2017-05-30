@@ -260,18 +260,24 @@
                         <CheckBox.Style>
                             <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
                                 <Setter Property="Content" Value="No service found." />
-                                <Setter Property="IsEnabled" Value="False" />
+                                <Setter Property="IsEnabled" Value="{Binding OptionsView.IsService, ElementName=NotifWindow}" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding OptionsView.IsService, ElementName=NotifWindow}" Value="True">
-                                        <Setter Property="IsEnabled" Value="True" />
-                                        <Setter Property="Content" Value="{Binding CurrentServiceDesc, FallbackValue='N/A'}"/>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding OptionsView.IsService, ElementName=NotifWindow}" Value="True"/>
+                                            <Condition Binding="{Binding OptionsView.IsServiceMultiple, ElementName=NotifWindow}" Value="False"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Content" Value="{Binding OptionsView.SingleServiceName, ElementName=NotifWindow, FallbackValue='N/A'}"/>
                                         <Setter Property="ContentStringFormat" Value="Service: {0}"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding OptionsView.IsServiceMultiple, ElementName=NotifWindow}" Value="True">
-                                        <Setter Property="IsEnabled" Value="True" />
-                                        <Setter Property="Content" Value="Multiple services found" />
+                                    </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding OptionsView.IsService, ElementName=NotifWindow}" Value="True"/>
+                                            <Condition Binding="{Binding OptionsView.IsServiceMultiple, ElementName=NotifWindow}" Value="True"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Content" Value="Multiple services found." />
                                         <Setter Property="Foreground" Value="Red" />
-                                    </DataTrigger>
+                                    </MultiDataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </CheckBox.Style>

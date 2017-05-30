@@ -48,6 +48,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             public bool IsAppChecked { get; set; }
             public bool IsService { get; set; }
             public bool IsServiceMultiple { get; set; }
+            public string SingleServiceName { get; set; }
         }
 
         private OptionsViewClass _optionsView = new OptionsViewClass();
@@ -181,11 +182,21 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 OptionsView.IsService = true;
                 OptionsView.IsServiceMultiple = false;
                 OptionsView.IsServiceRuleChecked = true;
+                OptionsView.SingleServiceName = activeConn.CurrentServiceDesc;
             }
             else if (activeConn.PossibleServices != null && activeConn.PossibleServices.Length > 0)
             {
                 OptionsView.IsService = true;
-                OptionsView.IsServiceMultiple = true;
+                if (activeConn.PossibleServices.Length > 1)
+                {
+                    OptionsView.IsServiceMultiple = true;
+                    OptionsView.SingleServiceName = "";
+                }
+                else
+                {
+                    OptionsView.IsServiceMultiple = false;
+                    OptionsView.SingleServiceName = activeConn.PossibleServicesDesc.FirstOrDefault();
+                }
                 OptionsView.IsServiceRuleChecked = false; //If we're unsure, let's choose the safe option. There are executables out there that run services but also open connections outside of those services. A false positive in such a case would create a rule that doesn't work.
             }
             else
@@ -193,6 +204,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 OptionsView.IsService = false;
                 OptionsView.IsServiceMultiple = false;
                 OptionsView.IsServiceRuleChecked = false;
+                OptionsView.SingleServiceName = "";
             }
 
             OptionsView.IsAppEnabled = !String.IsNullOrEmpty(activeConn.CurrentAppPkgId);
