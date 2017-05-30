@@ -48,23 +48,32 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
                 bool useCurrentProfile = bool.Parse(param[9]);
                 string action = param[10];
                 bool keepOpen = false;
-                bool ret = false;
+                bool ret = true;
 
                 switch (action)
                 {
                     case "A":
-                        ret = services.All(s => FirewallHelper.AddAllowRule(rname + (s != null ? "[" + s + "]" : ""), path, appPkgId, localUserOwner, s, protocol, target, targetPort, localPort, useCurrentProfile));
-                        break;
-
                     case "B":
-                        ret = services.All(s => FirewallHelper.AddBlockRule(rname + (s != null ? "[" + s + "]" : ""), path, appPkgId, localUserOwner, s, protocol, target, targetPort, localPort, useCurrentProfile));
+                        foreach (var service in services)
+                        {
+                            FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(rname + (service != null ? "[" + service + "]" : ""), path, appPkgId, localUserOwner, service, protocol, target, targetPort, localPort, 0, action);
+                            ret = ret && newRule.Apply(false, useCurrentProfile);
+                        }
                         break;
 
-                    /*case "T":
-                        tmpnames = services.ToDictionary(s => s, s => "[WFN Temp Rule] " + Guid.NewGuid().ToString());
-                        ret = services.All(s => FirewallHelper.AddTempRule(tmpnames[s], path, appPkgId, localUserOwner, s, protocol, target, targetPort, localPort, useCurrentProfile));
+                    case "T":
+                        tmpnames = new Dictionary<string, string>();
+                        foreach (var service in services)
+                        {
+                            tmpnames.Add(service, "[WFN Temp Rule] " + Guid.NewGuid().ToString());
+                            FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(rname + (service != null ? "[" + service + "]" : ""), path, appPkgId, localUserOwner, service, protocol, target, targetPort, localPort, 0, "A"); //FIXME: Hardcoded action!
+                            ret = ret && newRule.Apply(true, useCurrentProfile);
+                        }
                         keepOpen = true;
-                        break;*/
+                        break;
+
+                    default:
+                        throw new Exception("Unknown action type: " + action.ToString());
                 }
 
                 if (!ret)

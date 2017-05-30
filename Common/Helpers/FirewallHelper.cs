@@ -138,6 +138,32 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             {
                 return FirewallHelper.GetProfileAsText(profile_type);
             }
+
+            public bool ApplyIndirect(bool isTemp, bool currentProfile)
+            {
+                string actionString;
+                switch (Action)
+                {
+                    case NET_FW_ACTION_.NET_FW_ACTION_ALLOW:
+                        actionString = "A";
+                        break;
+
+                    case NET_FW_ACTION_.NET_FW_ACTION_BLOCK:
+                        actionString = "B";
+                        break;
+
+                    default:
+                        throw new Exception("Unknown action type: " + Action.ToString());
+                }
+                if (isTemp)
+                {
+                    actionString = "T";
+                }
+                string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, Name, ApplicationName, AppPkgId, LUOwn, ServiceName, Protocol, RemoteAddresses, RemotePorts, LocalPorts, currentProfile, actionString)));
+                return ProcessHelper.getProcessFeedback(WFNRuleManagerEXE, param, true, false);
+            }
+
+            public abstract bool Apply(bool isTemp, bool currentProfile);
         }
 
         public class WSHRule : Rule
@@ -402,6 +428,93 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             //        return p;
             //    }
             //}
+
+            public override bool Apply(bool isTemp, bool currentProfile)
+            {
+                try
+                {
+                    INetFwRule firewallRule;
+
+                    if (!String.IsNullOrEmpty(AppPkgId))
+                    {
+                        //Need INetFwRule3
+                        firewallRule = (INetFwRule3)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule"));
+                    }
+                    else
+                    {
+                        firewallRule = (INetFwRule)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule"));
+                    }
+                    firewallRule.Action = Action;
+                    firewallRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
+                    firewallRule.Enabled = true;
+                    firewallRule.Profiles = currentProfile ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
+                    firewallRule.InterfaceTypes = "All";
+                    firewallRule.Name = Name;
+                    firewallRule.ApplicationName = ApplicationName;
+
+                    if (!String.IsNullOrEmpty(AppPkgId))
+                    {
+                        ((INetFwRule3)firewallRule).LocalAppPackageId = AppPkgId;
+
+                        //This needs to be set as well
+                        ((INetFwRule3)firewallRule).LocalUserOwner = LUOwn;
+                    }
+
+                    if (!String.IsNullOrEmpty(ServiceName))
+                    {
+                        firewallRule.serviceName = ServiceName;
+                    }
+
+                    if (Protocol != -1)
+                    {
+                        firewallRule.Protocol = normalizeProtocol(Protocol);
+                    }
+
+                    if (!String.IsNullOrEmpty(LocalPorts))
+                    {
+                        firewallRule.LocalPorts = LocalPorts;
+
+                        if (!isTemp)
+                        {
+                            firewallRule.Name += " [L:" + LocalPorts + "]";
+                        }
+                    }
+
+                    if (!String.IsNullOrEmpty(RemoteAddresses))
+                    {
+                        firewallRule.RemoteAddresses = RemoteAddresses;
+
+                        if (!isTemp)
+                        {
+                            firewallRule.Name += " [T:" + RemoteAddresses + "]";
+                        }
+                    }
+
+                    if (!String.IsNullOrEmpty(RemotePorts))
+                    {
+                        firewallRule.RemotePorts = RemotePorts;
+
+                        if (!isTemp)
+                        {
+                            firewallRule.Name += " [R:" + RemotePorts + "]";
+                        }
+                    }
+
+                    firewallPolicy.Rules.Add(firewallRule);
+
+                    return true;
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    LogHelper.Error("Unable to add the rule to the Windows Firewall", e);
+                }
+
+                return false;
+            }
         }
 
         public class FwRule : Rule
@@ -516,6 +629,170 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             public override string RemoteAddresses { get { return InnerRule.RemoteAddresses; } }
             public override string RemotePorts { get { return InnerRule.RemotePorts; } }
             public override string ServiceName { get { return InnerRule.serviceName; } }
+
+            public override bool Apply(bool isTemp, bool currentProfile)
+            {
+                try
+                {
+                    firewallPolicy.Rules.Add(InnerRule);
+
+                    return true;
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    LogHelper.Error("Unable to add the rule to the Windows Firewall", e);
+                }
+
+                return false;
+            }
+        }
+
+        public class CustomRule : Rule
+        {
+            public override NET_FW_ACTION_ Action { get; }
+            public override string ApplicationName { get; }
+            public override string AppPkgId { get; }
+            public override string Description { get; }
+            public override NET_FW_RULE_DIRECTION_ Direction { get; }
+            public override bool EdgeTraversal { get; }
+            public override int EdgeTraversalOptions { get; }
+            public override bool Enabled { get; }
+            public override string Grouping { get; }
+            public override string IcmpTypesAndCodes { get; }
+            public override object Interfaces { get; }
+            public override string InterfaceTypes { get; }
+            public override string LocalAddresses { get; }
+            public override string LocalPorts { get; }
+            public override string LUOwn { get; }
+            public override string Name { get; }
+            public override int Profiles { get; }
+            public override int Protocol { get; }
+            public override string RemoteAddresses { get; }
+            public override string RemotePorts { get; }
+            public override string ServiceName { get; }
+
+            public override bool Apply(bool isTemp, bool currentProfile)
+            {
+                try
+                {
+                    INetFwRule firewallRule;
+
+                    if (!String.IsNullOrEmpty(AppPkgId))
+                    {
+                        //Need INetFwRule3
+                        firewallRule = (INetFwRule3)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule"));
+                    }
+                    else
+                    {
+                        firewallRule = (INetFwRule)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule"));
+                    }
+                    firewallRule.Action = Action;
+                    firewallRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
+                    firewallRule.Enabled = true;
+                    firewallRule.Profiles = currentProfile ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
+                    firewallRule.InterfaceTypes = "All";
+                    firewallRule.Name = Name;
+                    firewallRule.ApplicationName = ApplicationName;
+
+                    if (!String.IsNullOrEmpty(AppPkgId))
+                    {
+                        ((INetFwRule3)firewallRule).LocalAppPackageId = AppPkgId;
+
+                        //This needs to be set as well
+                        ((INetFwRule3)firewallRule).LocalUserOwner = LUOwn;
+                    }
+
+                    if (!String.IsNullOrEmpty(ServiceName))
+                    {
+                        firewallRule.serviceName = ServiceName;
+                    }
+
+                    if (Protocol != -1)
+                    {
+                        firewallRule.Protocol = normalizeProtocol(Protocol);
+                    }
+
+                    if (!String.IsNullOrEmpty(LocalPorts))
+                    {
+                        firewallRule.LocalPorts = LocalPorts;
+
+                        if (!isTemp)
+                        {
+                            firewallRule.Name += " [L:" + LocalPorts + "]";
+                        }
+                    }
+
+                    if (!String.IsNullOrEmpty(RemoteAddresses))
+                    {
+                        firewallRule.RemoteAddresses = RemoteAddresses;
+
+                        if (!isTemp)
+                        {
+                            firewallRule.Name += " [T:" + RemoteAddresses + "]";
+                        }
+                    }
+
+                    if (!String.IsNullOrEmpty(RemotePorts))
+                    {
+                        firewallRule.RemotePorts = RemotePorts;
+
+                        if (!isTemp)
+                        {
+                            firewallRule.Name += " [R:" + RemotePorts + "]";
+                        }
+                    }
+
+                    firewallPolicy.Rules.Add(firewallRule);
+
+                    return true;
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    LogHelper.Error("Unable to add the rule to the Windows Firewall", e);
+                }
+
+                return false;
+            }
+
+            public CustomRule(string ruleName, string currentPath, string currentAppPkgId, string localUserOwner, string[] services, int protocol, string target, string targetPort, string localport, int profiles, string action) : this(ruleName, currentPath, currentAppPkgId, localUserOwner, services != null ? String.Join(",", services) : null, protocol, target, targetPort, localport, profiles, action)
+            {
+                //Chained to the constructor below!
+            }
+
+            public CustomRule(string ruleName, string currentPath, string currentAppPkgId, string localUserOwner, string services, int protocol, string target, string targetPort, string localport, int profiles, string action)
+            {
+                Name = ruleName;
+                ApplicationName = currentPath;
+                AppPkgId = currentAppPkgId;
+                LUOwn = localUserOwner;
+                ServiceName = services != null ? String.Join(",", services) : null;
+                Protocol = protocol;
+                RemoteAddresses = target;
+                RemotePorts = targetPort;
+                LocalPorts = localport;
+                Profiles = profiles;
+                switch (action)
+                {
+                    case "A":
+                        Action = NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
+                        break;
+
+                    case "B":
+                        Action = NET_FW_ACTION_.NET_FW_ACTION_BLOCK;
+                        break;
+
+                    default:
+                        throw new Exception("Unknown action type: " + action.ToString());
+                }
+            }
         }
 
         /// <summary>
@@ -535,164 +812,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             {
                 LogHelper.Error("Unable to remove the rule.", e);
             }
-            return false;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ruleName"></param>
-        /// <param name="currentPath"></param>
-        /// <param name="currentAppPkgId"></param>
-        /// <param name="service"></param>
-        /// <param name="protocol"></param>
-        /// <param name="target"></param>
-        /// <param name="targetPort"></param>
-        /// <param name="localport"></param>
-        /// <returns></returns>
-        public static bool AddBlockRuleIndirect(string ruleName, string currentPath, string currentAppPkgId, string localUserOwner, string[] services, int protocol, string target, string targetPort, string localport, bool useCurrentProfile = true)
-        {
-            string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, currentAppPkgId, localUserOwner, services != null ? String.Join(",", services) : null, protocol, target, targetPort, localport, useCurrentProfile, "B")));
-            return ProcessHelper.getProcessFeedback(WFNRuleManagerEXE, param, true, false);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ruleName"></param>
-        /// <param name="currentPath"></param>
-        /// <param name="currentAppPkgId"></param>
-        /// <param name="service"></param>
-        /// <param name="protocol"></param>
-        /// <param name="target"></param>
-        /// <param name="targetPort"></param>
-        /// <param name="localport"></param>
-        /// <returns></returns>
-        public static bool AddBlockRule(string ruleName, string currentPath, string currentAppPkgId, string localUserOwner, string service, int protocol, string target, string targetPort, string localport, bool useCurrentProfile = true)
-        {
-            return AddRule(ruleName, currentPath, currentAppPkgId, localUserOwner, service, protocol, target, targetPort, localport, NET_FW_ACTION_.NET_FW_ACTION_BLOCK, useCurrentProfile);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ruleName"></param>
-        /// <param name="currentPath"></param>
-        /// <param name="currentAppPkgId"></param>
-        /// <param name="service"></param>
-        /// <param name="protocol"></param>
-        /// <param name="target"></param>
-        /// <param name="targetPort"></param>
-        /// <param name="localport"></param>
-        /// <returns></returns>
-        public static bool AddAllowRuleIndirect(string ruleName, string currentPath, string currentAppPkgId, string localUserOwner, string[] services, int protocol, string target, string targetPort, string localport, bool useCurrentProfile = true)
-        {
-            string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, ruleName, currentPath, currentAppPkgId, localUserOwner, services != null ? String.Join(",", services) : null, protocol, target, targetPort, localport, useCurrentProfile, "A")));
-            return ProcessHelper.getProcessFeedback(WFNRuleManagerEXE, param, true, false);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ruleName"></param>
-        /// <param name="currentPath"></param>
-        /// <param name="currentAppPkgId"></param>
-        /// <param name="service"></param>
-        /// <param name="protocol"></param>
-        /// <param name="target"></param>
-        /// <param name="targetPort"></param>
-        /// <param name="localport"></param>
-        /// <returns></returns>
-        public static bool AddAllowRule(string ruleName, string currentPath, string currentAppPkgId, string localUserOwner, string service, int protocol, string target, string targetPort, string localport, bool useCurrentProfile = true)
-        {
-            return AddRule(ruleName, currentPath, currentAppPkgId, localUserOwner, service, protocol, target, targetPort, localport, NET_FW_ACTION_.NET_FW_ACTION_ALLOW, useCurrentProfile);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ruleName"></param>
-        /// <param name="currentPath"></param>
-        /// <param name="currentAppPkgId"></param>
-        /// <param name="service"></param>
-        /// <param name="protocol"></param>
-        /// <param name="target"></param>
-        /// <param name="targetPort"></param>
-        /// <param name="localport"></param>
-        /// <param name="action"></param>
-        /// <returns></returns>
-        public static bool AddRule(string ruleName, string currentPath, string currentAppPkgId, string localUserOwner, string service, int protocol, string target, string targetPort, string localport, NET_FW_ACTION_ action, bool currentProfile)
-        {
-            try
-            {
-                INetFwRule firewallRule;
-
-                if (!String.IsNullOrEmpty(currentAppPkgId))
-                {
-                    //Need INetFwRule3
-                    firewallRule = (INetFwRule3)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule"));
-                }
-                else
-                {
-                    firewallRule = (INetFwRule)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule"));
-                }
-                firewallRule.Action = action;
-                firewallRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
-                firewallRule.Enabled = true;
-                firewallRule.Profiles = currentProfile ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
-                firewallRule.InterfaceTypes = "All";
-                firewallRule.Name = ruleName;
-                firewallRule.ApplicationName = currentPath;
-
-                if (!String.IsNullOrEmpty(currentAppPkgId))
-                {
-                    ((INetFwRule3)firewallRule).LocalAppPackageId = currentAppPkgId;
-
-                    //This needs to be set as well
-                    ((INetFwRule3)firewallRule).LocalUserOwner = localUserOwner;
-                }
-
-                if (!String.IsNullOrEmpty(service))
-                {
-                    firewallRule.serviceName = service;
-                }
-
-                if (protocol != -1)
-                {
-                    firewallRule.Protocol = normalizeProtocol(protocol);
-                }
-
-                if (!String.IsNullOrEmpty(localport))
-                {
-                    firewallRule.LocalPorts = localport;
-                    firewallRule.Name += " [L:" + localport + "]";
-                }
-
-                if (!String.IsNullOrEmpty(target))
-                {
-                    firewallRule.RemoteAddresses = target;
-                    firewallRule.Name += " [T:" + target + "]";
-                }
-
-                if (!String.IsNullOrEmpty(targetPort))
-                {
-                    firewallRule.RemotePorts = targetPort;
-                    firewallRule.Name += " [R:" + targetPort + "]";
-                }
-
-                firewallPolicy.Rules.Add(firewallRule);
-
-                return true;
-            }
-            catch (UnauthorizedAccessException)
-            {
-                throw;
-            }
-            catch (Exception e)
-            {
-                LogHelper.Error("Unable to create the rule", e);
-            }
-
             return false;
         }
 
