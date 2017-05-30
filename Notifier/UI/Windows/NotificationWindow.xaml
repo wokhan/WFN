@@ -177,7 +177,7 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    <Border x:Name="Main" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="1" BorderBrush="LightGray">
+    <Border x:Name="Main" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -239,7 +239,7 @@
                             </TextBlock>
                         </WrapPanel>
                     </Button>
-                    <Button Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" Style="{StaticResource RoundedButton}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="2" Content="0" FontFamily="Marlett" FontSize="20" Width="30" Height="30" HorizontalAlignment="Center" Click="btnMin_Click" Margin="2,0" Padding="5,0"/>
+                    <Button Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" Style="{StaticResource RoundedButton}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="2" Content="0" FontFamily="Marlett" FontSize="14" Width="30" Height="30" Click="btnMin_Click" Margin="2,0" Padding="2,0"/>
                 </StackPanel>
             </Grid>
             <Expander Grid.Row="2" Background="LightYellow" Margin="0,5,0,0" Header="Advanced" SizeChanged="expand_SizeChanged" DockPanel.Dock="Bottom" x:Name="expand" IsExpanded="{Binding AlwaysShowDetails,Source={x:Static settings:Settings.Default}}">
