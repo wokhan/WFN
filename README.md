@@ -8,8 +8,8 @@ WFN started as an "extension" to the embedded Windows firewall, and offers real 
 Please read the documentation about the features and limitation of WFN. Especially note that WFN is **not** a firewall itself!  
 
 ## Last update
-**2017.05.20 - v2.0 beta 1**  
-Head to the [releases page](https://github.com/wokhansoft/WFN/releases/tag/v2.0-beta1) if you are interested in trying the latest beta version, and **keep in mind, this is work in progress! Read the full description page before downloading!**  
+**2017.06.02 - v2.0 beta 2**  
+Head to the [releases page](https://github.com/wokhansoft/WFN/releases/tag/v2.0-beta2) if you are interested in trying the latest beta version, and **keep in mind, this is work in progress! Read the full description page before downloading!**  
 
 ## Requirements  
 WFN requires Windows Vista SP2 or later (Windows 7, 8, 8.1, 10...) with Microsoft .NET 4.5.2 or higher. Windows Server 2008 or later are not officially supported, but WFN should work fine on them.  
