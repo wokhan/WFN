@@ -18,7 +18,7 @@
                             <Run Text="{Binding ProductName,Mode=OneTime,FallbackValue='WFN'}" />
                             <Run Text="{Binding Version,Mode=OneTime,FallbackValue='X.X.X.X'}" />
                 </TextBlock>
-                <TextBlock Margin="0,5" Text="Developed by Jérôme Saliba (Khan) (http://wfn.codeplex.com)&#13;&#10;with help from DanielPharos." />
+                <TextBlock Margin="0,5" Text="Developed by Jérôme Saliba (Khan) (https://github.com/wokhansoft/WFN)&#13;&#10;with help from DanielPharos." />
             </StackPanel>
         </WrapPanel>
         <Label Content="Description" Background="{DynamicResource AccentColorBrush}" FontWeight="Bold" />
