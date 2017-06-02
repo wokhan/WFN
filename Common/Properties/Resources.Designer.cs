@@ -169,20 +169,20 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Skip program.
-        /// </summary>
-        public static string FW_RULE_SKIP_PROGRAM {
-            get {
-                return ResourceManager.GetString("FW_RULE_SKIP_PROGRAM", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Skip all.
         /// </summary>
         public static string FW_RULE_SKIP_ALL {
             get {
                 return ResourceManager.GetString("FW_RULE_SKIP_ALL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip program.
+        /// </summary>
+        public static string FW_RULE_SKIP_PROGRAM {
+            get {
+                return ResourceManager.GetString("FW_RULE_SKIP_PROGRAM", resourceCulture);
             }
         }
         
@@ -383,6 +383,24 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
         public static string RULE_NAME_FORMAT {
             get {
                 return ResourceManager.GetString("RULE_NAME_FORMAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temporary rule.
+        /// </summary>
+        public static string RULE_TEMP {
+            get {
+                return ResourceManager.GetString("RULE_TEMP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A temporary rule has been created.\r\nPath: {0}\r\nClick on the shield icon to remove this rule..
+        /// </summary>
+        public static string RULE_TEMP_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("RULE_TEMP_DESCRIPTION", resourceCulture);
             }
         }
         

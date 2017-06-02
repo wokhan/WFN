@@ -239,4 +239,10 @@ This application has NOT been totally disabled.</value>
   <data name="FW_RULE_SKIP_ALL" xml:space="preserve">
     <value>Skip all</value>
   </data>
+  <data name="RULE_TEMP" xml:space="preserve">
+    <value>Temporary rule</value>
+  </data>
+  <data name="RULE_TEMP_DESCRIPTION" xml:space="preserve">
+    <value>A temporary rule has been created.\r\nPath: {0}\r\nClick on the shield icon to remove this rule.</value>
+  </data>
 </root>
