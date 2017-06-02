@@ -9,8 +9,8 @@ using System.Windows;
 [assembly: AssemblyDescription("Main executable for the WFN program")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Wokhan Solutions")]
-[assembly: AssemblyProduct("WFN")]
-[assembly: AssemblyCopyright("2011-2017 Wokhan (http://wfn.codeplex.com)")]
+[assembly: AssemblyProduct("Windows Firewall Notifier")]
+[assembly: AssemblyCopyright("2011-2017 Wokhan (https://github.com/wokhansoft/WFN)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

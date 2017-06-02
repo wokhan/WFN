@@ -8,11 +8,11 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Wokhan.WindowsFirewallNotifier.Notifier")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Windows Firewall Notifier - Notification Handler")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Wokhan Solutions")]
-[assembly: AssemblyProduct("Windows Firewall Notifier - Notification Handler")]
-[assembly: AssemblyCopyright("©2011-2017 Wokhan (http://wfn.codeplex.com)")]
+[assembly: AssemblyProduct("Windows Firewall Notifier")]
+[assembly: AssemblyCopyright("2011-2017 Wokhan (https://github.com/wokhansoft/WFN)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

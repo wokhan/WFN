@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Wokhan.WindowsFirewallNotifier.Common")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Windows Firewall Notifier - Common Library")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Wokhan Solutions")]
-[assembly: AssemblyProduct("Windows Firewall Notifier - Common Library")]
-[assembly: AssemblyCopyright("2011-2017 Wokhan (http://wfn.codeplex.com)")]
+[assembly: AssemblyProduct("Windows Firewall Notifier")]
+[assembly: AssemblyCopyright("2011-2017 Wokhan (https://github.com/wokhansoft/WFN)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
