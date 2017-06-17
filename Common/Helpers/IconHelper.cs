@@ -37,10 +37,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     }
                     catch (ArgumentException)
                     {
+                        LogHelper.Debug("Unable to extract icon: " + path);
                         ic = SystemIcons.Warning; //FIXME: Use some generic application icon?
                     }
                     catch (System.IO.FileNotFoundException) //Undocumented exception
                     {
+                        LogHelper.Debug("Unable to extract icon: " + path);
                         ic = SystemIcons.Warning;
                     }
                     break;
