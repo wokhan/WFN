@@ -12,9 +12,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Extensions
 {
     public static class ProcessExtensions
     {
-        [DllImport("kernel32.dll", SetLastError = true)]
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool QueryFullProcessImageName(IntPtr hprocess, uint dwFlags, StringBuilder lpExeName, out uint size);
+        private static extern bool QueryFullProcessImageName(IntPtr hprocess, uint dwFlags, StringBuilder lpExeName, ref uint size);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern IntPtr OpenProcess(ProcessHelper.ProcessAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, uint dwProcessId);
@@ -34,7 +34,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Extensions
                     try
                     {
                         uint size = buffer.Capacity;
-                        if (QueryFullProcessImageName(hprocess, 0, buffer, out size))
+                        if (QueryFullProcessImageName(hprocess, 0, buffer, ref size))
                         {
                             return buffer.ToString();
                         }

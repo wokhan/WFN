@@ -101,10 +101,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             Process.Start(proc);
         }
 
-        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         private static extern IntPtr OpenSCManager(string machineName, string databaseName, uint dwAccess);
 
-        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         private static extern uint EnumServicesStatusEx(IntPtr hSCManager,
                int infoLevel, uint dwServiceType,
                uint dwServiceState, IntPtr lpServices, uint cbBufSize,
@@ -146,15 +146,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             public static readonly int SizeOf = Marshal.SizeOf(typeof(SERVICE_STATUS_PROCESS));
 
-            public int dwServiceType;
-            public int dwCurrentState;
-            public int dwControlsAccepted;
-            public int dwWin32ExitCode;
-            public int dwServiceSpecificExitCode;
-            public int dwCheckPoint;
-            public int dwWaitHint;
-            public int dwProcessId;
-            public int dwServiceFlags;
+            public uint dwServiceType;
+            public uint dwCurrentState;
+            public uint dwControlsAccepted;
+            public uint dwWin32ExitCode;
+            public uint dwServiceSpecificExitCode;
+            public uint dwCheckPoint;
+            public uint dwWaitHint;
+            public uint dwProcessId;
+            public uint dwServiceFlags;
         }
 
         [Flags]
@@ -202,11 +202,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool OpenProcessToken(IntPtr ProcessHandle, uint DesiredAccess, out IntPtr TokenHandle);
 
-        [DllImport("advapi32", CharSet = CharSet.Auto)]
+        [DllImport("advapi32", SetLastError = true, CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool GetTokenInformation(IntPtr hToken, TOKEN_INFORMATION_CLASS TokenInformationClass, IntPtr TokenInformation, uint dwTokenInfoLength, ref uint dwReturnLength);
 
-        [DllImport("advapi32", CharSet = CharSet.Auto)]
+        [DllImport("advapi32", SetLastError = true, CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool ConvertSidToStringSid(IntPtr pSID, [MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPTStr)] out string pStringSid);
 

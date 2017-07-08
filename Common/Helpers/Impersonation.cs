@@ -54,7 +54,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         private static extern bool DestroyEnvironmentBlock(
             IntPtr lpEnvironment);
 
-        [DllImport("advapi32.dll", SetLastError = true)]
+        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool CreateProcessAsUser(
             IntPtr hToken,

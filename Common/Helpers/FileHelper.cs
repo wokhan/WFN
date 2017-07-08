@@ -10,7 +10,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     public class FileHelper
     {
-        [DllImport("kernel32.dll", SetLastError = true)]
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         private static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTargetPath, uint ucchMax);
 
         private const int MAX_PATH = 260;
