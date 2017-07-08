@@ -500,6 +500,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                         }
                     }
 
+                    LogHelper.Debug("Adding rule to firewall...");
                     firewallPolicy.Rules.Add(firewallRule);
 
                     return true;
@@ -634,6 +635,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             {
                 try
                 {
+                    LogHelper.Debug("Adding rule to firewall...");
                     firewallPolicy.Rules.Add(InnerRule);
 
                     return true;
@@ -746,6 +748,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                         }
                     }
 
+                    LogHelper.Debug("Adding rule to firewall...");
                     firewallPolicy.Rules.Add(firewallRule);
 
                     return true;
