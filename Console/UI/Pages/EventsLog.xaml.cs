@@ -97,7 +97,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                             cpt--;
                             var le = new LogEntryViewModel()
                             {
-                                CreationTime = entry.TimeWritten,
+                                Timestamp = entry.TimeGenerated,
                                 Icon = IconHelper.GetIcon(entry.ReplacementStrings[1]),
                                 FriendlyPath = FileHelper.GetFriendlyPath(entry.ReplacementStrings[1]),
                                 TargetIP = entry.ReplacementStrings[5],

@@ -5,7 +5,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
     public class LogEntryViewModel
     {
-        public DateTime CreationTime { get; set; }
+        public DateTime Timestamp { get; set; }
         public ImageSource Icon { get; set; }
         public string FriendlyPath { get; set; }
         public string TargetIP { get; set; }

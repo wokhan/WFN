@@ -72,7 +72,7 @@
         <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
             <DataGrid BorderThickness="0" AlternatingRowBackground="Gainsboro" x:Name="gridLog" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="CreationTime" Binding="{Binding CreationTime}"/>
+                    <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp}"/>
                     <DataGridTemplateColumn Header="Path" SortMemberPath="FriendlyPath">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
