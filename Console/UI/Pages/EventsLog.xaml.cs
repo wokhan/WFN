@@ -78,18 +78,25 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 {
                     int i = securityLog.Entries.Count - 1;
                     int cpt = MaxEventsToLoad;
-                    EventLogEntry entry;
-                    bool isAppending = (_logEntries.Any());
-                    DateTime lastDateLocal = DateTime.MinValue;
-                    int indexLocal = 0;
+                    bool isAppending = _logEntries.Any();
+                    DateTime lastDateNew = DateTime.MinValue;
+                    int indexNew = 0;
 
-                    while (i > 0 && cpt > 0)
+                    while (i >= 0)
                     {
-                        entry = securityLog.Entries[i--];
+                        EventLogEntry entry = securityLog.Entries[i];
+                        i--;
 
                         if (lastDate != DateTime.MinValue && entry.TimeWritten <= lastDate && (entry.Index == lastIndex || lastIndex == -1))
                         {
                             break;
+                        }
+
+                        if (lastDateNew == DateTime.MinValue)
+                        {
+                            // Store where we start processing entries.
+                            lastDateNew = entry.TimeWritten;
+                            indexNew = entry.Index;
                         }
 
                         if (entry.InstanceId == 5157 && entry.EntryType == EventLogEntryType.FailureAudit)
@@ -107,31 +114,30 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
                             if (isAppending)
                             {
-                                _logEntries.Insert(0, le);
+                                _logEntries.Insert(MaxEventsToLoad - (cpt + 1), le);
                             }
                             else
                             {
                                 _logEntries.Add(le);
                             }
-                        }
 
-                        if (cpt >= MaxEventsToLoad - 1)
-                        {
-                            lastDateLocal = securityLog.Entries[i].TimeWritten;
-                            indexLocal = securityLog.Entries[i].Index;
+                            if (cpt == 0)
+                            {
+                                // We've loaded the maximum number of entries.
+                                break;
+                            }
                         }
                     }
 
-                    if (cpt == 0)
+                    // Trim the list
+                    while (_logEntries.Count > MaxEventsToLoad)
                     {
-                        lastDate = DateTime.Now;
-                        lastIndex = -1;
+                        _logEntries.RemoveAt(_logEntries.Count - 1);
                     }
-                    else
-                    {
-                        lastDate = lastDateLocal;
-                        lastIndex = indexLocal;
-                    }
+
+                    // Set the cut-off point for the next time this function gets called.
+                    lastDate = lastDateNew;
+                    lastIndex = indexNew;
                 }
             }
             catch (Exception e)
