@@ -70,7 +70,7 @@
             </Grid>
         </Border>
         <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
-            <DataGrid BorderThickness="0" AlternatingRowBackground="Gainsboro" x:Name="gridLog" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="True" HeadersVisibility="Column">
+            <DataGrid BorderThickness="0" AlternatingRowBackground="Gainsboro" x:Name="gridLog" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="CreationTime" Binding="{Binding CreationTime}"/>
                     <DataGridTemplateColumn Header="Path" SortMemberPath="FriendlyPath">
@@ -83,9 +83,9 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="IP" Binding="{Binding Replacement5}"/>
+                    <DataGridTextColumn Header="IP" Binding="{Binding TargetIP}"/>
+                    <DataGridTextColumn Header="Port" Binding="{Binding TargetPort}"/>
                     <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol}"/>
-                    <DataGridTextColumn Header="Replacement6" Binding="{Binding Replacement6}"/>
                 </DataGrid.Columns>
             </DataGrid>
             <Border Style="{StaticResource InfoBlock}">

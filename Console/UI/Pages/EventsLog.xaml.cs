@@ -100,9 +100,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                                 CreationTime = entry.TimeWritten,
                                 Icon = IconHelper.GetIcon(entry.ReplacementStrings[1]),
                                 FriendlyPath = FileHelper.GetFriendlyPath(entry.ReplacementStrings[1]),
-                                Replacement5 = entry.ReplacementStrings[5],
-                                Protocol = FirewallHelper.getProtocolAsString(int.Parse(entry.ReplacementStrings[7])),
-                                Replacement6 = entry.ReplacementStrings[6]
+                                TargetIP = entry.ReplacementStrings[5],
+                                TargetPort = entry.ReplacementStrings[6],
+                                Protocol = FirewallHelper.getProtocolAsString(int.Parse(entry.ReplacementStrings[7]))
                             };
 
                             if (isAppending)
