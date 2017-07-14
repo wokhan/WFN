@@ -52,6 +52,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             {
                 //FIXME: Resize the icon to save some memory?
                 var bitmap = Imaging.CreateBitmapSourceFromHIcon(ic.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                bitmap.Freeze();
                 ic.Dispose();
                 return bitmap;
             }
