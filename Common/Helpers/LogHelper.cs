@@ -20,11 +20,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             private set;
         }
 
-        private const int RetryDelay = 200; //ms
-        private const uint Retries = 5;
+        private const int RetryDelay = 100; //ms
+        private const uint Retries = 10;
 
-        private static string appVersion;
-        private static string assemblyName;
         private static string logFilePath;
         private static readonly Mutex logFileMutex = null;
         private static readonly String logFileMutexName = @"WindowsFirewallNotifier_Common_LogFile_Mutex";
@@ -34,8 +32,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         static LogHelper()
         {
             var assembly = Assembly.GetCallingAssembly().GetName();
-            appVersion = assembly.Version.ToString();
-            assemblyName = assembly.Name;
+            string appVersion = assembly.Version.ToString();
+            string assemblyName = assembly.Name;
 
             CurrentLogsPath = AppDomain.CurrentDomain.BaseDirectory;
             logFilePath = Path.Combine(CurrentLogsPath, assemblyName + ".log");
