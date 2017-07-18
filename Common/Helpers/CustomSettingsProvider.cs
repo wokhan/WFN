@@ -11,7 +11,7 @@ using System.Security.Principal;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
-    public class CustomSettingsProvider : SettingsProvider, IApplicationSettingsProvider
+    public class CustomSettingsProvider : SettingsProvider/*, IApplicationSettingsProvider*/
     {
         //Note: .NET framework has no easy way to get the types right, so our cache will be filled with strings.
         private Dictionary<string, object> _valuesCache = new Dictionary<string, object>();
@@ -33,12 +33,25 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             _valuesCache.Clear();
 
-            var r = new SettingsPropertyValueCollection();// base.GetPropertyValues(context, collection);
+            var r = new SettingsPropertyValueCollection();
 
-            var cfg = GetSharedConfiguration();
+            ExeConfigurationFileMap configMap = new ExeConfigurationFileMap();
+            configMap.ExeConfigFilename = SharedConfigurationPath;
+            if (!WindowsIdentity.GetCurrent().IsSystem)
+            {
+                //Only user settings for non-SYSTEM
+                configMap.LocalUserConfigFilename = UserLocalConfigurationPath;
+                configMap.RoamingUserConfigFilename = UserConfigurationPath;
+            }
+
+            var cfg = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.PerUserRoamingAndLocal);
             if (!cfg.HasFile)
             {
-                throw new ApplicationException("Configuration file missing!");
+                cfg = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
+                if (!cfg.HasFile)
+                {
+                    throw new ApplicationException("Configuration file missing!");
+                }
             }
 
             ClientSettingsSection appSettings = GetApplicationSettingsSection(cfg);
@@ -49,38 +62,24 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             sets = collection.Cast<SettingsProperty>().Where(x => IsUserSetting(x));
             ExtractSettings(sets, r, userInitialSettings);
 
-            ClientSettingsSection userSettings = GetUserSettings();
-            if (userSettings != null)
-            {
-                sets = collection.Cast<SettingsProperty>().Where(x => IsUserSetting(x));
-                ExtractSettings(sets, r, userSettings);
-            }
-
             return r;
         }
 
-        private void ExtractSettings(IEnumerable<SettingsProperty> sets, SettingsPropertyValueCollection r, ClientSettingsSection userInitialSettings)
+        private void ExtractSettings(IEnumerable<SettingsProperty> sets, SettingsPropertyValueCollection r, ClientSettingsSection newValues)
         {
-            if (userInitialSettings == null)
+            if (newValues == null)
             {
                 throw new ApplicationException("Configuration file is corrupt!");
             }
             foreach (var s in sets)
             {
-                var value = userInitialSettings.Settings.Get(s.Name).Value.ValueXml.FirstChild.Value;
+                var value = newValues.Settings.Get(s.Name).Value.ValueXml.FirstChild.Value;
 
                 _valuesCache[s.Name] = value;
 
                 r.Remove(s.Name);
                 r.Add(new SettingsPropertyValue(new SettingsProperty(s)) { IsDirty = false, SerializedValue = value });
             }
-        }
-
-        private static Configuration GetSharedConfiguration()
-        {
-            ExeConfigurationFileMap configMap = new ExeConfigurationFileMap();
-            configMap.ExeConfigFilename = SharedConfigurationPath;
-            return ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
         }
 
         private static ClientSettingsSection GetApplicationSettingsSection(Configuration cfg)
@@ -117,41 +116,23 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
         }
 
-        private static ClientSettingsSection GetUserSettings(bool createIfNone = false)
-        {
-            if (WindowsIdentity.GetCurrent().IsSystem)
-            {
-                //No user settings for SYSTEM
-                return null;
-            }
-            if (!File.Exists(UserConfigurationPath))
-            {
-                if (createIfNone)
-                {
-                    var sharedcfg = GetSharedConfiguration();
-                    sharedcfg.SectionGroups.Remove(applicationSectionName);
-                    sharedcfg.SaveAs(UserConfigurationPath, ConfigurationSaveMode.Minimal);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-
-            ExeConfigurationFileMap configMap = new ExeConfigurationFileMap();
-            configMap.ExeConfigFilename = UserConfigurationPath;
-            configMap.LocalUserConfigFilename = UserLocalConfigurationPath;
-            configMap.RoamingUserConfigFilename = UserConfigurationPath;
-            var cfg = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.PerUserRoamingAndLocal);
-
-            return GetUserSettingsSection(cfg);
-        }
-
         private bool IsUserSetting(SettingsProperty property)
         {
             foreach (DictionaryEntry d in property.Attributes)
             {
                 if (((Attribute)d.Value) is UserScopedSettingAttribute)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool IsRoamingSetting(SettingsProperty property)
+        {
+            foreach (DictionaryEntry d in property.Attributes)
+            {
+                if ((((Attribute)d.Value) is SettingsManageabilityAttribute) && (((SettingsManageabilityAttribute)d.Value).Manageability == SettingsManageability.Roaming))
                 {
                     return true;
                 }
@@ -186,14 +167,41 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         public override void SetPropertyValues(SettingsContext context, SettingsPropertyValueCollection collection)
         {
-            //base.SetPropertyValues(context, collection);
-            var cfg = GetSharedConfiguration();
+            if (WindowsIdentity.GetCurrent().IsSystem)
+            {
+                //Never save settings for SYSTEM
+                return;
+            }
+
+            ExeConfigurationFileMap configMap = new ExeConfigurationFileMap();
+            configMap.ExeConfigFilename = SharedConfigurationPath;
+            configMap.LocalUserConfigFilename = UserLocalConfigurationPath;
+            configMap.RoamingUserConfigFilename = UserConfigurationPath;
+
+            //Create user config files if they don't exist yet
+            if (!File.Exists(UserConfigurationPath))
+            {
+                var sharedcfg = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.PerUserRoamingAndLocal);
+                sharedcfg.Save(ConfigurationSaveMode.Minimal);
+            }
+
+            var cfg = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.PerUserRoamingAndLocal);
             ClientSettingsSection appSettings = GetApplicationSettingsSection(cfg);
-            var sets = collection.Cast<SettingsPropertyValue>().Where(x => !IsUserSetting(x.Property));
+            var sets = collection.Cast<SettingsPropertyValue>().Where(x => !IsUserSetting(x.Property) && !IsRoamingSetting(x.Property));
             SaveModifiedSettings(appSettings, sets);
 
-            ClientSettingsSection userSettings = GetUserSettings(true);
-            sets = collection.Cast<SettingsPropertyValue>().Where(x => IsUserSetting(x.Property));
+            ClientSettingsSection userSettings = GetUserSettingsSection(cfg);
+            sets = collection.Cast<SettingsPropertyValue>().Where(x => IsUserSetting(x.Property) && !IsRoamingSetting(x.Property));
+            SaveModifiedSettings(userSettings, sets);
+
+            //Now save the roaming settings
+            cfg = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.PerUserRoaming);
+            appSettings = GetApplicationSettingsSection(cfg);
+            sets = collection.Cast<SettingsPropertyValue>().Where(x => !IsUserSetting(x.Property) && IsRoamingSetting(x.Property));
+            SaveModifiedSettings(appSettings, sets);
+
+            userSettings = GetUserSettingsSection(cfg);
+            sets = collection.Cast<SettingsPropertyValue>().Where(x => IsUserSetting(x.Property) && IsRoamingSetting(x.Property));
             SaveModifiedSettings(userSettings, sets);
         }
 
@@ -243,7 +251,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             val.ValueXml = val.ValueXml;
         }
 
-        public SettingsPropertyValue GetPreviousVersion(SettingsContext context, SettingsProperty property)
+        /*public SettingsPropertyValue GetPreviousVersion(SettingsContext context, SettingsProperty property)
         {
             throw new NotImplementedException();
         }
@@ -256,6 +264,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         public void Upgrade(SettingsContext context, SettingsPropertyCollection properties)
         {
             throw new NotImplementedException();
-        }
+        }*/
     }
 }
