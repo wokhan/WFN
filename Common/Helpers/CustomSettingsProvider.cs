@@ -47,10 +47,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             var cfg = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.PerUserRoamingAndLocal);
             if (!cfg.HasFile)
             {
-                cfg = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
+                cfg = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.PerUserRoaming);
                 if (!cfg.HasFile)
                 {
-                    throw new ApplicationException("Configuration file missing!");
+                    cfg = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
+                    if (!cfg.HasFile)
+                    {
+                        throw new ApplicationException("Configuration file missing!");
+                    }
                 }
             }
 
