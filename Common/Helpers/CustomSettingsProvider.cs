@@ -35,6 +35,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             var r = new SettingsPropertyValueCollection();
 
+            Configuration cfg = null;
+
             ExeConfigurationFileMap configMap = new ExeConfigurationFileMap();
             configMap.ExeConfigFilename = SharedConfigurationPath;
             if (!WindowsIdentity.GetCurrent().IsSystem)
@@ -42,19 +44,20 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 //Only user settings for non-SYSTEM
                 configMap.LocalUserConfigFilename = UserLocalConfigurationPath;
                 configMap.RoamingUserConfigFilename = UserConfigurationPath;
-            }
 
-            var cfg = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.PerUserRoamingAndLocal);
-            if (!cfg.HasFile)
-            {
-                cfg = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.PerUserRoaming);
+                cfg = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.PerUserRoamingAndLocal);
                 if (!cfg.HasFile)
                 {
-                    cfg = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
-                    if (!cfg.HasFile)
-                    {
-                        throw new ApplicationException("Configuration file missing!");
-                    }
+                    cfg = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.PerUserRoaming);
+                }
+            }
+
+            if (cfg == null || !cfg.HasFile)
+            {
+                cfg = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
+                if (!cfg.HasFile)
+                {
+                    throw new ApplicationException("Configuration file missing!");
                 }
             }
 
