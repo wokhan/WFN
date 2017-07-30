@@ -282,6 +282,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             //Clipboard.SetText(copiedValue);
         }
 
+        private void btnSkip_Click(object sender, RoutedEventArgs e)
+        {
+            var tmpSelectedItem = (CurrentConn)lstConnections.SelectedItem;
+            lstConnections.SelectedIndex -= 1;
+            ((App)Application.Current).Connections.Remove(tmpSelectedItem);
+        }
+
         private void btnSkipProgram_Click(object sender, RoutedEventArgs e)
         {
             String skipPath = ((CurrentConn)lstConnections.SelectedItem).CurrentPath;
@@ -295,6 +302,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
             foreach (var connection in toRemove)
             {
+                if (lstConnections.SelectedItem == connection)
+                {
+                    lstConnections.SelectedIndex -= 1;
+                }
                 ((App)Application.Current).Connections.Remove(connection);
             }
             if (lstConnections.Items.Count == 0)
@@ -435,11 +446,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             int Profiles = _optionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
             FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(activeConn.RuleName, activeConn.CurrentPath, activeConn.CurrentAppPkgId, activeConn.CurrentLocalUserOwner, services, _optionsView.IsProtocolChecked? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked? activeConn.Target: null, _optionsView.IsTargetPortChecked? activeConn.TargetPort: null, _optionsView.IsLocalPortChecked? activeConn.LocalPort: null, Profiles, "A");
             return newRule.ApplyIndirect(isTemp);
-        }
-
-        private void btnSkip_Click(object sender, RoutedEventArgs e)
-        {
-            ((App)Application.Current).Connections.Remove((CurrentConn)lstConnections.SelectedItem);
         }
 
         private void hlkPath_Navigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
