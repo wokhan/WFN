@@ -71,7 +71,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 {
                     if (_icon == null)
                     {
-                        _icon = IconHelper.GetIcon(this.ApplicationName); //FIXME: This is now expanded... Is that a problem?!?
+						//Some apps (Ahem, IE) may create a rule where the ApplicationName is null. Supplement an empty string in case.
+                        _icon = IconHelper.GetIcon(this.ApplicationName == null ? "" : this.ApplicationName); //FIXME: This is now expanded... Is that a problem?!?
                     }
 
                     return _icon;
