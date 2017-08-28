@@ -814,6 +814,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
                 return true;
             }
+            catch (UnauthorizedAccessException)
+            {
+                //Don't have enough permissions
+                ;
+            }
             catch (Exception e)
             {
                 LogHelper.Error("Unable to remove the rule.", e);

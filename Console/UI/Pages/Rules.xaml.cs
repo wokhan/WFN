@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.Data;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
@@ -15,26 +14,21 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// </summary>
     public partial class Rules : Page
     {
-        private ObservableCollection<FirewallHelper.Rule> allRules;
-
         public Rules()
         {
             InitializeComponent();
 
-            initAllRules();
             initRules();
-            gridRules.ItemsSource = allRules;
-            // Apply a default sort by Name, ascending.
-            ICollectionView dataView = CollectionViewSource.GetDefaultView(gridRules.ItemsSource);
-            dataView.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
-            gridRules.Items.Refresh();
+            filterRules();
         }
+
+        private List<FirewallHelper.Rule> allRules;
 
         private string _filter = String.Empty;
         public string Filter
         {
             get { return _filter; }
-            set { _filter = value; initRules(); }
+            set { _filter = value; filterRules(); }
         }
 
         public Dictionary<int, string> TypeFilters
@@ -52,14 +46,15 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         public int TypeFilter
         {
             get { return _typeFilter; }
-            set { _typeFilter = value; initRules(); }
+            set { _typeFilter = value; filterRules(); }
         }
 
-        private void initAllRules()
+        private void initRules()
         {
+            LogHelper.Debug("Retrieving all rules...");
             try
             {
-                allRules = new ObservableCollection<FirewallHelper.Rule>(FirewallHelper.GetRules());
+                allRules = FirewallHelper.GetRules().ToList();
             }
             catch (Exception e)
             {
@@ -67,8 +62,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
         }
 
-        private void initRules()
+        private void filterRules()
         {
+            LogHelper.Debug("Filtering rules...");
             try
             {
                 Predicate<FirewallHelper.Rule> pred = null;
@@ -85,7 +81,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     case 3:
                         pred += WSHRulesPredicate;
                         break;
-                 
+
                     case 0:
                     default:
                         break;
@@ -96,7 +92,17 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     pred += filteredRulesPredicate;
                 }
 
-                //gridRules.ItemsSource = (pred == null ? allrules : allrules.Where(r => pred.GetInvocationList().All(p => ((Predicate<FirewallHelper.Rule>)p)(r)))).ToList();
+                //This code is messy, but the WPF DataGrid forgets the sorting when you change the ItemsSource, and you have to restore it in TWO places.
+                System.ComponentModel.SortDescription oldSorting = gridRules.Items.SortDescriptions.FirstOrDefault();
+                String oldSortingPropertyName = oldSorting.PropertyName;
+                System.ComponentModel.ListSortDirection oldSortingDirection = oldSorting.Direction;
+                gridRules.ItemsSource = (pred == null ? allRules : allRules.Where(r => pred.GetInvocationList().All(p => ((Predicate<FirewallHelper.Rule>)p)(r)))).ToList();
+                gridRules.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription(oldSortingPropertyName, oldSortingDirection));
+                foreach (var column in gridRules.Columns)
+                {
+                    if (column.Header.ToString() == oldSortingPropertyName) column.SortDirection = oldSortingDirection;
+                }
+                gridRules.Items.Refresh();
             }
             catch (Exception e)
             {
@@ -130,18 +136,20 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             if (MessageBox.Show(Common.Properties.Resources.MSG_RULE_DELETE, Common.Properties.Resources.MSG_DLG_TITLE, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 FirewallHelper.Rule selectedRule = (FirewallHelper.Rule)gridRules.SelectedItem;
-
+                if (!FirewallHelper.RemoveRule(selectedRule.Name))
+                {
+                    MessageBox.Show(Common.Properties.Resources.MSG_RULE_DELETE_FAILED, Common.Properties.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
                 allRules.Remove(selectedRule);
-                FirewallHelper.RemoveRule(selectedRule.Name);
 
-                //initAllRules();
-                //initRules();
+                filterRules();
             }
         }
 
         private void btnLocate_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("explorer.exe", "/select," + ((FirewallHelper.Rule)gridRules.SelectedItem).ApplicationName);
+            Process.Start("explorer.exe", "/select," + ((FirewallHelper.Rule)gridRules.SelectedItem).ApplicationName); //FIXME: Error is SelectedItem is null!
         }
 
         private void btnStartAdvConsole_Click(object sender, RoutedEventArgs e)
@@ -151,7 +159,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void btnRefresh_Click(object sender, RoutedEventArgs e)
         {
-            initAllRules();
+            initRules();
+            filterRules();
         }
     }
 }
