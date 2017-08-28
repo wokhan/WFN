@@ -20,6 +20,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         private static BitmapSource GetIconFromPath(string path, bool defaultIfNotFound = false)
         {
             Icon ic = null;
+            if (String.IsNullOrEmpty(path))
+            {
+                path = "?error";
+            }
             switch (path)
             {
                 case "System":
