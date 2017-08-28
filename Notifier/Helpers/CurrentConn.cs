@@ -42,7 +42,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
         public int Protocol { get; set; }
         public string ProtocolAsString { get { return FirewallHelper.getProtocolAsString(Protocol); } }
 
-        private string _resolvedHost = null;
+        private string _resolvedHost = null; //FIXME: Is this being used???
         public string ResolvedHost
         {
             get { return _resolvedHost; }
