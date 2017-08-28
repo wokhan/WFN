@@ -1,28 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
-using Wokhan.WindowsFirewallNotifier.Common.Properties;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
-    /// <summary>
-    /// Interaction logic for Rules.xaml
-    /// </summary>
-    public partial class Rules : Page
+	/// <summary>
+	/// Interaction logic for Rules.xaml
+	/// </summary>
+	public partial class Rules : Page
     {
-        public Rules()
+		private ObservableCollection<FirewallHelper.Rule> allRules;
+
+		public Rules()
         {
             InitializeComponent();
 
             initAllRules();
             initRules();
+			gridRules.ItemsSource = allRules;
+			// Apply a default sort by Name, ascending.
+			ICollectionView dataView = CollectionViewSource.GetDefaultView(gridRules.ItemsSource);
+			dataView.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+			gridRules.Items.Refresh();
         }
-
-        private IOrderedEnumerable<FirewallHelper.Rule> allrules;
 
         private string _filter = String.Empty;
         public string Filter
@@ -53,7 +59,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             try
             {
-                allrules = FirewallHelper.GetRules().OrderBy(r => r.Name);
+				allRules = new ObservableCollection<FirewallHelper.Rule>(FirewallHelper.GetRules());
             }
             catch (Exception e)
             {
@@ -90,7 +96,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     pred += filteredRulesPredicate;
                 }
 
-                gridRules.ItemsSource = (pred == null ? allrules : allrules.Where(r => pred.GetInvocationList().All(p => ((Predicate<FirewallHelper.Rule>)p)(r)))).ToList();
+                //gridRules.ItemsSource = (pred == null ? allrules : allrules.Where(r => pred.GetInvocationList().All(p => ((Predicate<FirewallHelper.Rule>)p)(r)))).ToList();
             }
             catch (Exception e)
             {
@@ -123,10 +129,13 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             if (MessageBox.Show(Common.Properties.Resources.MSG_RULE_DELETE, Common.Properties.Resources.MSG_DLG_TITLE, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                FirewallHelper.RemoveRule(((FirewallHelper.Rule)gridRules.SelectedItem).Name);
+				FirewallHelper.Rule selectedRule = (FirewallHelper.Rule)gridRules.SelectedItem;
 
-                initAllRules();
-                initRules();
+				allRules.Remove(selectedRule);
+				FirewallHelper.RemoveRule(selectedRule.Name);
+
+                //initAllRules();
+                //initRules();
             }
         }
 
