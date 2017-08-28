@@ -62,6 +62,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             //public abstract string LUAuth { get; }
             //public abstract string EmbedCtxt { get; }
 
+            // For Windows 10 Creators Update (v2.27)
+            //public abstract string Defer { get; }
+
             //FIXME: Need to parse: (RA42=) RmtIntrAnet
 
             private ImageSource _icon = null;
