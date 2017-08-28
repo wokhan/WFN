@@ -10,24 +10,24 @@ using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
-	/// <summary>
-	/// Interaction logic for Rules.xaml
-	/// </summary>
-	public partial class Rules : Page
+    /// <summary>
+    /// Interaction logic for Rules.xaml
+    /// </summary>
+    public partial class Rules : Page
     {
-		private ObservableCollection<FirewallHelper.Rule> allRules;
+        private ObservableCollection<FirewallHelper.Rule> allRules;
 
-		public Rules()
+        public Rules()
         {
             InitializeComponent();
 
             initAllRules();
             initRules();
-			gridRules.ItemsSource = allRules;
-			// Apply a default sort by Name, ascending.
-			ICollectionView dataView = CollectionViewSource.GetDefaultView(gridRules.ItemsSource);
-			dataView.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
-			gridRules.Items.Refresh();
+            gridRules.ItemsSource = allRules;
+            // Apply a default sort by Name, ascending.
+            ICollectionView dataView = CollectionViewSource.GetDefaultView(gridRules.ItemsSource);
+            dataView.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+            gridRules.Items.Refresh();
         }
 
         private string _filter = String.Empty;
@@ -59,7 +59,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             try
             {
-				allRules = new ObservableCollection<FirewallHelper.Rule>(FirewallHelper.GetRules());
+                allRules = new ObservableCollection<FirewallHelper.Rule>(FirewallHelper.GetRules());
             }
             catch (Exception e)
             {
@@ -129,10 +129,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             if (MessageBox.Show(Common.Properties.Resources.MSG_RULE_DELETE, Common.Properties.Resources.MSG_DLG_TITLE, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-				FirewallHelper.Rule selectedRule = (FirewallHelper.Rule)gridRules.SelectedItem;
+                FirewallHelper.Rule selectedRule = (FirewallHelper.Rule)gridRules.SelectedItem;
 
-				allRules.Remove(selectedRule);
-				FirewallHelper.RemoveRule(selectedRule.Name);
+                allRules.Remove(selectedRule);
+                FirewallHelper.RemoveRule(selectedRule.Name);
 
                 //initAllRules();
                 //initRules();

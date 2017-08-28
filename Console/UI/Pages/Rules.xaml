@@ -3,9 +3,9 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	  mc:Ignorable="d" 
+      mc:Ignorable="d"
       d:DesignHeight="400" d:DesignWidth="800"
-	Title="Firewall rules">
+      Title="Firewall rules">
     <DockPanel>
         <Border DockPanel.Dock="Top">
             <Border.Style>
@@ -59,8 +59,8 @@
             </Grid>
         </Border>
         <Grid>
-			<DataGrid AlternatingRowBackground="Gainsboro" BorderThickness="0" x:Name="gridRules" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column">
-				<DataGrid.CellStyle>
+            <DataGrid AlternatingRowBackground="Gainsboro" BorderThickness="0" x:Name="gridRules" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column">
+                <DataGrid.CellStyle>
                     <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
                         <Setter Property="VerticalAlignment" Value="Center" />
                     </Style>
