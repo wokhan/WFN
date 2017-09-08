@@ -248,4 +248,7 @@ This application has NOT been totally disabled.</value>
   <data name="MSG_RULE_DELETE_FAILED" xml:space="preserve">
     <value>Could not delete the rule.</value>
   </data>
+  <data name="FW_RULE_ADVANCED" xml:space="preserve">
+    <value>Advanced rule settings</value>
+  </data>
 </root>

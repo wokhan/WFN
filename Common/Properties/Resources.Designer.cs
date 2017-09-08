@@ -142,6 +142,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Advanced rule settings.
+        /// </summary>
+        public static string FW_RULE_ADVANCED {
+            get {
+                return ResourceManager.GetString("FW_RULE_ADVANCED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allow.
         /// </summary>
         public static string FW_RULE_ALLOW {
