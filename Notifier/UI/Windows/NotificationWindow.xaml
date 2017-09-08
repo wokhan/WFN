@@ -10,7 +10,7 @@
         AllowsTransparency="True"
         Background="Transparent"
         SizeToContent="Height"
-        Width="425"
+        Width="450"
         WindowStyle="None"
         Opacity="0.6"
         Icon="/Notifier;component/Resources/WFN.ico"
@@ -184,63 +184,65 @@
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <TextBlock Background="{DynamicResource AccentColorBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Padding="10,5" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" FontWeight="Bold" Text="{x:Static resx:Resources.FW_TITLE}" />
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="2" Width="30" Height="30" Click="btnPrev_Click">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource RoundedButton}">
+            <Grid Grid.Row="0" Background="{DynamicResource AccentColorBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" Margin="8,0,0,0" Height="16" MinWidth="16" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Icon}" />
+                <TextBlock Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Padding="8,0" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" FontWeight="Bold" Text="{x:Static resx:Resources.FW_TITLE}" />
+                <Button Grid.Column="2" Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="2" Width="28" Height="28" Click="btnPrev_Click">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource RoundedButton}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding NbConnectionsBefore}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                    <Setter Property="Opacity" Value="0.5" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <TextBlock Text="{Binding NbConnectionsBefore,FallbackValue='0',StringFormat='&lt;{0}'}" FontSize="10">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding NbConnectionsBefore}" Value="0">
-                                        <Setter Property="IsEnabled" Value="False" />
-                                        <Setter Property="Opacity" Value="0.5" />
+                                        <Setter Property="Visibility" Value="Collapsed" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </Button.Style>
-                        <WrapPanel>
-                            <TextBlock Text="{Binding NbConnectionsBefore,FallbackValue='0',StringFormat='&lt;{0}'}" FontSize="10">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding NbConnectionsBefore}" Value="0">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </WrapPanel>
-                    </Button>
-                    <Button Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="2" Width="30" Height="30" Click="btnNext_Click">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource RoundedButton}">
-                                <Setter Property="IsEnabled" Value="True" />
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Button>
+                <Button Grid.Column="3" Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="2" Width="28" Height="28" Click="btnNext_Click">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource RoundedButton}">
+                            <Setter Property="IsEnabled" Value="True" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding NbConnectionsAfter}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                    <Setter Property="Opacity" Value="0.5" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <TextBlock Text="{Binding NbConnectionsAfter,FallbackValue='0',StringFormat='\{0}&gt;'}" FontSize="10">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Visible" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding NbConnectionsAfter}" Value="0">
-                                        <Setter Property="IsEnabled" Value="False" />
-                                        <Setter Property="Opacity" Value="0.5" />
+                                        <Setter Property="Visibility" Value="Collapsed" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </Button.Style>
-                        <WrapPanel>
-                            <TextBlock Text="{Binding NbConnectionsAfter,FallbackValue='0',StringFormat='\{0}&gt;'}" FontSize="10">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding NbConnectionsAfter}" Value="0">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </WrapPanel>
-                    </Button>
-                    <Button Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" Style="{StaticResource RoundedButton}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="2" Content="0" FontFamily="Marlett" FontSize="14" Width="30" Height="30" Click="btnMin_Click" Margin="2,0" Padding="2,0"/>
-                </StackPanel>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Button>
+                <Button Grid.Column="4" Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" Style="{StaticResource RoundedButton}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="2" Content="0" FontFamily="Marlett" FontSize="14" Width="28" Height="28" Click="btnMin_Click" Margin="2,0" Padding="2,0"/>
             </Grid>
             <Expander Grid.Row="2" Background="Transparent" Margin="0,5,0,0" SizeChanged="expand_SizeChanged" DockPanel.Dock="Bottom" x:Name="expand" IsExpanded="{Binding AlwaysShowDetails,Source={x:Static settings:Settings.Default}}">
                 <Expander.Header>
@@ -348,7 +350,7 @@
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Image Margin="5,0,0,0"  Grid.Column="0" Height="32" MinWidth="32" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Icon}" />
+                                <Image Margin="5,0,0,0" Grid.Column="0" Height="32" MinWidth="32" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Icon}" />
                                 <StackPanel Margin="5" Grid.Column="1">
                                     <TextBlock FontWeight="Bold" Text="{Binding Description}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
                                     <TextBlock Text="{Binding ProductName}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" FontSize="10" />
