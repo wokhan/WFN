@@ -12,7 +12,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
         public AppDataSample()
         {
-            Connections.Add(new Helpers.CurrentConn() { CurrentPath = "Test 1", CurrentAppPkgId = String.Empty, CurrentService = "Service", CurrentProd = "Sample data", Editor = "Wokhan Solutions", Icon = new BitmapImage(new Uri("/Notifier;component/Resources/WFN Logo.png", UriKind.Relative)) });
+            Connections.Add(new Helpers.CurrentConn() { CurrentPath = "Test 1", CurrentAppPkgId = String.Empty, CurrentService = "Service", Description = "Sample data", ProductName = "WFN", Company = "Wokhan Solutions", Icon = new BitmapImage(new Uri("/Notifier;component/Resources/WFN Logo.png", UriKind.Relative)) });
         }
     }
 }

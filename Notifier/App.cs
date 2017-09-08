@@ -94,11 +94,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     string[] svc = new string[0];
                     string[] svcdsc = new string[0];
                     bool unsure = false;
-                    string app = null;
+                    string description = null;
 
                     if (path == "System")
                     {
-                        app = "System";
+                        description = "System";
                     }
                     else
                     {
@@ -106,21 +106,21 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                         {
                             if (File.Exists(path))
                             {
-                                app = FileVersionInfo.GetVersionInfo(path).FileDescription;
-                                if(String.IsNullOrWhiteSpace(app))
+                                description = FileVersionInfo.GetVersionInfo(path).FileDescription;
+                                if(String.IsNullOrWhiteSpace(description))
                                 {
-                                    app = path.Substring(path.LastIndexOf('\\') + 1);
+                                    description = path.Substring(path.LastIndexOf('\\') + 1);
                                 }
                             }
                             else
                             {
-                                app = path;
+                                description = path;
                             }
                         }
                         catch (Exception exc)
                         {
                             LogHelper.Error("Unable to check the file description.", exc);
-                            app = path + " (not found)";
+                            description = path + " (not found)";
                         }
 
                         if (Settings.Default.EnableServiceDetection)
@@ -176,14 +176,15 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
                     var conn = new CurrentConn
                     {
-                        CurrentProd = app,
+                        Description = description,
                         CurrentAppPkgId = ProcessHelper.getAppPkgId(pid),
                         CurrentLocalUserOwner = ProcessHelper.getLocalUserOwner(pid),
-                        Editor = fileinfo != null ? fileinfo.CompanyName : String.Empty,
+                        ProductName = fileinfo != null ? fileinfo.ProductName : String.Empty,
+                        Company = fileinfo != null ? fileinfo.CompanyName : String.Empty,
                         CurrentPath = path,
                         Protocol = protocol,
                         TargetPort = targetPort.ToString(),
-                        RuleName = String.Format(Common.Properties.Resources.RULE_NAME_FORMAT, unsure || String.IsNullOrEmpty(svcdsc.FirstOrDefault()) ? app : svcdsc.FirstOrDefault()),
+                        RuleName = String.Format(Common.Properties.Resources.RULE_NAME_FORMAT, unsure || String.IsNullOrEmpty(svcdsc.FirstOrDefault()) ? description : svcdsc.FirstOrDefault()),
                         Target = target,
                         LocalPort = localPort.ToString()
                     };
