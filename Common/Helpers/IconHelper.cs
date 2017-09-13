@@ -20,18 +20,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         private static BitmapSource GetIconFromPath(string path, bool defaultIfNotFound = false)
         {
             Icon ic = null;
-            if (String.IsNullOrEmpty(path))
-            {
-                path = "?error";
-            }
             switch (path)
             {
                 case "System":
                     ic = SystemIcons.WinLogo;
-                    break;
-
-                case "?error": //FIXME: Use something else?
-                    ic = SystemIcons.Error;
                     break;
 
                 default:
@@ -78,6 +70,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         /// <returns></returns>
         public static BitmapSource GetIcon(string path, bool defaultIfNotFound = false)
         {
+            if (String.IsNullOrEmpty(path))
+            {
+                path = String.Empty;
+            }
+
             BitmapSource icon;
             if (!procIconLst.ContainsKey(path))
             {
