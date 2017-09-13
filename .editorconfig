@@ -1,0 +1,7 @@
+# top-most EditorConfig file
+root = true
+
+# All code files
+[*.{cs,xaml}]
+indent_style = space
+indent_size = 4
