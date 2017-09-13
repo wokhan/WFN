@@ -26,6 +26,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     ic = SystemIcons.WinLogo;
                     break;
 
+                case "?error": //FIXME: Use something else?
+                    ic = SystemIcons.Error;
+                    break;
+
                 default:
                     try
                     {
