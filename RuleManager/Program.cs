@@ -11,7 +11,7 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
 {
     class Program
     {
-        private static Dictionary<string, string> tmpnames;
+        private static List<string> tmpnames;
 
         [STAThread]
         static void Main(string[] args)
@@ -62,11 +62,12 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
                         break;
 
                     case "T":
-                        tmpnames = new Dictionary<string, string>();
+                        tmpnames = new List<string>();
                         foreach (var service in services)
                         {
-                            tmpnames.Add(service, "[WFN Temp Rule] " + Guid.NewGuid().ToString());
-                            FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(rname + (service != null ? "[" + service + "]" : ""), path, appPkgId, localUserOwner, service, protocol, target, targetPort, localPort, profile, "A"); //FIXME: Hardcoded action!
+                            string tmpRuleName = "[WFN Temp Rule] " + Guid.NewGuid().ToString();
+                            tmpnames.Add(tmpRuleName);
+                            FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(tmpRuleName, path, appPkgId, localUserOwner, service, protocol, target, targetPort, localPort, profile, "A"); //FIXME: Hardcoded action!
                             ret = ret && newRule.Apply(true);
                         }
                         keepOpen = true;
@@ -105,8 +106,9 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
 
         private static void ni_Click(object sender, EventArgs e)
         {
+            LogHelper.Info("Now going to remove temporary rule(s)...");
 
-            if (!tmpnames.All(kv => FirewallHelper.RemoveRule(kv.Value)))
+            if (!tmpnames.All(kv => FirewallHelper.RemoveRule(kv)))
             {
                 MessageBox.Show(Resources.MSG_RULE_RM_FAILED, Resources.MSG_DLG_ERR_TITLE, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
