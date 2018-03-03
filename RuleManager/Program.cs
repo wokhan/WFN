@@ -86,7 +86,7 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
                     ni.Click += new EventHandler(ni_Click);
                     ni.BalloonTipIcon = ToolTipIcon.Info;
                     ni.BalloonTipTitle = Resources.RULE_TEMP;
-                    ni.BalloonTipText = String.Format(Resources.RULE_TEMP_DESCRIPTION, param[8]);
+                    ni.BalloonTipText = String.Format(Resources.RULE_TEMP_DESCRIPTION, path);
                     ni.Icon = new Icon(SystemIcons.Shield, new Size(16, 16));
                     ni.Visible = true;
                     ni.ShowBalloonTip(2000);
