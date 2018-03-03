@@ -243,7 +243,9 @@ This application has NOT been totally disabled.</value>
     <value>Temporary rule</value>
   </data>
   <data name="RULE_TEMP_DESCRIPTION" xml:space="preserve">
-    <value>A temporary rule has been created.\r\nPath: {0}\r\nClick on the shield icon to remove this rule.</value>
+    <value>A temporary rule has been created.
+Path: {0}
+Click on the shield icon to remove this rule.</value>
   </data>
   <data name="MSG_RULE_DELETE_FAILED" xml:space="preserve">
     <value>Could not delete the rule.</value>

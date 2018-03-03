@@ -414,7 +414,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A temporary rule has been created.\r\nPath: {0}\r\nClick on the shield icon to remove this rule..
+        ///   Looks up a localized string similar to A temporary rule has been created.
+        ///Path: {0}
+        ///Click on the shield icon to remove this rule..
         /// </summary>
         public static string RULE_TEMP_DESCRIPTION {
             get {
