@@ -163,7 +163,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     actionString = "T";
                 }
                 string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, Name, ApplicationName, AppPkgId, LUOwn, ServiceName, Protocol, RemoteAddresses, RemotePorts, LocalPorts, Profiles, actionString)));
-                return ProcessHelper.getProcessFeedback(WFNRuleManagerEXE, param, true, false);
+                return ProcessHelper.getProcessFeedback(WFNRuleManagerEXE, param, true, isTemp);
             }
 
             public abstract bool Apply(bool isTemp);
