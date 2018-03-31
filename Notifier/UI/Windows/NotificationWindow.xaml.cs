@@ -232,7 +232,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnIgnore_Click(object sender, RoutedEventArgs e) //@@@@
+        private void btnIgnore_Click(object sender, RoutedEventArgs e) //FIXME: Naming?
         {
             createRule(false, false);
         }
@@ -243,7 +243,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         }
 
         /// <summary>
-        /// Quits @@@
+        /// Show the next connection attempt
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -253,12 +253,22 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             lstConnections.ScrollIntoView(lstConnections.SelectedItem);
         }
 
+        /// <summary>
+        /// Show the previous connection attempt
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnPrev_Click(object sender, RoutedEventArgs e)
         {
             lstConnections.SelectedIndex--;
             lstConnections.ScrollIntoView(lstConnections.SelectedItem);
         }
 
+        /// <summary>
+        /// Minimizes the Notifier window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnMin_Click(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
@@ -417,7 +427,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 if (Settings.Default.UseBlockRules)
                 {
                     int Profiles = _optionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
-                    FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(activeConn.RuleName, activeConn.CurrentPath, activeConn.CurrentAppPkgId, activeConn.CurrentLocalUserOwner, services, _optionsView.IsProtocolChecked ? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked ? activeConn.Target : null, _optionsView.IsTargetPortChecked ? activeConn.TargetPort : null, _optionsView.IsLocalPortChecked ? activeConn.LocalPort : null, Profiles, "B");
+                    FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(activeConn.RuleName, activeConn.CurrentPath, _optionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null, activeConn.CurrentLocalUserOwner, services, _optionsView.IsProtocolChecked ? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked ? activeConn.Target : null, _optionsView.IsTargetPortChecked ? activeConn.TargetPort : null, _optionsView.IsLocalPortChecked ? activeConn.LocalPort : null, Profiles, "B");
                     success = newRule.ApplyIndirect(isTemp);
                     if (!success)
                     {
@@ -444,7 +454,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         private bool createAllowRule(CurrentConn activeConn, string[] services, bool isTemp)
         {
             int Profiles = _optionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
-            FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(activeConn.RuleName, activeConn.CurrentPath, activeConn.CurrentAppPkgId, activeConn.CurrentLocalUserOwner, services, _optionsView.IsProtocolChecked? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked? activeConn.Target: null, _optionsView.IsTargetPortChecked? activeConn.TargetPort: null, _optionsView.IsLocalPortChecked? activeConn.LocalPort: null, Profiles, "A");
+            FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(activeConn.RuleName, activeConn.CurrentPath, _optionsView.IsAppChecked? activeConn.CurrentAppPkgId : null, activeConn.CurrentLocalUserOwner, services, _optionsView.IsProtocolChecked? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked? activeConn.Target: null, _optionsView.IsTargetPortChecked? activeConn.TargetPort: null, _optionsView.IsLocalPortChecked? activeConn.LocalPort: null, Profiles, "A");
             return newRule.ApplyIndirect(isTemp);
         }
 
