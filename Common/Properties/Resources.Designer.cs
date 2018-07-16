@@ -441,5 +441,41 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
                 return ResourceManager.GetString("SERVICES_NONE", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Local port: {0}.
+        /// </summary>
+        public static string TXT_LOCAL_PORTS {
+            get {
+                return ResourceManager.GetString("TXT_LOCAL_PORTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Local ports:.
+        /// </summary>
+        public static string TXT_LOCAL_PORTS_TOOLTIP {
+            get {
+                return ResourceManager.GetString("TXT_LOCAL_PORTS_TOOLTIP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remote port: {0}.
+        /// </summary>
+        public static string TXT_REMOTE_PORTS {
+            get {
+                return ResourceManager.GetString("TXT_REMOTE_PORTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remote ports:.
+        /// </summary>
+        public static string TXT_REMOTE_PORTS_TOOLTIP {
+            get {
+                return ResourceManager.GetString("TXT_REMOTE_PORTS_TOOLTIP", resourceCulture);
+            }
+        }
     }
 }

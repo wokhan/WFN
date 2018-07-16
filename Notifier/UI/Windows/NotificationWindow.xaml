@@ -268,10 +268,10 @@
                     <CheckBox Grid.Row="1" Margin="3" IsChecked="{Binding OptionsView.IsCurrentProfileChecked, ElementName=NotifWindow}" Content="{Binding CurrentProfile, ElementName=NotifWindow, FallbackValue='Unknown'}" ContentStringFormat="Profile: {0}" />
                     <CheckBox Grid.Row="1" Grid.Column="1" Margin="3" IsChecked="{Binding OptionsView.IsProtocolChecked, ElementName=NotifWindow}" Content="{Binding ProtocolAsString,FallbackValue='Unknown'}" ContentStringFormat="Protocol: {0}" />
                     <CheckBox Grid.Row="2" Margin="3" IsChecked="{Binding OptionsView.IsLocalPortChecked, ElementName=NotifWindow}" ToolTipService.ShowOnDisabled="True">
-                        <TextBlock Text="{Binding LocalPort,FallbackValue='N/A', StringFormat='Local port: {0}'}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                        <TextBlock Text="{Binding LocalPort, FallbackValue='N/A', StringFormat='{x:Static resx:Resources.TXT_LOCAL_PORTS}'}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
                         <CheckBox.ToolTip>
                             <StackPanel>
-                                <TextBlock FontWeight="Bold">Local ports:</TextBlock>
+                                <TextBlock FontWeight="Bold" Text="{x:Static resx:Resources.TXT_LOCAL_PORTS_TOOLTIP}" />
                                 <TextBlock Text="{Binding LocalPort}" />
                             </StackPanel>
                         </CheckBox.ToolTip>
@@ -302,7 +302,15 @@
                             </Style>
                         </CheckBox.Style>
                     </CheckBox>
-                    <CheckBox Grid.Row="3" Margin="3" IsChecked="{Binding OptionsView.IsTargetPortChecked, ElementName=NotifWindow}" Content="{Binding TargetPort,FallbackValue='N/A'}" ContentStringFormat="Target port: {0}" />
+                    <CheckBox Grid.Row="3" Margin="3" IsChecked="{Binding OptionsView.IsTargetPortChecked, ElementName=NotifWindow}" ToolTipService.ShowOnDisabled="True">
+                        <TextBlock Text="{Binding TargetPort, FallbackValue='N/A', StringFormat='{x:Static resx:Resources.TXT_REMOTE_PORTS}'}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                        <CheckBox.ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold" Text="{x:Static resx:Resources.TXT_REMOTE_PORTS_TOOLTIP}" />
+                                <TextBlock Text="{Binding TargetPort}" />
+                            </StackPanel>
+                        </CheckBox.ToolTip>
+                    </CheckBox>
                     <CheckBox Grid.Row="3" Grid.Column="1" Margin="3" IsChecked="{Binding OptionsView.IsTargetIPChecked, ElementName=NotifWindow}" Content="{Binding Target, FallbackValue='N/A'}" ContentStringFormat="Target: {0}" />
                     <CheckBox Grid.Row="4" Grid.ColumnSpan="2" Margin="3" IsEnabled="{Binding OptionsView.IsAppEnabled, ElementName=NotifWindow}" IsChecked="{Binding OptionsView.IsAppChecked, ElementName=NotifWindow}" Content="{Binding CurrentAppPkgId,FallbackValue='N/A'}" ContentStringFormat="App: {0}" /><!--FIXME: Really needs ellipses-->
                 </Grid>

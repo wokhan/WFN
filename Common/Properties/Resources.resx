@@ -253,4 +253,16 @@ Click on the shield icon to remove this rule.</value>
   <data name="FW_RULE_ADVANCED" xml:space="preserve">
     <value>Advanced rule settings</value>
   </data>
+  <data name="TXT_LOCAL_PORTS" xml:space="preserve">
+    <value>Local port: {0}</value>
+  </data>
+  <data name="TXT_LOCAL_PORTS_TOOLTIP" xml:space="preserve">
+    <value>Local ports:</value>
+  </data>
+  <data name="TXT_REMOTE_PORTS" xml:space="preserve">
+    <value>Remote port: {0}</value>
+  </data>
+  <data name="TXT_REMOTE_PORTS_TOOLTIP" xml:space="preserve">
+    <value>Remote ports:</value>
+  </data>
 </root>
