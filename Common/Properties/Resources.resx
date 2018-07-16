@@ -265,4 +265,10 @@ Click on the shield icon to remove this rule.</value>
   <data name="TXT_REMOTE_PORTS_TOOLTIP" xml:space="preserve">
     <value>Remote ports:</value>
   </data>
+  <data name="TXT_SERVICES" xml:space="preserve">
+    <value>Service: {0}</value>
+  </data>
+  <data name="TXT_SERVICES_TOOLTIP" xml:space="preserve">
+    <value>Services:</value>
+  </data>
 </root>

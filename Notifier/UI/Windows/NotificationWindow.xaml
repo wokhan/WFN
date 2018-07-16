@@ -288,7 +288,7 @@
                                             <Condition Binding="{Binding OptionsView.IsServiceMultiple, ElementName=NotifWindow}" Value="False"/>
                                         </MultiDataTrigger.Conditions>
                                         <Setter Property="Content" Value="{Binding OptionsView.SingleServiceName, ElementName=NotifWindow, FallbackValue='N/A'}"/>
-                                        <Setter Property="ContentStringFormat" Value="Service: {0}"/>
+                                        <Setter Property="ContentStringFormat" Value="{x:Static resx:Resources.TXT_SERVICES}"/>
                                     </MultiDataTrigger>
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>

@@ -477,5 +477,23 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
                 return ResourceManager.GetString("TXT_REMOTE_PORTS_TOOLTIP", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service: {0}.
+        /// </summary>
+        public static string TXT_SERVICES {
+            get {
+                return ResourceManager.GetString("TXT_SERVICES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Services:.
+        /// </summary>
+        public static string TXT_SERVICES_TOOLTIP {
+            get {
+                return ResourceManager.GetString("TXT_SERVICES_TOOLTIP", resourceCulture);
+            }
+        }
     }
 }
