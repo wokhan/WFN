@@ -259,12 +259,10 @@
                             <RowDefinition />
                             <RowDefinition />
                             <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Margin="3">
-                            <Hyperlink TextDecorations="" NavigateUri="{Binding CurrentPath}" RequestNavigate="hlkPath_Navigate">
-                                <TextBlock Text="{Binding CurrentPath, FallbackValue='N/A', StringFormat='Path: {0}'}"></TextBlock>
-                            </Hyperlink>
-                        </TextBlock>
+                        <TextBlock Grid.Row="0" Margin="3" FontWeight="Bold" Text="Connection" />
                         <CheckBox Grid.Row="1" Margin="3" IsChecked="{Binding OptionsView.IsCurrentProfileChecked, ElementName=NotifWindow}" Content="{Binding CurrentProfile, ElementName=NotifWindow, FallbackValue='Unknown'}" ContentStringFormat="Profile: {0}" />
                         <CheckBox Grid.Row="2" Margin="3" IsChecked="{Binding OptionsView.IsProtocolChecked, ElementName=NotifWindow}" Content="{Binding ProtocolAsString,FallbackValue='Unknown'}" ContentStringFormat="Protocol: {0}" />
                         <CheckBox Grid.Row="3" Margin="3" IsChecked="{Binding OptionsView.IsLocalPortChecked, ElementName=NotifWindow}" ToolTipService.ShowOnDisabled="True">
@@ -285,7 +283,14 @@
                                 </StackPanel>
                             </CheckBox.ToolTip>
                         </CheckBox>
-                        <CheckBox Grid.Row="5" Margin="3" IsChecked="{Binding OptionsView.IsServiceRuleChecked, ElementName=NotifWindow}">
+                        <CheckBox Grid.Row="5" Margin="3" IsChecked="{Binding OptionsView.IsTargetIPChecked, ElementName=NotifWindow}" Content="{Binding Target, FallbackValue='N/A'}" ContentStringFormat="Target IP: {0}" />
+                        <TextBlock Grid.Row="6" Margin="3" FontWeight="Bold" Text="Application" />
+                        <CheckBox Grid.Row="7" Margin="3" IsChecked="True">
+                            <Hyperlink TextDecorations="" NavigateUri="{Binding CurrentPath}" RequestNavigate="hlkPath_Navigate">
+                                <TextBlock Text="{Binding CurrentPath, FallbackValue='N/A', StringFormat='Path: {0}'}" />
+                            </Hyperlink>
+                        </CheckBox>
+                        <CheckBox Grid.Row="8" Margin="3" IsChecked="{Binding OptionsView.IsServiceRuleChecked, ElementName=NotifWindow}">
                             <CheckBox.Style>
                                 <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
                                     <Setter Property="Content" Value="{x:Static resx:Resources.SERVICES_NONE}" />
@@ -311,8 +316,7 @@
                                 </Style>
                             </CheckBox.Style>
                         </CheckBox>
-                        <CheckBox Grid.Row="6" Margin="3" IsChecked="{Binding OptionsView.IsTargetIPChecked, ElementName=NotifWindow}" Content="{Binding Target, FallbackValue='N/A'}" ContentStringFormat="Target: {0}" />
-                        <CheckBox Grid.Row="7" Margin="3" IsEnabled="{Binding OptionsView.IsAppEnabled, ElementName=NotifWindow}" IsChecked="{Binding OptionsView.IsAppChecked, ElementName=NotifWindow}" Content="{Binding CurrentAppPkgId,FallbackValue='N/A'}" ContentStringFormat="App: {0}" />
+                        <CheckBox Grid.Row="9" Margin="3" IsEnabled="{Binding OptionsView.IsAppEnabled, ElementName=NotifWindow}" IsChecked="{Binding OptionsView.IsAppChecked, ElementName=NotifWindow}" Content="{Binding CurrentAppPkgId,FallbackValue='N/A'}" ContentStringFormat="App: {0}" />
                         <!--FIXME: Really needs ellipses-->
                     </Grid>
                 </ScrollViewer>
