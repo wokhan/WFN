@@ -3,9 +3,12 @@ using NetFwTypeLib;
 using System.Linq;
 using Microsoft.Win32;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows.Media;
+using Wokhan.WindowsFirewallNotifier.Common.Annotations;
 using Wokhan.WindowsFirewallNotifier.Common.Properties;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
@@ -1170,7 +1173,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return String.Join(", ", ret, 0, i);
         }
 
-        public class FirewallStatusWrapper
+        public class FirewallStatusWrapper : INotifyPropertyChanged
         {
             private static Dictionary<bool, string> _actions = new Dictionary<bool, string>{
                 { true, "Block" },
@@ -1199,6 +1202,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             public bool PrivateIsInBlocked { get; set; }
             public bool PrivateIsOutBlocked { get; set; }
             public bool PrivateIsOutAllowed { get; set; }
+            public bool PrivateIsInAllowed { get; set; }
             public bool PrivateIsInBlockedNotif { get; set; }
             public bool PrivateIsOutBlockedNotif { get; set; }
 
@@ -1206,6 +1210,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             public bool PublicIsInBlocked { get; set; }
             public bool PublicIsOutBlocked { get; set; }
             public bool PublicIsOutAllowed { get; set; }
+            public bool PublicIsInAllowed { get; set; }
             public bool PublicIsInBlockedNotif { get; set; }
             public bool PublicIsOutBlockedNotif { get; set; }
 
@@ -1213,8 +1218,100 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             public bool DomainIsInBlocked { get; set; }
             public bool DomainIsOutBlocked { get; set; }
             public bool DomainIsOutAllowed { get; set; }
+            public bool DomainIsInAllowed { get; set; }
             public bool DomainIsInBlockedNotif { get; set; }
             public bool DomainIsOutBlockedNotif { get; set; }
+
+            public bool AllIsEnabled
+            {
+                set
+                {
+                    PublicIsEnabled = value;
+                    PrivateIsEnabled = value;
+                    DomainIsEnabled = value;
+                    OnPropertyChanged(nameof(PublicIsEnabled));
+                    OnPropertyChanged(nameof(PrivateIsEnabled));
+                    OnPropertyChanged(nameof(DomainIsEnabled));
+                }
+            }
+
+            public bool AllIsInBlocked
+            {
+                set
+                {
+                    PublicIsInBlocked = value;
+                    PrivateIsInBlocked = value;
+                    DomainIsInBlocked = value;
+                    OnPropertyChanged(nameof(PublicIsInBlocked));
+                    OnPropertyChanged(nameof(PrivateIsInBlocked));
+                    OnPropertyChanged(nameof(DomainIsInBlocked));
+                }
+            }
+            
+            public bool AllIsInAllowed
+            {
+                set
+                {
+                    PublicIsInAllowed = value;
+                    PrivateIsInAllowed = value;
+                    DomainIsInAllowed = value; 
+                    OnPropertyChanged(nameof(PublicIsInAllowed));
+                    OnPropertyChanged(nameof(PrivateIsInAllowed));
+                    OnPropertyChanged(nameof(DomainIsInAllowed));
+                }
+            }
+
+            public bool AllIsOutBlocked
+            {
+                set
+                {
+                    PublicIsOutBlocked = value;
+                    PrivateIsOutBlocked = value;
+                    DomainIsOutBlocked = value;
+                    OnPropertyChanged(nameof(PublicIsOutBlocked));
+                    OnPropertyChanged(nameof(PrivateIsOutBlocked));
+                    OnPropertyChanged(nameof(DomainIsOutBlocked));
+                }
+            }
+
+            public bool AllIsOutAllowed
+            {
+                set
+                {
+                    PublicIsOutAllowed = value;
+                    PrivateIsOutAllowed = value;
+                    DomainIsOutAllowed = value; 
+                    OnPropertyChanged(nameof(PublicIsOutAllowed));
+                    OnPropertyChanged(nameof(PrivateIsOutAllowed));
+                    OnPropertyChanged(nameof(DomainIsOutAllowed));
+                }
+            }
+
+            public bool AllIsInBlockedNotif
+            {
+                set
+                {
+                    PublicIsInBlockedNotif = value;
+                    PrivateIsInBlockedNotif = value;
+                    DomainIsInBlockedNotif = value;
+                    OnPropertyChanged(nameof(PublicIsInBlockedNotif));
+                    OnPropertyChanged(nameof(PrivateIsInBlockedNotif));
+                    OnPropertyChanged(nameof(DomainIsInBlockedNotif));
+                }
+            }
+
+            public bool AllIsOutBlockedNotif
+            {
+                set
+                {
+                    PublicIsOutBlockedNotif = value;
+                    PrivateIsOutBlockedNotif = value;
+                    DomainIsOutBlockedNotif = value;
+                    OnPropertyChanged(nameof(PublicIsOutBlockedNotif));
+                    OnPropertyChanged(nameof(PrivateIsOutBlockedNotif));
+                    OnPropertyChanged(nameof(DomainIsOutBlockedNotif));
+                }
+            }
 
             public string CurrentProfile { get { return GetCurrentProfileAsText(); } }
 
@@ -1290,6 +1387,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 firewallPolicy.DefaultInboundAction[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN] = DomainIsInBlockedNotif || DomainIsInBlocked ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
                 firewallPolicy.DefaultOutboundAction[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN] = DomainIsOutBlockedNotif || DomainIsOutBlocked ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
                 firewallPolicy.NotificationsDisabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN] = !DomainIsInBlockedNotif;
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            [NotifyPropertyChangedInvocator]
+            protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }
