@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using System.Windows.Navigation;
 using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Properties;
@@ -458,10 +459,16 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             return newRule.ApplyIndirect(isTemp);
         }
 
-        private void hlkPath_Navigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        private void hlkPath_Navigate(object sender, RequestNavigateEventArgs e)
         {
             LogHelper.Debug("Calling external program: explorer.exe /select,\"" + e.Uri + "\"");
             Process.Start("explorer.exe", String.Format("/select,\"{0}\"", e.Uri));
+        }
+
+        private void hlk_Navigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
         }
     }
 }
