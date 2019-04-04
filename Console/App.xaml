@@ -71,12 +71,17 @@
                                         <Ellipse Margin="2" Width="10" Height="10" Fill="{TemplateBinding Foreground}">
                                             <Ellipse.Style>
                                                 <Style TargetType="Ellipse">
-                                                    <Setter Property="HorizontalAlignment" Value="Left" />
-                                                    <Setter Property="Opacity" Value="0.3" />
+                                                    <Setter Property="Visibility" Value="Hidden"/>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding IsChecked,RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible"/>
                                                             <Setter Property="HorizontalAlignment" Value="Right" />
                                                             <Setter Property="Opacity" Value="1" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsChecked,RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="False">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                            <Setter Property="HorizontalAlignment" Value="Left" />
+                                                            <Setter Property="Opacity" Value="0.3" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
