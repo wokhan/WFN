@@ -1224,6 +1224,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             public bool AllIsEnabled
             {
+                get => PublicIsEnabled && PrivateIsEnabled && DomainIsEnabled;
                 set
                 {
                     PublicIsEnabled = value;
@@ -1237,6 +1238,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             public bool AllIsInBlocked
             {
+                get => PublicIsInBlocked && PrivateIsInBlocked && DomainIsInBlocked;
                 set
                 {
                     PublicIsInBlocked = value;
@@ -1250,6 +1252,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             
             public bool AllIsInAllowed
             {
+                get => PublicIsInAllowed && PrivateIsInAllowed && DomainIsInAllowed;
                 set
                 {
                     PublicIsInAllowed = value;
@@ -1263,6 +1266,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             public bool AllIsOutBlocked
             {
+                get => PublicIsOutBlocked && PrivateIsOutBlocked && DomainIsOutBlocked;
                 set
                 {
                     PublicIsOutBlocked = value;
@@ -1276,6 +1280,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             public bool AllIsOutAllowed
             {
+                get => PublicIsOutAllowed && PrivateIsOutAllowed && DomainIsOutAllowed;
                 set
                 {
                     PublicIsOutAllowed = value;
@@ -1289,6 +1294,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             public bool AllIsInBlockedNotif
             {
+                get => PublicIsInBlockedNotif && PrivateIsInBlockedNotif && DomainIsInBlockedNotif;
                 set
                 {
                     PublicIsInBlockedNotif = value;
@@ -1302,6 +1308,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             public bool AllIsOutBlockedNotif
             {
+                get => PublicIsOutBlockedNotif && PrivateIsOutBlockedNotif && DomainIsOutBlockedNotif;
                 set
                 {
                     PublicIsOutBlockedNotif = value;

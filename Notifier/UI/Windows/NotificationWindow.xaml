@@ -275,7 +275,9 @@
                             </CheckBox.ToolTip>
                         </CheckBox>
                         <CheckBox Grid.Row="4" Margin="3" IsChecked="{Binding OptionsView.IsTargetPortChecked, ElementName=NotifWindow}" ToolTipService.ShowOnDisabled="True">
-                            <TextBlock Text="{Binding TargetPort, FallbackValue='N/A', StringFormat='{x:Static resx:Resources.TXT_REMOTE_PORTS}'}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                            <Hyperlink NavigateUri="{Binding TargetPortUrl}" RequestNavigate="hlk_Navigate">
+                                <TextBlock Text="{Binding TargetPort, FallbackValue='N/A', StringFormat='{x:Static resx:Resources.TXT_REMOTE_PORTS}'}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                            </Hyperlink>
                             <CheckBox.ToolTip>
                                 <StackPanel>
                                     <TextBlock FontWeight="Bold" Text="{x:Static resx:Resources.TXT_REMOTE_PORTS_TOOLTIP}" />
@@ -283,7 +285,11 @@
                                 </StackPanel>
                             </CheckBox.ToolTip>
                         </CheckBox>
-                        <CheckBox Grid.Row="5" Margin="3" IsChecked="{Binding OptionsView.IsTargetIPChecked, ElementName=NotifWindow}" Content="{Binding Target, FallbackValue='N/A'}" ContentStringFormat="Target IP: {0}" />
+                        <CheckBox Grid.Row="5" Margin="3" IsChecked="{Binding OptionsView.IsTargetIPChecked, ElementName=NotifWindow}">
+                            <Hyperlink NavigateUri="{Binding TargetInfoUrl}" RequestNavigate="hlk_Navigate">
+                                <TextBlock Text="{Binding Target, FallbackValue='N/A', StringFormat='Target IP: {0}'}" />
+                            </Hyperlink>
+                        </CheckBox>
                         <TextBlock Grid.Row="6" Margin="3" FontWeight="Bold" Text="Application" />
                         <CheckBox Grid.Row="7" Margin="3" IsChecked="True">
                             <Hyperlink TextDecorations="" NavigateUri="{Binding CurrentPath}" RequestNavigate="hlkPath_Navigate">
