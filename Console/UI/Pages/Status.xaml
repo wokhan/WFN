@@ -142,7 +142,7 @@
                 <StackPanel Grid.Row="5" Grid.Column="4">
                     <RadioButton GroupName="rdbInAll" Padding="0,0,0,10" IsChecked="{Binding AllIsInAllowed}" Content="Allow" />
                     <RadioButton GroupName="rdbInAll" IsChecked="{Binding AllIsInBlocked}" Content="Block silently" />
-                    <RadioButton GroupName="rdbInAll" Padding="0,10,0,0" IsChecked="{Binding AllIsInBlockedNotif}" Content="Block and prompt*" />
+                    <RadioButton GroupName="rdbInAll" Padding="0,10,0,0" IsChecked="{Binding AllIsInBlockedNotif}" Content="Block and prompt" />
                 </StackPanel>
                 <Label Grid.Row="6" Content="Outbound" FontWeight="Bold" />
                 <StackPanel Grid.Row="6" Grid.Column="1" IsEnabled="{Binding PrivateIsEnabled}">
