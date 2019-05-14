@@ -41,7 +41,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
         public string Target { get; set; }
         public string TargetInfoUrl => $"http://whois.domaintools.com/{Target}";
         public string TargetPort { get; set; }
-        public string TargetPortUrl => $"https://www.speedguide.net/port.php?port=${TargetPort}";
+        public string TargetPortUrl => $"https://www.speedguide.net/port.php?port={TargetPort}";
         public int Protocol { get; set; }
         public string ProtocolAsString { get { return FirewallHelper.getProtocolAsString(Protocol); } }
 
