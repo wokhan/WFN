@@ -12,7 +12,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// <summary>
     /// Interaction logic for Rules.xaml
     /// </summary>
-    public partial class Rules : Page
+    public partial class Rules : Page, IComparable<FirewallHelper.Rule>, IComparable
     {
         public Rules()
         {
@@ -35,9 +35,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             get
             {
-                return new Dictionary<int, string> { { 0, "Show all" }, 
-                                                     { 1, "Active rules" }, 
-                                                     { 2, "WFN rules" }, 
+                return new Dictionary<int, string> { { 0, "Show all" },
+                                                     { 1, "Active rules" },
+                                                     { 2, "WFN rules" },
                                                      { 3, "WSH rules (Windows hidden rules)" } };
             }
         }
@@ -94,13 +94,17 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
                 //This code is messy, but the WPF DataGrid forgets the sorting when you change the ItemsSource, and you have to restore it in TWO places.
                 System.ComponentModel.SortDescription oldSorting = gridRules.Items.SortDescriptions.FirstOrDefault();
-                String oldSortingPropertyName = oldSorting.PropertyName;
+                String oldSortingPropertyName = oldSorting.PropertyName ?? gridRules.Columns.FirstOrDefault().Header.ToString();
                 System.ComponentModel.ListSortDirection oldSortingDirection = oldSorting.Direction;
                 gridRules.ItemsSource = (pred == null ? allRules : allRules.Where(r => pred.GetInvocationList().All(p => ((Predicate<FirewallHelper.Rule>)p)(r)))).ToList();
+                // FIXME: Causes: System.InvalidOperationException: Failed to compare two elements in the array.
                 gridRules.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription(oldSortingPropertyName, oldSortingDirection));
                 foreach (var column in gridRules.Columns)
                 {
-                    if (column.Header.ToString() == oldSortingPropertyName) column.SortDirection = oldSortingDirection;
+                    if (column.Header.ToString() == oldSortingPropertyName)
+                    {
+                        column.SortDirection = oldSortingDirection;
+                    }
                 }
                 gridRules.Items.Refresh();
             }
@@ -110,10 +114,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
         }
 
-        private static string rulePrefix = Common.Properties.Resources.RULE_NAME_FORMAT.Split('-')[0];
+        private static readonly string rulePrefix = Common.Properties.Resources.RULE_NAME_FORMAT.Split('-')[0];
+        private static readonly string tempRuleSuffix = Common.Properties.Resources.RULE_TEMP;
         private bool WFNRulesPredicate(FirewallHelper.Rule r)
         {
-            return r.Name.StartsWith(rulePrefix);
+            return r.Name.StartsWith(rulePrefix) || r.Name.StartsWith("[WFN ") || r.Name.StartsWith(tempRuleSuffix);
         }
 
         private bool WSHRulesPredicate(FirewallHelper.Rule r)
@@ -161,6 +166,16 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             initRules();
             filterRules();
+        }
+
+        public int CompareTo(FirewallHelper.Rule other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int CompareTo(object obj)
+        {
+            throw new NotImplementedException();
         }
     }
 }
