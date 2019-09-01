@@ -72,7 +72,8 @@
         <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
             <DataGrid BorderThickness="0" AlternatingRowBackground="Gainsboro" x:Name="gridLog" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp}"/>
+                    <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp}" Width="Auto"/>
+                    <DataGridTextColumn Header="App"  Binding="{Binding FileName}"/>
                     <DataGridTemplateColumn Header="Path" SortMemberPath="FriendlyPath">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -83,9 +84,10 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="IP" Binding="{Binding TargetIP}"/>
-                    <DataGridTextColumn Header="Port" Binding="{Binding TargetPort}"/>
-                    <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol}"/>
+                    <DataGridTextColumn Header="IP" Binding="{Binding TargetIP}" Width="Auto"/>
+                    <DataGridTextColumn Header="Port" Binding="{Binding TargetPort}" Width="Auto"/>
+                    <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol}" Width="Auto"/>
+                    <DataGridTextColumn Header="Reason" Binding="{Binding Reason}" Width="Auto"/>
                 </DataGrid.Columns>
             </DataGrid>
             <Border Style="{StaticResource InfoBlock}">

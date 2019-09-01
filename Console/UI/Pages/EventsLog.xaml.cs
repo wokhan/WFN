@@ -99,17 +99,23 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                             indexNew = entry.Index;
                         }
 
-                        if (entry.InstanceId == 5157 && entry.EntryType == EventLogEntryType.FailureAudit)
+                        // Note: instanceId == eventID
+                        if (entry.EntryType == EventLogEntryType.FailureAudit &&
+                            FirewallHelper.isEventInstanceIdAccepted(entry.InstanceId))
                         {
                             cpt--;
+                            string friendlyPath = FileHelper.GetFriendlyPath(entry.ReplacementStrings[1]);
                             var le = new LogEntryViewModel()
                             {
                                 Timestamp = entry.TimeGenerated,
                                 Icon = IconHelper.GetIcon(entry.ReplacementStrings[1]),
-                                FriendlyPath = FileHelper.GetFriendlyPath(entry.ReplacementStrings[1]),
+                                FriendlyPath = friendlyPath,
+                                FileName = System.IO.Path.GetFileName(friendlyPath),
                                 TargetIP = entry.ReplacementStrings[5],
                                 TargetPort = entry.ReplacementStrings[6],
-                                Protocol = FirewallHelper.getProtocolAsString(int.Parse(entry.ReplacementStrings[7]))
+                                Protocol = FirewallHelper.getProtocolAsString(int.Parse(entry.ReplacementStrings[7])),
+                                Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId) 
+                                // TODO: show entry.Message as tooltip?
                             };
 
                             if (isAppending)

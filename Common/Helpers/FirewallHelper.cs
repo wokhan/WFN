@@ -839,6 +839,42 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return Enum.GetName(typeof(NET_FW_PROFILE_TYPE2_), type);
         }
 
+        public static Boolean isEventInstanceIdAccepted(long instanceId)
+        {
+            // From: https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
+            return
+                instanceId == 5157 // the most relevant
+                || instanceId == 5031
+                || instanceId == 5150
+                || instanceId == 5151
+                || instanceId == 5154
+                || instanceId == 5155
+                || instanceId == 5156;
+        }
+        public static string getEventInstanceIdAsString(long instanceId)
+        {
+            // From: https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
+            switch (instanceId)
+            {
+                case 5157:
+                    return "[BLOCK_OUT] Connection"; // the most relevant
+                case 5031:
+                    return "[BLOCK_IN] Connection"; 
+                case 5150:
+                    return "[BLOCK] Packet";
+                case 5151:
+                    return "[BLOCK] Packet (other FW)";
+                case 5154:
+                    return "[ALLOW_IN] Listen";
+                case 5155:
+                    return "[BLOCK_IN] Listen";
+                case 5156:
+                    return "[ALLOW_OUT] Connection";
+                default:
+                    return "[UNKNOWN] id:" + instanceId.ToString(); 
+            }
+        }
+
         public static string getProtocolAsString(int protocol)
         {
             //These are the IANA protocol numbers.
