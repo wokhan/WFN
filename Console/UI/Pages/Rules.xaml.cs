@@ -12,7 +12,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// <summary>
     /// Interaction logic for Rules.xaml
     /// </summary>
-    public partial class Rules : Page, IComparable<FirewallHelper.Rule>, IComparable
+    public partial class Rules : Page
     {
         public Rules()
         {
@@ -118,7 +118,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private static readonly string tempRuleSuffix = Common.Properties.Resources.RULE_TEMP;
         private bool WFNRulesPredicate(FirewallHelper.Rule r)
         {
-            return r.Name.StartsWith(rulePrefix) || r.Name.StartsWith("[WFN ") || r.Name.StartsWith(tempRuleSuffix);
+            // TODO: Needs testing again
+            return r.Name.StartsWith(rulePrefix) || r.Name.StartsWith("[WFN ") || r.Name.EndsWith(tempRuleSuffix);
         }
 
         private bool WSHRulesPredicate(FirewallHelper.Rule r)
@@ -166,16 +167,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             initRules();
             filterRules();
-        }
-
-        public int CompareTo(FirewallHelper.Rule other)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int CompareTo(object obj)
-        {
-            throw new NotImplementedException();
         }
     }
 }
