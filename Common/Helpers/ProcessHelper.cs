@@ -221,13 +221,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             if (previousCache == null)
             {
-                using (var searcher = new ManagementObjectSearcher("SELECT ProcessId, Name, ExecutablePath FROM Win32_Process"))
+                using (var searcher = new ManagementObjectSearcher("SELECT ProcessId, Name, ExecutablePath, CommandLine FROM Win32_Process"))
                 {
                     using (var results = searcher.Get())
                     {
                         previousCache = results.Cast<ManagementObject>()
-                                               .ToDictionary(r => (int)(uint)r["ProcessId"], 
-                                                             r => new[] { (string)r["Name"], (string)r["ExecutablePath"] });
+                                               .ToDictionary(r => (int)(uint)r["ProcessId"],
+                                                             r => new[] { (string)r["Name"], (string)r["ExecutablePath"], (string)r["CommandLine"] });
                     }
                 }
             }
@@ -689,10 +689,37 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
             catch (Exception e)
             {
-                LogHelper.Error("Unable to parse the parameters: key = "+ key + " argv = " + String.Join(" ", args), e);
+                LogHelper.Error("Unable to parse the parameters: key = " + key + " argv = " + String.Join(" ", args), e);
             }
 
             return ret;
+        }
+
+        /// <summary>
+        /// Get the command-line of a running process id.<br>Use parseCommandLine to parse it into list of arguments</br>
+        /// </summary>
+        /// <param name="processId"></param>
+        /// <returns>command-line or null</returns>
+        public static String getCommandLineFromProcessWMI(int processId)
+        {
+            try
+            {
+                using (ManagementObjectSearcher clSearcher = new ManagementObjectSearcher(
+                    "SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + processId))
+                {
+                    String cLine = "";
+                    foreach (ManagementObject mObj in clSearcher.Get())
+                    {
+                        cLine += (String)mObj["CommandLine"];
+                    }
+                    return cLine;
+                }
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("Unable to get command-line from processId: " + processId + " - is process running?", e);
+            }
+            return null;
         }
     }
 }
