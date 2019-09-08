@@ -97,7 +97,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 String oldSortingPropertyName = oldSorting.PropertyName ?? gridRules.Columns.FirstOrDefault().Header.ToString();
                 System.ComponentModel.ListSortDirection oldSortingDirection = oldSorting.Direction;
                 gridRules.ItemsSource = (pred == null ? allRules : allRules.Where(r => pred.GetInvocationList().All(p => ((Predicate<FirewallHelper.Rule>)p)(r)))).ToList();
-                // FIXME: Causes: System.InvalidOperationException: Failed to compare two elements in the array.
                 gridRules.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription(oldSortingPropertyName, oldSortingDirection));
                 foreach (var column in gridRules.Columns)
                 {
