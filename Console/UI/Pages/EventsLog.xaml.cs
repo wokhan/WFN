@@ -107,15 +107,17 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                             string friendlyPath = FileHelper.GetFriendlyPath(entry.ReplacementStrings[1]);
                             var le = new LogEntryViewModel()
                             {
+                                Pid = entry.ReplacementStrings[0],
                                 Timestamp = entry.TimeGenerated,
                                 Icon = IconHelper.GetIcon(entry.ReplacementStrings[1]),
+                                Path = entry.ReplacementStrings[1],
                                 FriendlyPath = friendlyPath,
                                 FileName = System.IO.Path.GetFileName(friendlyPath),
                                 TargetIP = entry.ReplacementStrings[5],
                                 TargetPort = entry.ReplacementStrings[6],
                                 Protocol = FirewallHelper.getProtocolAsString(int.Parse(entry.ReplacementStrings[7])),
-                                Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId) 
-                                // TODO: show entry.Message as tooltip?
+                                Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId),
+                                Reason_Info = entry.Message
                             };
 
                             if (isAppending)
@@ -154,6 +156,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void btnLocate_Click(object sender, RoutedEventArgs e)
         {
+            if (gridLog.SelectedItem == null)
+            {
+                return;
+            }
             Process.Start("explorer.exe", "/select," + ((LogEntryViewModel)gridLog.SelectedItem).FriendlyPath);
         }
 
@@ -166,5 +172,115 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             ((App)Application.Current).RestartAsAdmin();
         }
+
+        private void GridLog_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //System.Console.WriteLine($"Grid SelectionChanged: {sender}, {e.Source}, {e.Handled}, {e.OriginalSource}, {e}");
+            if (gridLog.SelectedItem == null) {
+                btnLocate.IsEnabled = false;
+            } else {
+                btnLocate.IsEnabled = true;
+                if ((bool)btnAutoRefreshToggle.IsChecked)
+                {
+                   // disable the auto-refresh for not loosing the selection to locate
+                   btnAutoRefreshToggle.IsChecked = false;
+                }
+            }
+        }
+
+        private void Reason_GotFocus(object sender, RoutedEventArgs e)
+        {
+           // System.Console.WriteLine($"Columng Reason GotFocus: {sender}, {e.Source}, {e.Handled}, {e.OriginalSource}, {e}");
+        }
+
+        private void GridLog_CellSelected(object sender, RoutedEventArgs e)
+        {
+            //System.Console.WriteLine($"CellSelected: {sender}, {e.Source}, {e.Handled}, {e.OriginalSource}, {e}");
+            showMatchingRuleAndDetails((DataGrid)e.Source, (DataGridCell)e.OriginalSource);  // case when selection changed
+
+        }
+        private void GridLog_GotFocus(object sender, RoutedEventArgs e)
+        {
+            //System.Console.WriteLine($"Cell GotFocus: {sender}, {e.Source}, {e.Handled}, {e.OriginalSource}, {e}");
+            showMatchingRuleAndDetails((DataGrid)e.Source, (DataGridCell)e.OriginalSource);  // case when row already selected and cell got focus
+        }            
+
+        private void showMatchingRuleAndDetails(DataGrid grid, DataGridCell cell)
+        {
+            LogEntryViewModel selectedEntry = (LogEntryViewModel)grid.SelectedItem;
+            if (selectedEntry != null && Reason.Equals(cell.Column) && cell.IsFocused && cell.IsSelected)
+            {
+                LogHelper.Debug("\nGetMatchingRulesForEvent:");
+                IEnumerable<FirewallHelper.Rule> rules = FirewallHelper.GetMatchingRulesForEvent(int.Parse(selectedEntry.Pid), selectedEntry.Path, selectedEntry.TargetIP, selectedEntry.TargetPort, blockOnly: true, outgoingOnly: false);
+                string reasonDetails = "\n\nMatching Rules:";
+                foreach (FirewallHelper.Rule rule in rules.Take(10))
+                {
+                    reasonDetails += $"\n'{rule.Name}' | {rule.ActionStr} | {rule.DirectionStr} | {rule.AppPkgId} | profile={rule.ProfilesStr} | svc={rule.ServiceName} | {System.IO.Path.GetFileName(rule.ApplicationName)}";
+                }
+                if (rules.Count() > 10)
+                {
+                    reasonDetails += "\n...more...";
+                }
+                else if (rules.Count() == 0)
+                {
+                    reasonDetails = "\n... no matching rules found ...";
+                }
+                showToolTip((Control)cell, selectedEntry.Reason_Info + reasonDetails);
+            }
+            else
+            {
+                closeToolTip();
+            }
+        }
+
+        private static ToolTip toolTipInstance = new ToolTip  {
+                Content = "",
+                PlacementTarget = null,
+                StaysOpen = true,
+                IsOpen = false
+            };
+
+        private void showToolTip(UIElement placementTarget, String text)
+        {
+            toolTipInstance.PlacementTarget = placementTarget;
+            toolTipInstance.Content = text;
+            toolTipInstance.IsOpen = true;
+            placementTarget.LostFocus += PlacementTarget_LostFocus;
+       }
+
+        private void closeToolTip()
+        {
+            toolTipInstance.Content = "";
+            toolTipInstance.IsOpen = false;
+            toolTipInstance.PlacementTarget = null;
+        }
+
+        private void PlacementTarget_LostFocus(object sender, RoutedEventArgs e)
+        {
+            closeToolTip();
+            (sender as UIElement).LostFocus -= PlacementTarget_LostFocus;
+        }
+
+        private void showToolTip(Control control)
+        {
+            // shows the controls tooltip on demand
+            if (control.ToolTip != null)
+            {
+                if (control.ToolTip is ToolTip castToolTip)
+                {
+                    castToolTip.IsOpen = true;
+                }
+                else
+                {
+                    _ = new ToolTip
+                    {
+                        Content = control.ToolTip,
+                        StaysOpen = false,
+                        IsOpen = true
+                    };
+                }
+            }
+        }
+
     }
 }
