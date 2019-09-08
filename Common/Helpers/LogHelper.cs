@@ -115,11 +115,20 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         }
 
 #if DEBUG
+
+        public static bool isDebugEnabled()
+        {
+            return true;
+        }
         public static void Debug(string msg,
             [CallerMemberName] string memberName = null,
             [CallerFilePath] string filePath = null,
             [CallerLineNumber] int lineNumber = -1)
 #else
+        public static bool isDebugEnabled()
+        {
+            return false;
+        }
         public static void Debug(string msg)
 #endif
         {
