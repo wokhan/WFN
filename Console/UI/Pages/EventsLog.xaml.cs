@@ -69,41 +69,32 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         public ObservableCollection<LogEntryViewModel> LogEntries { get { return _logEntries; } }
 
         private DateTime lastDate = DateTime.MinValue;
-        private int lastIndex = 0;
         private void initEventLog()
         {
+            // small re-write because it got stuck going through all event logs when it found no matching event e.g. 5157
             try
             {
                 using (EventLog securityLog = new EventLog("security"))
                 {
-                    int i = securityLog.Entries.Count - 1;
-                    int cpt = MaxEventsToLoad;
+                    int slCount = securityLog.Entries.Count - 1;
+                    int eventsStored = 0;
                     bool isAppending = _logEntries.Any();
-                    DateTime lastDateNew = DateTime.MinValue;
-                    int indexNew = 0;
+                    DateTime lastDateNew = lastDate;
 
-                    while (i >= 0)
+                    for (int i=slCount; i > 0 && eventsStored < MaxEventsToLoad; i--)
                     {
                         EventLogEntry entry = securityLog.Entries[i];
-                        i--;
 
-                        if (lastDate != DateTime.MinValue && entry.TimeWritten <= lastDate && (entry.Index == lastIndex || lastIndex == -1))
+                        if (lastDate != DateTime.MinValue && entry.TimeWritten <= lastDate)
                         {
                             break;
-                        }
-
-                        if (lastDateNew == DateTime.MinValue)
-                        {
-                            // Store where we start processing entries.
-                            lastDateNew = entry.TimeWritten;
-                            indexNew = entry.Index;
                         }
 
                         // Note: instanceId == eventID
                         if (entry.EntryType == EventLogEntryType.FailureAudit &&
                             FirewallHelper.isEventInstanceIdAccepted(entry.InstanceId))
                         {
-                            cpt--;
+                            eventsStored++;
                             string friendlyPath = FileHelper.GetFriendlyPath(entry.ReplacementStrings[1]);
                             var le = new LogEntryViewModel()
                             {
@@ -116,36 +107,22 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                                 TargetIP = entry.ReplacementStrings[5],
                                 TargetPort = entry.ReplacementStrings[6],
                                 Protocol = FirewallHelper.getProtocolAsString(int.Parse(entry.ReplacementStrings[7])),
-                                Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId),
+                                Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId, entry.ReplacementStrings[2]),
                                 Reason_Info = entry.Message
                             };
 
-                            if (isAppending)
-                            {
-                                _logEntries.Insert(MaxEventsToLoad - (cpt + 1), le);
-                            }
-                            else
-                            {
-                                _logEntries.Add(le);
-                            }
-
-                            if (cpt == 0)
-                            {
-                                // We've loaded the maximum number of entries.
-                                break;
-                            }
+                            _logEntries.Add(le);
                         }
                     }
 
                     // Trim the list
                     while (_logEntries.Count > MaxEventsToLoad)
                     {
-                        _logEntries.RemoveAt(_logEntries.Count - 1);
+                        _logEntries.RemoveAt(0);
                     }
 
                     // Set the cut-off point for the next time this function gets called.
                     lastDate = lastDateNew;
-                    lastIndex = indexNew;
                 }
             }
             catch (Exception e)
