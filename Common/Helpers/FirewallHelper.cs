@@ -843,7 +843,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
             return
-                instanceId == 5157 // the most relevant
+                instanceId == 5157 // block connection
+                || instanceId == 5152 // drop packet
                 || instanceId == 5031
                 || instanceId == 5150
                 || instanceId == 5151
@@ -851,27 +852,31 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 || instanceId == 5155
                 || instanceId == 5156;
         }
-        public static string getEventInstanceIdAsString(long instanceId)
+        public static string getEventInstanceIdAsString(long instanceId, string directionCode)
         {
             // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
+            string reason = "[BLOCK] {0} {1}";
+            string direction = directionCode == "%%14593" ? "Out" : "In";
             switch (instanceId)
             {
-                case 5157:
-                    return "[BLOCK_OUT] Connection"; // the most relevant
+               case 5157:
+                    return string.Format(reason, direction, "connection");
+                case 5152:
+                    return string.Format(reason, direction, " Packet drop");
                 case 5031:
-                    return "[BLOCK_IN] Connection"; 
+                    return string.Format(reason, direction, " Connection"); 
                 case 5150:
-                    return "[BLOCK] Packet";
+                    return string.Format(reason, direction, " Packet");
                 case 5151:
-                    return "[BLOCK] Packet (other FW)";
+                    return string.Format(reason, direction, " Packet (other FW)");
                 case 5154:
-                    return "[ALLOW_IN] Listen";
+                    return "[ALLOW] " + direction + " Listen";
                 case 5155:
-                    return "[BLOCK_IN] Listen";
+                    return string.Format(reason, direction, "  Listen");
                 case 5156:
-                    return "[ALLOW_OUT] Connection";
+                    return "[ALLOW] " + direction + " Connection";
                 default:
-                    return "[UNKNOWN] id:" + instanceId.ToString(); 
+                    return "[UNKNOWN] event id:" + instanceId.ToString(); 
             }
         }
 
