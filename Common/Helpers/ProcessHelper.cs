@@ -9,6 +9,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Management;
+using System.Text.RegularExpressions;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -721,5 +722,70 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
             return null;
         }
+        /// <summary>
+        /// Parses a complete command-line with arguments provided as a string (support commands spaces and quotes).
+        /// <para>Special keys in dictionary
+        /// <br>key=@command  contains the command itself</br>
+        /// <br>key=@arg[x] for args wihtout argname</br>
+        /// </para>
+        /// </summary>
+        /// 
+        /// <param name="cmdLine">command-line to parse e.g. "\"c:\\program files\\svchost.exe\" -k -s svcName -t \"some text\""</param>
+        /// <returns>Dictionary with key-value pairs.<para>
+        /// key=@command contains the command itself</para>
+        /// <para>key=@arg[x] for args without key</para>
+        /// <para>[-argname|/aname]</para>
+        /// </returns>
+        public static Dictionary<string, string> ParseCommandLineArgs(string cmdLine)
+        {
+            // https://stackoverflow.com/questions/298830/split-string-containing-command-line-parameters-into-string-in-c-sharp
+            // Fiddle link (regex): https://dotnetfiddle.net/PU7kXD
+
+            string regEx = @"\G(""((""""|[^""])+)""|(\S+)) *";
+            MatchCollection matches = Regex.Matches(cmdLine, regEx);
+            List<String> args = matches.Cast<Match>().Select(m => Regex.Replace(m.Groups[2].Success ? m.Groups[2].Value : m.Groups[4].Value, @"""""", @"""")).ToList();
+            return ParseCommandLineArgsToDict(args);
+        }
+
+        /// <summary>
+        /// Creates a dictionary from a command-line arguments list.
+        /// <para>Special keys in dictionary
+        /// <br>key=@command  contains the command itself from the first element in the list</br>
+        /// <br>key=@arg[x] for args wihtout argname</br>
+        /// </para>
+        /// </summary>
+        /// 
+        public static Dictionary<string, string> ParseCommandLineArgsToDict(List<String> args)
+        {
+            // Fiddle link to test it: https://dotnetfiddle.net/PU7kXD
+            Dictionary<string, string> dict = new Dictionary<string, string>(args.Count);
+            for (int i = 0; i < args.Count(); i++)
+            {
+                string key, val;
+                if (args[i].StartsWith("-") || args[i].StartsWith("/"))
+                {
+                    key = args[i];
+                    if ((i + 1) < args.Count && !args[i + 1].StartsWith("-") && !args[i + 1].StartsWith("/"))
+                    {
+                        val = args[i + 1];
+                        i++;
+                    }
+                    else
+                    {
+                        val = null;
+                    }
+                }
+                else
+                {
+                    // key=@command@ or argX 
+                    key = (i == 0) ? "@command" : "@arg" + i;
+                    val = args[i];
+                }
+                dict.Add(key, val);
+            }
+
+            return dict;
+        }
     }
 }
+
