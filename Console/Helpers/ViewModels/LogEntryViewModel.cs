@@ -14,8 +14,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         public string TargetIP { get; set; }
         public string TargetPort { get; set; }
         public string Protocol { get; set; }
+        public string Direction { get; set; }
+        public string FilterId { get; set; }
+
         public string Reason { get; set; }
         public string Reason_Info { get; set; }
+
     }
 
 }
