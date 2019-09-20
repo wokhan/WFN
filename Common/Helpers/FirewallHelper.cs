@@ -852,29 +852,28 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 || instanceId == 5155
                 || instanceId == 5156;
         }
-        public static string getEventInstanceIdAsString(long instanceId, string directionCode)
+        public static string getEventInstanceIdAsString(long instanceId, string direction)
         {
             // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
             string reason = "[BLOCK] {0} {1}";
-            string direction = directionCode == "%%14593" ? "Out" : "In";
             switch (instanceId)
             {
                case 5157:
                     return string.Format(reason, direction, "connection");
                 case 5152:
-                    return string.Format(reason, direction, " Packet drop");
+                    return string.Format(reason, direction, "packet drop");
                 case 5031:
-                    return string.Format(reason, direction, " Connection"); 
+                    return string.Format(reason, direction, "app connection"); 
                 case 5150:
-                    return string.Format(reason, direction, " Packet");
+                    return string.Format(reason, direction, "packet");
                 case 5151:
-                    return string.Format(reason, direction, " Packet (other FW)");
+                    return string.Format(reason, direction, "packet (other FW)");
                 case 5154:
-                    return "[ALLOW] " + direction + " Listen";
+                    return "[ALLOW] " + direction + "listen";
                 case 5155:
-                    return string.Format(reason, direction, "  Listen");
+                    return string.Format(reason, direction, "listen");
                 case 5156:
-                    return "[ALLOW] " + direction + " Connection";
+                    return "[ALLOW] " + direction + "connection";
                 default:
                     return "[UNKNOWN] event id:" + instanceId.ToString(); 
             }
@@ -1143,7 +1142,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         /// <returns></returns>
         public static IEnumerable<Rule> GetMatchingRulesForEvent(int pid, string path, string target, string targetPort, bool blockOnly = true, bool outgoingOnly = false)
         {
-            String appPkgId = ProcessHelper.getAppPkgId(pid);
+            String appPkgId = (pid != 0) ? ProcessHelper.getAppPkgId(pid) : String.Empty;
             int currentProfile = GetCurrentProfile(); 
             string svcName = "*";
             if (path.ToLower().EndsWith("svchost.exe"))
@@ -1155,6 +1154,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     svcName = cLine.Split(new string[] { " -s " }, StringSplitOptions.None).Last().Split(' ').First();
                 }
             }
+
+            String exeName = System.IO.Path.GetFileName(path);
+            LogHelper.Debug($"\nGetMatchingRulesForEvent: path={exeName}, svcName={svcName}, pid={pid}, target={target} targetPort={targetPort}, blockOnly={blockOnly}, outgoingOnly={outgoingOnly}");
 
             IEnumerable<Rule> ret = GetRules(AlsoGetInactive: false).Distinct(new SimpleEventRuleCompare()).Where(r => r.Enabled && RuleMatchesEvent(r, currentProfile, appPkgId, svcName, path, target, targetPort));
             if (blockOnly)
@@ -1184,12 +1186,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             if (ret && LogHelper.isDebugEnabled())
             {
                 LogHelper.Debug("Found enabled "+ r.ActionStr + " " + r.DirectionStr + " Rule '" + r.Name + "'");
-                LogHelper.Debug(r.Profiles.ToString() + " <--> " + currentProfile.ToString() + " : " + (((r.Profiles & currentProfile) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0)).ToString());
-                LogHelper.Debug(ruleFriendlyPath + " <--> " + friendlyPath + " : " + ((String.IsNullOrEmpty(ruleFriendlyPath) || StringComparer.CurrentCultureIgnoreCase.Compare(ruleFriendlyPath, friendlyPath) == 0)).ToString());
-                LogHelper.Debug(r.RemoteAddresses + " <--> " + target + " : " + CheckRuleAddresses(r.RemoteAddresses, target).ToString());
-                LogHelper.Debug(r.RemotePorts + " <--> " + remoteport + " : " + CheckRulePorts(r.RemotePorts, remoteport).ToString());
-                LogHelper.Debug(r.AppPkgId + " <--> " + appPkgId + "  : " + (String.IsNullOrEmpty(r.AppPkgId) || (r.AppPkgId == appPkgId)).ToString());
-                LogHelper.Debug(r.ServiceName + " <--> " + svcName + " : " + ((String.IsNullOrEmpty(r.ServiceName) || StringComparer.CurrentCultureIgnoreCase.Compare(svcName, r.ServiceName) == 0)));
+                LogHelper.Debug("\t" + r.Profiles.ToString() + " <--> " + currentProfile.ToString() + " : " + (((r.Profiles & currentProfile) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0)).ToString());
+                LogHelper.Debug("\t" + ruleFriendlyPath + " <--> " + friendlyPath + " : " + ((String.IsNullOrEmpty(ruleFriendlyPath) || StringComparer.CurrentCultureIgnoreCase.Compare(ruleFriendlyPath, friendlyPath) == 0)).ToString());
+                LogHelper.Debug("\t" + r.RemoteAddresses + " <--> " + target + " : " + CheckRuleAddresses(r.RemoteAddresses, target).ToString());
+                LogHelper.Debug("\t" + r.RemotePorts + " <--> " + remoteport + " : " + CheckRulePorts(r.RemotePorts, remoteport).ToString());
+                LogHelper.Debug("\t" + r.AppPkgId + " <--> " + appPkgId + "  : " + (String.IsNullOrEmpty(r.AppPkgId) || (r.AppPkgId == appPkgId)).ToString());
+                LogHelper.Debug("\t" + r.ServiceName + " <--> " + svcName + " : " + ((String.IsNullOrEmpty(r.ServiceName) || StringComparer.CurrentCultureIgnoreCase.Compare(svcName, r.ServiceName) == 0)));
             }
             return ret;
         }
