@@ -35,6 +35,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             set { _interval = value; timer.Interval = TimeSpan.FromSeconds(value); }
         }
 
+        private bool RefreshFilterData = true;
+
         public EventsLog()
         {
             InitializeComponent();
@@ -74,6 +76,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             // small re-write because it got stuck going through all event logs when it found no matching event e.g. 5157
             try
             {
+                // TODO: retrieve service name command-line ProcessHelper#getAllServices2 ?
                 using (EventLog securityLog = new EventLog("security"))
                 {
                     int slCount = securityLog.Entries.Count - 1;
@@ -81,7 +84,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     bool isAppending = _logEntries.Any();
                     DateTime lastDateNew = lastDate;
 
-                    for (int i=slCount; i > 0 && eventsStored < MaxEventsToLoad; i--)
+                    for (int i = slCount; i > 0 && eventsStored < MaxEventsToLoad; i--)
                     {
                         EventLogEntry entry = securityLog.Entries[i];
 
@@ -95,23 +98,36 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                             FirewallHelper.isEventInstanceIdAccepted(entry.InstanceId))
                         {
                             eventsStored++;
-                            string friendlyPath = FileHelper.GetFriendlyPath(entry.ReplacementStrings[1]);
-                            var le = new LogEntryViewModel()
-                            {
-                                Pid = entry.ReplacementStrings[0],
-                                Timestamp = entry.TimeGenerated,
-                                Icon = IconHelper.GetIcon(entry.ReplacementStrings[1]),
-                                Path = entry.ReplacementStrings[1],
-                                FriendlyPath = friendlyPath,
-                                FileName = System.IO.Path.GetFileName(friendlyPath),
-                                TargetIP = entry.ReplacementStrings[5],
-                                TargetPort = entry.ReplacementStrings[6],
-                                Protocol = FirewallHelper.getProtocolAsString(int.Parse(entry.ReplacementStrings[7])),
-                                Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId, entry.ReplacementStrings[2]),
-                                Reason_Info = entry.Message
-                            };
+                            string friendlyPath = entry.ReplacementStrings[1] == "-" ? "System" : FileHelper.GetFriendlyPath(entry.ReplacementStrings[1]);
 
-                            _logEntries.Add(le);
+                            LogEntryViewModel lastEntry = _logEntries.Count > 0 ? _logEntries.Last() : null;
+                            bool canBeIgnored = lastEntry != null
+                                && lastEntry.Pid == entry.ReplacementStrings[0]
+                                && lastEntry.Timestamp.Second == entry.TimeGenerated.Second
+                                && lastEntry.Timestamp.Minute == entry.TimeGenerated.Minute
+                                && lastEntry.TargetIP == entry.ReplacementStrings[5]
+                                && lastEntry.TargetPort == entry.ReplacementStrings[6];
+
+                            if (!canBeIgnored)
+                            {
+                                var le = new LogEntryViewModel()
+                                {
+                                    Pid = entry.ReplacementStrings[0],
+                                    Timestamp = entry.TimeGenerated,
+                                    Icon = IconHelper.GetIcon(entry.ReplacementStrings[1]),
+                                    Path = entry.ReplacementStrings[1] == "-" ? "System" : entry.ReplacementStrings[1],
+                                    FriendlyPath = friendlyPath,
+                                    FileName = System.IO.Path.GetFileName(friendlyPath),
+                                    TargetIP = entry.ReplacementStrings[5],
+                                    TargetPort = entry.ReplacementStrings[6],
+                                    Protocol = FirewallHelper.getProtocolAsString(int.Parse(entry.ReplacementStrings[7])),
+                                    Direction = entry.ReplacementStrings[2] == "%%14593" ? "Out" : "In",
+                                    FilterId = entry.ReplacementStrings[8],
+                                    Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId, entry.ReplacementStrings[2] == "%%14593" ? "Out" : "In"),
+                                    Reason_Info = entry.Message,
+                                };
+                                _logEntries.Add(le);
+                            }
                         }
                     }
 
@@ -153,21 +169,24 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private void GridLog_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //System.Console.WriteLine($"Grid SelectionChanged: {sender}, {e.Source}, {e.Handled}, {e.OriginalSource}, {e}");
-            if (gridLog.SelectedItem == null) {
+            if (gridLog.SelectedItem == null)
+            {
                 btnLocate.IsEnabled = false;
-            } else {
+            }
+            else
+            {
                 btnLocate.IsEnabled = true;
                 if ((bool)btnAutoRefreshToggle.IsChecked)
                 {
-                   // disable the auto-refresh for not loosing the selection to locate
-                   btnAutoRefreshToggle.IsChecked = false;
+                    // disable the auto-refresh for not loosing the selection to locate
+                    btnAutoRefreshToggle.IsChecked = false;
                 }
             }
         }
 
         private void Reason_GotFocus(object sender, RoutedEventArgs e)
         {
-           // System.Console.WriteLine($"Columng Reason GotFocus: {sender}, {e.Source}, {e.Handled}, {e.OriginalSource}, {e}");
+            // System.Console.WriteLine($"Columng Reason GotFocus: {sender}, {e.Source}, {e.Handled}, {e.OriginalSource}, {e}");
         }
 
         private void GridLog_CellSelected(object sender, RoutedEventArgs e)
@@ -180,29 +199,34 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             //System.Console.WriteLine($"Cell GotFocus: {sender}, {e.Source}, {e.Handled}, {e.OriginalSource}, {e}");
             showMatchingRuleAndDetails((DataGrid)e.Source, (DataGridCell)e.OriginalSource);  // case when row already selected and cell got focus
-        }            
+        }
 
         private void showMatchingRuleAndDetails(DataGrid grid, DataGridCell cell)
         {
             LogEntryViewModel selectedEntry = (LogEntryViewModel)grid.SelectedItem;
             if (selectedEntry != null && Reason.Equals(cell.Column) && cell.IsFocused && cell.IsSelected)
             {
-                LogHelper.Debug("\nGetMatchingRulesForEvent:");
-                IEnumerable<FirewallHelper.Rule> rules = FirewallHelper.GetMatchingRulesForEvent(int.Parse(selectedEntry.Pid), selectedEntry.Path, selectedEntry.TargetIP, selectedEntry.TargetPort, blockOnly: true, outgoingOnly: false);
-                string reasonDetails = "\n\nMatching Rules:";
-                foreach (FirewallHelper.Rule rule in rules.Take(10))
-                {
-                    reasonDetails += $"\n'{rule.Name}' | {rule.ActionStr} | {rule.DirectionStr} | {rule.AppPkgId} | profile={rule.ProfilesStr} | svc={rule.ServiceName} | {System.IO.Path.GetFileName(rule.ApplicationName)}";
-                }
-                if (rules.Count() > 10)
-                {
-                    reasonDetails += "\n...more...";
-                }
-                else if (rules.Count() == 0)
-                {
-                    reasonDetails = "\n... no matching rules found ...";
-                }
-                showToolTip((Control)cell, selectedEntry.Reason_Info + reasonDetails);
+                // Filter which blocked the connection
+                NetshHelper.FilterResult blockingFilter = NetshHelper.getBlockingFilter(int.Parse(selectedEntry.FilterId), refreshData: RefreshFilterData);
+                RefreshFilterData = false;
+                string blockingFilterDetails = blockingFilter != null ? $"\n\nBlocking filter:\n\t{selectedEntry.FilterId}: {blockingFilter.name} - {blockingFilter.description}\n" : "\n\n... No blocking filter found ...";
+
+                //// Other matching filters for process
+                //IEnumerable<FirewallHelper.Rule> rules = FirewallHelper.GetMatchingRulesForEvent(int.Parse(selectedEntry.Pid), selectedEntry.Path, selectedEntry.TargetIP, selectedEntry.TargetPort, blockOnly: false, outgoingOnly: false);
+                //string reasonDetails = $"\nMatching Rules for | {selectedEntry.FileName} | {selectedEntry.Pid} | {selectedEntry.TargetIP}:{selectedEntry.TargetPort} |";
+                //foreach (FirewallHelper.Rule rule in rules.Take(10))
+                //{
+                //    reasonDetails += $"\n'{rule.Name}' | {rule.ActionStr} | {rule.DirectionStr} | {rule.AppPkgId} | profile={rule.ProfilesStr} | svc={rule.ServiceName} | {System.IO.Path.GetFileName(rule.ApplicationName)}";
+                //}
+                //if (rules.Count() > 10)
+                //{
+                //    reasonDetails += "\n...more...";
+                //}
+                //else if (rules.Count() == 0)
+                //{
+                //    reasonDetails += "\n... no matching rules found ...";
+                //}
+                showToolTip((Control)cell, selectedEntry.Reason_Info + blockingFilterDetails); // + reasonDetails);
             }
             else
             {
@@ -210,12 +234,13 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
         }
 
-        private static ToolTip toolTipInstance = new ToolTip  {
-                Content = "",
-                PlacementTarget = null,
-                StaysOpen = true,
-                IsOpen = false
-            };
+        private static ToolTip toolTipInstance = new ToolTip
+        {
+            Content = "",
+            PlacementTarget = null,
+            StaysOpen = true,
+            IsOpen = false
+        };
 
         private void showToolTip(UIElement placementTarget, String text)
         {
@@ -223,7 +248,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             toolTipInstance.Content = text;
             toolTipInstance.IsOpen = true;
             placementTarget.LostFocus += PlacementTarget_LostFocus;
-       }
+        }
 
         private void closeToolTip()
         {
