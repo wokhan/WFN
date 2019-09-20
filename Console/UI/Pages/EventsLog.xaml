@@ -74,8 +74,8 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp}" Width="Auto"/>
                     <DataGridTextColumn Header="PID" Binding="{Binding Pid}" Width="Auto"/>
-                    <DataGridTextColumn Header="App"  Binding="{Binding FileName}" Width="0.5*"/>
-                    <DataGridTemplateColumn Header="Path" SortMemberPath="FriendlyPath">
+                    <DataGridTextColumn Header="App"  Binding="{Binding FileName}" Width="0.3*"/>
+                    <DataGridTemplateColumn Header="Path" SortMemberPath="FriendlyPath" Width="0.3*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -88,7 +88,9 @@
                     <DataGridTextColumn Header="IP" Binding="{Binding TargetIP}" Width="Auto"/>
                     <DataGridTextColumn Header="Port" Binding="{Binding TargetPort}" Width="Auto"/>
                     <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol}" Width="Auto"/>
-                    <DataGridTextColumn x:Name="Reason" Header="Reason" Binding="{Binding Reason}" Width="Auto">
+                    <DataGridTextColumn Header="FilterId" Binding="{Binding FilterId}" Width="Auto"/>
+                    <DataGridTextColumn Header="Dir" Binding="{Binding Direction}" Width="Auto"/>
+                    <DataGridTextColumn x:Name="Reason" Header="Action" Binding="{Binding Reason}" Width="Auto">
                     </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>

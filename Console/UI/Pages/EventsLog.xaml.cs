@@ -8,6 +8,9 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
+using System.ComponentModel;
+using System.Data;
+using System.Windows.Data;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -16,7 +19,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// </summary>
     public partial class EventsLog : Page
     {
-        private const int MaxEventsToLoad = 500;
+        private const int MaxEventsToLoad = 1500;
 
         public bool IsTrackingEnabled
         {
@@ -67,8 +70,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         }
 
 
+        
         private ObservableCollection<LogEntryViewModel> _logEntries = new ObservableCollection<LogEntryViewModel>();
-        public ObservableCollection<LogEntryViewModel> LogEntries { get { return _logEntries; } }
+        public ObservableCollection<LogEntryViewModel> LogEntries { get { return _logEntries; } }  // used as binding in designer
 
         private DateTime lastDate = DateTime.MinValue;
         private void initEventLog()
@@ -79,6 +83,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 // TODO: retrieve service name command-line ProcessHelper#getAllServices2 ?
                 using (EventLog securityLog = new EventLog("security"))
                 {
+                    // TODO: utilize EventLog#EnableRaisingEvents after initialization instead of timer
+                    //securityLog.EnableRaisingEvents = true;
+                    //securityLog.EntryWritten += (sender, args) => _logEntries.Add(createEventLogEntry(args.Entry));
+                    
                     int slCount = securityLog.Entries.Count - 1;
                     int eventsStored = 0;
                     bool isAppending = _logEntries.Any();
@@ -123,12 +131,18 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                                     Protocol = FirewallHelper.getProtocolAsString(int.Parse(entry.ReplacementStrings[7])),
                                     Direction = entry.ReplacementStrings[2] == "%%14593" ? "Out" : "In",
                                     FilterId = entry.ReplacementStrings[8],
-                                    Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId, entry.ReplacementStrings[2] == "%%14593" ? "Out" : "In"),
+                                    Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId),
                                     Reason_Info = entry.Message,
                                 };
                                 _logEntries.Add(le);
                             }
                         }
+                    }
+
+                    ICollectionView dataView = CollectionViewSource.GetDefaultView(gridLog.ItemsSource);
+                    if (dataView.SortDescriptions.Count < 1)
+                    {
+                        dataView.SortDescriptions.Add(new SortDescription("Timestamp", ListSortDirection.Descending));
                     }
 
                     // Trim the list

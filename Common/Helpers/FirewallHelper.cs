@@ -852,30 +852,30 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 || instanceId == 5155
                 || instanceId == 5156;
         }
-        public static string getEventInstanceIdAsString(long instanceId, string direction)
+        public static string getEventInstanceIdAsString(long eventId)
         {
             // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
-            string reason = "[BLOCK] {0} {1}";
-            switch (instanceId)
+            string reason = "Block: {0} ";
+            switch (eventId)
             {
                case 5157:
-                    return string.Format(reason, direction, "connection");
+                    return string.Format(reason,  "connection");
                 case 5152:
-                    return string.Format(reason, direction, "packet drop");
+                    return string.Format(reason,  "packet droped");
                 case 5031:
-                    return string.Format(reason, direction, "app connection"); 
+                    return string.Format(reason,  "app connection"); 
                 case 5150:
-                    return string.Format(reason, direction, "packet");
+                    return string.Format(reason,  "packet");
                 case 5151:
-                    return string.Format(reason, direction, "packet (other FW)");
+                    return string.Format(reason,  "packet (other FW)");
                 case 5154:
-                    return "[ALLOW] " + direction + "listen";
+                    return "Allow: listen";
                 case 5155:
-                    return string.Format(reason, direction, "listen");
+                    return string.Format(reason,  "listen");
                 case 5156:
-                    return "[ALLOW] " + direction + "connection";
+                    return "Allow: connection";
                 default:
-                    return "[UNKNOWN] event id:" + instanceId.ToString(); 
+                    return "[UNKNOWN] eventId:" + eventId.ToString(); 
             }
         }
 
