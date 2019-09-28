@@ -74,23 +74,29 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp}" Width="Auto"/>
                     <DataGridTextColumn Header="PID" Binding="{Binding Pid}" Width="Auto"/>
-                    <DataGridTextColumn Header="App"  Binding="{Binding FileName}" Width="0.3*"/>
-                    <DataGridTemplateColumn Header="Path" SortMemberPath="FriendlyPath" Width="0.3*">
+                    <!-- <DataGridTextColumn Header="App"  Binding="{Binding FileName}" Width="0.3*"/> -->
+                    <DataGridTemplateColumn Header="App" SortMemberPath="FileName" Width="0.3*" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
-                                    <Image Source="{Binding Icon}" Width="16" HorizontalAlignment="Left"/>
-                                    <Label Content="{Binding FriendlyPath}" Margin="20,0,0,0" />
+                                    <Image Source="{Binding Icon}" Width="16" HorizontalAlignment="Left" />
+                                    <Label Content="{Binding FileName}" Margin="20,0,0,0" ToolTip="{Binding FriendlyPath}"/>
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Service"  Binding="{Binding ServiceName}" Width="0.2*"/>
                     <DataGridTextColumn Header="IP" Binding="{Binding TargetIP}" Width="Auto"/>
                     <DataGridTextColumn Header="Port" Binding="{Binding TargetPort}" Width="Auto"/>
                     <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol}" Width="Auto"/>
                     <DataGridTextColumn Header="FilterId" Binding="{Binding FilterId}" Width="Auto"/>
                     <DataGridTextColumn Header="Dir" Binding="{Binding Direction}" Width="Auto"/>
                     <DataGridTextColumn x:Name="Reason" Header="Action" Binding="{Binding Reason}" Width="Auto">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="click for details" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>

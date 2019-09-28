@@ -21,6 +21,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     {
         private const int MaxEventsToLoad = 1500;
 
+        private Dictionary<int, ProcessHelper.ServiceInfoResult> services = ProcessHelper.GetAllServicesByPidWMI();
+
         public bool IsTrackingEnabled
         {
             get { return timer.IsEnabled; }
@@ -80,7 +82,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             // small re-write because it got stuck going through all event logs when it found no matching event e.g. 5157
             try
             {
-                // TODO: retrieve service name command-line ProcessHelper#getAllServices2 ?
                 using (EventLog securityLog = new EventLog("security"))
                 {
                     // TODO: utilize EventLog#EnableRaisingEvents after initialization instead of timer
@@ -106,11 +107,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                             FirewallHelper.isEventInstanceIdAccepted(entry.InstanceId))
                         {
                             eventsStored++;
-                            string friendlyPath = entry.ReplacementStrings[1] == "-" ? "System" : FileHelper.GetFriendlyPath(entry.ReplacementStrings[1]);
 
                             LogEntryViewModel lastEntry = _logEntries.Count > 0 ? _logEntries.Last() : null;
+                            int pid = int.Parse(entry.ReplacementStrings[0]);
                             bool canBeIgnored = lastEntry != null
-                                && lastEntry.Pid == entry.ReplacementStrings[0]
+                                && lastEntry.Pid == pid
                                 && lastEntry.Timestamp.Second == entry.TimeGenerated.Second
                                 && lastEntry.Timestamp.Minute == entry.TimeGenerated.Minute
                                 && lastEntry.TargetIP == entry.ReplacementStrings[5]
@@ -118,18 +119,26 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
                             if (!canBeIgnored)
                             {
+                                string friendlyPath = entry.ReplacementStrings[1] == "-" ? "System" : FileHelper.GetFriendlyPath(entry.ReplacementStrings[1]);
+                                string fileName = System.IO.Path.GetFileName(friendlyPath);
+                                string direction = entry.ReplacementStrings[2] == @"%%14593" ? "Out" : "In";
+
+                                // try to get the servicename from pid (works only if service is running)
+                                string serviceName = services.ContainsKey(pid) ? services[pid].Name : "-";
+
                                 var le = new LogEntryViewModel()
                                 {
-                                    Pid = entry.ReplacementStrings[0],
+                                    Pid = pid,
                                     Timestamp = entry.TimeGenerated,
                                     Icon = IconHelper.GetIcon(entry.ReplacementStrings[1]),
                                     Path = entry.ReplacementStrings[1] == "-" ? "System" : entry.ReplacementStrings[1],
                                     FriendlyPath = friendlyPath,
-                                    FileName = System.IO.Path.GetFileName(friendlyPath),
+                                    ServiceName = serviceName,
+                                    FileName = fileName,
                                     TargetIP = entry.ReplacementStrings[5],
                                     TargetPort = entry.ReplacementStrings[6],
                                     Protocol = FirewallHelper.getProtocolAsString(int.Parse(entry.ReplacementStrings[7])),
-                                    Direction = entry.ReplacementStrings[2] == "%%14593" ? "Out" : "In",
+                                    Direction = direction,
                                     FilterId = entry.ReplacementStrings[8],
                                     Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId),
                                     Reason_Info = entry.Message,
@@ -297,6 +306,5 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 }
             }
         }
-
     }
 }
