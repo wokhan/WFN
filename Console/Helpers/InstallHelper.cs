@@ -16,7 +16,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
         /// <summary>
         /// 
         /// </summary>
-        public static bool RemoveProgram(bool disableLogging, Action<bool, string> callback)
+        public static bool ApplyChanges(bool disableLogging, bool removeNotifierTask, Action<bool, string> callback)
         {
             /*if (reallowOutgoing && !FirewallHelper.RestoreWindowsFirewall())
             {
@@ -31,13 +31,13 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
                 return false;
             }
 
-            if (!RemoveTask())
+            if (removeNotifierTask && !RemoveTask())
             {
                 callback(false, Resources.MSG_UNINST_TASK_ERR);
                 return false;
             }
 
-            callback(true, Resources.MSG_UNINST_OK);
+            if (removeNotifierTask) callback(true, Resources.MSG_UNINST_OK);
 
             return true;
         }
