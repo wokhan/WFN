@@ -462,85 +462,183 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="service"></param>
-        /// <returns></returns>
-        private static string getServiceDesc(string service)
+        public class ServiceInfoResult
         {
-            string ret;
-            try
+            public int ProcessId { get; set; }
+            public string Name { get; set; }
+            public string DisplayName { get; set; }
+            public string PathName { get; set; }
+        }
+        /// <summary>
+        /// Retrieve information about all services by pid
+        /// </summary>
+        /// <returns></returns>
+        public static Dictionary<int, ServiceInfoResult> GetAllServicesByPidWMI()
+        {
+            // use WMI "Win32_Service" query to get service names by pid
+            // https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/win32-service
+            Dictionary<int, ServiceInfoResult> dict = new Dictionary<int, ServiceInfoResult>();
+            using (var searcher = new ManagementObjectSearcher("SELECT ProcessId, Name, DisplayName, PathName FROM Win32_Service WHERE ProcessId != 0"))
             {
-                using (ServiceController sc = new ServiceController(service))
+                using (var results = searcher.Get())
                 {
-                    ret = sc.DisplayName;
-                }
+                    foreach (var r in results)
+                    {
+                        //Console.WriteLine($"{r["processId"]} {r["Name"]}");
+                        int pid = (int)(uint)r["ProcessId"];
+                        if (pid > 0 && !dict.ContainsKey(pid))
+                        {
+                            ServiceInfoResult si = new ServiceInfoResult()
+                            {
+                                ProcessId = pid,
+                                Name = (string)r["Name"],
+                                DisplayName = (string)r["DisplayName"],
+                                PathName = (string)r["PathName"]
+                            };
+                           dict.Add(pid, si);
+                        }
+                    }
 
-                return ret;
+                }
             }
-            catch (ArgumentException)
-            {
-                LogHelper.Debug("Couldn't get description for service: " + service);
-                return String.Empty;
-            }
-            //There's an undocumented feature/bug where instead of ArgumentException, an InvalidOperationException is thrown.
-            catch (InvalidOperationException) //FIXME: Add undocumented System. ?
-            {
-                LogHelper.Debug("Couldn't get description for service: " + service);
-                return String.Empty;
-            }
+            return dict;
         }
 
-        public static string getAppPkgId(int pid)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="service"></param>
+    /// <returns></returns>
+    private static string getServiceDesc(string service)
+    {
+        string ret;
+        try
         {
-            if (Environment.OSVersion.Version <= new System.Version(6, 2))
+            using (ServiceController sc = new ServiceController(service))
             {
-                //Not Windows 8 or higher, there are no Apps
+                ret = sc.DisplayName;
+            }
+
+            return ret;
+        }
+        catch (ArgumentException)
+        {
+            LogHelper.Debug("Couldn't get description for service: " + service);
+            return String.Empty;
+        }
+        //There's an undocumented feature/bug where instead of ArgumentException, an InvalidOperationException is thrown.
+        catch (InvalidOperationException) //FIXME: Add undocumented System. ?
+        {
+            LogHelper.Debug("Couldn't get description for service: " + service);
+            return String.Empty;
+        }
+    }
+
+    public static string getAppPkgId(int pid)
+    {
+        if (Environment.OSVersion.Version <= new System.Version(6, 2))
+        {
+            //Not Windows 8 or higher, there are no Apps
+            return String.Empty;
+        }
+
+        IntPtr hProcess = OpenProcess(ProcessHelper.ProcessAccessFlags.QueryLimitedInformation, false, (uint)pid);
+        if (hProcess == IntPtr.Zero)
+        {
+            LogHelper.Warning("Unable to retrieve process package id: process cannot be found!");
+            return String.Empty;
+        }
+        try
+        {
+            //Based on: https://github.com/jimschubert/clr-profiler/blob/master/src/CLRProfiler45Source/WindowsStoreAppHelper/WindowsStoreAppHelper.cs
+            uint packageFamilyNameLength = 0;
+            StringBuilder packageFamilyNameBld = new StringBuilder();
+
+            uint ret = GetPackageFamilyName(hProcess, ref packageFamilyNameLength, packageFamilyNameBld);
+            if ((ret == APPMODEL_ERROR_NO_PACKAGE) || (packageFamilyNameLength == 0))
+            {
+                // Not a WindowsStoreApp process
                 return String.Empty;
             }
 
-            IntPtr hProcess = OpenProcess(ProcessHelper.ProcessAccessFlags.QueryLimitedInformation, false, (uint)pid);
-            if (hProcess == IntPtr.Zero)
+            // Call again, now that we know the size
+            packageFamilyNameBld = new StringBuilder((int)packageFamilyNameLength);
+            ret = GetPackageFamilyName(hProcess, ref packageFamilyNameLength, packageFamilyNameBld);
+            if (ret != ERROR_SUCCESS)
             {
-                LogHelper.Warning("Unable to retrieve process package id: process cannot be found!");
+                LogHelper.Warning("Unable to retrieve process package id: failed to retrieve family package name!");
+                return String.Empty;
+            }
+
+            IntPtr pSID;
+            ret = DeriveAppContainerSidFromAppContainerName(packageFamilyNameBld.ToString(), out pSID);
+            if (ret != S_OK)
+            {
+                LogHelper.Warning("Unable to retrieve process package id: failed to retrieve package SID!");
                 return String.Empty;
             }
             try
             {
-                //Based on: https://github.com/jimschubert/clr-profiler/blob/master/src/CLRProfiler45Source/WindowsStoreAppHelper/WindowsStoreAppHelper.cs
-                uint packageFamilyNameLength = 0;
-                StringBuilder packageFamilyNameBld = new StringBuilder();
-
-                uint ret = GetPackageFamilyName(hProcess, ref packageFamilyNameLength, packageFamilyNameBld);
-                if ((ret == APPMODEL_ERROR_NO_PACKAGE) || (packageFamilyNameLength == 0))
+                string SID;
+                if (ConvertSidToStringSid(pSID, out SID) == false)
                 {
-                    // Not a WindowsStoreApp process
+                    LogHelper.Warning("Unable to retrieve process package id: SID cannot be converted!");
                     return String.Empty;
                 }
 
-                // Call again, now that we know the size
-                packageFamilyNameBld = new StringBuilder((int)packageFamilyNameLength);
-                ret = GetPackageFamilyName(hProcess, ref packageFamilyNameLength, packageFamilyNameBld);
-                if (ret != ERROR_SUCCESS)
+                return SID;
+            }
+            finally
+            {
+                FreeSid(pSID);
+            }
+        }
+        finally
+        {
+            CloseHandle(hProcess);
+        }
+    }
+
+    public static string getLocalUserOwner(int pid)
+    {
+        //Based on: https://bytes.com/topic/c-sharp/answers/225065-how-call-win32-native-api-gettokeninformation-using-c
+        IntPtr hProcess = OpenProcess(ProcessHelper.ProcessAccessFlags.QueryInformation, false, (uint)pid);
+        if (hProcess == IntPtr.Zero)
+        {
+            LogHelper.Warning("Unable to retrieve process local user owner: process cannot be found!");
+            return String.Empty;
+        }
+        try
+        {
+            IntPtr hToken;
+            if (OpenProcessToken(hProcess, TOKEN_QUERY, out hToken) == false)
+            {
+                LogHelper.Warning("Unable to retrieve process local user owner: process cannot be opened!");
+                return String.Empty;
+            }
+            try
+            {
+                uint dwBufSize = 0;
+
+                if (GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, IntPtr.Zero, 0, ref dwBufSize) != false)
                 {
-                    LogHelper.Warning("Unable to retrieve process package id: failed to retrieve family package name!");
+                    LogHelper.Warning("Unexpected result from call to GetTokenInformation.");
                     return String.Empty;
                 }
 
-                IntPtr pSID;
-                ret = DeriveAppContainerSidFromAppContainerName(packageFamilyNameBld.ToString(), out pSID);
-                if (ret != S_OK)
-                {
-                    LogHelper.Warning("Unable to retrieve process package id: failed to retrieve package SID!");
-                    return String.Empty;
-                }
+                IntPtr hTokenInformation = Marshal.AllocHGlobal((int)dwBufSize);
                 try
                 {
-                    string SID;
-                    if (ConvertSidToStringSid(pSID, out SID) == false)
+                    if (GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, hTokenInformation, dwBufSize, ref dwBufSize) == false)
                     {
-                        LogHelper.Warning("Unable to retrieve process package id: SID cannot be converted!");
+                        LogHelper.Warning("Unable to retrieve process local user owner: token cannot be opened!");
+                        return String.Empty;
+                    }
+
+                    string SID;
+                    if (ConvertSidToStringSid(((TOKEN_USER)Marshal.PtrToStructure(hTokenInformation, typeof(TOKEN_USER))).User.Sid, out SID) == false)
+                    {
+                        LogHelper.Warning("Unable to retrieve process local user owner: SID cannot be converted!");
                         return String.Empty;
                     }
 
@@ -548,244 +646,188 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 }
                 finally
                 {
-                    FreeSid(pSID);
+                    Marshal.FreeHGlobal(hTokenInformation);
                 }
             }
             finally
             {
-                CloseHandle(hProcess);
+                CloseHandle(hToken);
             }
         }
-
-        public static string getLocalUserOwner(int pid)
+        finally
         {
-            //Based on: https://bytes.com/topic/c-sharp/answers/225065-how-call-win32-native-api-gettokeninformation-using-c
-            IntPtr hProcess = OpenProcess(ProcessHelper.ProcessAccessFlags.QueryInformation, false, (uint)pid);
-            if (hProcess == IntPtr.Zero)
-            {
-                LogHelper.Warning("Unable to retrieve process local user owner: process cannot be found!");
-                return String.Empty;
-            }
-            try
-            {
-                IntPtr hToken;
-                if (OpenProcessToken(hProcess, TOKEN_QUERY, out hToken) == false)
-                {
-                    LogHelper.Warning("Unable to retrieve process local user owner: process cannot be opened!");
-                    return String.Empty;
-                }
-                try
-                {
-                    uint dwBufSize = 0;
-
-                    if (GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, IntPtr.Zero, 0, ref dwBufSize) != false)
-                    {
-                        LogHelper.Warning("Unexpected result from call to GetTokenInformation.");
-                        return String.Empty;
-                    }
-
-                    IntPtr hTokenInformation = Marshal.AllocHGlobal((int)dwBufSize);
-                    try
-                    {
-                        if (GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, hTokenInformation, dwBufSize, ref dwBufSize) == false)
-                        {
-                            LogHelper.Warning("Unable to retrieve process local user owner: token cannot be opened!");
-                            return String.Empty;
-                        }
-
-                        string SID;
-                        if (ConvertSidToStringSid(((TOKEN_USER)Marshal.PtrToStructure(hTokenInformation, typeof(TOKEN_USER))).User.Sid, out SID) == false)
-                        {
-                            LogHelper.Warning("Unable to retrieve process local user owner: SID cannot be converted!");
-                            return String.Empty;
-                        }
-
-                        return SID;
-                    }
-                    finally
-                    {
-                        Marshal.FreeHGlobal(hTokenInformation);
-                    }
-                }
-                finally
-                {
-                    CloseHandle(hToken);
-                }
-            }
-            finally
-            {
-                CloseHandle(hProcess);
-            }
-        }
-
-        public static bool getProcessFeedback(string cmd, string args)
-        {
-            return getProcessFeedback(cmd, args, false, false);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="p"></param>
-        /// <param name="p_2"></param>
-        /// <returns></returns>
-        public static bool getProcessFeedback(string cmd, string args, bool runas, bool dontwait)
-        {
-            try
-            {
-                ProcessStartInfo psiTaskTest = new ProcessStartInfo(cmd, args);
-                psiTaskTest.CreateNoWindow = true;
-                if (runas)
-                {
-                    psiTaskTest.Verb = "runas";
-                }
-                else
-                {
-                    psiTaskTest.UseShellExecute = false;
-                }
-
-                Process procTaskTest = Process.Start(psiTaskTest);
-                if (dontwait)
-                {
-                    procTaskTest.WaitForExit(100);
-                    if (procTaskTest.HasExited)
-                    {
-                        return procTaskTest.ExitCode == 0;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    procTaskTest.WaitForExit();
-                }
-
-                return (procTaskTest.ExitCode == 0);
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        ///  Turns command line parameters into a dictionary to ease values retrieval
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public static Dictionary<string, string> ParseParameters(IList<string> args)
-        {
-            Dictionary<string, string> ret = null;
-            String key = "";
-            try
-            {
-                ret = new Dictionary<string, string>(args.Count / 2);
-                for (int i = args.Count % 2; i < args.Count(); i += 2)
-                {
-                    key = args[i].TrimStart('-');
-                    ret.Add(key, args[i + 1]);
-                }
-            }
-            catch (Exception e)
-            {
-                LogHelper.Error("Unable to parse the parameters: key = " + key + " argv = " + String.Join(" ", args), e);
-            }
-
-            return ret;
-        }
-
-        /// <summary>
-        /// Get the command-line of a running process id.<br>Use parseCommandLine to parse it into list of arguments</br>
-        /// </summary>
-        /// <param name="processId"></param>
-        /// <returns>command-line or null</returns>
-        public static String getCommandLineFromProcessWMI(int processId)
-        {
-            try
-            {
-                using (ManagementObjectSearcher clSearcher = new ManagementObjectSearcher(
-                    "SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + processId))
-                {
-                    String cLine = "";
-                    foreach (ManagementObject mObj in clSearcher.Get())
-                    {
-                        cLine += (String)mObj["CommandLine"];
-                    }
-                    return cLine;
-                }
-            }
-            catch (Exception e)
-            {
-                LogHelper.Error("Unable to get command-line from processId: " + processId + " - is process running?", e);
-            }
-            return null;
-        }
-        /// <summary>
-        /// Parses a complete command-line with arguments provided as a string (support commands spaces and quotes).
-        /// <para>Special keys in dictionary
-        /// <br>key=@command  contains the command itself</br>
-        /// <br>key=@arg[x] for args wihtout argname</br>
-        /// </para>
-        /// </summary>
-        /// 
-        /// <param name="cmdLine">command-line to parse e.g. "\"c:\\program files\\svchost.exe\" -k -s svcName -t \"some text\""</param>
-        /// <returns>Dictionary with key-value pairs.<para>
-        /// key=@command contains the command itself</para>
-        /// <para>key=@arg[x] for args without key</para>
-        /// <para>[-argname|/aname]</para>
-        /// </returns>
-        public static Dictionary<string, string> ParseCommandLineArgs(string cmdLine)
-        {
-            // https://stackoverflow.com/questions/298830/split-string-containing-command-line-parameters-into-string-in-c-sharp
-            // Fiddle link (regex): https://dotnetfiddle.net/PU7kXD
-
-            string regEx = @"\G(""((""""|[^""])+)""|(\S+)) *";
-            MatchCollection matches = Regex.Matches(cmdLine, regEx);
-            List<String> args = matches.Cast<Match>().Select(m => Regex.Replace(m.Groups[2].Success ? m.Groups[2].Value : m.Groups[4].Value, @"""""", @"""")).ToList();
-            return ParseCommandLineArgsToDict(args);
-        }
-
-        /// <summary>
-        /// Creates a dictionary from a command-line arguments list.
-        /// <para>Special keys in dictionary
-        /// <br>key=@command  contains the command itself from the first element in the list</br>
-        /// <br>key=@arg[x] for args wihtout argname</br>
-        /// </para>
-        /// </summary>
-        /// 
-        public static Dictionary<string, string> ParseCommandLineArgsToDict(List<String> args)
-        {
-            // Fiddle link to test it: https://dotnetfiddle.net/PU7kXD
-            Dictionary<string, string> dict = new Dictionary<string, string>(args.Count);
-            for (int i = 0; i < args.Count(); i++)
-            {
-                string key, val;
-                if (args[i].StartsWith("-") || args[i].StartsWith("/"))
-                {
-                    key = args[i];
-                    if ((i + 1) < args.Count && !args[i + 1].StartsWith("-") && !args[i + 1].StartsWith("/"))
-                    {
-                        val = args[i + 1];
-                        i++;
-                    }
-                    else
-                    {
-                        val = null;
-                    }
-                }
-                else
-                {
-                    // key=@command@ or argX 
-                    key = (i == 0) ? "@command" : "@arg" + i;
-                    val = args[i];
-                }
-                dict.Add(key, val);
-            }
-
-            return dict;
+            CloseHandle(hProcess);
         }
     }
+
+    public static bool getProcessFeedback(string cmd, string args)
+    {
+        return getProcessFeedback(cmd, args, false, false);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="p"></param>
+    /// <param name="p_2"></param>
+    /// <returns></returns>
+    public static bool getProcessFeedback(string cmd, string args, bool runas, bool dontwait)
+    {
+        try
+        {
+            ProcessStartInfo psiTaskTest = new ProcessStartInfo(cmd, args);
+            psiTaskTest.CreateNoWindow = true;
+            if (runas)
+            {
+                psiTaskTest.Verb = "runas";
+            }
+            else
+            {
+                psiTaskTest.UseShellExecute = false;
+            }
+
+            Process procTaskTest = Process.Start(psiTaskTest);
+            if (dontwait)
+            {
+                procTaskTest.WaitForExit(100);
+                if (procTaskTest.HasExited)
+                {
+                    return procTaskTest.ExitCode == 0;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                procTaskTest.WaitForExit();
+            }
+
+            return (procTaskTest.ExitCode == 0);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    ///  Turns command line parameters into a dictionary to ease values retrieval
+    /// </summary>
+    /// <param name="args"></param>
+    /// <returns></returns>
+    public static Dictionary<string, string> ParseParameters(IList<string> args)
+    {
+        Dictionary<string, string> ret = null;
+        String key = "";
+        try
+        {
+            ret = new Dictionary<string, string>(args.Count / 2);
+            for (int i = args.Count % 2; i < args.Count(); i += 2)
+            {
+                key = args[i].TrimStart('-');
+                ret.Add(key, args[i + 1]);
+            }
+        }
+        catch (Exception e)
+        {
+            LogHelper.Error("Unable to parse the parameters: key = " + key + " argv = " + String.Join(" ", args), e);
+        }
+
+        return ret;
+    }
+
+    /// <summary>
+    /// Get the command-line of a running process id.<br>Use parseCommandLine to parse it into list of arguments</br>
+    /// </summary>
+    /// <param name="processId"></param>
+    /// <returns>command-line or null</returns>
+    public static String getCommandLineFromProcessWMI(int processId)
+    {
+        try
+        {
+            using (ManagementObjectSearcher clSearcher = new ManagementObjectSearcher(
+                "SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + processId))
+            {
+                String cLine = "";
+                foreach (ManagementObject mObj in clSearcher.Get())
+                {
+                    cLine += (String)mObj["CommandLine"];
+                }
+                return cLine;
+            }
+        }
+        catch (Exception e)
+        {
+            LogHelper.Error("Unable to get command-line from processId: " + processId + " - is process running?", e);
+        }
+        return null;
+    }
+    /// <summary>
+    /// Parses a complete command-line with arguments provided as a string (support commands spaces and quotes).
+    /// <para>Special keys in dictionary
+    /// <br>key=@command  contains the command itself</br>
+    /// <br>key=@arg[x] for args wihtout argname</br>
+    /// </para>
+    /// </summary>
+    /// 
+    /// <param name="cmdLine">command-line to parse e.g. "\"c:\\program files\\svchost.exe\" -k -s svcName -t \"some text\""</param>
+    /// <returns>Dictionary with key-value pairs.<para>
+    /// key=@command contains the command itself</para>
+    /// <para>key=@arg[x] for args without key</para>
+    /// <para>[-argname|/aname]</para>
+    /// </returns>
+    public static Dictionary<string, string> ParseCommandLineArgs(string cmdLine)
+    {
+        // https://stackoverflow.com/questions/298830/split-string-containing-command-line-parameters-into-string-in-c-sharp
+        // Fiddle link (regex): https://dotnetfiddle.net/PU7kXD
+
+        string regEx = @"\G(""((""""|[^""])+)""|(\S+)) *";
+        MatchCollection matches = Regex.Matches(cmdLine, regEx);
+        List<String> args = matches.Cast<Match>().Select(m => Regex.Replace(m.Groups[2].Success ? m.Groups[2].Value : m.Groups[4].Value, @"""""", @"""")).ToList();
+        return ParseCommandLineArgsToDict(args);
+    }
+
+    /// <summary>
+    /// Creates a dictionary from a command-line arguments list.
+    /// <para>Special keys in dictionary
+    /// <br>key=@command  contains the command itself from the first element in the list</br>
+    /// <br>key=@arg[x] for args wihtout argname</br>
+    /// </para>
+    /// </summary>
+    /// 
+    public static Dictionary<string, string> ParseCommandLineArgsToDict(List<String> args)
+    {
+        // Fiddle link to test it: https://dotnetfiddle.net/PU7kXD
+        Dictionary<string, string> dict = new Dictionary<string, string>(args.Count);
+        for (int i = 0; i < args.Count(); i++)
+        {
+            string key, val;
+            if (args[i].StartsWith("-") || args[i].StartsWith("/"))
+            {
+                key = args[i];
+                if ((i + 1) < args.Count && !args[i + 1].StartsWith("-") && !args[i + 1].StartsWith("/"))
+                {
+                    val = args[i + 1];
+                    i++;
+                }
+                else
+                {
+                    val = null;
+                }
+            }
+            else
+            {
+                // key=@command@ or argX 
+                key = (i == 0) ? "@command" : "@arg" + i;
+                val = args[i];
+            }
+            dict.Add(key, val);
+        }
+
+        return dict;
+    }
+}
 }
 
