@@ -48,6 +48,23 @@ namespace Wokhan.WindowsFirewallNotifier.Console
             {
                 Resources["AccentColorBrush"] = Settings.Default.AccentColor;
             }
+
+            if (Settings.Default.ConsoleSizeWidth > 900)
+            {
+                Resources["ConsoleSizeWidth"] = Convert.ToDouble(Settings.Default.ConsoleSizeWidth);
+            }
+            else
+            {
+                Resources["ConsoleSizeWidth"] = 900d;
+            }
+            if (Settings.Default.ConsoleSizeHeight > 600)
+            {
+                Resources["ConsoleSizeHeight"] = Convert.ToDouble(Settings.Default.ConsoleSizeHeight);
+            }
+            else
+            {
+                Resources["ConsoleSizeHeight"] = 600d;
+            }
         }
 
         internal void RestartAsAdmin()
