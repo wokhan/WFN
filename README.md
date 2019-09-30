@@ -8,7 +8,7 @@ WFN started as an "extension" to the embedded Windows firewall, and offers real 
 Please read the documentation about the features and limitation of WFN. Especially note that WFN is **not** a firewall itself!  
 
 ## Last update
-**2018.03.03 - v2.0 beta 3**  
+**2018.03.03 - v2.0 beta 3**  //TODO
 Head to the [releases page](https://github.com/wokhansoft/WFN/releases/tag/v2.0-beta3) if you are interested in trying the latest beta version, and **keep in mind, this is work in progress! Read the full description page before downloading!**  
 
 ## Requirements  
@@ -33,6 +33,12 @@ _Please do not ask for a Windows XP version, since WFN relies on features introd
 
 **Notification popup for unknown outgoing connections (optional)**  
 ![](http://wokhan.online.fr/progs/wfn/notifier.PNG)
+
+**Security event log**
+[[images/eventlog.png]]
+
+***Event details and filter name***
+[[images/eventlog-details.png]]
 
 ## Donations (or _"How can I show how much I like this project?"_)
 If you feel generous, you can head to [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=wokhan%40online%2efr&lc=US&item_name=Khan%20%28Windows%20Firewall%20Notifier%29&item_number=WOK%2dWFN&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted).  
