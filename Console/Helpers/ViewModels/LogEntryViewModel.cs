@@ -21,6 +21,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         public string Reason { get; set; }
         public string Reason_Info { get; set; }
 
+        public SolidColorBrush ReasonColor { get; set; }
+
+        public SolidColorBrush DirectionColor { get; set; }
+
     }
 
 }

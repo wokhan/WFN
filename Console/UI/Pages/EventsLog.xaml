@@ -70,7 +70,7 @@
             </Grid>
         </Border>
         <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
-            <DataGrid BorderThickness="0" AlternatingRowBackground="Gainsboro" x:Name="gridLog" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column" SelectionChanged="GridLog_SelectionChanged" DataGridCell.Selected="GridLog_CellSelected" GotFocus="GridLog_GotFocus">
+            <DataGrid BorderThickness="0" x:Name="gridLog" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column" SelectionChanged="GridLog_SelectionChanged" DataGridCell.Selected="GridLog_CellSelected" GotFocus="GridLog_GotFocus">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp}" Width="Auto"/>
                     <DataGridTextColumn Header="PID" Binding="{Binding Pid}" Width="Auto"/>
@@ -90,18 +90,34 @@
                     <DataGridTextColumn Header="Port" Binding="{Binding TargetPort}" Width="Auto"/>
                     <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol}" Width="Auto"/>
                     <DataGridTextColumn Header="FilterId" Binding="{Binding FilterId}" Width="Auto"/>
-                    <DataGridTextColumn Header="Dir" Binding="{Binding Direction}" Width="Auto"/>
+                    <DataGridTextColumn Header="Dir" Binding="{Binding Direction}" Width="Auto">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Foreground" Value="{Binding DirectionColor}"/>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn x:Name="Reason" Header="Action" Binding="{Binding Reason}" Width="Auto">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="click for details" />
                             </Style>
                         </DataGridTextColumn.CellStyle>
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="ToolTip" Value="click for details" />
+                                <Setter Property="Foreground" Value="{Binding ReasonColor}"/>
+                                <Setter Property="TextBlock.TextDecorations" Value="Underline"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
             <Border Style="{StaticResource InfoBlock}">
-                <TextBlock>This page displays a list of the latest blocked outgoing connections (for performance reasons, the list has been limited to 500 items). If you need a complete list, please use the Windows events log viewer.</TextBlock>
+                <TextBlock >This page displays a list of the latest connections (for performance reasons, the list has been limited).<LineBreak/>
+                    If you need a complete list, please use the Windows events log viewer.<LineBreak/>
+                    <LineBreak/>
+                    Click on a cell in the Action column to view details from the eventlog including the name of the filter rule which triggered the event.
+                </TextBlock>
             </Border>
         </Grid>
     </DockPanel>

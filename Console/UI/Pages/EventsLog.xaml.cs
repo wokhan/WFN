@@ -11,6 +11,7 @@ using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
 using System.ComponentModel;
 using System.Data;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -103,8 +104,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                         }
 
                         // Note: instanceId == eventID
-                        if (entry.EntryType == EventLogEntryType.FailureAudit &&
-                            FirewallHelper.isEventInstanceIdAccepted(entry.InstanceId))
+                        if (FirewallHelper.isEventInstanceIdAccepted(entry.InstanceId))
                         {
                             eventsStored++;
 
@@ -143,6 +143,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                                     Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId),
                                     Reason_Info = entry.Message,
                                 };
+                                le.ReasonColor = le.Reason.StartsWith("Block") ? Brushes.OrangeRed : Brushes.Black;
+                                le.DirectionColor = le.Direction.StartsWith("In") ? Brushes.OrangeRed : Brushes.Black;
                                 _logEntries.Add(le);
                             }
                         }
@@ -232,7 +234,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 // Filter which blocked the connection
                 NetshHelper.FilterResult blockingFilter = NetshHelper.getBlockingFilter(int.Parse(selectedEntry.FilterId), refreshData: RefreshFilterData);
                 RefreshFilterData = false;
-                string blockingFilterDetails = blockingFilter != null ? $"\n\nBlocking filter:\n\t{selectedEntry.FilterId}: {blockingFilter.name} - {blockingFilter.description}\n" : "\n\n... No blocking filter found ...";
+                string blockingFilterDetails = blockingFilter != null ? $"\n-----------------------------------------\nFilter rule which triggered the event:\n\t{selectedEntry.FilterId}: {blockingFilter.name} - {blockingFilter.description}\n" : "\n\n... No filter rule found ...";
 
                 //// Other matching filters for process
                 //IEnumerable<FirewallHelper.Rule> rules = FirewallHelper.GetMatchingRulesForEvent(int.Parse(selectedEntry.Pid), selectedEntry.Path, selectedEntry.TargetIP, selectedEntry.TargetPort, blockOnly: false, outgoingOnly: false);
