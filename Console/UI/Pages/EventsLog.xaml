@@ -22,7 +22,7 @@
         <Border Style="{StaticResource ToolBarPanel}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
             <Grid>
                 <WrapPanel>
-                    <ToggleButton IsChecked="{Binding IsTrackingEnabled}">
+                    <ToggleButton x:Name="btnAutoRefreshToggle" IsChecked="{Binding IsTrackingEnabled}" ToolTip="Toggle auto-refreshs - turned off when selecting an item">
                         <Grid>
                             <Path HorizontalAlignment="Left" Height="16" Stretch="Uniform" Fill="Green">
                                 <Path.Style>
@@ -41,7 +41,7 @@
                             <Label Margin="20,0,0,0" Content="Auto-refresh" />
                         </Grid>
                     </ToggleButton>
-                    <Button x:Name="btnLocate" Click="btnLocate_Click">
+                    <Button x:Name="btnLocate" Click="btnLocate_Click" IsEnabled="false" ToolTip="Locate the selected item">
                         <Grid>
                             <Path Fill="CornflowerBlue" Data="{StaticResource Image_Locate}"/>
                             <TextBlock Margin="20,0,0,0" Text="Locate" />
@@ -70,22 +70,34 @@
             </Grid>
         </Border>
         <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
-            <DataGrid BorderThickness="0" AlternatingRowBackground="Gainsboro" x:Name="gridLog" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column">
+            <DataGrid BorderThickness="0" AlternatingRowBackground="Gainsboro" x:Name="gridLog" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column" SelectionChanged="GridLog_SelectionChanged" DataGridCell.Selected="GridLog_CellSelected" GotFocus="GridLog_GotFocus">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp}"/>
-                    <DataGridTemplateColumn Header="Path" SortMemberPath="FriendlyPath">
+                    <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp}" Width="Auto"/>
+                    <DataGridTextColumn Header="PID" Binding="{Binding Pid}" Width="Auto"/>
+                    <!-- <DataGridTextColumn Header="App"  Binding="{Binding FileName}" Width="0.3*"/> -->
+                    <DataGridTemplateColumn Header="App" SortMemberPath="FileName" Width="0.3*" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
-                                    <Image Source="{Binding Icon}" Width="16" HorizontalAlignment="Left"/>
-                                    <Label Content="{Binding FriendlyPath}" Margin="20,0,0,0" />
+                                    <Image Source="{Binding Icon}" Width="16" HorizontalAlignment="Left" />
+                                    <Label Content="{Binding FileName}" Margin="20,0,0,0" ToolTip="{Binding FriendlyPath}"/>
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="IP" Binding="{Binding TargetIP}"/>
-                    <DataGridTextColumn Header="Port" Binding="{Binding TargetPort}"/>
-                    <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol}"/>
+                    <DataGridTextColumn Header="Service"  Binding="{Binding ServiceName}" Width="0.2*"/>
+                    <DataGridTextColumn Header="IP" Binding="{Binding TargetIP}" Width="Auto"/>
+                    <DataGridTextColumn Header="Port" Binding="{Binding TargetPort}" Width="Auto"/>
+                    <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol}" Width="Auto"/>
+                    <DataGridTextColumn Header="FilterId" Binding="{Binding FilterId}" Width="Auto"/>
+                    <DataGridTextColumn Header="Dir" Binding="{Binding Direction}" Width="Auto"/>
+                    <DataGridTextColumn x:Name="Reason" Header="Action" Binding="{Binding Reason}" Width="Auto">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="click for details" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
             <Border Style="{StaticResource InfoBlock}">
