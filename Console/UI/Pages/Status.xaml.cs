@@ -63,12 +63,22 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             {
                 InstallHelper.EnableProgram(true, callback);
             }
-            else if (isInstalled && (!status.PrivateIsEnabled || !status.PrivateIsOutBlockedNotif) && (!status.PublicIsEnabled || !status.PublicIsOutBlockedNotif) && (!status.DomainIsEnabled || !status.DomainIsOutBlockedNotif))
+            else if (isInstalled)
             {
-                InstallHelper.RemoveProgram(true, callback);
+                InstallHelper.ApplyChanges(!isEnabled(status), !isOutBlockNotifierEnabled(status), callback);
             }
 
             init();
+        }
+
+        private static bool isEnabled(FirewallHelper.FirewallStatusWrapper status)
+        {
+            return status.PrivateIsEnabled || status.DomainIsEnabled || status.PublicIsEnabled;
+        }
+
+        private static bool isOutBlockNotifierEnabled(FirewallHelper.FirewallStatusWrapper status)
+        {
+            return status.PrivateIsOutBlockedNotif || status.PublicIsOutBlockedNotif || status.DomainIsOutBlockedNotif;
         }
 
         private void btnRevert_Click(object sender, RoutedEventArgs e)
