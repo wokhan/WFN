@@ -70,7 +70,7 @@
             </Grid>
         </Border>
         <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
-            <DataGrid BorderThickness="0" x:Name="gridLog" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column" SelectionChanged="GridLog_SelectionChanged" DataGridCell.Selected="GridLog_CellSelected" GotFocus="GridLog_GotFocus">
+            <DataGrid BorderThickness="0" x:Name="gridLog" AlternatingRowBackground="Gainsboro" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column" SelectionChanged="GridLog_SelectionChanged" DataGridCell.Selected="GridLog_CellSelected" GotFocus="GridLog_GotFocus">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp}" Width="Auto"/>
                     <DataGridTextColumn Header="PID" Binding="{Binding Pid}" Width="Auto"/>

@@ -109,19 +109,19 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                             eventsStored++;
 
                             LogEntryViewModel lastEntry = _logEntries.Count > 0 ? _logEntries.Last() : null;
-                            int pid = int.Parse(entry.ReplacementStrings[0]);
+                            int pid = int.Parse(getReplacementString(entry, 0));
                             bool canBeIgnored = lastEntry != null
                                 && lastEntry.Pid == pid
                                 && lastEntry.Timestamp.Second == entry.TimeGenerated.Second
                                 && lastEntry.Timestamp.Minute == entry.TimeGenerated.Minute
-                                && lastEntry.TargetIP == entry.ReplacementStrings[5]
-                                && lastEntry.TargetPort == entry.ReplacementStrings[6];
+                                && lastEntry.TargetIP == getReplacementString(entry, 5)
+                                && lastEntry.TargetPort == getReplacementString(entry, 6);
 
                             if (!canBeIgnored)
                             {
-                                string friendlyPath = entry.ReplacementStrings[1] == "-" ? "System" : FileHelper.GetFriendlyPath(entry.ReplacementStrings[1]);
+                                string friendlyPath = getReplacementString(entry, 1) == "-" ? "System" : FileHelper.GetFriendlyPath(getReplacementString(entry, 1));
                                 string fileName = System.IO.Path.GetFileName(friendlyPath);
-                                string direction = entry.ReplacementStrings[2] == @"%%14593" ? "Out" : "In";
+                                string direction = getReplacementString(entry, 2) == @"%%14593" ? "Out" : "In";
 
                                 // try to get the servicename from pid (works only if service is running)
                                 string serviceName = services.ContainsKey(pid) ? services[pid].Name : "-";
@@ -130,20 +130,20 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                                 {
                                     Pid = pid,
                                     Timestamp = entry.TimeGenerated,
-                                    Icon = IconHelper.GetIcon(entry.ReplacementStrings[1]),
-                                    Path = entry.ReplacementStrings[1] == "-" ? "System" : entry.ReplacementStrings[1],
+                                    Icon = IconHelper.GetIcon(getReplacementString(entry, 1)),
+                                    Path = getReplacementString(entry, 1) == "-" ? "System" : getReplacementString(entry, 1),
                                     FriendlyPath = friendlyPath,
                                     ServiceName = serviceName,
                                     FileName = fileName,
-                                    TargetIP = entry.ReplacementStrings[5],
-                                    TargetPort = entry.ReplacementStrings[6],
-                                    Protocol = FirewallHelper.getProtocolAsString(int.Parse(entry.ReplacementStrings[7])),
+                                    TargetIP = getReplacementString(entry, 5),
+                                    TargetPort = getReplacementString(entry, 6),
+                                    Protocol = FirewallHelper.getProtocolAsString(int.Parse(getReplacementString(entry, 7))),
                                     Direction = direction,
-                                    FilterId = entry.ReplacementStrings[8],
+                                    FilterId = getReplacementString(entry, 8),
                                     Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId),
                                     Reason_Info = entry.Message,
                                 };
-                                le.ReasonColor = le.Reason.StartsWith("Block") ? Brushes.OrangeRed : Brushes.Black;
+                                le.ReasonColor = le.Reason.StartsWith("Block") ? Brushes.OrangeRed : Brushes.Blue;
                                 le.DirectionColor = le.Direction.StartsWith("In") ? Brushes.OrangeRed : Brushes.Black;
                                 _logEntries.Add(le);
                             }
@@ -169,6 +169,17 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             catch (Exception e)
             {
                 LogHelper.Error("Unable to load the event log", e);
+            }
+        }
+
+        private string getReplacementString(EventLogEntry entry, int i)
+        {
+            // check out of bounds
+            if (i < entry.ReplacementStrings.Length)
+            {
+                return entry.ReplacementStrings[i];
+            } else {
+                return "";
             }
         }
 
