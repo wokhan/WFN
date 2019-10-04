@@ -896,6 +896,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 case (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_UDP: //17
                     return "UDP";
 
+                case 40:
+                    return "IL"; // IL Transport protocol
+
                 case 47:
                     return "GRE"; //Used by PPTP, for example.
 
@@ -907,7 +910,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
                 default:
                     LogHelper.Warning("Unknown protocol type: " + protocol.ToString());
-                    return "Unknown";
+                    return protocol >= 0 ? protocol.ToString() : "Unknown";
             }
         }
 
