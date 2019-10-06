@@ -106,46 +106,52 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                         // Note: instanceId == eventID
                         if (FirewallHelper.isEventInstanceIdAccepted(entry.InstanceId))
                         {
-                            eventsStored++;
-
                             LogEntryViewModel lastEntry = _logEntries.Count > 0 ? _logEntries.Last() : null;
-                            int pid = int.Parse(getReplacementString(entry, 0));
-                            bool canBeIgnored = lastEntry != null
-                                && lastEntry.Pid == pid
-                                && lastEntry.Timestamp.Second == entry.TimeGenerated.Second
-                                && lastEntry.Timestamp.Minute == entry.TimeGenerated.Minute
-                                && lastEntry.TargetIP == getReplacementString(entry, 5)
-                                && lastEntry.TargetPort == getReplacementString(entry, 6);
-
-                            if (!canBeIgnored)
+                            try
                             {
-                                string friendlyPath = getReplacementString(entry, 1) == "-" ? "System" : FileHelper.GetFriendlyPath(getReplacementString(entry, 1));
-                                string fileName = System.IO.Path.GetFileName(friendlyPath);
-                                string direction = getReplacementString(entry, 2) == @"%%14593" ? "Out" : "In";
+                                int pid = int.Parse(getReplacementString(entry, 0));
+                                bool canBeIgnored = lastEntry != null
+                                    && lastEntry.Pid == pid
+                                    && lastEntry.Timestamp.Second == entry.TimeGenerated.Second
+                                    && lastEntry.Timestamp.Minute == entry.TimeGenerated.Minute
+                                    && lastEntry.TargetIP == getReplacementString(entry, 5)
+                                    && lastEntry.TargetPort == getReplacementString(entry, 6);
 
-                                // try to get the servicename from pid (works only if service is running)
-                                string serviceName = services.ContainsKey(pid) ? services[pid].Name : "-";
-
-                                var le = new LogEntryViewModel()
+                                if (!canBeIgnored)
                                 {
-                                    Pid = pid,
-                                    Timestamp = entry.TimeGenerated,
-                                    Icon = IconHelper.GetIcon(getReplacementString(entry, 1)),
-                                    Path = getReplacementString(entry, 1) == "-" ? "System" : getReplacementString(entry, 1),
-                                    FriendlyPath = friendlyPath,
-                                    ServiceName = serviceName,
-                                    FileName = fileName,
-                                    TargetIP = getReplacementString(entry, 5),
-                                    TargetPort = getReplacementString(entry, 6),
-                                    Protocol = FirewallHelper.getProtocolAsString(int.Parse(getReplacementString(entry, 7))),
-                                    Direction = direction,
-                                    FilterId = getReplacementString(entry, 8),
-                                    Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId),
-                                    Reason_Info = entry.Message,
-                                };
-                                le.ReasonColor = le.Reason.StartsWith("Block") ? Brushes.OrangeRed : Brushes.Blue;
-                                le.DirectionColor = le.Direction.StartsWith("In") ? Brushes.OrangeRed : Brushes.Black;
-                                _logEntries.Add(le);
+                                    string friendlyPath = getReplacementString(entry, 1) == "-" ? "System" : FileHelper.GetFriendlyPath(getReplacementString(entry, 1));
+                                    string fileName = System.IO.Path.GetFileName(friendlyPath);
+                                    string direction = getReplacementString(entry, 2) == @"%%14593" ? "Out" : "In";
+
+                                    // try to get the servicename from pid (works only if service is running)
+                                    string serviceName = services.ContainsKey(pid) ? services[pid].Name : "-";
+
+                                    var le = new LogEntryViewModel()
+                                    {
+                                        Pid = pid,
+                                        Timestamp = entry.TimeGenerated,
+                                        Icon = IconHelper.GetIcon(getReplacementString(entry, 1)),
+                                        Path = getReplacementString(entry, 1) == "-" ? "System" : getReplacementString(entry, 1),
+                                        FriendlyPath = friendlyPath,
+                                        ServiceName = serviceName,
+                                        FileName = fileName,
+                                        TargetIP = getReplacementString(entry, 5),
+                                        TargetPort = getReplacementString(entry, 6),
+                                        Protocol = FirewallHelper.getProtocolAsString(int.Parse(getReplacementString(entry, 7))),
+                                        Direction = direction,
+                                        FilterId = getReplacementString(entry, 8),
+                                        Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId),
+                                        Reason_Info = entry.Message,
+                                    };
+                                    le.ReasonColor = le.Reason.StartsWith("Block") ? Brushes.OrangeRed : Brushes.Blue;
+                                    le.DirectionColor = le.Direction.StartsWith("In") ? Brushes.OrangeRed : Brushes.Black;
+                                    _logEntries.Add(le);
+                                    eventsStored++;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                LogHelper.Error("Cannot parse eventlog entry: eventID=" + entry.InstanceId.ToString(), ex);
                             }
                         }
                     }

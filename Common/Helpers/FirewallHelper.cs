@@ -845,7 +845,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return
                 instanceId == 5157 // block connection
                 || instanceId == 5152 // drop packet
-                || instanceId == 5031
+                // Cannot parse this event: || instanceId == 5031 
                 || instanceId == 5150
                 || instanceId == 5151
                 || instanceId == 5154
@@ -863,7 +863,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 case 5152:
                     return string.Format(reason,  "packet droped");
                 case 5031:
-                    return string.Format(reason,  "app connection"); 
+                    return string.Format(reason,  "app connection"); //  Firewall blocked an application from accepting incoming connections on the network.
                 case 5150:
                     return string.Format(reason,  "packet");
                 case 5151:
