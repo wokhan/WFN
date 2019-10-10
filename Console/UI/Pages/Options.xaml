@@ -96,22 +96,26 @@ Please note that you will be able to do it later through the Options panel." Tex
                         </StackPanel>
                     </GroupBox>
                 </StackPanel-->
-                <ToggleButton Style="{StaticResource ToggleSwitch}" Padding="5,0" Content="Use an animated notification" Margin="0,0,0,10" IsChecked="{Binding UseAnimation, Source={x:Static settings:Settings.Default}}" />
-                <Button Style="{StaticResource RoundedButton}" Background="LightBlue" Margin="0,0,0,10" Padding="4"  HorizontalAlignment="Center" Content="Click here to test" x:Name="btnTestNotif" Click="btnTestNotif_Click" />
-                <ToggleButton Style="{StaticResource ToggleSwitch}" Padding="5,0" Content="Create a blocking rule instead of using an exceptions list for the blocked outgoing connections*" Margin="0,0,0,5" IsChecked="{Binding UseBlockRules, Source={x:Static settings:Settings.Default}}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
-                <TextBlock Margin="30,0,0,10" Text="This option allows the blocked applications to stay blocked even if you disable WFN notifications, by creating a blocking rule in the Windows embedded firewall." TextWrapping="Wrap" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
-                <ToggleButton Style="{StaticResource ToggleSwitch}" Padding="5,0" Content="Enable services detection*" IsChecked="{Binding EnableServiceDetection, Source={x:Static settings:Settings.Default}}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />                
+                <StackPanel Orientation = "Horizontal">
+                    <ToggleButton Style="{StaticResource ToggleSwitch}" Padding="5,0" Content="Use an animated notification" Margin="0,0,22,10.2" IsChecked="{Binding UseAnimation, Source={x:Static settings:Settings.Default}}" />
+                    <Button Style="{StaticResource RoundedButton}" Background="LightBlue" Margin="171,0,169,10.2" Padding="4"  HorizontalAlignment="Center" Content="Click here to test" x:Name="btnTestNotif" Click="btnTestNotif_Click" />
+                </StackPanel>
+                <StackPanel Orientation = "Vertical">
+                    <ToggleButton Style="{StaticResource ToggleSwitch}" Padding="5,0" Content="Create a blocking rule instead of using an exceptions list for the blocked outgoing connections*" ToolTip="Default: True" Margin="0,0,0,5" IsChecked="{Binding UseBlockRules, Source={x:Static settings:Settings.Default}}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
+                    <TextBlock Margin="30,0,0,10" Text="This option allows the blocked applications to stay blocked even if you disable WFN notifications, by creating a blocking rule in the Windows embedded firewall." TextWrapping="Wrap" IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}" />
+                </StackPanel>
+                <ToggleButton Style="{StaticResource ToggleSwitch}" Padding="5,0" Content="Enable services detection*" ToolTip="Additionally tries to detect the service making a connection in the notifier." IsChecked="{Binding EnableServiceDetection, Source={x:Static settings:Settings.Default}}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
             </StackPanel>
             <Label Content="Miscellaneous options" Background="{DynamicResource AccentColorBrush}" FontWeight="Bold" />
             <StackPanel Margin="10">
-                <ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10"  Padding="5,0" Content="Minimize the console to the system tray instead of the taskbar." IsChecked="{Binding MinimizeToTray, Source={x:Static settings:Settings.Default}}" />
+                <!-- TODO: not working  <ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10"  Padding="5,0" Content="Minimize the console to the system tray instead of the taskbar." IsChecked="{Binding MinimizeToTray, Source={x:Static settings:Settings.Default}}" /> -->
                 <ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10" Padding="5,0" Content="Enable verbose logging (for debugging purpose only, may use a lot more disk space)" IsChecked="{Binding EnableVerboseLogging, Source={x:Static settings:Settings.Default}}" />
                 <TextBlock Margin="30,0,0,10" Text="Note: the log files can either be in the WFN installation directory or the current user's appdata folder." />
-                <TextBlock Margin="30,0,0,10" Text="{Binding Source={x:Static helpers:LogHelper.CurrentLogsPath},Mode=OneTime,StringFormat='Path for the current user: {0}'}" Tag="{Binding Source={x:Static helpers:LogHelper.CurrentLogsPath}, Mode=OneTime}" x:Name="txtCurrentLogPath" MouseDown="txtCurrentLogPath_MouseDown"/>
-                <ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10" Padding="5,0" Content="Always run as admin*" IsChecked="{Binding AlwaysRunAs, Source={x:Static settings:Settings.Default}}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
-                <WrapPanel>
+                <TextBlock Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding Mode=OneTime, Source={x:Static helpers:LogHelper.CurrentLogsPath}, StringFormat=Path for the current user: \{0\}}" Tag="{Binding Mode=OneTime, Source={x:Static helpers:LogHelper.CurrentLogsPath}}" x:Name="txtCurrentLogPath" MouseDown="txtCurrentLogPath_MouseDown" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
+                <ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10" Padding="5,0" Content="Always run as admin*" ToolTip="Options marked with * need admin rights to change" IsChecked="{Binding AlwaysRunAs, Source={x:Static settings:Settings.Default}}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
+                <StackPanel Orientation="Horizontal">
                     <Label Content="Accent color: " />
-                    <ComboBox IsEditable="False" MinWidth="100" ItemsSource="{Binding Colors}" SelectedValuePath="Value" SelectedValue="{Binding AccentColor}">
+                    <ComboBox IsEditable="False" MinWidth="100" ItemsSource="{Binding Colors}" SelectedValuePath="Value" SelectedValue="{Binding AccentColor}" Height="20">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <WrapPanel>
@@ -121,7 +125,11 @@ Please note that you will be able to do it later through the Options panel." Tex
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                </WrapPanel>
+                    <Label Content="Console Width" Margin="20,0,0,0"/>
+                    <TextBox Text="{Binding ConsoleSizeWidth, Source={x:Static settings:Settings.Default}}"  ToolTip="Needs a restart to take effect." IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Width="50" Height="20" />
+                    <Label Content="Height"/>
+                    <TextBox Text="{Binding ConsoleSizeHeight, Source={x:Static settings:Settings.Default}}" ToolTip="Needs a restart to take effect." IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" Width="50" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Height="20" />
+                </StackPanel>
             </StackPanel>
         </StackPanel>
     </DockPanel>

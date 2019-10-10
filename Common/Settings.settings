@@ -6,7 +6,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ConsoleSizeHeight" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">500</Value>
+      <Value Profile="(Default)">600</Value>
     </Setting>
     <Setting Name="ConsoleState" Type="System.Windows.WindowState" Scope="User">
       <Value Profile="(Default)">Normal</Value>
@@ -33,7 +33,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ConsoleSizeWidth" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">850</Value>
+      <Value Profile="(Default)">900</Value>
     </Setting>
     <Setting Name="AccentColor" Roaming="true" Type="System.Windows.Media.SolidColorBrush" Scope="User">
       <Value Profile="(Default)">#FFFF7F50</Value>
