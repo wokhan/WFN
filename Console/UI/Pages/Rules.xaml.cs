@@ -137,9 +137,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void btnRemoveRule_Click(object sender, RoutedEventArgs e)
         {
+            var selectedRule = (FirewallHelper.Rule)gridRules.SelectedItem;
+            if (selectedRule == null)
+            {
+                //@
+                return;
+            }
             if (MessageBox.Show(Common.Properties.Resources.MSG_RULE_DELETE, Common.Properties.Resources.MSG_DLG_TITLE, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                FirewallHelper.Rule selectedRule = (FirewallHelper.Rule)gridRules.SelectedItem;
                 if (!FirewallHelper.RemoveRule(selectedRule.Name))
                 {
                     MessageBox.Show(Common.Properties.Resources.MSG_RULE_DELETE_FAILED, Common.Properties.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
@@ -153,7 +158,13 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void btnLocate_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("explorer.exe", "/select," + ((FirewallHelper.Rule)gridRules.SelectedItem).ApplicationName); //FIXME: Error is SelectedItem is null!
+            var selectedRule = (FirewallHelper.Rule)gridRules.SelectedItem;
+            if (selectedRule == null)
+            {
+                //@
+                return;
+            }
+            Process.Start("explorer.exe", "/select," + selectedRule.ApplicationName);
         }
 
         private void btnStartAdvConsole_Click(object sender, RoutedEventArgs e)

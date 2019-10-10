@@ -191,11 +191,13 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void btnLocate_Click(object sender, RoutedEventArgs e)
         {
-            if (gridLog.SelectedItem == null)
+            var selectedLog = (LogEntryViewModel)gridLog.SelectedItem;
+            if (selectedLog == null)
             {
+                //@
                 return;
             }
-            Process.Start("explorer.exe", "/select," + ((LogEntryViewModel)gridLog.SelectedItem).FriendlyPath);
+            Process.Start("explorer.exe", "/select," + selectedLog.FriendlyPath);
         }
 
         private void btnEventLogVwr_Click(object sender, RoutedEventArgs e)
