@@ -52,7 +52,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     catch (System.IO.FileNotFoundException) //Undocumented exception
                     {
                         LogHelper.Debug("Unable to extract icon: " + friendlyPath + (!friendlyPath.Equals(path) ? " (" + path + ")" : ""));
-                        ic = SystemIcons.Warning; 
+                        ic = SystemIcons.Warning;
                     }
                     break;
             }
