@@ -56,6 +56,5 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             Process.Start("explorer.exe", LogHelper.CurrentLogsPath);
         }
-
     }
 }

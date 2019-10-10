@@ -128,7 +128,7 @@ Please note that you will be able to do it later through the Options panel." Tex
                     <Label Content="Console Width" Margin="20,0,0,0"/>
                     <TextBox Text="{Binding ConsoleSizeWidth, Source={x:Static settings:Settings.Default}}"  ToolTip="Needs a restart to take effect." IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Width="50" Height="20" />
                     <Label Content="Height"/>
-                    <TextBox Text="{Binding ConsoleSizeHeight, Source={x:Static settings:Settings.Default}}" ToolTip="Needs a restart to take effect." IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" Width="50" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Height="20" />
+                    <TextBox Text="{Binding ConsoleSizeHeight, Source={x:Static settings:Settings.Default}}" ToolTip="Needs a restart to take effect." IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Width="50" Height="20" />
                 </StackPanel>
             </StackPanel>
         </StackPanel>
