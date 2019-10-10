@@ -46,6 +46,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         }
 
         /// <summary>
+        /// Get a normalized fully qaulified path in the form "C:\Program Files\....".<br>
+        /// - resolves device paths e.g: \device\harddiskvolume1\...
+        /// - expands environment variables contained in the path such es %WinDir%, etc.
+        /// </br>
         /// 
         /// </summary>
         /// <param name="p"></param>
@@ -58,7 +62,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
 
             KeyValuePair<string, string> item = deviceNameMap.FirstOrDefault(d => p.StartsWith(d.Key, StringComparison.InvariantCultureIgnoreCase));
-            return (item.Key == null ? p : item.Value + p.Substring(item.Key.Length - 1));
+            return (item.Key == null ? System.Environment.ExpandEnvironmentVariables(p) : item.Value + p.Substring(item.Key.Length - 1));
         }
 
         //FIXME: Clear the cache if there's some change with the drives!

@@ -67,7 +67,7 @@
                     </Style>
                 </DataGrid.CellStyle>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=OneTime}" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=OneTime}" SortDirection="Ascending"/>
                     <DataGridTemplateColumn Header="Path" SortMemberPath="ApplicationName">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

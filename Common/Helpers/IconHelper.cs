@@ -25,25 +25,34 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 case "System":
                     ic = SystemIcons.WinLogo;
                     break;
-
+                case "-":
+                    ic = SystemIcons.WinLogo;
+                    break;
                 case "?error": //FIXME: Use something else?
                     ic = SystemIcons.Error;
                     break;
 
                 default:
+                    // Using FileHelper.GetFriendlyPath(path) to cover paths like \device\harddiskvolume1\program files etc.
+                    string friendlyPath = FileHelper.GetFriendlyPath(path);
+                    if (!path.Contains("\\"))
+                    {
+                        LogHelper.Debug($"Skipped extract icon: '{friendlyPath}' because path has no directory info.");
+                        break;
+                    }
                     try
                     {
-                        ic = Icon.ExtractAssociatedIcon(path) ?? (defaultIfNotFound ? SystemIcons.Application : null);
+                        ic = Icon.ExtractAssociatedIcon(friendlyPath) ?? (defaultIfNotFound ? SystemIcons.Application : null);
                     }
                     catch (ArgumentException)
                     {
-                        LogHelper.Debug("Unable to extract icon: " + path);
-                        ic = SystemIcons.Warning; //FIXME: Use some generic application icon?
+                        LogHelper.Debug("Unable to extract icon: " + friendlyPath + (!friendlyPath.Equals(path) ? " (" + path + ")" : ""));
+                        ic = SystemIcons.Question; //FIXME: Use some generic application icon?
                     }
                     catch (System.IO.FileNotFoundException) //Undocumented exception
                     {
-                        LogHelper.Debug("Unable to extract icon: " + path);
-                        ic = SystemIcons.Warning;
+                        LogHelper.Debug("Unable to extract icon: " + friendlyPath + (!friendlyPath.Equals(path) ? " (" + path + ")" : ""));
+                        ic = SystemIcons.Warning; 
                     }
                     break;
             }

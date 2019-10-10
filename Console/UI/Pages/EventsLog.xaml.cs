@@ -8,6 +8,10 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
+using System.ComponentModel;
+using System.Data;
+using System.Windows.Data;
+using System.Windows.Media;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -16,7 +20,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// </summary>
     public partial class EventsLog : Page
     {
-        private const int MaxEventsToLoad = 500;
+        private const int MaxEventsToLoad = 1500;
+
+        private Dictionary<int, ProcessHelper.ServiceInfoResult> services = ProcessHelper.GetAllServicesByPidWMI();
 
         public bool IsTrackingEnabled
         {
@@ -34,6 +40,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             get { return _interval; }
             set { _interval = value; timer.Interval = TimeSpan.FromSeconds(value); }
         }
+
+        private bool RefreshFilterData = true;
 
         public EventsLog()
         {
@@ -65,79 +73,103 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         }
 
 
+        
         private ObservableCollection<LogEntryViewModel> _logEntries = new ObservableCollection<LogEntryViewModel>();
-        public ObservableCollection<LogEntryViewModel> LogEntries { get { return _logEntries; } }
+        public ObservableCollection<LogEntryViewModel> LogEntries { get { return _logEntries; } }  // used as binding in designer
 
         private DateTime lastDate = DateTime.MinValue;
-        private int lastIndex = 0;
         private void initEventLog()
         {
+            // small re-write because it got stuck going through all event logs when it found no matching event e.g. 5157
             try
             {
                 using (EventLog securityLog = new EventLog("security"))
                 {
-                    int i = securityLog.Entries.Count - 1;
-                    int cpt = MaxEventsToLoad;
+                    // TODO: utilize EventLog#EnableRaisingEvents after initialization instead of timer
+                    //securityLog.EnableRaisingEvents = true;
+                    //securityLog.EntryWritten += (sender, args) => _logEntries.Add(createEventLogEntry(args.Entry));
+                    
+                    int slCount = securityLog.Entries.Count - 1;
+                    int eventsStored = 0;
                     bool isAppending = _logEntries.Any();
-                    DateTime lastDateNew = DateTime.MinValue;
-                    int indexNew = 0;
+                    DateTime lastDateNew = lastDate;
 
-                    while (i >= 0)
+                    for (int i = slCount; i > 0 && eventsStored < MaxEventsToLoad; i--)
                     {
                         EventLogEntry entry = securityLog.Entries[i];
-                        i--;
 
-                        if (lastDate != DateTime.MinValue && entry.TimeWritten <= lastDate && (entry.Index == lastIndex || lastIndex == -1))
+                        if (lastDate != DateTime.MinValue && entry.TimeWritten <= lastDate)
                         {
                             break;
                         }
 
-                        if (lastDateNew == DateTime.MinValue)
+                        // Note: instanceId == eventID
+                        if (FirewallHelper.isEventInstanceIdAccepted(entry.InstanceId))
                         {
-                            // Store where we start processing entries.
-                            lastDateNew = entry.TimeWritten;
-                            indexNew = entry.Index;
+                            LogEntryViewModel lastEntry = _logEntries.Count > 0 ? _logEntries.Last() : null;
+                            try
+                            {
+                                int pid = int.Parse(getReplacementString(entry, 0));
+                                bool canBeIgnored = lastEntry != null
+                                    && lastEntry.Pid == pid
+                                    && lastEntry.Timestamp.Second == entry.TimeGenerated.Second
+                                    && lastEntry.Timestamp.Minute == entry.TimeGenerated.Minute
+                                    && lastEntry.TargetIP == getReplacementString(entry, 5)
+                                    && lastEntry.TargetPort == getReplacementString(entry, 6);
+
+                                if (!canBeIgnored)
+                                {
+                                    string friendlyPath = getReplacementString(entry, 1) == "-" ? "System" : FileHelper.GetFriendlyPath(getReplacementString(entry, 1));
+                                    string fileName = System.IO.Path.GetFileName(friendlyPath);
+                                    string direction = getReplacementString(entry, 2) == @"%%14593" ? "Out" : "In";
+
+                                    // try to get the servicename from pid (works only if service is running)
+                                    string serviceName = services.ContainsKey(pid) ? services[pid].Name : "-";
+
+                                    var le = new LogEntryViewModel()
+                                    {
+                                        Pid = pid,
+                                        Timestamp = entry.TimeGenerated,
+                                        Icon = IconHelper.GetIcon(getReplacementString(entry, 1)),
+                                        Path = getReplacementString(entry, 1) == "-" ? "System" : getReplacementString(entry, 1),
+                                        FriendlyPath = friendlyPath,
+                                        ServiceName = serviceName,
+                                        FileName = fileName,
+                                        TargetIP = getReplacementString(entry, 5),
+                                        TargetPort = getReplacementString(entry, 6),
+                                        Protocol = FirewallHelper.getProtocolAsString(int.Parse(getReplacementString(entry, 7))),
+                                        Direction = direction,
+                                        FilterId = getReplacementString(entry, 8),
+                                        Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId),
+                                        Reason_Info = entry.Message,
+                                    };
+                                    le.ReasonColor = le.Reason.StartsWith("Block") ? Brushes.OrangeRed : Brushes.Blue;
+                                    le.DirectionColor = le.Direction.StartsWith("In") ? Brushes.OrangeRed : Brushes.Black;
+                                    _logEntries.Add(le);
+                                    eventsStored++;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                LogHelper.Error("Cannot parse eventlog entry: eventID=" + entry.InstanceId.ToString(), ex);
+                            }
                         }
+                    }
 
-                        if (entry.InstanceId == 5157 && entry.EntryType == EventLogEntryType.FailureAudit)
-                        {
-                            cpt--;
-                            var le = new LogEntryViewModel()
-                            {
-                                Timestamp = entry.TimeGenerated,
-                                Icon = IconHelper.GetIcon(entry.ReplacementStrings[1]),
-                                FriendlyPath = FileHelper.GetFriendlyPath(entry.ReplacementStrings[1]),
-                                TargetIP = entry.ReplacementStrings[5],
-                                TargetPort = entry.ReplacementStrings[6],
-                                Protocol = FirewallHelper.getProtocolAsString(int.Parse(entry.ReplacementStrings[7]))
-                            };
-
-                            if (isAppending)
-                            {
-                                _logEntries.Insert(MaxEventsToLoad - (cpt + 1), le);
-                            }
-                            else
-                            {
-                                _logEntries.Add(le);
-                            }
-
-                            if (cpt == 0)
-                            {
-                                // We've loaded the maximum number of entries.
-                                break;
-                            }
-                        }
+                    ICollectionView dataView = CollectionViewSource.GetDefaultView(gridLog.ItemsSource);
+                    if (dataView.SortDescriptions.Count < 1)
+                    {
+                        dataView.SortDescriptions.Add(new SortDescription("Timestamp", ListSortDirection.Descending));
                     }
 
                     // Trim the list
                     while (_logEntries.Count > MaxEventsToLoad)
                     {
-                        _logEntries.RemoveAt(_logEntries.Count - 1);
+                        _logEntries.RemoveAt(0);
                     }
 
                     // Set the cut-off point for the next time this function gets called.
                     lastDate = lastDateNew;
-                    lastIndex = indexNew;
                 }
             }
             catch (Exception e)
@@ -146,8 +178,23 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
         }
 
+        private string getReplacementString(EventLogEntry entry, int i)
+        {
+            // check out of bounds
+            if (i < entry.ReplacementStrings.Length)
+            {
+                return entry.ReplacementStrings[i];
+            } else {
+                return "";
+            }
+        }
+
         private void btnLocate_Click(object sender, RoutedEventArgs e)
         {
+            if (gridLog.SelectedItem == null)
+            {
+                return;
+            }
             Process.Start("explorer.exe", "/select," + ((LogEntryViewModel)gridLog.SelectedItem).FriendlyPath);
         }
 
@@ -159,6 +206,124 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private void btnRestartAdmin_Click(object sender, RoutedEventArgs e)
         {
             ((App)Application.Current).RestartAsAdmin();
+        }
+
+        private void GridLog_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //System.Console.WriteLine($"Grid SelectionChanged: {sender}, {e.Source}, {e.Handled}, {e.OriginalSource}, {e}");
+            if (gridLog.SelectedItem == null)
+            {
+                btnLocate.IsEnabled = false;
+            }
+            else
+            {
+                btnLocate.IsEnabled = true;
+                if ((bool)btnAutoRefreshToggle.IsChecked)
+                {
+                    // disable the auto-refresh for not loosing the selection to locate
+                    btnAutoRefreshToggle.IsChecked = false;
+                }
+            }
+        }
+
+        private void Reason_GotFocus(object sender, RoutedEventArgs e)
+        {
+            // System.Console.WriteLine($"Columng Reason GotFocus: {sender}, {e.Source}, {e.Handled}, {e.OriginalSource}, {e}");
+        }
+
+        private void GridLog_CellSelected(object sender, RoutedEventArgs e)
+        {
+            //System.Console.WriteLine($"CellSelected: {sender}, {e.Source}, {e.Handled}, {e.OriginalSource}, {e}");
+            showMatchingRuleAndDetails((DataGrid)e.Source, (DataGridCell)e.OriginalSource);  // case when selection changed
+
+        }
+        private void GridLog_GotFocus(object sender, RoutedEventArgs e)
+        {
+            //System.Console.WriteLine($"Cell GotFocus: {sender}, {e.Source}, {e.Handled}, {e.OriginalSource}, {e}");
+            showMatchingRuleAndDetails((DataGrid)e.Source, (DataGridCell)e.OriginalSource);  // case when row already selected and cell got focus
+        }
+
+        private void showMatchingRuleAndDetails(DataGrid grid, DataGridCell cell)
+        {
+            LogEntryViewModel selectedEntry = (LogEntryViewModel)grid.SelectedItem;
+            if (selectedEntry != null && Reason.Equals(cell.Column) && cell.IsFocused && cell.IsSelected)
+            {
+                // Filter which blocked the connection
+                NetshHelper.FilterResult blockingFilter = NetshHelper.getBlockingFilter(int.Parse(selectedEntry.FilterId), refreshData: RefreshFilterData);
+                RefreshFilterData = false;
+                string blockingFilterDetails = blockingFilter != null ? $"\n-----------------------------------------\nFilter rule which triggered the event:\n\t{selectedEntry.FilterId}: {blockingFilter.name} - {blockingFilter.description}\n" : "\n\n... No filter rule found ...";
+
+                //// Other matching filters for process
+                //IEnumerable<FirewallHelper.Rule> rules = FirewallHelper.GetMatchingRulesForEvent(int.Parse(selectedEntry.Pid), selectedEntry.Path, selectedEntry.TargetIP, selectedEntry.TargetPort, blockOnly: false, outgoingOnly: false);
+                //string reasonDetails = $"\nMatching Rules for | {selectedEntry.FileName} | {selectedEntry.Pid} | {selectedEntry.TargetIP}:{selectedEntry.TargetPort} |";
+                //foreach (FirewallHelper.Rule rule in rules.Take(10))
+                //{
+                //    reasonDetails += $"\n'{rule.Name}' | {rule.ActionStr} | {rule.DirectionStr} | {rule.AppPkgId} | profile={rule.ProfilesStr} | svc={rule.ServiceName} | {System.IO.Path.GetFileName(rule.ApplicationName)}";
+                //}
+                //if (rules.Count() > 10)
+                //{
+                //    reasonDetails += "\n...more...";
+                //}
+                //else if (rules.Count() == 0)
+                //{
+                //    reasonDetails += "\n... no matching rules found ...";
+                //}
+                showToolTip((Control)cell, selectedEntry.Reason_Info + blockingFilterDetails); // + reasonDetails);
+            }
+            else
+            {
+                closeToolTip();
+            }
+        }
+
+        private static ToolTip toolTipInstance = new ToolTip
+        {
+            Content = "",
+            PlacementTarget = null,
+            StaysOpen = true,
+            IsOpen = false
+        };
+
+        private void showToolTip(UIElement placementTarget, String text)
+        {
+            toolTipInstance.PlacementTarget = placementTarget;
+            toolTipInstance.Content = text;
+            toolTipInstance.IsOpen = true;
+            placementTarget.LostFocus += PlacementTarget_LostFocus;
+        }
+
+        private void closeToolTip()
+        {
+            toolTipInstance.Content = "";
+            toolTipInstance.IsOpen = false;
+            toolTipInstance.PlacementTarget = null;
+        }
+
+        private void PlacementTarget_LostFocus(object sender, RoutedEventArgs e)
+        {
+            closeToolTip();
+            (sender as UIElement).LostFocus -= PlacementTarget_LostFocus;
+        }
+
+        private void showToolTip(Control control)
+        {
+            // shows the controls tooltip on demand
+            if (control.ToolTip != null)
+            {
+                if (control.ToolTip is ToolTip castToolTip)
+                {
+                    castToolTip.IsOpen = true;
+                }
+                else
+                {
+                    _ = new ToolTip
+                    {
+                        Content = control.ToolTip,
+                        StaysOpen = false,
+                        IsOpen = true
+                    };
+                }
+            }
         }
     }
 }

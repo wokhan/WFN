@@ -839,6 +839,46 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return Enum.GetName(typeof(NET_FW_PROFILE_TYPE2_), type);
         }
 
+        public static Boolean isEventInstanceIdAccepted(long instanceId)
+        {
+            // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
+            return
+                instanceId == 5157 // block connection
+                || instanceId == 5152 // drop packet
+                // Cannot parse this event: || instanceId == 5031 
+                || instanceId == 5150
+                || instanceId == 5151
+                || instanceId == 5154
+                || instanceId == 5155
+                || instanceId == 5156;
+        }
+        public static string getEventInstanceIdAsString(long eventId)
+        {
+            // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
+            string reason = "Block: {0} ";
+            switch (eventId)
+            {
+               case 5157:
+                    return string.Format(reason,  "connection");
+                case 5152:
+                    return string.Format(reason,  "packet droped");
+                case 5031:
+                    return string.Format(reason,  "app connection"); //  Firewall blocked an application from accepting incoming connections on the network.
+                case 5150:
+                    return string.Format(reason,  "packet");
+                case 5151:
+                    return string.Format(reason,  "packet (other FW)");
+                case 5154:
+                    return "Allow: listen";
+                case 5155:
+                    return string.Format(reason,  "listen");
+                case 5156:
+                    return "Allow: connection";
+                default:
+                    return "[UNKNOWN] eventId:" + eventId.ToString(); 
+            }
+        }
+
         public static string getProtocolAsString(int protocol)
         {
             //These are the IANA protocol numbers.
@@ -856,6 +896,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 case (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_UDP: //17
                     return "UDP";
 
+                case 40:
+                    return "IL"; // IL Transport protocol
+
                 case 47:
                     return "GRE"; //Used by PPTP, for example.
 
@@ -867,7 +910,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
                 default:
                     LogHelper.Warning("Unknown protocol type: " + protocol.ToString());
-                    return "Unknown";
+                    return protocol >= 0 ? protocol.ToString() : "Unknown";
             }
         }
 
@@ -1042,7 +1085,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return ret;
         }
 
-
         private static bool RuleMatches(Rule r, string path, IEnumerable<string> svc, int protocol, string localport, string target, string remoteport, string appPkgId, string LocalUserOwner, int currentProfile)
         {
             //Note: This outputs *really* a lot, so use the if-statement to filter!
@@ -1077,6 +1119,85 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return ret;
         }
 
+
+        class SimpleEventRuleCompare : IEqualityComparer<FirewallHelper.Rule>
+        {
+            public bool Equals(Rule x, Rule y)
+            {
+                // Two items are equal if their keys are equal.
+                return x.Name == y.Name;
+            }
+
+            public int GetHashCode(Rule obj)
+            {
+                return obj.Name.GetHashCode();
+            }
+        }
+        
+        /// <summary>
+        /// Get the rules matching an eventlog item taking process appPkgId and svcName into account.
+        /// </summary>
+        /// <param name="path">Executable path</param>
+        /// <param name="target">Target IP or *</param>
+        /// <param name="targetPort">Target port or *</param>
+        /// <param name="blockOnly">Filter for block only rules</param>
+        /// <param name="outgoingOnly">Filter for outgoing rules only</param>
+        /// <returns></returns>
+        public static IEnumerable<Rule> GetMatchingRulesForEvent(int pid, string path, string target, string targetPort, bool blockOnly = true, bool outgoingOnly = false)
+        {
+            String appPkgId = (pid != 0) ? ProcessHelper.getAppPkgId(pid) : String.Empty;
+            int currentProfile = GetCurrentProfile(); 
+            string svcName = "*";
+            if (path.ToLower().EndsWith("svchost.exe"))
+            {
+                // get the scvName associated with svchost.exe
+                string cLine = ProcessHelper.getCommandLineFromProcessWMI(pid);
+                if (cLine != null)
+                {
+                    svcName = cLine.Split(new string[] { " -s " }, StringSplitOptions.None).Last().Split(' ').First();
+                }
+            }
+
+            String exeName = System.IO.Path.GetFileName(path);
+            LogHelper.Debug($"\nGetMatchingRulesForEvent: path={exeName}, svcName={svcName}, pid={pid}, target={target} targetPort={targetPort}, blockOnly={blockOnly}, outgoingOnly={outgoingOnly}");
+
+            IEnumerable<Rule> ret = GetRules(AlsoGetInactive: false).Distinct(new SimpleEventRuleCompare()).Where(r => r.Enabled && RuleMatchesEvent(r, currentProfile, appPkgId, svcName, path, target, targetPort));
+            if (blockOnly)
+            {
+                ret = ret.Where(r => r.Action == NET_FW_ACTION_.NET_FW_ACTION_BLOCK);
+            }
+            if (outgoingOnly)
+            {
+                ret = ret.Where(r => r.Direction == NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT);
+            }
+
+            return ret;
+        }
+
+        private static bool RuleMatchesEvent(Rule r, int currentProfile, string appPkgId, string svcName, string path, string target = "*", string remoteport = "*")
+        {
+            string friendlyPath = String.IsNullOrWhiteSpace(path) ? path : FileHelper.GetFriendlyPath(path);
+            string ruleFriendlyPath = String.IsNullOrWhiteSpace(r.ApplicationName) ? r.ApplicationName : FileHelper.GetFriendlyPath(r.ApplicationName);
+            bool ret = r.Enabled
+                       && (((r.Profiles & currentProfile) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0))
+                       && (String.IsNullOrEmpty(ruleFriendlyPath) || StringComparer.CurrentCultureIgnoreCase.Compare(ruleFriendlyPath, friendlyPath) == 0)
+                       && CheckRuleAddresses(r.RemoteAddresses, target)
+                       && CheckRulePorts(r.RemotePorts, remoteport)
+                       && (String.IsNullOrEmpty(r.AppPkgId) || (r.AppPkgId == appPkgId))
+                       && (String.IsNullOrEmpty(r.ServiceName) || (svcName.Any() && (r.ServiceName == "*")) || StringComparer.CurrentCultureIgnoreCase.Compare(svcName, r.ServiceName) == 0)
+                       ;
+            if (ret && LogHelper.isDebugEnabled())
+            {
+                LogHelper.Debug("Found enabled "+ r.ActionStr + " " + r.DirectionStr + " Rule '" + r.Name + "'");
+                LogHelper.Debug("\t" + r.Profiles.ToString() + " <--> " + currentProfile.ToString() + " : " + (((r.Profiles & currentProfile) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0)).ToString());
+                LogHelper.Debug("\t" + ruleFriendlyPath + " <--> " + friendlyPath + " : " + ((String.IsNullOrEmpty(ruleFriendlyPath) || StringComparer.CurrentCultureIgnoreCase.Compare(ruleFriendlyPath, friendlyPath) == 0)).ToString());
+                LogHelper.Debug("\t" + r.RemoteAddresses + " <--> " + target + " : " + CheckRuleAddresses(r.RemoteAddresses, target).ToString());
+                LogHelper.Debug("\t" + r.RemotePorts + " <--> " + remoteport + " : " + CheckRulePorts(r.RemotePorts, remoteport).ToString());
+                LogHelper.Debug("\t" + r.AppPkgId + " <--> " + appPkgId + "  : " + (String.IsNullOrEmpty(r.AppPkgId) || (r.AppPkgId == appPkgId)).ToString());
+                LogHelper.Debug("\t" + r.ServiceName + " <--> " + svcName + " : " + ((String.IsNullOrEmpty(r.ServiceName) || StringComparer.CurrentCultureIgnoreCase.Compare(svcName, r.ServiceName) == 0)));
+            }
+            return ret;
+        }
 
         private static bool CheckRuleAddresses(string ruleAddresses, string checkedAddress)
         {
