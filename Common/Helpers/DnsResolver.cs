@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
 namespace Harrwiss.Common.Network.Helper
 {
@@ -16,11 +17,17 @@ namespace Harrwiss.Common.Network.Helper
     {
         private readonly static object syncLock = new object();
 
+
         public class CachedIPHostEntry
         {
-            public IPHostEntry HostEntry;
+            public readonly static CachedIPHostEntry EMTPY = new CachedIPHostEntry();
+
+            public IPHostEntry HostEntry = new IPHostEntry() {
+                HostName = "unknown",
+                AddressList = new IPAddress[] { }
+             };
             public bool IsResolved = false;
-            public string TextHint;
+            public string ToolTipText = "...";
         }
         /// <summary>
         /// Dictionary of resolved IP addresses.
@@ -32,7 +39,14 @@ namespace Harrwiss.Common.Network.Helper
             List<IPAddress> ipList = new List<IPAddress>();
             ipAddressList.ForEach(s =>
             {
-                ipList.Add(IPAddress.Parse(s));
+                if (IPAddress.TryParse(s, out IPAddress parsedIP))
+                {
+                    ipList.Add(parsedIP);
+                }
+                else
+                {
+                    LogHelper.Warning($"Cannot parse IP {s}");
+                }
             });
             return await ResolveIpAddresses(ipList, maxEntriesToResolve);
         }
@@ -59,51 +73,51 @@ namespace Harrwiss.Common.Network.Helper
 
         private static void ResolveIP(IPAddress ip)
         {
-            lock (syncLock)
+            try
             {
-                try
+                if (!CachedIPHostEntryDict.ContainsKey(ip))
                 {
-                    if (!CachedIPHostEntryDict.ContainsKey(ip))
-                    {
-                        IPHostEntry resolvedEntry = Dns.GetHostEntry(address: ip);
-                        CachedIPHostEntry entry = new CachedIPHostEntry
-                        {
-                            HostEntry = resolvedEntry,
-                            IsResolved = true,
-                            TextHint = resolvedEntry.HostName
-                        };
-                        PutEntry(ip, entry);
-                    }
-                }
-                catch (Exception e)
-                {
+                    PutEntry(ip, CachedIPHostEntry.EMTPY);  // reserve slot
+                    // http://www.dotnetframework.org/default.aspx/4@0/4@0/DEVDIV_TFS/Dev10/Releases/RTMRel/ndp/fx/src/Net/System/Net/DNS@cs/1305376/DNS@cs
+                    IPHostEntry resolvedEntry = Dns.GetHostEntry(address: ip);
                     CachedIPHostEntry entry = new CachedIPHostEntry
                     {
-                        HostEntry = new IPHostEntry
-                        {
-                            HostName = "unknown",
-                            AddressList = new IPAddress[] { ip }
-                        },
-                        IsResolved = false,
-                        TextHint = e.Message
+                        HostEntry = resolvedEntry,
+                        IsResolved = true,
+                        ToolTipText = resolvedEntry.HostName
                     };
                     PutEntry(ip, entry);
                 }
+            }
+            catch (Exception e)
+            {
+                CachedIPHostEntry entry = new CachedIPHostEntry
+                {
+                    HostEntry = new IPHostEntry
+                    {
+                        HostName = "unknown",
+                        AddressList = new IPAddress[] { ip }
+                    },
+                    IsResolved = false,
+                    ToolTipText = e.Message
+                };
+                PutEntry(ip, entry);
             }
         }
 
         private static void PutEntry(IPAddress ip, CachedIPHostEntry entry)
         {
-            lock (syncLock)
+            lock (CachedIPHostEntryDict)
             {
                 if (CachedIPHostEntryDict.ContainsKey(ip))
                 {
-                    CachedIPHostEntryDict.Remove(ip);
-                    CachedIPHostEntryDict.Add(ip, entry);
+                    CachedIPHostEntryDict[ip] = entry;
+                    LogHelper.Debug($"Endc resolve IPHostEntry for {ip}. IsResolved={entry.IsResolved}, ToolTipText={entry.ToolTipText}");
                 }
                 else
                 {
                     CachedIPHostEntryDict.Add(ip, entry);
+                    LogHelper.Debug($"Start resolve IPHostEntry for {ip}. IsResolved={entry.IsResolved} ToolTipText={entry.ToolTipText}");
                 }
             }
         }
