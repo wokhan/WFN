@@ -56,6 +56,9 @@
                     <TextBlock VerticalAlignment="Center" Text="{Binding LogEntries.Count, StringFormat='{}{0} item(s)', FallbackValue='No item found'}" />
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Right">
+                    <CheckBox x:Name="cbxIsTCPOnlyEnabled" IsChecked="{Binding IsTCPOnlyEnabled}" ToolTip="Only show TCP Protocol events">
+                        <Label Content="TCP only" VerticalAlignment="Center" Margin="0,0,10,0" />
+                    </CheckBox>
                     <Border BorderBrush="White" Background="White" BorderThickness="0" CornerRadius="8" Padding="5,2" Margin="0,0,5,0">
                         <WrapPanel>
                             <Path Fill="#FFA2A2FF" Data="{StaticResource Image_UpdateRate}"/>
@@ -75,7 +78,7 @@
                     <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp}" Width="Auto"/>
                     <DataGridTextColumn Header="PID" Binding="{Binding Pid}" Width="Auto"/>
                     <!-- <DataGridTextColumn Header="App"  Binding="{Binding FileName}" Width="0.3*"/> -->
-                    <DataGridTemplateColumn Header="App" SortMemberPath="FileName" Width="0.3*" >
+                    <DataGridTemplateColumn Header="App" SortMemberPath="FileName" Width="0.2*" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -85,8 +88,9 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Service"  Binding="{Binding ServiceName}" Width="0.2*"/>
-                    <DataGridTextColumn Header="IP" Binding="{Binding TargetIP}" Width="Auto"/>
+                    <DataGridTextColumn Header="Service"  Binding="{Binding ServiceName}" Width="0.1*"/>
+                    <DataGridTextColumn Header="IP" Binding="{Binding TargetIP}" Width="0.1*"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding TargetHostName}" Width="0.1*"/>
                     <DataGridTextColumn Header="Port" Binding="{Binding TargetPort}" Width="Auto"/>
                     <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol}" Width="Auto"/>
                     <DataGridTextColumn Header="FilterId" Binding="{Binding FilterId}" Width="Auto"/>

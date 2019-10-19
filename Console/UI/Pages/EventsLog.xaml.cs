@@ -12,6 +12,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Windows.Data;
 using System.Windows.Media;
+using Harrwiss.Common.Network.Helper;
+using System.Net;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -29,6 +31,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             get { return timer.IsEnabled; }
             set { timer.IsEnabled = value; }
         }
+
+        public bool IsTCPOnlyEnabled { get; set; }
 
         private DispatcherTimer timer = new DispatcherTimer() { IsEnabled = true };
 
@@ -75,7 +79,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         
         private ObservableCollection<LogEntryViewModel> _logEntries = new ObservableCollection<LogEntryViewModel>();
-        public ObservableCollection<LogEntryViewModel> LogEntries { get { return _logEntries; } }  // used as binding in designer
+        public ObservableCollection<LogEntryViewModel> LogEntries { get {
+                return _logEntries;
+            }
+        }  
 
         private DateTime lastDate = DateTime.MinValue;
         private void initEventLog()
@@ -88,11 +95,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     // TODO: utilize EventLog#EnableRaisingEvents after initialization instead of timer
                     //securityLog.EnableRaisingEvents = true;
                     //securityLog.EntryWritten += (sender, args) => _logEntries.Add(createEventLogEntry(args.Entry));
-                    
+
                     int slCount = securityLog.Entries.Count - 1;
                     int eventsStored = 0;
                     bool isAppending = _logEntries.Any();
                     DateTime lastDateNew = lastDate;
+                    List<String> tcpIPList = new List<string>();
 
                     for (int i = slCount; i > 0 && eventsStored < MaxEventsToLoad; i--)
                     {
@@ -110,18 +118,34 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                             try
                             {
                                 int pid = int.Parse(getReplacementString(entry, 0));
+                                string direction = getReplacementString(entry, 2) == @"%%14593" ? "Out" : "In";
+                                string targetIp;
+                                string targetPort;
+                                if (direction == "Out")
+                                {
+                                    // outgoing target ip
+                                    targetIp = getReplacementString(entry, 5);
+                                    targetPort = getReplacementString(entry, 6);
+                                }
+                                else
+                                {
+                                    // incoming source ip
+                                    targetIp = getReplacementString(entry, 3);
+                                    targetPort = getReplacementString(entry, 4);
+                                }
+
                                 bool canBeIgnored = lastEntry != null
                                     && lastEntry.Pid == pid
                                     && lastEntry.Timestamp.Second == entry.TimeGenerated.Second
                                     && lastEntry.Timestamp.Minute == entry.TimeGenerated.Minute
-                                    && lastEntry.TargetIP == getReplacementString(entry, 5)
-                                    && lastEntry.TargetPort == getReplacementString(entry, 6);
+                                    && lastEntry.TargetIP == targetIp
+                                    && lastEntry.TargetPort == targetPort;
 
                                 if (!canBeIgnored)
                                 {
                                     string friendlyPath = getReplacementString(entry, 1) == "-" ? "System" : FileHelper.GetFriendlyPath(getReplacementString(entry, 1));
                                     string fileName = System.IO.Path.GetFileName(friendlyPath);
-                                    string direction = getReplacementString(entry, 2) == @"%%14593" ? "Out" : "In";
+                                    int protocol = int.Parse(getReplacementString(entry, 7));
 
                                     // try to get the servicename from pid (works only if service is running)
                                     string serviceName = services.ContainsKey(pid) ? services[pid].Name : "-";
@@ -135,9 +159,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                                         FriendlyPath = friendlyPath,
                                         ServiceName = serviceName,
                                         FileName = fileName,
-                                        TargetIP = getReplacementString(entry, 5),
-                                        TargetPort = getReplacementString(entry, 6),
-                                        Protocol = FirewallHelper.getProtocolAsString(int.Parse(getReplacementString(entry, 7))),
+                                        TargetIP = targetIp,
+                                        TargetPort = targetPort,
+                                        Protocol = FirewallHelper.getProtocolAsString(protocol),
                                         Direction = direction,
                                         FilterId = getReplacementString(entry, 8),
                                         Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId),
@@ -146,6 +170,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                                     le.ReasonColor = le.Reason.StartsWith("Block") ? Brushes.OrangeRed : Brushes.Blue;
                                     le.DirectionColor = le.Direction.StartsWith("In") ? Brushes.OrangeRed : Brushes.Black;
                                     _logEntries.Add(le);
+                                    //if (le.Protocol == "TCP") {
+                                    tcpIPList.Add(le.TargetIP);
+                                    //}
                                     eventsStored++;
                                 }
                             }
@@ -156,10 +183,22 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                         }
                     }
 
+
+                    _ = DnsResolver.ResolveIpAddresses(tcpIPList);
+
                     ICollectionView dataView = CollectionViewSource.GetDefaultView(gridLog.ItemsSource);
                     if (dataView.SortDescriptions.Count < 1)
                     {
                         dataView.SortDescriptions.Add(new SortDescription("Timestamp", ListSortDirection.Descending));
+                    }
+                    if (dataView.Filter == null)
+                    {
+                        Predicate<Object> filter = (Object o) =>
+                        {
+                            LogEntryViewModel le = (LogEntryViewModel)o;
+                            return IsTCPOnlyEnabled ? le.Protocol == "TCP" : true;
+                        };
+                        dataView.Filter += filter;
                     }
 
                     // Trim the list
@@ -251,9 +290,17 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             if (selectedEntry != null && Reason.Equals(cell.Column) && cell.IsFocused && cell.IsSelected)
             {
                 // Filter which blocked the connection
-                NetshHelper.FilterResult blockingFilter = NetshHelper.getBlockingFilter(int.Parse(selectedEntry.FilterId), refreshData: RefreshFilterData);
-                RefreshFilterData = false;
-                string blockingFilterDetails = blockingFilter != null ? $"\n-----------------------------------------\nFilter rule which triggered the event:\n\t{selectedEntry.FilterId}: {blockingFilter.name} - {blockingFilter.description}\n" : "\n\n... No filter rule found ...";
+                string blockingFilterDetails;
+                try
+                {
+                    NetshHelper.FilterResult blockingFilter = NetshHelper.getBlockingFilter(int.Parse(selectedEntry.FilterId), refreshData: RefreshFilterData);
+                    RefreshFilterData = false;
+                    blockingFilterDetails = blockingFilter != null ? $"\n-----------------------------------------\nFilter rule which triggered the event:\n\t{selectedEntry.FilterId}: {blockingFilter.name} - {blockingFilter.description}\n" : "\n\n... No filter rule found ...";
+                } catch (Exception ex)
+                {
+                    LogHelper.Warning("Cannot get blocking filter:" + ex.Message);
+                    blockingFilterDetails = $"\n-----------------------------------------\nCannot get blocking filter: {ex.Message}";
+                }
 
                 //// Other matching filters for process
                 //IEnumerable<FirewallHelper.Rule> rules = FirewallHelper.GetMatchingRulesForEvent(int.Parse(selectedEntry.Pid), selectedEntry.Path, selectedEntry.TargetIP, selectedEntry.TargetPort, blockOnly: false, outgoingOnly: false);
