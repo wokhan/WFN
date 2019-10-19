@@ -67,7 +67,7 @@ namespace Harrwiss.Common.Network.Helper
         {
             foreach (var entry in DnsResolver.CachedIPHostEntryDict)
             {
-                Console.WriteLine($"{ entry.Key }: isResolved={entry.Value.IsResolved} hostName={entry.Value.HostEntry.HostName}, tooltipText={entry.Value.TextHint}\n");
+                Console.WriteLine($"{ entry.Key }: isResolved={entry.Value.IsResolved} hostName={entry.Value.HostEntry.HostName}, tooltipText={entry.Value.ToolTipText}\n");
             }
         }
     }
