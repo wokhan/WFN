@@ -53,7 +53,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="ConsoleProject\Helpers\ViewModels\GeoConnection2Tests.cs" />
+    <Compile Include="Console\Helpers\ViewModels\GeoConnection2Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -77,7 +77,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Common\Helper\" />
     <Folder Include="ManualTests\" />
     <Folder Include="Properties\" />
   </ItemGroup>

@@ -12,7 +12,7 @@ using MaxMind.GeoIP2.Responses;
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
     /// <summary>
-    /// Geo locations v2 using GeoIP2 API.<para>
+    /// Geo locations v2 using GeoIP2 API supporting ipv4 andv ipv6.<para>
     /// Uses database from: https://dev.maxmind.com/geoip/geoip2/geolite2/
     /// GeoIP2 API: https://github.com/maxmind/GeoIP2-dotnet
     /// </para>
@@ -111,14 +111,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             {
                 CurrentCoordinates
             };
-            foreach (var x in (await IPHelper.GetFullRoute(this.RemoteAddress)).Select(ip => IPToLocation(ip)).Where(l => l.Latitude != 0 && l.Longitude != 0))
+            foreach (var x in (await IPHelper.GetFullRoute(RemoteAddress).ConfigureAwait(false)).Select(ip => IPToLocation(ip)).Where(l => l.Latitude != 0 && l.Longitude != 0))
             {
                 r.Add(x);
             }
 
             _fullRoute = r;
 
-            NotifyPropertyChanged("FullRoute");
+            NotifyPropertyChanged(nameof(FullRoute));
         }
 
         private static readonly string _DB_PATH = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"IPDatabase\GeoLite2-City.mmdb");
@@ -137,7 +137,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
                         _databaseReader = InitDatabaseReader(_DB_PATH);
                     }
                     return true;
-                });
+                }).ConfigureAwait(false);
         }
 
         /// <summary>
