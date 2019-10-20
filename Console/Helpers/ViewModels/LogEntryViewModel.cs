@@ -20,7 +20,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             {
                 try
                 {
-                    if (DnsResolver.CachedIPHostEntryDict.TryGetValue(IPAddress.Parse(TargetIP), out DnsResolver.CachedIPHostEntry value))
+                    if (DnsResolver.CachedIPHostEntryDict.TryGetValue(IPAddress.Parse(TargetIP), out CachedIPHostEntry value))
                     {
                         return value.ToolTipText;
                     }

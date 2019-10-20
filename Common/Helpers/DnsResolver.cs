@@ -10,25 +10,24 @@ using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
 namespace Harrwiss.Common.Network.Helper
 {
+    public class CachedIPHostEntry
+    {
+        public readonly static CachedIPHostEntry EMTPY = new CachedIPHostEntry();
+
+        public IPHostEntry HostEntry { get; set; } = new IPHostEntry()
+        {
+            HostName = "unknown",
+            AddressList = new IPAddress[] { }
+        };
+        public bool IsResolved { get; set; } = false;
+        public string ToolTipText { get; set; } = "...";
+    }
+
     /// <summary>
     /// Resolves IP addesses to IPHostEntry records asynchronously and caches them in a dictionary.
     /// </summary>
-    public class DnsResolver
+    public static class DnsResolver
     {
-        private readonly static object syncLock = new object();
-
-
-        public class CachedIPHostEntry
-        {
-            public readonly static CachedIPHostEntry EMTPY = new CachedIPHostEntry();
-
-            public IPHostEntry HostEntry = new IPHostEntry() {
-                HostName = "unknown",
-                AddressList = new IPAddress[] { }
-             };
-            public bool IsResolved = false;
-            public string ToolTipText = "...";
-        }
         /// <summary>
         /// Dictionary of resolved IP addresses.
         /// </summary>
@@ -48,7 +47,7 @@ namespace Harrwiss.Common.Network.Helper
                     LogHelper.Warning($"Cannot parse IP {s}");
                 }
             });
-            return await ResolveIpAddresses(ipList, maxEntriesToResolve);
+            return await ResolveIpAddresses(ipList, maxEntriesToResolve).ConfigureAwait(false);
         }
         /// <summary>
         /// Resolves given ip addresses to IPHostEntry and stores them in CachedIPHostEntryDict.
@@ -68,7 +67,7 @@ namespace Harrwiss.Common.Network.Helper
                     }
                 });
                 return true;
-            });
+            }).ConfigureAwait(false);
         }
 
         private static void ResolveIP(IPAddress ip)
@@ -112,7 +111,7 @@ namespace Harrwiss.Common.Network.Helper
                 if (CachedIPHostEntryDict.ContainsKey(ip))
                 {
                     CachedIPHostEntryDict[ip] = entry;
-                    LogHelper.Debug($"Endc resolve IPHostEntry for {ip}. IsResolved={entry.IsResolved}, ToolTipText={entry.ToolTipText}");
+                    LogHelper.Debug($"End resolve IPHostEntry for {ip}. IsResolved={entry.IsResolved}, ToolTipText={entry.ToolTipText}");
                 }
                 else
                 {
