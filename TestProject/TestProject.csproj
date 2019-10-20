@@ -6,8 +6,8 @@
     <ProjectGuid>{D6117BE3-3E69-48F9-90DC-B53AA29613A6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConsoleTests</RootNamespace>
-    <AssemblyName>ConsoleTests</AssemblyName>
+    <RootNamespace>TestProject</RootNamespace>
+    <AssemblyName>TestProject</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -54,6 +54,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Console\Helpers\ViewModels\GeoConnection2Tests.cs" />
+    <Compile Include="Common\Network\Helper\DnsResolverTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
