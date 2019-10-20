@@ -59,7 +59,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         public string CurrentProfile { get { return FirewallHelper.GetCurrentProfileAsText(); } }
 
 
-        private ToolTip ttip = new ToolTip();
+        //private ToolTip ttip = new ToolTip();
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChanged(string propertyName)
