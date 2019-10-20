@@ -21,7 +21,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// </summary>
     public partial class Map : Page, INotifyPropertyChanged
     {
-        public Location CurrentCoordinates { get { return GeoConnection.CurrentCoordinates; } }
+        public Location CurrentCoordinates { get { return GeoConnection2.CurrentCoordinates; } }
 
         public bool IsTrackingEnabled
         {
@@ -59,8 +59,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private ListCollectionView _connectionsView;
         public ListCollectionView ConnectionsView { get { return _connectionsView; } }
 
-        private ObservableCollection<GeoConnection> _connectionsRoutes = new ObservableCollection<GeoConnection>();
-        public ObservableCollection<GeoConnection> ConnectionsRoutes { get { return _connectionsRoutes; } }
+        private ObservableCollection<GeoConnection2> _connectionsRoutes = new ObservableCollection<GeoConnection2>();
+        public ObservableCollection<GeoConnection2> ConnectionsRoutes { get { return _connectionsRoutes; } }
 
         private int _interval = 1;
 
@@ -102,12 +102,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         async void Map_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!GeoConnection.CheckDB())
+            if (!GeoConnection2.CheckDB())
             {
                 MessageBox.Show("The IP database cannot be found. The Map feature is disabled.", "Missing database");
                 return;
             }
-            var ok = await GeoConnection.InitCache();
+            var ok = await GeoConnection2.InitCache();
 
             initialPoint.SetValue(MapLayer.PositionProperty, CurrentCoordinates);
 
@@ -149,10 +149,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             var ic = _connectionsRoutes.Count % LineChart.ColorsDic.Count;
             var br = new SolidColorBrush(LineChart.ColorsDic[ic]);
 
-            GeoConnection existingRoute = _connectionsRoutes.SingleOrDefault(l => l.RemoteAddress.Equals(b.RemoteAddress));
+            GeoConnection2 existingRoute = _connectionsRoutes.SingleOrDefault(l => l.RemoteAddress.Equals(b.RemoteAddress));
             if (existingRoute == null)
             {
-                _connectionsRoutes.Add(new GeoConnection(b) { Brush = br });
+                _connectionsRoutes.Add(new GeoConnection2(b) { Brush = br });
             }
         }
 
