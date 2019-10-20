@@ -113,13 +113,23 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MaxMind.Db, Version=2.0.0.0, Culture=neutral, PublicKeyToken=66afa4cc5ae853ac, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaxMind.Db.2.4.0\lib\net45\MaxMind.Db.dll</HintPath>
+    </Reference>
+    <Reference Include="MaxMind.GeoIP2, Version=3.0.0.0, Culture=neutral, PublicKeyToken=66afa4cc5ae853ac, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaxMind.GeoIP2.3.0.0\lib\net45\MaxMind.GeoIP2.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Maps.MapControl.WPF, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Maps.MapControl.WPF.1.0.0.3\lib\net40-Client\Microsoft.Maps.MapControl.WPF.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
@@ -144,7 +154,7 @@
     <Compile Include="Helpers\DummyData\AdapterDummy.cs" />
     <Compile Include="Helpers\DummyData\MonitorDummy.cs" />
     <Compile Include="Helpers\InstallHelper.cs" />
-    <Compile Include="Helpers\ViewModels\GeoConnection.cs" />
+    <Compile Include="Helpers\ViewModels\GeoConnection2.cs" />
     <Compile Include="Helpers\ViewModels\ExposedInterfaceView.cs" />
     <Compile Include="Helpers\ViewModels\MapGroupedView.cs" />
     <Compile Include="Helpers\ViewModels\GroupedView.cs" />
@@ -243,6 +253,9 @@
       <SubType>Code</SubType>
     </Compile>
     <None Include="app.config" />
+    <Content Include="IPDatabase\GeoLite2-City.mmdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Properties\app.manifest" />
     <None Include="packages.config" />
     <AppDesigner Include="Properties\" />
@@ -254,6 +267,12 @@
     <EmbeddedResource Include="Resources\TaskTemplate.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="IPDatabase\LICENSE.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IPDatabase\COPYRIGHT.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="DisableWFN.cmd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

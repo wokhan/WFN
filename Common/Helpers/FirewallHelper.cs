@@ -899,6 +899,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
                 case 40:
                     return "IL"; // IL Transport protocol
+                case 42:
+                    return "SDRP"; // Source Demand Routing Protocol
 
                 case 47:
                     return "GRE"; //Used by PPTP, for example.
