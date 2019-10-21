@@ -35,6 +35,10 @@ namespace Harrwiss.Common.Network.Helper
 
         public static async Task<bool> ResolveIpAddresses(List<String> ipAddressList, int maxEntriesToResolve = 100)
         {
+            if (ipAddressList == null)
+            {
+                return true;
+            }
             List<IPAddress> ipList = new List<IPAddress>();
             ipAddressList.ForEach(s =>
             {
@@ -70,6 +74,7 @@ namespace Harrwiss.Common.Network.Helper
             }).ConfigureAwait(false);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
         private static void ResolveIP(IPAddress ip)
         {
             try
@@ -111,12 +116,12 @@ namespace Harrwiss.Common.Network.Helper
                 if (CachedIPHostEntryDict.ContainsKey(ip))
                 {
                     CachedIPHostEntryDict[ip] = entry;
-                    LogHelper.Debug($"End resolve IPHostEntry for {ip}. IsResolved={entry.IsResolved}, ToolTipText={entry.ToolTipText}");
+                    LogHelper.Debug($"End resolve IPHostEntry for {ip}: IsResolved={entry.IsResolved}, ToolTipText={entry.ToolTipText}");
                 }
                 else
                 {
                     CachedIPHostEntryDict.Add(ip, entry);
-                    LogHelper.Debug($"Start resolve IPHostEntry for {ip}. IsResolved={entry.IsResolved} ToolTipText={entry.ToolTipText}");
+                    LogHelper.Debug($"Start resolve IPHostEntry for {ip}: IsResolved={entry.IsResolved}, ToolTipText={entry.ToolTipText}");
                 }
             }
         }
