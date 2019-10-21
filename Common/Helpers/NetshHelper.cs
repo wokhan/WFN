@@ -29,9 +29,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 RunResult rr = runCommandCapturing(sys32Folder + @"\netsh.exe", @"wfp show filters file=-");
                 if (rr.exitCode == 0)
                 {
-                    xmlDoc = new XmlDocument() { XmlResolver = null };
-                    XmlReader reader = XmlReader.Create(rr.outputData.ToString(), new XmlReaderSettings() { XmlResolver = null });
-                    xmlDoc.Load(reader);
+                    xmlDoc = new XmlDocument
+                    {
+                        InnerXml = rr.outputData.ToString()
+                    };
                 }
                 else
                 {
@@ -52,7 +53,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             XmlNode root = doc.DocumentElement;
 
-            // Add the namespace.
+            // Add the namespace.  
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
 
             try
