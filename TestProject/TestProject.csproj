@@ -54,6 +54,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Common\CusttomSettingsProviderTest.cs" />
+    <Compile Include="Common\Network\Helper\NetshHelperTest.cs" />
     <Compile Include="Console\Helpers\ViewModels\GeoConnection2Tests.cs" />
     <Compile Include="Common\Network\Helper\DnsResolverTest.cs" />
   </ItemGroup>

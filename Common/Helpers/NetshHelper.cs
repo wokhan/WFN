@@ -9,19 +9,19 @@ using System.IO;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
+    public class FilterResult
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
     /// <summary>
     /// Helper for executing netsh commands and parsing the results.
     /// </summary>
-    public class NetshHelper
+    public static class NetshHelper
     {
-        public class FilterResult
-        {
-            public string name { get; set; }
-            public string description { get; set; }
-        }
-
         internal static XmlDocument xmlDoc = null;
-        public static FilterResult getBlockingFilter(int filterId, bool refreshData = false)
+        public static FilterResult getMatchingFilterInfo(int filterId, bool refreshData = false)
         {
             if (xmlDoc == null || refreshData)
             {
@@ -29,27 +29,52 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 RunResult rr = runCommandCapturing(sys32Folder + @"\netsh.exe", @"wfp show filters file=-");
                 if (rr.exitCode == 0)
                 {
-                    xmlDoc = new XmlDocument
-                    {
-                        InnerXml = rr.outputData.ToString()
-                    };
+                    xmlDoc = SafeLoadXml(rr.outputData.ToString());
                 }
                 else
                 {
                     xmlDoc = null;
-                    LogHelper.Debug($"netsh error: exitCode={rr.exitCode}\noutput: {rr.outputData.ToString().Substring(1, 300)}...\nerror: { rr.errorData.ToString() }");
+                    LogHelper.Debug($"netsh error: exitCode={rr.exitCode}\noutput: {rr.outputData.ToString().Substring(1, Math.Min(rr.outputData.Length-1, 300))}...\nerror: { rr.errorData?.ToString() }");
                 }
             }
 
             if (xmlDoc != null)
             {
-                FilterResult fr = parseFilters(filterId, xmlDoc);
+                FilterResult fr = ParseFilters(filterId, xmlDoc);
                 return fr;
             }
             return null;
         }
 
-        static FilterResult parseFilters(int filterId, XmlDocument doc)
+        internal static XmlDocument SafeLoadXml(string xml)
+        {
+            XmlReader reader = null;
+            XmlDocument xmlDoc = null;
+            try
+            {
+                // CA3075 - Unclear message: Unsafe overload of 'LoadXml' 
+                // see: https://github.com/dotnet/roslyn-analyzers/issues/2477
+                xmlDoc = new XmlDocument() { XmlResolver = null };
+                StringReader sreader = new System.IO.StringReader(xml);
+                reader = XmlReader.Create(sreader, new XmlReaderSettings() { XmlResolver = null });
+                xmlDoc.Load(reader);
+            }
+            catch (Exception xe)
+            {
+                xmlDoc = null;
+                LogHelper.Error(xe.Message, xe);
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Dispose();
+                }
+            }
+            return xmlDoc;
+        }
+
+        internal static FilterResult ParseFilters(int filterId, XmlDocument doc)
         {
             XmlNode root = doc.DocumentElement;
 
@@ -65,8 +90,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 {
                     fr = new FilterResult();
                     XmlNode displayData = filter["displayData"];
-                    fr.name = displayData["name"].InnerText;
-                    fr.description = displayData["description"].InnerText;
+                    fr.Name = displayData["name"].InnerText;
+                    fr.Description = displayData["description"].InnerText;
                 }
                 return fr;
             }
