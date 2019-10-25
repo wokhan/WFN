@@ -20,6 +20,8 @@ namespace Harrwiss.Common.Network.Helper
             AddressList = new IPAddress[] { }
         };
         public bool IsResolved { get; set; } = false;
+
+        public bool HasErrors { get; set; } = false;
         public string ToolTipText { get; set; } = "...";
     }
 
@@ -103,6 +105,7 @@ namespace Harrwiss.Common.Network.Helper
                         AddressList = new IPAddress[] { ip }
                     },
                     IsResolved = false,
+                    HasErrors = true,
                     ToolTipText = e.Message
                 };
                 PutEntry(ip, entry);
@@ -116,12 +119,12 @@ namespace Harrwiss.Common.Network.Helper
                 if (CachedIPHostEntryDict.ContainsKey(ip))
                 {
                     CachedIPHostEntryDict[ip] = entry;
-                    LogHelper.Debug($"End resolve IPHostEntry for {ip}: IsResolved={entry.IsResolved}, ToolTipText={entry.ToolTipText}");
+                    LogHelper.Debug($"End resolve IPHostEntry for {ip}: IsResolved={entry.IsResolved}, HasErrors={entry.HasErrors}, ToolTipText={entry.ToolTipText}");
                 }
                 else
                 {
                     CachedIPHostEntryDict.Add(ip, entry);
-                    LogHelper.Debug($"Start resolve IPHostEntry for {ip}: IsResolved={entry.IsResolved}, ToolTipText={entry.ToolTipText}");
+                    LogHelper.Debug($"Start resolve IPHostEntry for {ip}: IsResolved={entry.IsResolved}, HasErrors={entry.HasErrors}, ToolTipText={entry.ToolTipText}");
                 }
             }
         }
