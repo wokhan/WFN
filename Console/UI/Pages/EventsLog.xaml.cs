@@ -290,16 +290,16 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             if (selectedEntry != null && Reason.Equals(cell.Column) && cell.IsFocused && cell.IsSelected)
             {
                 // Filter which blocked the connection
-                string blockingFilterDetails;
+                string matchingFilterDetails;
                 try
                 {
-                    NetshHelper.FilterResult blockingFilter = NetshHelper.getBlockingFilter(int.Parse(selectedEntry.FilterId), refreshData: RefreshFilterData);
+                    FilterResult matchingFilter = NetshHelper.getMatchingFilterInfo(int.Parse(selectedEntry.FilterId), refreshData: RefreshFilterData);
                     RefreshFilterData = false;
-                    blockingFilterDetails = blockingFilter != null ? $"\n-----------------------------------------\nFilter rule which triggered the event:\n\t{selectedEntry.FilterId}: {blockingFilter.name} - {blockingFilter.description}\n" : "\n\n... No filter rule found ...";
+                    matchingFilterDetails = matchingFilter != null ? $"\n-----------------------------------------\nFilter rule which triggered the event:\n\t{selectedEntry.FilterId}: {matchingFilter.Name} - {matchingFilter.Description}\n" : "\n\n... No filter rule found ...";
                 } catch (Exception ex)
                 {
-                    LogHelper.Warning("Cannot get blocking filter:" + ex.Message);
-                    blockingFilterDetails = $"\n-----------------------------------------\nCannot get blocking filter: {ex.Message}";
+                    LogHelper.Warning("Cannot get filter rule:" + ex.Message);
+                    matchingFilterDetails = $"\n-----------------------------------------\nCannot get filter rule: {ex.Message}";
                 }
 
                 //// Other matching filters for process
@@ -317,7 +317,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 //{
                 //    reasonDetails += "\n... no matching rules found ...";
                 //}
-                showToolTip((Control)cell, selectedEntry.Reason_Info + blockingFilterDetails); // + reasonDetails);
+                showToolTip((Control)cell, selectedEntry.Reason_Info + matchingFilterDetails); // + reasonDetails);
             }
             else
             {
