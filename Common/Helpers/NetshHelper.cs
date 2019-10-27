@@ -30,6 +30,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 if (rr.exitCode == 0)
                 {
                     xmlDoc = SafeLoadXml(rr.outputData.ToString());
+                    //xmlDoc = UnSafeLoadXml(rr.outputData.ToString());
                 }
                 else
                 {
@@ -70,6 +71,25 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 {
                     reader.Dispose();
                 }
+            }
+            return xmlDoc;
+        }
+
+        internal static XmlDocument UnSafeLoadXml(string xml)
+        {
+            try
+            {
+                xmlDoc = new XmlDocument {
+                    InnerXml = xml,
+                    XmlResolver = null
+                };
+
+                //File.WriteAllText(@"c:\temp\filters_compare.xml", xml);
+            }
+            catch (Exception xe)
+            {
+                xmlDoc = null;
+                LogHelper.Error(xe.Message, xe);
             }
             return xmlDoc;
         }
