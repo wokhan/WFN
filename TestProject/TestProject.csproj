@@ -43,6 +43,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Interop.NetFwTypeLib">
+      <HintPath>..\Common\obj\x86\Debug\Interop.NetFwTypeLib.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -56,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Common\CusttomSettingsProviderTest.cs" />
     <Compile Include="Common\Network\Helper\NetshHelperTest.cs" />
+    <Compile Include="Common\Network\Helper\FirewallHelperTest.cs" />
     <Compile Include="Console\Helpers\ViewModels\GeoConnection2Tests.cs" />
     <Compile Include="Common\Network\Helper\DnsResolverTest.cs" />
   </ItemGroup>
