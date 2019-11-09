@@ -6,55 +6,117 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
-namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
+namespace Harrwiss.Common.Network.Helper
 {
+    public enum FiltersContextEnum
+    {
+        NONE,
+        FILTERS,
+        WFPSTATE
+    }
+
+    public class FilterResult
+    {
+        public int FilterId { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public FiltersContextEnum FoundIn { get; set; } = FiltersContextEnum.NONE;
+        public Boolean HasErrors { get; set; } = false;
+    }
+
     /// <summary>
     /// Helper for executing netsh commands and parsing the results.
     /// </summary>
-    public class NetshHelper
+    public static class NetshHelper
     {
-        public class FilterResult
+        internal static XmlDocument FILTERS_XMLDOC = null;
+        internal static XmlDocument WFPSTATE_XMLDOC = null;
+
+        internal static FilterResult FILTER_RESULT_ERROR = new FilterResult
         {
-            public string name { get; set; }
-            public string description { get; set; }
+            FilterId = 0,
+            Name = "No filter found",
+            Description = "",
+            HasErrors = true
+        };
+
+        internal static void Init(bool refreshData = false)
+        {
+            if (FILTERS_XMLDOC == null || WFPSTATE_XMLDOC == null || refreshData) { 
+                FILTERS_XMLDOC = LoadWfpFilters(); // firewall filters
+                WFPSTATE_XMLDOC = LoadWfpState(); // all filters added by other provider e.g. firewall apps
+            }
         }
 
-        internal static XmlDocument xmlDoc = null;
-        public static FilterResult getBlockingFilter(int filterId, bool refreshData = false)
+        public static FilterResult FindMatchingFilterInfo(int filterId, bool refreshData = false)
         {
-            if (xmlDoc == null || refreshData)
+            Init(refreshData);
+            if (FILTERS_XMLDOC != null)
             {
-                String sys32Folder = Environment.GetFolderPath(Environment.SpecialFolder.System);
-                RunResult rr = runCommandCapturing(sys32Folder + @"\netsh.exe", @"wfp show filters file=-");
-                if (rr.exitCode == 0)
+                FilterResult fr = FindFilterId(filterId);
+                if (fr == null && WFPSTATE_XMLDOC != null)
                 {
-                    xmlDoc = new XmlDocument() { XmlResolver = null };
-                    XmlReader reader = XmlReader.Create(rr.outputData.ToString(), new XmlReaderSettings() { XmlResolver = null });
-                    xmlDoc.Load(reader);
+                   fr = FindWfpStateFilterId(filterId);
                 }
-                else
-                {
-                    xmlDoc = null;
-                    LogHelper.Debug($"netsh error: exitCode={rr.exitCode}\noutput: {rr.outputData.ToString().Substring(1, 300)}...\nerror: { rr.errorData.ToString() }");
-                }
+                return fr ?? FILTER_RESULT_ERROR;
             }
-
-            if (xmlDoc != null)
-            {
-                FilterResult fr = parseFilters(filterId, xmlDoc);
-                return fr;
-            }
-            return null;
+            return FILTER_RESULT_ERROR;
         }
 
-        static FilterResult parseFilters(int filterId, XmlDocument doc)
+        public static FilterResult FindMatchingFilterByKey(string filterKey, bool refreshData = false)
         {
-            XmlNode root = doc.DocumentElement;
+            Init(refreshData);
+            if (FILTERS_XMLDOC != null)
+            {
+                FilterResult fr = FindFilterKey(filterKey);
+                if (fr == null && WFPSTATE_XMLDOC != null)
+                {
+                    fr = FindWfpStateFilterKey(filterKey);
+                }
+                return fr ?? FILTER_RESULT_ERROR;
+            }
+            return FILTER_RESULT_ERROR;
+        }
 
-            // Add the namespace.
-            XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
+        internal static XmlDocument LoadWfpFilters()
+        {
+            XmlDocument xmlDoc;
+            String sys32Folder = Environment.GetFolderPath(Environment.SpecialFolder.System);
+            RunResult rr = RunCommandCapturing(sys32Folder + @"\netsh.exe", @"wfp show filters file=-");
+            if (rr.exitCode == 0)
+            {
+                xmlDoc = SafeLoadXml(rr.outputData.ToString());
+            }
+            else
+            {
+                xmlDoc = null;
+                LogHelper.Debug($"netsh error: exitCode={rr.exitCode}\noutput: {rr.outputData.ToString().Substring(1, Math.Min(rr.outputData.Length - 1, 300))}...\nerror: { rr.errorData?.ToString() }");
+            }
+            return xmlDoc;
+        }
+        internal static XmlDocument LoadWfpState()
+        {
+            XmlDocument xmlDoc;
+            String sys32Folder = Environment.GetFolderPath(Environment.SpecialFolder.System);
+            RunResult rr = RunCommandCapturing(sys32Folder + @"\netsh.exe", @"wfp show state file=-");
+            if (rr.exitCode == 0)
+            {
+                xmlDoc = SafeLoadXml(rr.outputData.ToString());
+            }
+            else
+            {
+                xmlDoc = null;
+                LogHelper.Debug($"netsh error: exitCode={rr.exitCode}\noutput: {rr.outputData.ToString().Substring(1, Math.Min(rr.outputData.Length - 1, 300))}...\nerror: { rr.errorData?.ToString() }");
+            }
+            return xmlDoc;
+        }
 
+        internal static FilterResult FindFilterId(int filterId)
+        {
+            XmlNode root = FILTERS_XMLDOC.DocumentElement;
+            XmlNamespaceManager nsmgr = new XmlNamespaceManager(FILTERS_XMLDOC.NameTable);
             try
             {
                 XmlNode filtersNode = root.FirstChild;
@@ -64,8 +126,92 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 {
                     fr = new FilterResult();
                     XmlNode displayData = filter["displayData"];
-                    fr.name = displayData["name"].InnerText;
-                    fr.description = displayData["description"].InnerText;
+                    fr.FilterId = filterId;
+                    fr.Name = displayData["name"].InnerText;
+                    fr.Description = displayData["description"].InnerText;
+                    fr.FoundIn = FiltersContextEnum.FILTERS;
+                }
+                return fr;
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error(e.Message, e);
+            }
+            return null;
+        }
+
+        internal static FilterResult FindFilterKey(string filterKey)
+        {
+            XmlNode root = FILTERS_XMLDOC.DocumentElement;
+            XmlNamespaceManager nsmgr = new XmlNamespaceManager(FILTERS_XMLDOC.NameTable);
+
+            try
+            {
+                XmlNode filtersNode = root.FirstChild;
+                XmlNode filter = filtersNode.SelectSingleNode("item[filterKey='" + filterKey + "']", nsmgr);
+                FilterResult fr = null;
+                if (filter != null)
+                {
+                    fr = new FilterResult();
+                    fr.FilterId = int.Parse(filter["filterId"].InnerText);
+                    XmlNode displayData = filter["displayData"];
+                    fr.Name = displayData["name"].InnerText;
+                    fr.Description = displayData["description"].InnerText;
+                    fr.FoundIn = FiltersContextEnum.FILTERS;
+                }
+                return fr;
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error(e.Message, e);
+            }
+            return null;
+        }
+        internal static FilterResult FindWfpStateFilterKey(string filterKey)
+        {
+            XmlNode root = WFPSTATE_XMLDOC.DocumentElement;
+            XmlNamespaceManager nsmgr = new XmlNamespaceManager(WFPSTATE_XMLDOC.NameTable);
+            try
+            {
+                // / wfpstate / layers / item[14] / filters / item[1] / filterKey
+                XmlNode filtersNode = root.SelectSingleNode("layers");
+                XmlNode filter = filtersNode.SelectSingleNode("//filters/item[filterKey='" + filterKey + "']", nsmgr);
+                FilterResult fr = null;
+                if (filter != null)
+                {
+                    fr = new FilterResult();
+                    fr.FilterId = int.Parse(filter["filterId"].InnerText);
+                    XmlNode displayData = filter["displayData"];
+                    fr.Name = displayData["name"].InnerText;
+                    fr.Description = displayData["description"].InnerText;
+                    fr.FoundIn = FiltersContextEnum.WFPSTATE;
+                }
+                return fr;
+
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error(e.Message, e);
+            }
+            return null;
+        }
+
+        internal static FilterResult FindWfpStateFilterId(int filterId)
+        {
+            XmlNode root = WFPSTATE_XMLDOC.DocumentElement;
+            XmlNamespaceManager nsmgr = new XmlNamespaceManager(WFPSTATE_XMLDOC.NameTable);
+            try
+            {
+                XmlNode filtersNode = root.SelectSingleNode("layers");
+                XmlNode filter = filtersNode.SelectSingleNode("//filters/item[filterId=" + filterId + "]", nsmgr);
+                FilterResult fr = null;
+                if (filter != null)
+                {
+                    fr = new FilterResult();
+                    XmlNode displayData = filter["displayData"];
+                    fr.Name = displayData["name"].InnerText;
+                    fr.Description = displayData["description"].InnerText;
+                    fr.FoundIn = FiltersContextEnum.WFPSTATE;
                 }
                 return fr;
             }
@@ -84,7 +230,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             internal int exitCode = -1;
         }
 
-        static RunResult runCommandCapturing(string command, string args, string workingDir = null)
+        static RunResult RunCommandCapturing(string command, string args, string workingDir = null)
         {
             RunResult rr = new RunResult();
             try
@@ -101,7 +247,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                         CreateNoWindow = true,
                         WindowStyle = ProcessWindowStyle.Hidden
                     };
-                    // note: outputData.appendLine should not be used because it can cause a break in the middle of a output line when the buffer is reached
+                    // note: outputData.appendLine should not be used because it can cause a break in the middle of an output line when the buffer is reached
                     p.OutputDataReceived += (sender, arg) => { rr.outputData.Append(arg.Data); rr.dataLineCnt++; };
                     p.ErrorDataReceived += (sender, arg) => { rr.errorData.AppendLine(arg.Data); };
                     p.EnableRaisingEvents = false;
@@ -120,6 +266,54 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 rr.errorData.AppendLine(ex.Message);
             }
             return rr;
+        }
+        internal static XmlDocument SafeLoadXml(string xml)
+        {
+            XmlReader reader = null;
+            XmlDocument xmlDoc = null;
+            try
+            {
+                // CA3075 - Unclear message: Unsafe overload of 'LoadXml' 
+                // see: https://github.com/dotnet/roslyn-analyzers/issues/2477
+                xmlDoc = new XmlDocument() { XmlResolver = null };
+                StringReader sreader = new System.IO.StringReader(xml);
+                reader = XmlReader.Create(sreader, new XmlReaderSettings() { XmlResolver = null });
+                xmlDoc.Load(reader);
+            }
+            catch (Exception xe)
+            {
+                xmlDoc = null;
+                LogHelper.Error(xe.Message, xe);
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Dispose();
+                }
+            }
+            return xmlDoc;
+        }
+
+        internal static XmlDocument UnSafeLoadXml(string xml)
+        {
+            XmlDocument xmlDoc = null;
+            try
+            {
+                xmlDoc = new XmlDocument
+                {
+                    InnerXml = xml,
+                    XmlResolver = null
+                };
+
+                //File.WriteAllText(@"c:\temp\filters_compare.xml", xml);
+            }
+            catch (Exception xe)
+            {
+                xmlDoc = null;
+                LogHelper.Error(xe.Message, xe);
+            }
+            return xmlDoc;
         }
     }
 }
