@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using MaxMind.Db;
 using MaxMind.GeoIP2;
 
-namespace Harrwiss.TestProject.Console.Helpers.ViewModels
+namespace TestProject.ConsoleTests
 {
     [TestClass()]
     public class GeoConnection2Tests
