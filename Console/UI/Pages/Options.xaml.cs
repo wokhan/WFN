@@ -10,6 +10,7 @@ using Wokhan.WindowsFirewallNotifier.Common;
 using System.Linq;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using System.Windows.Threading;
+using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -35,6 +36,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
             Settings.Default.Save();
+            InstallHelper.SetAuditPolConnection(enableSuccess: Settings.Default.AuditPolEnableSuccessEvent, enableFailure:true);
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)

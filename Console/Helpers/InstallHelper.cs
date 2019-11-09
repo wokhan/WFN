@@ -8,6 +8,7 @@ using Wokhan.WindowsFirewallNotifier.Common.Properties;
 using System.Reflection;
 using System.ServiceProcess;
 using System.Linq;
+using Wokhan.WindowsFirewallNotifier.Common;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
 {
@@ -16,7 +17,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
         /// <summary>
         /// 
         /// </summary>
-        public static bool ApplyChanges(bool disableLogging, bool removeNotifierTask, Action<bool, string> callback)
+        public static bool UninstallCheck(bool disableAuditPolicy, bool removeNotifierTask, Action<bool, string> callback)
         {
             /*if (reallowOutgoing && !FirewallHelper.RestoreWindowsFirewall())
             {
@@ -24,8 +25,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
                 return false;
             }*/
 
-            if (disableLogging
-                && !ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\auditpol.exe", "/set /subcategory:{0CCE9226-69AE-11D9-BED3-505054503030} /failure:disable"))
+            if (disableAuditPolicy
+                && !SetAuditPolConnection(enableSuccess: false, enableFailure: false))
             {
                 callback(false, Resources.MSG_UNINST_DISABLE_LOG_ERR);
                 return false;
@@ -51,11 +52,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
         {
             if (IsInstalled())
             {
-                RemoveTask();
+                RemoveTask();  // will be re-created below
             }
 
             if (ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\reg.exe", @"ADD HKLM\SYSTEM\CurrentControlSet\Control\Lsa /v SCENoApplyLegacyAuditPolicy /t REG_DWORD /d 1 /f")
-                && ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\auditpol.exe", "/set /subcategory:{0CCE9226-69AE-11D9-BED3-505054503030} /failure:enable /success:disable"))
+                && SetAuditPolConnection(enableSuccess: Settings.Default.AuditPolEnableSuccessEvent, enableFailure: true)
+                )
             {
                 if (FirewallHelper.EnableWindowsFirewall())
                 {
@@ -92,6 +94,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
             return true;
         }
 
+        public static bool SetAuditPolConnection(bool enableSuccess, bool enableFailure)
+        {
+            string successOption = enableSuccess ? "/success:enable" : "/success:disable";
+            string failureOption = enableFailure ? "/failure:enable" : "/failure:disable";
+            return ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\auditpol.exe", "/set /subcategory:{0CCE9226-69AE-11D9-BED3-505054503030} " + successOption + " " + failureOption);
+        }
         private static bool CreateDefaultRules()
         {
             bool ret = true;

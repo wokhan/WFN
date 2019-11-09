@@ -216,5 +216,17 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
                 this["FilterTcpOnlyEvents"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AuditPolEnableSuccessEvent {
+            get {
+                return ((bool)(this["AuditPolEnableSuccessEvent"]));
+            }
+            set {
+                this["AuditPolEnableSuccessEvent"] = value;
+            }
+        }
     }
 }
