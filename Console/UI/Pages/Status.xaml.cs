@@ -65,7 +65,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
             else if (isInstalled)
             {
-                InstallHelper.ApplyChanges(!isEnabled(status), !isOutBlockNotifierEnabled(status), callback);
+                InstallHelper.UninstallCheck(!isEnabled(status), !isOutBlockNotifierEnabled(status), callback);
             }
 
             init();
