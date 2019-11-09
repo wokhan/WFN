@@ -6,7 +6,7 @@ using Harrwiss.Common.Network.Helper;
 namespace TestProject.CommonTests
 {
     /// 
-    /// Test NetShHelper to retrieve filterId information. Note that filterId is generated at runtime and therefore may change 
+    /// Test NetShHelper to retrieve filterId information. Note that filterId and even filterKey is generated at runtime and therefore may change 
     /// after a reboot etc.
     /// 
     [TestClass]
@@ -18,7 +18,7 @@ namespace TestProject.CommonTests
             Assert.IsTrue(UacHelper.CheckProcessElevated(), "Only admin can run this test - restart as admin");
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void TestFindMatchingFilterInfo()
         {
             // Default Outbound (at the end of the filters xml)
@@ -68,28 +68,24 @@ namespace TestProject.CommonTests
             Assert.IsTrue(result.Description != null);
             Assert.AreEqual(result.FoundIn, FiltersContextEnum.WFPSTATE);
         }
-
         [TestMethod]
         public void TestFindMatchingFilterInfo3()
         {
             // Boot time filter
             int filterId = FindRuntimeFilterIdByFilterKey(@"{935b7f48-0ede-44dd-9bc2-e00bb635cda3}");
-            FilterResult result = NetshHelper.FindMatchingFilterInfo(filterId); // Boot time filter (id's may vary?)
+            FilterResult result = NetshHelper.FindMatchingFilterInfo(filterId); 
             Assert.IsFalse(result.HasErrors);
             Assert.IsNotNull(result);
             Console.WriteLine($"name={result.Name}, description={result.Description}");
             Assert.AreEqual("Boot Time Filter", result.Name, true);
             Assert.IsTrue(result.Description != null);
         }
-
-        
-
-        [TestMethod]
+        //[TestMethod] filterKey can change
         public void TestFindMatchingFilterInfo4()
         {
             // Port scanning prevention filter (wfpstate filter)
             int filterId = FindRuntimeFilterIdByFilterKey(@"{a3dfb1bd-bea6-4b91-b103-e64a545e8e78}");
-            FilterResult result = NetshHelper.FindMatchingFilterInfo(filterId); // Boot time filter (id's may vary?)
+            FilterResult result = NetshHelper.FindMatchingFilterInfo(filterId); 
             Assert.IsNotNull(result);
             Assert.IsFalse(result.HasErrors);
             Console.WriteLine($"name={result.Name}, description={result.Description}");
