@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Windows.Media;
+using System.Net;
+using Harrwiss.Common.Network.Helper;
+using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
@@ -13,6 +16,26 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         public string FriendlyPath { get; set; }
         public string ServiceName { get; set; }
         public string TargetIP { get; set; }
+        public string TargetHostName { get
+            {
+                try
+                {
+                    if (DnsResolver.CachedIPHostEntryDict.TryGetValue(IPAddress.Parse(TargetIP), out CachedIPHostEntry value))
+                    {
+                        return value.ToolTipText;
+                    }
+                    else
+                    {
+                        return "...";
+                    }
+                }
+                catch (Exception e)
+                {
+                    LogHelper.Warning(e.Message);
+                }
+                return "";
+            }
+        }
         public string TargetPort { get; set; }
         public string Protocol { get; set; }
         public string Direction { get; set; }

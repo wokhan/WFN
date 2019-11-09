@@ -101,6 +101,7 @@
   <ItemGroup>
     <Compile Include="Extensions\ProcessExtensions.cs" />
     <Compile Include="Extensions\StreamExtensions.cs" />
+    <Compile Include="Helpers\DnsResolver.cs" />
     <Compile Include="Helpers\NetshHelper.cs" />
     <Compile Include="Helpers\CommonHelper.cs" />
     <Compile Include="Helpers\CustomSettingsProvider.cs" />
