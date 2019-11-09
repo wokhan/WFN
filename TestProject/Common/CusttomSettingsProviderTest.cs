@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
-namespace TestProject.Common
+namespace TestProject.CommonTests
 {
     [TestClass]
     public class CustomSettingsProviderTest
@@ -14,7 +14,7 @@ namespace TestProject.Common
         /// Tests whether global settings are properly initialized from this test project (path names to config files e.g. WFN.config)
         /// If not, check the Build > Output path
         /// 
-        public void testInit()
+        public void TestInit()
         {
             Assert.IsNotNull(Settings.Default);
 

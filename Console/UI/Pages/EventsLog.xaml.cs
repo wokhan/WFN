@@ -14,6 +14,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using Harrwiss.Common.Network.Helper;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -117,21 +118,21 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                             LogEntryViewModel lastEntry = _logEntries.Count > 0 ? _logEntries.Last() : null;
                             try
                             {
-                                int pid = int.Parse(getReplacementString(entry, 0));
-                                string direction = getReplacementString(entry, 2) == @"%%14593" ? "Out" : "In";
+                                int pid = int.Parse(GetReplacementString(entry, 0));
+                                string direction = GetReplacementString(entry, 2) == @"%%14593" ? "Out" : "In";
                                 string targetIp;
                                 string targetPort;
                                 if (direction == "Out")
                                 {
                                     // outgoing target ip
-                                    targetIp = getReplacementString(entry, 5);
-                                    targetPort = getReplacementString(entry, 6);
+                                    targetIp = GetReplacementString(entry, 5);
+                                    targetPort = GetReplacementString(entry, 6);
                                 }
                                 else
                                 {
                                     // incoming source ip
-                                    targetIp = getReplacementString(entry, 3);
-                                    targetPort = getReplacementString(entry, 4);
+                                    targetIp = GetReplacementString(entry, 3);
+                                    targetPort = GetReplacementString(entry, 4);
                                 }
 
                                 bool canBeIgnored = lastEntry != null
@@ -143,9 +144,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
                                 if (!canBeIgnored)
                                 {
-                                    string friendlyPath = getReplacementString(entry, 1) == "-" ? "System" : FileHelper.GetFriendlyPath(getReplacementString(entry, 1));
+                                    string friendlyPath = GetReplacementString(entry, 1) == "-" ? "System" : FileHelper.GetFriendlyPath(GetReplacementString(entry, 1));
                                     string fileName = System.IO.Path.GetFileName(friendlyPath);
-                                    int protocol = int.Parse(getReplacementString(entry, 7));
+                                    int protocol = int.Parse(GetReplacementString(entry, 7));
 
                                     // try to get the servicename from pid (works only if service is running)
                                     string serviceName = services.ContainsKey(pid) ? services[pid].Name : "-";
@@ -154,8 +155,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                                     {
                                         Pid = pid,
                                         Timestamp = entry.TimeGenerated,
-                                        Icon = IconHelper.GetIcon(getReplacementString(entry, 1)),
-                                        Path = getReplacementString(entry, 1) == "-" ? "System" : getReplacementString(entry, 1),
+                                        Icon = IconHelper.GetIcon(GetReplacementString(entry, 1)),
+                                        Path = GetReplacementString(entry, 1) == "-" ? "System" : GetReplacementString(entry, 1),
                                         FriendlyPath = friendlyPath,
                                         ServiceName = serviceName,
                                         FileName = fileName,
@@ -163,7 +164,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                                         TargetPort = targetPort,
                                         Protocol = FirewallHelper.getProtocolAsString(protocol),
                                         Direction = direction,
-                                        FilterId = getReplacementString(entry, 8),
+                                        FilterId = GetReplacementString(entry, 8),
                                         Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId),
                                         Reason_Info = entry.Message,
                                     };
@@ -217,7 +218,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
         }
 
-        private string getReplacementString(EventLogEntry entry, int i)
+        private static string GetReplacementString(EventLogEntry entry, int i)
         {
             // check out of bounds
             if (i < entry.ReplacementStrings.Length)
@@ -293,13 +294,18 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 string matchingFilterDetails;
                 try
                 {
-                    FilterResult matchingFilter = NetshHelper.getMatchingFilterInfo(int.Parse(selectedEntry.FilterId), refreshData: RefreshFilterData);
+                    FilterResult matchingFilter = NetshHelper.FindMatchingFilterInfo(int.Parse(selectedEntry.FilterId), refreshData: RefreshFilterData);
                     RefreshFilterData = false;
-                    matchingFilterDetails = matchingFilter != null ? $"\n-----------------------------------------\nFilter rule which triggered the event:\n\t{selectedEntry.FilterId}: {matchingFilter.Name} - {matchingFilter.Description}\n" : "\n\n... No filter rule found ...";
+                    string filterInfo = WrapTextTrunc($"{ matchingFilter.Name} - { matchingFilter.Description}", 120, "\t");
+                    matchingFilterDetails = matchingFilter != null ? $"\n\n" +
+                        $"Filter rule which triggered the event:\n" +
+                        $"\t{selectedEntry.FilterId}: {filterInfo}\n" : 
+                        "\n\n... No filter rule found ...";
                 } catch (Exception ex)
                 {
                     LogHelper.Warning("Cannot get filter rule:" + ex.Message);
-                    matchingFilterDetails = $"\n-----------------------------------------\nCannot get filter rule: {ex.Message}";
+                    matchingFilterDetails = $"\n\n" +
+                        $"Cannot get filter rule: {ex.Message}";
                 }
 
                 //// Other matching filters for process
@@ -317,12 +323,21 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 //{
                 //    reasonDetails += "\n... no matching rules found ...";
                 //}
-                showToolTip((Control)cell, selectedEntry.Reason_Info + matchingFilterDetails); // + reasonDetails);
+                string serviceNameInfo = !string.IsNullOrEmpty(selectedEntry.ServiceName) ? $"{selectedEntry.ServiceName}" : "-";
+                ShowToolTip((Control)cell, selectedEntry.Reason_Info + $"\n\nService:\t{serviceNameInfo}" + matchingFilterDetails); // + reasonDetails);
             }
             else
             {
-                closeToolTip();
+                CloseToolTip();
             }
+        }
+
+        private string WrapTextTrunc(string text, int maxChars, string indent = " ") { 
+            if (text.Length > maxChars)
+            {
+                return Regex.Replace(text, "(.{" + maxChars + "})", "$1\n" + indent);
+            }
+            return text;
         }
 
         private static ToolTip toolTipInstance = new ToolTip
@@ -333,7 +348,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             IsOpen = false
         };
 
-        private void showToolTip(UIElement placementTarget, String text)
+        private void ShowToolTip(UIElement placementTarget, String text)
         {
             toolTipInstance.PlacementTarget = placementTarget;
             toolTipInstance.Content = text;
@@ -341,7 +356,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             placementTarget.LostFocus += PlacementTarget_LostFocus;
         }
 
-        private void closeToolTip()
+        private static void CloseToolTip()
         {
             toolTipInstance.Content = "";
             toolTipInstance.IsOpen = false;
@@ -350,11 +365,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void PlacementTarget_LostFocus(object sender, RoutedEventArgs e)
         {
-            closeToolTip();
+            CloseToolTip();
             (sender as UIElement).LostFocus -= PlacementTarget_LostFocus;
         }
 
-        private void showToolTip(Control control)
+        private void ShowToolTip(Control control)
         {
             // shows the controls tooltip on demand
             if (control.ToolTip != null)
