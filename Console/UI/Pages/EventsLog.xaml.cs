@@ -15,6 +15,7 @@ using System.Windows.Media;
 using Harrwiss.Common.Network.Helper;
 using System.Net;
 using System.Text.RegularExpressions;
+using Wokhan.WindowsFirewallNotifier.Common;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -33,7 +34,15 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             set { timer.IsEnabled = value; }
         }
 
-        public bool IsTCPOnlyEnabled { get; set; }
+        public bool IsTCPOnlyEnabled { 
+            get {
+                return Settings.Default.FilterTcpOnlyEvents;
+            }
+            set {
+                Settings.Default.FilterTcpOnlyEvents = value;
+                Settings.Default.Save();
+            } 
+        }
 
         private DispatcherTimer timer = new DispatcherTimer() { IsEnabled = true };
 
@@ -51,6 +60,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         public EventsLog()
         {
             InitializeComponent();
+
+            if (!Settings.Default.EnableDnsResolver)
+            {
+                RemoteHostCol.Visibility = Visibility.Hidden;
+            }
 
             if (((App)Application.Current).IsElevated)
             {
@@ -184,8 +198,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                         }
                     }
 
-
-                    _ = DnsResolver.ResolveIpAddresses(tcpIPList);
+                    if (Settings.Default.EnableDnsResolver)
+                    {
+                        _ = DnsResolver.ResolveIpAddresses(tcpIPList);
+                    }
 
                     ICollectionView dataView = CollectionViewSource.GetDefaultView(gridLog.ItemsSource);
                     if (dataView.SortDescriptions.Count < 1)
@@ -276,16 +292,16 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private void GridLog_CellSelected(object sender, RoutedEventArgs e)
         {
             //System.Console.WriteLine($"CellSelected: {sender}, {e.Source}, {e.Handled}, {e.OriginalSource}, {e}");
-            showMatchingRuleAndDetails((DataGrid)e.Source, (DataGridCell)e.OriginalSource);  // case when selection changed
+            ShowMatchingRuleAndDetails((DataGrid)e.Source, (DataGridCell)e.OriginalSource);  // case when selection changed
 
         }
         private void GridLog_GotFocus(object sender, RoutedEventArgs e)
         {
             //System.Console.WriteLine($"Cell GotFocus: {sender}, {e.Source}, {e.Handled}, {e.OriginalSource}, {e}");
-            showMatchingRuleAndDetails((DataGrid)e.Source, (DataGridCell)e.OriginalSource);  // case when row already selected and cell got focus
+            ShowMatchingRuleAndDetails((DataGrid)e.Source, (DataGridCell)e.OriginalSource);  // case when row already selected and cell got focus
         }
 
-        private void showMatchingRuleAndDetails(DataGrid grid, DataGridCell cell)
+        private void ShowMatchingRuleAndDetails(DataGrid grid, DataGridCell cell)
         {
             LogEntryViewModel selectedEntry = (LogEntryViewModel)grid.SelectedItem;
             if (selectedEntry != null && Reason.Equals(cell.Column) && cell.IsFocused && cell.IsSelected)

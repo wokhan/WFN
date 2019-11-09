@@ -22,7 +22,7 @@ namespace Harrwiss.Common.Network.Helper
         public bool IsResolved { get; set; } = false;
 
         public bool HasErrors { get; set; } = false;
-        public string ToolTipText { get; set; } = "...";
+        public string DisplayText { get; set; } = "...";
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ namespace Harrwiss.Common.Network.Helper
                     {
                         HostEntry = resolvedEntry,
                         IsResolved = true,
-                        ToolTipText = resolvedEntry.HostName
+                        DisplayText = resolvedEntry.HostName
                     };
                     PutEntry(ip, entry);
                 }
@@ -106,7 +106,7 @@ namespace Harrwiss.Common.Network.Helper
                     },
                     IsResolved = false,
                     HasErrors = true,
-                    ToolTipText = e.Message
+                    DisplayText = e.Message
                 };
                 PutEntry(ip, entry);
             }
@@ -119,12 +119,12 @@ namespace Harrwiss.Common.Network.Helper
                 if (CachedIPHostEntryDict.ContainsKey(ip))
                 {
                     CachedIPHostEntryDict[ip] = entry;
-                    LogHelper.Debug($"End resolve IPHostEntry for {ip}: IsResolved={entry.IsResolved}, HasErrors={entry.HasErrors}, ToolTipText={entry.ToolTipText}");
+                    LogHelper.Debug($"End resolve IPHostEntry for {ip}: IsResolved={entry.IsResolved}, HasErrors={entry.HasErrors}, ToolTipText={entry.DisplayText}");
                 }
                 else
                 {
                     CachedIPHostEntryDict.Add(ip, entry);
-                    LogHelper.Debug($"Start resolve IPHostEntry for {ip}: IsResolved={entry.IsResolved}, HasErrors={entry.HasErrors}, ToolTipText={entry.ToolTipText}");
+                    LogHelper.Debug($"Start resolve IPHostEntry for {ip}: IsResolved={entry.IsResolved}, HasErrors={entry.HasErrors}, ToolTipText={entry.DisplayText}");
                 }
             }
         }
