@@ -86,7 +86,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ManualTests\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <Choose>

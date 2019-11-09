@@ -6,7 +6,7 @@ using static Wokhan.WindowsFirewallNotifier.Common.Helpers.FirewallHelper;
 using System.Linq;
 using NetFwTypeLib;
 
-namespace TestProject.Common.Network.Helper
+namespace TestProject.CommonTests
 {
     [TestClass]
     public class FirewallHelperTest
@@ -28,8 +28,6 @@ namespace TestProject.Common.Network.Helper
         {
             IEnumerable<Rule> ret = GetRules(AlsoGetInactive: false);
             string exePath = @"C:\Windows\System32\svchost.exe";
-            //string exePath = @"C:\tools\TorBrowser\Tor Browser\Browser\firefox.exe";
-            //string exePath = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe";
             const int PROF_ALL = (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL;
             Console.WriteLine($"{exePath}");
             int cntMatch = 0;

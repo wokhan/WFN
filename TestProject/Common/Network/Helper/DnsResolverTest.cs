@@ -4,9 +4,9 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Harrwiss.Common.Network.Helper;
 
-
-namespace Harrwiss.Common.Network.Helper
+namespace TestProject.CommonTests
 {
     [TestClass]
     public class DnsResolverTest
@@ -24,7 +24,7 @@ namespace Harrwiss.Common.Network.Helper
                 Dns.GetHostAddresses("www.google.ch").FirstOrDefault().ToString()
             };
 
-            Console.WriteLine("Resolve first 3 entries:");
+            System.Console.WriteLine("Resolve first 3 entries:");
             Task<bool> t = DnsResolver.ResolveIpAddresses(ipList, maxEntriesToResolve: 4);
             t.Wait();
             LogDictEntries();
@@ -38,7 +38,7 @@ namespace Harrwiss.Common.Network.Helper
                 "23.211.5.15", // a23-211-5-15.deploy.static.akamaitechnologies.com
                 "1.78.64.10", // sp1-78-64-10.msa.spmode.ne.jp
             };
-            Console.WriteLine("Resolve next 3 entries:");
+            System.Console.WriteLine("Resolve next 3 entries:");
             t = DnsResolver.ResolveIpAddresses(ipList, maxEntriesToResolve: 3);
             t.Wait();
             LogDictEntries();
