@@ -3,6 +3,7 @@ using System.Windows.Media;
 using System.Net;
 using Harrwiss.Common.Network.Helper;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
@@ -20,9 +21,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             {
                 try
                 {
-                    if (DnsResolver.CachedIPHostEntryDict.TryGetValue(IPAddress.Parse(TargetIP), out CachedIPHostEntry value))
+                    if (Settings.Default.EnableDnsResolver && DnsResolver.CachedIPHostEntryDict.TryGetValue(IPAddress.Parse(TargetIP), out CachedIPHostEntry value))
                     {
-                        return value.ToolTipText;
+                        return value.DisplayText;
                     }
                     else
                     {

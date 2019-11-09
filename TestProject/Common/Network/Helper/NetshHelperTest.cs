@@ -84,19 +84,19 @@ namespace TestProject.CommonTests
 
         
 
-    [TestMethod]
-    public void TestFindMatchingFilterInfo4()
-    {
-        // Port scanning prevention filter (wfpstate filter)
-        int filterId = FindRuntimeFilterIdByFilterKey(@"{a3dfb1bd-bea6-4b91-b103-e64a545e8e78}");
-        FilterResult result = NetshHelper.FindMatchingFilterInfo(filterId); // Boot time filter (id's may vary?)
-        Assert.IsNotNull(result);
-        Assert.IsFalse(result.HasErrors);
-        Console.WriteLine($"name={result.Name}, description={result.Description}");
-        Assert.AreEqual("Port Scanning Prevention Filter", result.Name, true);
-        Assert.IsTrue(result.Description != null);
-    }
-    [TestMethod]
+        [TestMethod]
+        public void TestFindMatchingFilterInfo4()
+        {
+            // Port scanning prevention filter (wfpstate filter)
+            int filterId = FindRuntimeFilterIdByFilterKey(@"{a3dfb1bd-bea6-4b91-b103-e64a545e8e78}");
+            FilterResult result = NetshHelper.FindMatchingFilterInfo(filterId); // Boot time filter (id's may vary?)
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.HasErrors);
+            Console.WriteLine($"name={result.Name}, description={result.Description}");
+            Assert.AreEqual("Port Scanning Prevention Filter", result.Name, true);
+            Assert.IsTrue(result.Description != null);
+        }
+        [TestMethod]
         public void TestGetMatchingFilterInfo_notfound()
         {
             FilterResult result = NetshHelper.FindMatchingFilterInfo(1); 

@@ -89,8 +89,8 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Service"  Binding="{Binding ServiceName}" Width="0.1*"/>
-                    <DataGridTextColumn Header="IP" Binding="{Binding TargetIP}" Width="0.1*"/>
-                    <DataGridTextColumn Header="Name" Binding="{Binding TargetHostName}" Width="0.1*"/>
+                    <DataGridTextColumn Header="Remote IP" Binding="{Binding TargetIP}" Width="0.1*"/>
+                    <DataGridTextColumn x:Name="RemoteHostCol" Header="Remote Host" Binding="{Binding TargetHostName}" Width="0.1*" />
                     <DataGridTextColumn Header="Port" Binding="{Binding TargetPort}" Width="Auto"/>
                     <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol}" Width="Auto"/>
                     <DataGridTextColumn Header="FilterId" Binding="{Binding FilterId}" Width="Auto"/>
