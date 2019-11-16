@@ -88,6 +88,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             private BitmapSource _icon = null;
             public BitmapSource Icon { get { return _icon = _icon ?? IconHelper.GetIcon(ModulePath, true); } }
 
+            public Owner()
+            {
+
+            }
             public Owner(TCPIP_OWNER_MODULE_BASIC_INFO inf)
             {
                 ModuleName = Marshal.PtrToStringAuto(inf.p1);
