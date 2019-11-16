@@ -351,6 +351,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
                 return ret;
             }*/
 
+            if (row.OwningPid == 0)
+            {
+                Owner owner = new Owner();
+                owner.ModuleName = "System";
+                owner.ModulePath = "System";
+                return owner;
+            }
+
             IntPtr buffer = IntPtr.Zero;
             try
             {
