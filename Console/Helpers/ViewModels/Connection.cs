@@ -3,8 +3,10 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Media.Imaging;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Harrwiss.Common.Network.Helper;
 using System.Linq;
 using System.Collections.Generic;
+using System.Net;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
@@ -33,8 +35,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             this._localPort = ownerMod.LocalPort.ToString();
             this.CreationTime = ownerMod.CreationTime;
             this._localAddress = ownerMod.LocalAddress;
+            ResolveLocalIpToHostnameTask(this._localAddress);
             this._protocol = ownerMod.Protocol;
             this._remoteAddress = ownerMod.RemoteAddress;
+            ResolveRemoteIpToHostnameTask(this._remoteAddress);
             this._remotePort = (ownerMod.RemotePort == -1 ? String.Empty : ownerMod.RemotePort.ToString());
             this.LastSeen = DateTime.Now;
             this._state = Enum.GetName(typeof(IPHelper.MIB_TCP_STATE), ownerMod.State);
@@ -74,6 +78,25 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             }
 
             GroupKey = String.Format("{0} ({1}) - [{2}]", ProcName, Path, PID);
+        }
+
+        internal void ResolveRemoteIpToHostnameTask(string ip)
+        {
+            async void doResolve()
+            {
+                CachedIPHostEntry entry = await DnsResolver.ResolveIpAddress(ip).ConfigureAwait(true);
+                RemoteHostName = entry.DisplayText;
+            };
+            doResolve();
+        }
+        internal void ResolveLocalIpToHostnameTask(string ip)
+        {
+            async void doResolve()
+            {
+                CachedIPHostEntry entry = await DnsResolver.ResolveIpAddress(ip).ConfigureAwait(true);
+                LocalHostName = entry.DisplayText;
+            };
+            doResolve();
         }
 
         private bool _isAccessDenied;
@@ -117,7 +140,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             //lvi.Protocol = b.Protocol;
             if (this.RemoteAddress != b.RemoteAddress)
             {
-                this.RemoteAddress = b.RemoteAddress;
+                ResolveRemoteIpToHostnameTask(this._remoteAddress); 
             }
 
             var newPort = (b.RemotePort == -1 ? String.Empty : b.RemotePort.ToString());
@@ -156,6 +179,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             set { _localAddress = value; NotifyPropertyChanged(nameof(LocalAddress)); }
         }
 
+        private string _localHostName;
+        public string LocalHostName
+        {
+            get { return _localHostName; }
+            set { _localHostName = value; NotifyPropertyChanged(nameof(LocalHostName)); }
+        }
+
+
         private string _localPort;
         public string LocalPort
         {
@@ -167,7 +198,16 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         public string RemoteAddress
         {
             get { return _remoteAddress; }
-            set { _remoteAddress = value; NotifyPropertyChanged(nameof(RemoteAddress)); }
+            set { _remoteAddress = value;
+                NotifyPropertyChanged(nameof(RemoteAddress)); 
+            }
+        }
+
+        private string _remoteHostName;
+        public string RemoteHostName
+        {
+            get { return _remoteHostName; }
+            set { _remoteHostName = value; NotifyPropertyChanged(nameof(RemoteHostName)); }
         }
 
         private string _remotePort;
