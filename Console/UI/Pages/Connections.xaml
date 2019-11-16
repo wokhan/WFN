@@ -118,9 +118,24 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol, Mode=OneTime}" />
-                    <DataGridTextColumn Header="LocalAddress" Binding="{Binding LocalAddress, Mode=OneTime}" />
+                    <DataGridTextColumn Header="LocalAddress" Binding="{Binding LocalAddress, Mode=OneTime}" >
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="{Binding LocalHostName}" />
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="LocalPort" Binding="{Binding LocalPort, Mode=OneTime}" />
-                    <DataGridTextColumn Header="RemoteAddress" Binding="{Binding RemoteAddress, Mode=OneTime}" />
+                    <DataGridTextColumn Header="RemoteAddress" Binding="{Binding RemoteAddress, Mode=OneTime}">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="{Binding RemoteHostName}" />
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="RemoteHostName" Binding="{Binding RemoteHostName, Mode=Default}"/>
                     <DataGridTextColumn Header="RemotePort" Binding="{Binding RemotePort, Mode=OneTime}" />
                     <DataGridTextColumn Header="State" Binding="{Binding State, Mode=OneWay}" />
                     <DataGridTextColumn Header="CreationTime" Binding="{Binding CreationTime, Mode=OneTime}" />

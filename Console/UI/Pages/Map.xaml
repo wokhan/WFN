@@ -173,7 +173,7 @@
                                                         </Image.Style>
                                                     </Image>
                                                     <TextBlock Grid.Column="1" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Text="{Binding Name,Mode=OneTime}">
-                                                <Run Text="{Binding Items.Count,Mode=OneWay,StringFormat=' ({0})'}"/>
+                                                        <Run Text="{Binding Items.Count,Mode=OneWay,StringFormat=' ({0})'}"/>
                                                     </TextBlock>
                                                 </Grid>
                                             </Border>
@@ -221,6 +221,19 @@
                                                 </Style>
                                             </TextBlock.Style>
                                         </TextBlock>
+                                        <TextBlock Foreground="{Binding Brush}" Margin="20,0,0,0">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Text" Value="{Binding RemoteHostName}" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsChecked,ElementName=btnGrpOwner}" Value="False">
+                                                            <Setter Property="Text" Value="{Binding Owner}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+
                                     </WrapPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
