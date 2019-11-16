@@ -14,6 +14,22 @@ namespace Harrwiss.Common.Network.Helper
     {
         public readonly static CachedIPHostEntry EMTPY = new CachedIPHostEntry();
 
+        internal static Func<IPAddress, Exception, CachedIPHostEntry> ERROR_ENTRY = (ip, e) =>
+        {
+            CachedIPHostEntry entry = new CachedIPHostEntry
+            {
+                HostEntry = new IPHostEntry
+                {
+                    HostName = "unknown",
+                    AddressList = ip != null ? new IPAddress[] { ip } : new IPAddress[] { }
+                },
+                IsResolved = false,
+                HasErrors = true,
+                DisplayText = e.Message
+            };
+            return entry;
+        };
+
         public IPHostEntry HostEntry { get; set; } = new IPHostEntry()
         {
             HostName = "unknown",
@@ -33,9 +49,9 @@ namespace Harrwiss.Common.Network.Helper
         /// <summary>
         /// Dictionary of resolved IP addresses.
         /// </summary>
-        public static Dictionary<IPAddress, CachedIPHostEntry> CachedIPHostEntryDict = new Dictionary<IPAddress, CachedIPHostEntry>();
+        public static readonly Dictionary<IPAddress, CachedIPHostEntry> CachedIPHostEntryDict = new Dictionary<IPAddress, CachedIPHostEntry>();
 
-        public static async Task<bool> ResolveIpAddresses(List<String> ipAddressList, int maxEntriesToResolve = 100)
+        public static async Task<bool> ResolveIpAddresses(List<String> ipAddressList, int maxEntriesToResolve = 1000)
         {
             if (ipAddressList == null)
             {
@@ -61,7 +77,7 @@ namespace Harrwiss.Common.Network.Helper
         /// <param name="ipAddressList">IP address list to resolve</param>
         /// <param name="maxEntriesToResolve">Max entries to resolve for this task</param>
         /// <returns></returns>
-        public static async Task<bool> ResolveIpAddresses(List<IPAddress> ipAddressList, int maxEntriesToResolve = 100)
+        public static async Task<bool> ResolveIpAddresses(List<IPAddress> ipAddressList, int maxEntriesToResolve = 1000)
         {
             return await Task.Run(() =>
             {
@@ -74,6 +90,50 @@ namespace Harrwiss.Common.Network.Helper
                 });
                 return true;
             }).ConfigureAwait(false);
+        }
+
+        public static async Task<CachedIPHostEntry> ResolveIpAddress(string ip)
+        {
+            return await Task.Run(() =>
+            {
+                if (!IsIPValid(ip))
+                {
+                    return CachedIPHostEntry.EMTPY;
+                }
+                IPAddress ipa = null;
+                try
+                {
+                    ipa = IPAddress.Parse(ip);
+                    ResolveIP(ipa);
+                    return CachedIPHostEntryDict[ipa];
+                } catch (Exception e)
+                {
+                    return CachedIPHostEntry.ERROR_ENTRY(ipa, e);
+                }
+            }).ConfigureAwait(false);
+        }
+
+        internal static bool IsIPValid(string ip)
+        {
+            if (string.IsNullOrWhiteSpace(ip) || ip == "0.0.0.0" || ip == "::" || ip == "::0")
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public static string getResolvedHostName(string ipAddress)
+        {
+            if (!IsIPValid(ipAddress))
+            {
+                return "invalid ip";
+            }
+            CachedIPHostEntryDict.TryGetValue(IPAddress.Parse(ipAddress), out CachedIPHostEntry ipHost);
+            if (ipHost == null)
+            {
+                return "unkown host";
+            }
+            return ipHost.DisplayText;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
@@ -97,18 +157,7 @@ namespace Harrwiss.Common.Network.Helper
             }
             catch (Exception e)
             {
-                CachedIPHostEntry entry = new CachedIPHostEntry
-                {
-                    HostEntry = new IPHostEntry
-                    {
-                        HostName = "unknown",
-                        AddressList = new IPAddress[] { ip }
-                    },
-                    IsResolved = false,
-                    HasErrors = true,
-                    DisplayText = e.Message
-                };
-                PutEntry(ip, entry);
+                PutEntry(ip, CachedIPHostEntry.ERROR_ENTRY(ip, e));
             }
         }
 
