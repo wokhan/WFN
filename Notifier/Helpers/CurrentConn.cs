@@ -39,9 +39,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
         public List<int> LocalPortArray { get { return _localPortArray; } }
         public string LocalPort { get; set; }
         public string Target { get; set; }
-        public string TargetInfoUrl => $"http://whois.domaintools.com/{Target}";
+        //public string TargetInfoUrl => $"http://whois.domaintools.com/{Target}";  // uses captcha validation :(
+        //public string TargetInfoUrl => $"https://bgpview.io/ip/{Target}";
+        public string TargetInfoUrl => string.Format(Common.Settings.Default.TargetInfoUrl, Target);  // eg: $"https://bgpview.io/ip/{Target}"
         public string TargetPort { get; set; }
-        public string TargetPortUrl => $"https://www.speedguide.net/port.php?port={TargetPort}";
+        //public string TargetPortUrl => $"https://www.speedguide.net/port.php?port={TargetPort}";
+        public string TargetPortUrl => string.Format(Common.Settings.Default.TargetPortUrl, TargetPort); // eg: $"https://www.speedguide.net/port.php?port={TargetPort}"
+
         public int Protocol { get; set; }
         public string ProtocolAsString { get { return FirewallHelper.getProtocolAsString(Protocol); } }
 

@@ -16,7 +16,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         //Note: .NET framework has no easy way to get the types right, so our cache will be filled with strings.
         private Dictionary<string, object> _valuesCache = new Dictionary<string, object>();
 
-        private static readonly string SectionName = "Wokhan.WindowsFirewallNotifier.Configuration";
+        private static readonly string SectionName = "Wokhan.WindowsFirewallNotifier.Common.Settings";
         private static readonly string applicationSectionName = "applicationSettings";
         private static readonly string userSectionName = "userSettings";
         public static readonly string SharedConfigurationPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "WFN.config");

@@ -53,5 +53,11 @@
     <Setting Name="AuditPolEnableSuccessEvent" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="TargetInfoUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://bgpview.io/ip/{0}</Value>
+    </Setting>
+    <Setting Name="TargetPortUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://www.speedguide.net/port.php?port={0}</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
