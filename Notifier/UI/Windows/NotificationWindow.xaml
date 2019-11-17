@@ -6,7 +6,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         xmlns:settings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common;assembly=Wokhan.WindowsFirewallNotifier.Common"
         xmlns:sampleApp="clr-namespace:Wokhan.WindowsFirewallNotifier.Notifier"
-        Title="WFN - Notification" ResizeMode="NoResize"
+        Title="WFN - Notification" 
         AllowsTransparency="True"
         Background="Transparent"
         SizeToContent="Height"
@@ -20,7 +20,12 @@
         UseLayoutRounding="True"
         BorderThickness="0"
         ScrollViewer.CanContentScroll="False"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}" Visibility="Visible" Loaded="NotificationWindow_Loaded" Initialized="NotificationWindow_Initialized" MouseEnter="NotificationWindow_MouseEnter">
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" 
+        Visibility="Visible" 
+        Loaded="NotificationWindow_Loaded" 
+        Initialized="NotificationWindow_Initialized" 
+        MouseEnter="NotificationWindow_MouseEnter" 
+        WindowState="Normal" StateChanged="NotificationWindow_StateChanged" ResizeMode="CanMinimize">
     <Window.Resources>
         <Storyboard x:Key="animate">
             <ThicknessAnimation Storyboard.TargetProperty="Margin" From="250,0,-250,0" To="0,0,0,0" Duration="0:0:0.5" />
