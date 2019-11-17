@@ -129,7 +129,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                         }
                     }
 
-                    // Check whether this connection has been excluded.
+                    // Check whether this connection has been excluded - exclusion means ignore i.e do not notify
                     if (exclusions != null)
                     {
                         // WARNING: check for regressions
@@ -276,12 +276,14 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 {
                     LogHelper.Debug("No notification window loaded; creating a new one...");
                     window = new NotificationWindow();
+                    MainWindow = window;
                     //this.Run(window);
                 }
 
                 if (window.WindowState == WindowState.Minimized)
                 {
-                    window.WindowState = WindowState.Normal;
+                    //window.WindowState = WindowState.Normal;
+                    window.ShowPendingTrayIcon($"Notifier has pending notifications - double-click the tray icon to show them");
                 }
             }
             catch (Exception e)

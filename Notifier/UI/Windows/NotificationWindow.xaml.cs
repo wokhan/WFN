@@ -19,9 +19,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
     /// <summary>
     /// Interaction logic for NotificationWindow.xaml
     /// </summary>
-    public partial class NotificationWindow : Window, INotifyPropertyChanged
+    public partial class NotificationWindow : System.Windows.Window, INotifyPropertyChanged
     {
         private bool isDetailsExpanded;
+
+        private System.Windows.Forms.NotifyIcon NotifierTrayIcon;
 
         public double ExpectedTop
         {
@@ -77,6 +79,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             InitializeComponent();
 
+            InitTrayIcon();
+
             this.isDetailsExpanded = expand.IsExpanded;
 
             if (Settings.Default.AccentColor != null)
@@ -90,18 +94,70 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             //Make sure the showConn function is triggered on initial load.
             showConn();
-            NotifyPropertyChanged("NbConnectionsAfter");
-            NotifyPropertyChanged("NbConnectionsBefore");
+            NotifyPropertyChanged(nameof(NbConnectionsAfter));
+            NotifyPropertyChanged(nameof(NbConnectionsBefore));
 
             /*ttip.SetToolTip(btnAlwaysAllow, Resources.MSG_ALLOW);
             ttip.SetToolTip(btnAlwaysBlock, Resources.MSG_BLOCK);
             */
         }
 
+        private void InitTrayIcon()
+        {
+            NotifierTrayIcon = new System.Windows.Forms.NotifyIcon
+            {
+                Icon = Notifier.Properties.Resources.TrayIcon
+            };
+
+            NotifierTrayIcon.MouseDoubleClick +=
+                new System.Windows.Forms.MouseEventHandler
+                    (NotifierTrayIcon_MouseDoubleClick);
+        }
+
+        private void NotifierTrayIcon_MouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            // TODO HARRWISS: NotifyIcon try
+            this.WindowState = WindowState.Normal;
+        }
+
+        private void NotificationWindow_StateChanged(object sender, EventArgs e)
+        {
+            if (this.WindowState == WindowState.Minimized)
+            {
+                this.ShowInTaskbar = false;
+                NotifierTrayIcon.BalloonTipTitle = "WFN Notifier";
+                NotifierTrayIcon.BalloonTipText = "Double-click to open again";
+                NotifierTrayIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+                NotifierTrayIcon.ShowBalloonTip(400);
+                NotifierTrayIcon.Text = "Notifier stays miminized - double-click to open it";
+                NotifierTrayIcon.Visible = true;
+            }
+            else if (this.WindowState == WindowState.Normal)
+            {
+                NotifierTrayIcon.Visible = false;
+                this.ShowInTaskbar = true;
+            }
+        }
+
+        public void ShowPendingTrayIcon(string tooltipText)
+        {
+            if (this.WindowState == WindowState.Minimized && NotifierTrayIcon.Visible)
+            {
+                if (!Notifier.Properties.Resources.TrayIconPending.Equals(NotifierTrayIcon)) 
+                {
+                    NotifierTrayIcon.Icon = Notifier.Properties.Resources.TrayIconPending;
+                    NotifierTrayIcon.Text = tooltipText;
+                    NotifierTrayIcon.BalloonTipTitle = "WFN Notifier";
+                    NotifierTrayIcon.BalloonTipText = tooltipText;
+                    NotifierTrayIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Warning;
+                }
+            }
+        }
+
         private void NotificationWindow_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            NotifyPropertyChanged("NbConnectionsAfter");
-            NotifyPropertyChanged("NbConnectionsBefore");
+            NotifyPropertyChanged(nameof(NbConnectionsAfter));
+            NotifyPropertyChanged(nameof(NbConnectionsBefore));
         }
 
         private void NotificationWindow_Initialized(object sender, EventArgs e)
@@ -149,8 +205,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
                 showConn();
 
-                NotifyPropertyChanged("NbConnectionsAfter");
-                NotifyPropertyChanged("NbConnectionsBefore");
+                NotifyPropertyChanged(nameof(NbConnectionsAfter));
+                NotifyPropertyChanged(nameof(NbConnectionsBefore));
             }
             else
             {
@@ -210,7 +266,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             OptionsView.IsAppEnabled = !String.IsNullOrEmpty(activeConn.CurrentAppPkgId);
 
-            NotifyPropertyChanged("OptionsView");
+            NotifyPropertyChanged(nameof(OptionsView));
         }
 
         /// <summary>
@@ -297,7 +353,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             var tmpSelectedItem = (CurrentConn)lstConnections.SelectedItem;
             lstConnections.SelectedIndex -= 1;
-            ((App)Application.Current).Connections.Remove(tmpSelectedItem);
+            ((App)System.Windows.Application.Current).Connections.Remove(tmpSelectedItem);
         }
 
         private void btnSkipProgram_Click(object sender, RoutedEventArgs e)
@@ -317,7 +373,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 {
                     lstConnections.SelectedIndex -= 1;
                 }
-                ((App)Application.Current).Connections.Remove(connection);
+                ((App)System.Windows.Application.Current).Connections.Remove(connection);
             }
             if (lstConnections.Items.Count == 0)
             {
@@ -393,9 +449,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             {
                 LogHelper.Info("New rule for connection successfully created!");
 
-                for (int i = ((App)Application.Current).Connections.Count - 1; i >= 0; i--)
+                for (int i = ((App)System.Windows.Application.Current).Connections.Count - 1; i >= 0; i--)
                 {
-                    var c = ((App)Application.Current).Connections[i];
+                    var c = ((App)System.Windows.Application.Current).Connections[i];
                     string[] svc = new string[0];
                     if (!String.IsNullOrEmpty(c.CurrentService))
                     {
@@ -404,11 +460,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                     if (FirewallHelper.GetMatchingRules(c.CurrentPath, c.CurrentAppPkgId, c.Protocol, c.Target, c.TargetPort, c.LocalPort, svc, c.CurrentLocalUserOwner, false).Any()) //FIXME: LocalPort may have multiple!)
                     {
                         LogHelper.Debug("Auto-removing a similar connection...");
-                        ((App)Application.Current).Connections.Remove(c);
+                        ((App)System.Windows.Application.Current).Connections.Remove(c);
                     }
                 }
 
-                if (((App)Application.Current).Connections.Count == 0)
+                if (((App)System.Windows.Application.Current).Connections.Count == 0)
                 {
                     LogHelper.Debug("No connections left; closing notification window.");
                     this.Close();
