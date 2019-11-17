@@ -228,5 +228,29 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
                 this["AuditPolEnableSuccessEvent"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://bgpview.io/ip/{0}")]
+        public string TargetInfoUrl {
+            get {
+                return ((string)(this["TargetInfoUrl"]));
+            }
+            set {
+                this["TargetInfoUrl"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://www.speedguide.net/port.php?port={0}")]
+        public string TargetPortUrl {
+            get {
+                return ((string)(this["TargetPortUrl"]));
+            }
+            set {
+                this["TargetPortUrl"] = value;
+            }
+        }
     }
 }
