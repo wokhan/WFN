@@ -61,13 +61,20 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 }
             }
 
-            ClientSettingsSection appSettings = GetApplicationSettingsSection(cfg);
-            var sets = collection.Cast<SettingsProperty>().Where(x => !IsUserSetting(x));
-            ExtractSettings(sets, r, appSettings);
+            try
+            {
+                ClientSettingsSection appSettings = GetApplicationSettingsSection(cfg);
+                var sets = collection.Cast<SettingsProperty>().Where(x => !IsUserSetting(x));
+                ExtractSettings(sets, r, appSettings);
 
-            ClientSettingsSection userInitialSettings = GetUserSettingsSection(cfg);
-            sets = collection.Cast<SettingsProperty>().Where(x => IsUserSetting(x));
-            ExtractSettings(sets, r, userInitialSettings);
+                ClientSettingsSection userInitialSettings = GetUserSettingsSection(cfg);
+                sets = collection.Cast<SettingsProperty>().Where(x => IsUserSetting(x));
+                ExtractSettings(sets, r, userInitialSettings);
+            }
+            catch ( Exception e )
+            {
+                Console.WriteLine("Error loading config");
+            }
 
             return r;
         }
@@ -80,10 +87,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
             foreach (var s in sets)
             {
-                var value = newValues.Settings.Get(s.Name).Value.ValueXml.FirstChild.Value;
-
+                // need to provide default value for missing key sections in case something is not there
+                var value = newValues.Settings.Get(s.Name)?.Value?.ValueXml?.FirstChild?.Value ?? s.DefaultValue;
                 _valuesCache[s.Name] = value;
-
                 r.Remove(s.Name);
                 r.Add(new SettingsPropertyValue(new SettingsProperty(s)) { IsDirty = false, SerializedValue = value });
             }

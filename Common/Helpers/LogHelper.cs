@@ -100,7 +100,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 }
             }
 
-            if (Settings.Default.FirstRun)
+            if (Settings.Default?.FirstRun ?? true)  // avoid crash if corrupt settings cause an exception to be written at the same time
             {
                 writeLog("INIT", String.Format("OS: {0} ({1} bit) / .Net CLR: {2} / Path: {3} / Version: {4} ({5} bit)", Environment.OSVersion, Environment.Is64BitOperatingSystem ? 64 : 32, Environment.Version, AppDomain.CurrentDomain.BaseDirectory, appVersion, Environment.Is64BitProcess ? 64 : 32));
             }
@@ -132,7 +132,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         public static void Debug(string msg)
 #endif
         {
-            if (Settings.Default.EnableVerboseLogging)
+            if (Settings.Default?.EnableVerboseLogging ?? false)
             {
 #if DEBUG
                 writeLog("DEBUG", msg, memberName, filePath, lineNumber);
@@ -151,7 +151,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         public static void Info(string msg)
 #endif
         {
-            if (Settings.Default.EnableVerboseLogging)
+            if (Settings.Default?.EnableVerboseLogging ?? false)
             {
 #if DEBUG
                 writeLog("INFO", msg, memberName, filePath, lineNumber);
