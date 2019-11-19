@@ -15,7 +15,109 @@ using Wokhan.WindowsFirewallNotifier.Common.Properties;
 using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
-{
+{ 
+    public class NotifierTrayIcon
+    {
+        private readonly System.Windows.Forms.NotifyIcon trayIcon;
+        private readonly System.Windows.Forms.ContextMenu contextMenu;
+        private readonly System.Windows.Forms.MenuItem menuExit;
+        private readonly System.ComponentModel.IContainer components;
+
+        private bool activitySwitch = false;
+        private bool activityTipShown = false;
+
+        private readonly NotificationWindow window;
+
+        public static NotifierTrayIcon Init(NotificationWindow window)
+        {
+            NotifierTrayIcon factory = new NotifierTrayIcon(window);
+            return factory;
+        }
+
+        private NotifierTrayIcon() { }
+        private NotifierTrayIcon(NotificationWindow window) {
+            //  https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.notifyicon?redirectedfrom=MSDN&view=netframework-4.8
+            this.window = window;
+            components = new System.ComponentModel.Container();
+
+            menuExit = new System.Windows.Forms.MenuItem();
+            menuExit.Index = 0;
+            menuExit.Text = @"E&xit";
+            menuExit.Click += new System.EventHandler(MenuExit_Click);
+
+            contextMenu = new System.Windows.Forms.ContextMenu();
+            contextMenu.MenuItems.AddRange(
+                  new System.Windows.Forms.MenuItem[] {menuExit });
+
+            // Create the NotifyIcon. 
+            trayIcon = new System.Windows.Forms.NotifyIcon(components);
+            trayIcon.Icon = Notifier.Properties.Resources.TrayIcon;
+            trayIcon.ContextMenu = contextMenu;
+            trayIcon.Text = "Notifier stays hidden - double-click to open";
+            trayIcon.Visible = false;
+
+            // Handle the DoubleClick event to activate the windw
+            trayIcon.DoubleClick += new System.EventHandler(TrayIcon_DoubleClick);
+        }
+
+        private void MenuExit_Click(object Sender, EventArgs e)
+        {
+            // Dispose and close the window which exits the app
+            Dispose();
+            window.Close();
+        }
+
+        private void TrayIcon_DoubleClick(object Sender, EventArgs e)
+        {
+            window.RestoreWindowState();
+        }
+
+        public void Show()
+        {
+            trayIcon.Visible = true;
+        }
+        public void Hide()
+        {
+            trayIcon.Visible = false;
+        }
+
+        public void ShowActivity(string tooltipText)
+        {
+            if (trayIcon.Visible)
+            {
+                if (activitySwitch)
+                {
+                    activitySwitch = false;
+                    trayIcon.Icon = Notifier.Properties.Resources.TrayIcon;
+                }
+                else
+                {
+                    activitySwitch = true;
+                    trayIcon.Icon = Notifier.Properties.Resources.TrayIconBlocked3;
+                }
+                showBalloonTip(tooltipText);
+            }
+        }
+
+        private void showBalloonTip(string tooltipText)
+        {
+            if (!activityTipShown)
+            {
+                activityTipShown = true;
+                trayIcon.BalloonTipTitle = "WFN Notifier";
+                trayIcon.BalloonTipText = tooltipText;
+                trayIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Warning;
+                trayIcon.ShowBalloonTip(400);
+            }
+        }
+
+        public void Dispose()
+        {
+            if (components != null)
+                components.Dispose();
+        }
+    }
+
     /// <summary>
     /// Interaction logic for NotificationWindow.xaml
     /// </summary>
@@ -23,7 +125,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
     {
         private bool isDetailsExpanded;
 
-        private System.Windows.Forms.NotifyIcon NotifierTrayIcon;
+        private readonly NotifierTrayIcon notifierTrayIcon;
 
         public double ExpectedTop
         {
@@ -79,7 +181,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             InitializeComponent();
 
-            InitTrayIcon();
+            notifierTrayIcon = NotifierTrayIcon.Init(this);
 
             this.isDetailsExpanded = expand.IsExpanded;
 
@@ -102,55 +204,30 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             */
         }
 
-        private void InitTrayIcon()
+        internal void RestoreWindowState()
         {
-            NotifierTrayIcon = new System.Windows.Forms.NotifyIcon
-            {
-                Icon = Notifier.Properties.Resources.TrayIcon
-            };
-
-            NotifierTrayIcon.MouseDoubleClick +=
-                new System.Windows.Forms.MouseEventHandler
-                    (NotifierTrayIcon_MouseDoubleClick);
-        }
-
-        private void NotifierTrayIcon_MouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            // TODO HARRWISS: NotifyIcon try
-            this.WindowState = WindowState.Normal;
+            WindowState = WindowState.Normal;
         }
 
         private void NotificationWindow_StateChanged(object sender, EventArgs e)
         {
-            if (this.WindowState == WindowState.Minimized)
+            if (WindowState == WindowState.Minimized)
             {
-                this.ShowInTaskbar = false;
-                NotifierTrayIcon.BalloonTipTitle = "WFN Notifier";
-                NotifierTrayIcon.BalloonTipText = "Double-click to open again";
-                NotifierTrayIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-                NotifierTrayIcon.ShowBalloonTip(400);
-                NotifierTrayIcon.Text = "Notifier stays miminized - double-click to open it";
-                NotifierTrayIcon.Visible = true;
+                notifierTrayIcon.Show();
+                ShowInTaskbar = false;
             }
-            else if (this.WindowState == WindowState.Normal)
+            else 
             {
-                NotifierTrayIcon.Visible = false;
-                this.ShowInTaskbar = true;
+                notifierTrayIcon.Hide();
+                ShowInTaskbar = true;
             }
         }
 
-        public void ShowPendingTrayIcon(string tooltipText)
+        public void ShowActivityTrayIcon(string tooltipText)
         {
-            if (this.WindowState == WindowState.Minimized && NotifierTrayIcon.Visible)
+            if (WindowState == WindowState.Minimized)
             {
-                if (!Notifier.Properties.Resources.TrayIconPending.Equals(NotifierTrayIcon)) 
-                {
-                    NotifierTrayIcon.Icon = Notifier.Properties.Resources.TrayIconPending;
-                    NotifierTrayIcon.Text = tooltipText;
-                    NotifierTrayIcon.BalloonTipTitle = "WFN Notifier";
-                    NotifierTrayIcon.BalloonTipText = tooltipText;
-                    NotifierTrayIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Warning;
-                }
+                notifierTrayIcon.ShowActivity(tooltipText);
             }
         }
 

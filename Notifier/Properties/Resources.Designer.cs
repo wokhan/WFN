@@ -83,6 +83,26 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon TrayIconBlocked2 {
+            get {
+                object obj = ResourceManager.GetObject("TrayIconBlocked2", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon TrayIconBlocked3 {
+            get {
+                object obj = ResourceManager.GetObject("TrayIconBlocked3", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon TrayIconPending {
             get {
                 object obj = ResourceManager.GetObject("TrayIconPending", resourceCulture);
