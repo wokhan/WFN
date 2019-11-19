@@ -224,6 +224,12 @@
   <ItemGroup>
     <Resource Include="Resources\TrayIconBlocked.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TrayIconBlocked2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TrayIconBlocked3.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if "$(ConfigurationName)" == "Release" (copy "$(TargetPath)" "$(TargetDir)..\Published")</PostBuildEvent>
