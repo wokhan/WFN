@@ -20,7 +20,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
     {
         private readonly System.Windows.Forms.NotifyIcon trayIcon;
         private readonly System.Windows.Forms.ContextMenu contextMenu;
-        private readonly System.Windows.Forms.MenuItem menuExit;
+        private readonly System.Windows.Forms.MenuItem menuDiscard;
+        private readonly System.Windows.Forms.MenuItem menuShow;
         private readonly System.ComponentModel.IContainer components;
 
         private bool activitySwitch = false;
@@ -40,34 +41,59 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             this.window = window;
             components = new System.ComponentModel.Container();
 
-            menuExit = new System.Windows.Forms.MenuItem();
-            menuExit.Index = 0;
-            menuExit.Text = @"E&xit";
-            menuExit.Click += new System.EventHandler(MenuExit_Click);
+            menuShow = new System.Windows.Forms.MenuItem
+            {
+                Index = 0,
+                Text = "&Show"
+            };
+            menuShow.Click += new System.EventHandler(MenuShow_Click);
+
+            // TODO: maybe??
+            //menuBlockSilently = new System.Windows.Forms.MenuItem
+            //{
+            //    Index = 0,
+            //    Text = "&Exit and block silently"
+            //};
+            //menuBlockSilently.Click += new System.EventHandler(MenuBlockSilently_Click);
+
+            menuDiscard = new System.Windows.Forms.MenuItem
+            {
+                Index = 0,
+                Text = "&Discard and close"
+            };
+            menuDiscard.Click += new System.EventHandler(MenuClose_Click);
+
 
             contextMenu = new System.Windows.Forms.ContextMenu();
             contextMenu.MenuItems.AddRange(
-                  new System.Windows.Forms.MenuItem[] {menuExit });
+                  new System.Windows.Forms.MenuItem[] {menuShow, menuDiscard });
 
             // Create the NotifyIcon. 
-            trayIcon = new System.Windows.Forms.NotifyIcon(components);
-            trayIcon.Icon = Notifier.Properties.Resources.TrayIcon;
-            trayIcon.ContextMenu = contextMenu;
-            trayIcon.Text = "Notifier stays hidden - double-click to open";
-            trayIcon.Visible = false;
+            trayIcon = new System.Windows.Forms.NotifyIcon(components)
+            {
+                Icon = Notifier.Properties.Resources.TrayIcon,
+                ContextMenu = contextMenu,
+                Text = "Notifier stays hidden when minimized - click to open",
+                Visible = false
+            };
 
-            // Handle the DoubleClick event to activate the windw
-            trayIcon.DoubleClick += new System.EventHandler(TrayIcon_DoubleClick);
+            trayIcon.Click += new System.EventHandler(TrayIcon_Click);
         }
 
-        private void MenuExit_Click(object Sender, EventArgs e)
+        private void MenuShow_Click(object Sender, EventArgs e)
+        {
+            window.RestoreWindowState();
+        }
+        
+
+        private void MenuClose_Click(object Sender, EventArgs e)
         {
             // Dispose and close the window which exits the app
             Dispose();
             window.Close();
         }
 
-        private void TrayIcon_DoubleClick(object Sender, EventArgs e)
+        private void TrayIcon_Click(object Sender, EventArgs e)
         {
             window.RestoreWindowState();
         }
@@ -95,11 +121,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                     activitySwitch = true;
                     trayIcon.Icon = Notifier.Properties.Resources.TrayIconBlocked3;
                 }
-                showBalloonTip(tooltipText);
+                ShowBalloonTip(tooltipText);
             }
         }
 
-        private void showBalloonTip(string tooltipText)
+        private void ShowBalloonTip(string tooltipText)
         {
             if (!activityTipShown)
             {
