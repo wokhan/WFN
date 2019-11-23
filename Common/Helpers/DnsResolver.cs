@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
-namespace Harrwiss.Common.Network.Helper
+namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     public class CachedIPHostEntry
     {

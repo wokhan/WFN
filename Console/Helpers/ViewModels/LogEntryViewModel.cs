@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Media;
 using System.Net;
-using Harrwiss.Common.Network.Helper;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common;
 

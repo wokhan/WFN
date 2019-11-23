@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Media.Imaging;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
-using Harrwiss.Common.Network.Helper;
 using System.Linq;
 using System.Collections.Generic;
 using System.Net;

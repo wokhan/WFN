@@ -4,7 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Harrwiss.Common.Network.Helper;
+using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
 namespace TestProject.CommonTests
 {
