@@ -279,11 +279,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     MainWindow = window;
                     //this.Run(window);
                 }
-
                 if (window.WindowState == WindowState.Minimized)
                 {
-                    //window.WindowState = WindowState.Normal;
-                    window.ShowActivityTrayIcon($"Notifier has pending notifications - double-click the tray icon to show them");
+                    window.ShowActivityTrayIcon($"Notifier has pending notifications - click the tray icon to show them");
                 }
             }
             catch (Exception e)
