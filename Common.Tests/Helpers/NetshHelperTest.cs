@@ -1,8 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
-namespace TestProject.CommonTests
+namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     /// 
     /// Test NetShHelper to retrieve filterId information. Note that filterId and even filterKey is generated at runtime and therefore may change 

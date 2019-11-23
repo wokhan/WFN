@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 using MaxMind.Db;
 using MaxMind.GeoIP2;
 
-namespace TestProject.ConsoleTests
+namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
     [TestClass()]
     public class GeoConnection2Tests
