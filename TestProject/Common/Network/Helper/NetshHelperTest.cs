@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
-using Harrwiss.Common.Network.Helper;
 
 namespace TestProject.CommonTests
 {

@@ -12,7 +12,6 @@ using System.ComponentModel;
 using System.Data;
 using System.Windows.Data;
 using System.Windows.Media;
-using Harrwiss.Common.Network.Helper;
 using System.Net;
 using System.Text.RegularExpressions;
 using Wokhan.WindowsFirewallNotifier.Common;
