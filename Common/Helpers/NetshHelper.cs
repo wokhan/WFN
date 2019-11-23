@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 using System.IO;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
+/// <summary>
+/// NetshHelper executes netsh commands and parses the resulting xml content.
+/// Author: harrwiss / Nov 2019
+/// </summary>
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     public enum FiltersContextEnum

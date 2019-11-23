@@ -8,8 +8,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
+/// <summary>
+/// DnsResolver resolves IP addesses to IPHostEntry records asynchronously and caches them in a dictionary.
+/// Author: harrwiss / Nov 2019
+/// </summary>
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
+    /// <summary>
+    /// An ip host entry for the dictionary.
+    /// </summary>
     public class CachedIPHostEntry
     {
         public readonly static CachedIPHostEntry EMTPY = new CachedIPHostEntry();
@@ -35,9 +42,20 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             HostName = "unknown",
             AddressList = new IPAddress[] { }
         };
+
+        /// <summary>
+        /// Gets the resolved status of an ip address - a resolved entry can have <see cref="HasErrors"/>
+        /// </summary>
         public bool IsResolved { get; set; } = false;
 
+        /// <summary>
+        /// Returns true if an ip address could not be resolved to a host name.
+        /// </summary>
         public bool HasErrors { get; set; } = false;
+        
+        /// <summary>
+        /// Text displayed on the ui - may also return an error message.
+        /// </summary>
         public string DisplayText { get; set; } = "...";
     }
 
