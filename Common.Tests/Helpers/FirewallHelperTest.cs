@@ -6,7 +6,7 @@ using static Wokhan.WindowsFirewallNotifier.Common.Helpers.FirewallHelper;
 using System.Linq;
 using NetFwTypeLib;
 
-namespace TestProject.CommonTests
+namespace Common.Tests.Helpers
 {
     [TestClass]
     public class FirewallHelperTest

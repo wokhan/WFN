@@ -4,10 +4,10 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
-namespace TestProject.CommonTests
+namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
+
     [TestClass]
     public class DnsResolverTest
     {
@@ -18,8 +18,8 @@ namespace TestProject.CommonTests
             List<string> ipList = new List<string>
             {
                 "52.200.121.83",  // origin on ec2-52-200-121-83.compute-1.amazonaws.com
+                "52.200.121.83",  // duplicate
                 "8.8.8.8", // dns.google
-                "52.200.121.83", // ec2-52-200-121-83.compute-1.amazonaws.com
                 "2001:4860:4860::8888", // dns.google
                 Dns.GetHostAddresses("www.google.ch").FirstOrDefault().ToString()
             };

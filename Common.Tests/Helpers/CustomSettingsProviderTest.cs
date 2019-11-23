@@ -1,10 +1,8 @@
 ﻿using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Wokhan.WindowsFirewallNotifier.Common;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
-namespace TestProject.CommonTests
+namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     [TestClass]
     public class CustomSettingsProviderTest
