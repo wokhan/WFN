@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Net;
 using System.Windows.Media;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
@@ -49,7 +50,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
         public int Protocol { get; set; }
         public string ProtocolAsString { get { return FirewallHelper.getProtocolAsString(Protocol); } }
 
-        private string _resolvedHost = null; //FIXME: Is this being used???
+        private string _resolvedHost = null;
         public string ResolvedHost
         {
             get { return _resolvedHost; }
@@ -65,6 +66,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
             get { return _tentativesCounter; }
             set { _tentativesCounter = value; NotifyPropertyChanged(nameof(TentativesCounter)); }
         }
+
     }
 
 }
