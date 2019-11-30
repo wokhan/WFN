@@ -5,3 +5,13 @@ root = true
 [*.{cs,xaml}]
 indent_style = space
 indent_size = 4
+[*.cs]
+
+# CA1305: Specify IFormatProvider
+dotnet_diagnostic.CA1305.severity = silent
+
+# CA1819: Properties should not return arrays
+dotnet_diagnostic.CA1819.severity = silent
+
+# CA1034: Nested types should not be visible
+dotnet_diagnostic.CA1034.severity = silent

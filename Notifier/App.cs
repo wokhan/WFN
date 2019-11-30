@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
@@ -134,23 +136,24 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     {
                         // WARNING: check for regressions
                         LogHelper.Debug("Checking exclusions...");
-                        var exclusion = exclusions.FirstOrDefault(e => e.StartsWith(/*svc ??*/path, StringComparison.CurrentCultureIgnoreCase) || svc != null && svc.All(s => e.StartsWith(s, StringComparison.CurrentCultureIgnoreCase)));
+                        var exclusion = exclusions.FirstOrDefault(e => e.StartsWith(/*svc ??*/path, StringComparison.InvariantCulture) || svc != null && svc.All(s => e.StartsWith(s, StringComparison.InvariantCulture)));
                         if (exclusion != null)
                         {
                             string[] esplit = exclusion.Split(';');
                             if (esplit.Length == 1 ||
-                                    ((esplit[1] == String.Empty || esplit[1] == localPort.ToString()) &&
-                                     (esplit[2] == String.Empty || esplit[2] == target) &&
-                                     (esplit[3] == String.Empty || esplit[3] == targetPort.ToString())))
+                                    (String.IsNullOrEmpty(esplit[1]) || esplit[1] == localPort.ToString()) &&
+                                    (String.IsNullOrEmpty(esplit[2]) || esplit[2] == target) &&
+                                    (String.IsNullOrEmpty(esplit[3]) || esplit[3] == targetPort.ToString())
+                               )
                             {
-                                LogHelper.Info("Connection is excluded!");
+                                LogHelper.Info($"Connection is excluded: {exclusion}");
                                 return false;
                             }
                         }
                     }
 
                     // Check whether this connection is blocked by a rule.
-                    var blockingRules = FirewallHelper.GetMatchingRules(path, ProcessHelper.getAppPkgId(pid), protocol, target, targetPort.ToString(), localPort.ToString(), unsure ? svc : svc.Take(1), ProcessHelper.getLocalUserOwner(pid), true);
+                    var blockingRules = FirewallHelper.GetMatchingRules(path, ProcessHelper.getAppPkgId(pid), protocol, target, targetPort.ToString(), localPort.ToString(), unsure ? svc : svc.Take(1), ProcessHelper.getLocalUserOwner(pid), blockOnly:true, outgoingOnly:true);
                     if (blockingRules.Any())
                     {
                         LogHelper.Info("Connection matches a block-rule!");
@@ -204,7 +207,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                         conn.CurrentServiceDesc = svcdsc.FirstOrDefault();
                     }
 
-                    resolveHostForConnection(conn);
+                    ResolveHostForConnection(conn);
                     //retrieveIcon(conn);
                     conn.Icon = IconHelper.GetIcon(conn.CurrentPath, true);
 
@@ -227,17 +230,22 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             conn.Icon = icon;
         }
 
-        private async void resolveHostForConnection(CurrentConn conn)
+        private static async void ResolveHostForConnection(CurrentConn conn)
         {
             try
             {
-                var host = (await Dns.GetHostEntryAsync(conn.Target)).HostName;
+                conn.ResolvedHost = "...";
+                var host = (await DnsResolver.ResolveIpAddress(conn.Target).ConfigureAwait(true)).HostEntry.HostName; 
+                //var host = (await Dns.GetHostEntryAsync(conn.Target)).HostName;
                 if (conn.Target != host)
                 {
                     conn.ResolvedHost = host;
                 }
             }
-            catch { }
+            catch (Exception e) 
+            {
+                LogHelper.Warning($"Cannot resolve host name for {conn.Target} - Exception: {e.Message}");
+            }
         }
 
 
