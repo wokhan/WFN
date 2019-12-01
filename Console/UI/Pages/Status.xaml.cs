@@ -20,22 +20,18 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         public string LastMessage
         {
             get { return _lastMessage; }
-            private set { _lastMessage = value; NotifyPropertyChanged("LastMessage"); }
+            private set { _lastMessage = value; NotifyPropertyChanged(nameof(LastMessage)); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged(string caller)
+        private void NotifyPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(caller));
-            }
+            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public Status()
         {
             InitializeComponent();
-
             init();
         }
 
@@ -111,6 +107,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
 
             stackOptions.DataContext = status;
+            messsageInfoPanel.DataContext = this;
         }
 
         private void callback(bool isSuccess, string details)

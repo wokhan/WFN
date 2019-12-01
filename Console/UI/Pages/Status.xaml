@@ -1,11 +1,11 @@
-﻿<Page x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.Status"
+﻿<Page
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Pages" x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.Status" 
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="600"
-      DataContext="{Binding RelativeSource={RelativeSource Self}}"
       Title="Status">
     <DockPanel>
         <Border Background="#FFFF7B7B" Style="{StaticResource NonAdminPanel}">
@@ -21,7 +21,7 @@
         </Border>
         <Border Style="{StaticResource ToolBarPanel}">
             <WrapPanel HorizontalAlignment="Left">
-                <Button x:Name="btnSave" Click="btnSave_Click" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
+                <Button x:Name="btnSave" Click="btnSave_Click" IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}">
                     <Grid>
                         <Path HorizontalAlignment="Left" Height="14" Stretch="Uniform" Fill="#FF6C6CD4" Data="{StaticResource Image_Shield}" />
                         <Label Margin="20,0,0,0" Content="Apply" />
@@ -35,32 +35,32 @@
                 </Button>
             </WrapPanel>
         </Border>
-        <Border DataContext="{Binding LastMessage}" Padding="10" DockPanel.Dock="Top">
+        <Border x:Name="messsageInfoPanel" Padding="10" DockPanel.Dock="Top">
             <Border.Style>
-                <Style TargetType="Border" BasedOn="{StaticResource InfoPanel}">
+                <Style TargetType="{x:Type Border}" BasedOn="{StaticResource InfoPanel}">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding}" Value="{x:Null}">
+                        <DataTrigger Binding="{Binding LastMessage}" Value="{x:Null}">
                             <Setter Property="Visibility" Value="Collapsed" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Border.Style>
             <Grid>
-                <TextBlock Text="{Binding}" />
+                <TextBlock Text="{Binding LastMessage}" />
             </Grid>
         </Border>
         <StackPanel x:Name="stackOptions">
             <TextBlock Margin="5" TextWrapping="Wrap" Text="WFN is not a firewall and relies on the Windows embedded firewall when it comes to connections filtering. The table below shows the current Windows firewall status and allows you to manage the same directly." />
             <WrapPanel>
                 <Label FontWeight="Bold" Content="Current profile: "/>
-                <Label Content="{Binding CurrentProfile,FallbackValue=Unknown}" />
+                <Label Content="{Binding CurrentProfile, FallbackValue=Unknown}" />
             </WrapPanel>
             <TextBlock Margin="5" TextWrapping="Wrap" FontStyle="Italic" Text="Note: if you don't know what a profile is all about, the private one usually refers to your home network, while the public one is for public places (restaurant, hotels...). A domain profile is usually for workplaces." />
-            <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
+            <Grid IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}">
                 <Grid.Style>
                     <Style>
                         <Style.Resources>
-                            <Style TargetType="ToggleButton" BasedOn="{StaticResource ToggleSwitch}">
+                            <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource ToggleSwitch}">
                                 <Setter Property="Content" Value="Disabled" />
                                 <Setter Property="Padding" Value="10,5" />
                                 <Style.Triggers>
@@ -69,10 +69,10 @@
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
-                            <Style TargetType="StackPanel">
+                            <Style TargetType="{x:Type StackPanel}">
                                 <Setter Property="Margin" Value="5" />
                             </Style>
-                            <Style TargetType="RadioButton" BasedOn="{StaticResource RadioButtonSlide}">
+                            <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource RadioButtonSlide}">
                                 <Setter Property="Margin" Value="5,0" />
                                 <Style.Triggers>
                                     <Trigger Property="IsEnabled" Value="False">
