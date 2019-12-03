@@ -16,6 +16,9 @@ using System.Windows;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
+// CA1824 Mark assemblies default resource language
+[assembly: NeutralResourcesLanguage("en")]
+
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
