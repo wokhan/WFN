@@ -72,7 +72,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             // Create the NotifyIcon. 
             trayIcon = new System.Windows.Forms.NotifyIcon(components)
             {
-                Icon = Notifier.Properties.Resources.TrayIcon,
+                Icon = Notifier.Properties.Resources.TrayIcon22,
                 ContextMenu = contextMenu,
                 Text = "Notifier stays hidden when minimized - click to open",
                 Visible = false
@@ -115,12 +115,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 if (activitySwitch)
                 {
                     activitySwitch = false;
-                    trayIcon.Icon = Notifier.Properties.Resources.TrayIcon;
+                    trayIcon.Icon = Notifier.Properties.Resources.TrayIcon22;
                 }
                 else
                 {
                     activitySwitch = true;
-                    trayIcon.Icon = Notifier.Properties.Resources.TrayIconBlocked3;
+                    trayIcon.Icon = Notifier.Properties.Resources.TrayIcon21;
                 }
                 ShowBalloonTip(tooltipText);
             }
