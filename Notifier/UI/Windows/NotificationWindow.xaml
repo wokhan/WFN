@@ -13,7 +13,7 @@
         Width="450"
         WindowStyle="None"
         Opacity="0.6"
-        Icon="/Notifier;component/Resources/WFN.ico"
+        Icon="/Notifier;component/Resources/TrayIcon22.ico"
         Topmost="True"
         x:Name="NotifWindow"
         WindowStartupLocation="Manual"
@@ -292,7 +292,7 @@
                         </CheckBox>
                         <CheckBox Grid.Row="5" Margin="3" IsChecked="{Binding OptionsView.IsTargetIPChecked, ElementName=NotifWindow}">
                             <Hyperlink NavigateUri="{Binding TargetInfoUrl}" RequestNavigate="hlk_Navigate">
-                                <TextBlock Text="{Binding Target, FallbackValue='N/A', StringFormat='Target IP: {0}'}" />
+                                <TextBlock Text="{Binding Target, FallbackValue='N/A', StringFormat='Target IP: {0}'}" ToolTip="{Binding ResolvedHost}"/>
                             </Hyperlink>
                         </CheckBox>
                         <TextBlock Grid.Row="6" Margin="3" FontWeight="Bold" Text="Application" />

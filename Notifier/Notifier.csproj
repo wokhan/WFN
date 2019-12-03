@@ -219,16 +219,37 @@
     <Resource Include="Resources\WFN.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\TrayIconBlocked.ico_bak" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\TrayIconBlocked.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\TrayIconBlocked2.ico" />
+    <Resource Include="Resources\TrayIconBlocked2.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\TrayIconBlocked3.ico" />
+    <Resource Include="Resources\TrayIconBlocked3.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon3.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon2off.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon21.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon22.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon23.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon24.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon1.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

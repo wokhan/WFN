@@ -124,6 +124,30 @@
   <data name="TrayIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\TrayIcon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="TrayIcon1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TrayIcon1.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TrayIcon2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TrayIcon2.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TrayIcon21" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TrayIcon21.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TrayIcon22" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TrayIcon22.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TrayIcon23" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TrayIcon23.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TrayIcon24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TrayIcon24.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TrayIcon2off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TrayIcon2off.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TrayIcon3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TrayIcon3.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="TrayIconBlocked2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\TrayIconBlocked2.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
