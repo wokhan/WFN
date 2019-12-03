@@ -110,6 +110,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }).ConfigureAwait(false);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
         public static async Task<CachedIPHostEntry> ResolveIpAddress(string ip)
         {
             return await Task.Run(() =>
