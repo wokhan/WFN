@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -182,7 +183,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             public string SingleServiceName { get; set; }
         }
 
-        private OptionsViewClass _optionsView = new OptionsViewClass();
+        private readonly OptionsViewClass _optionsView = new OptionsViewClass();
         public OptionsViewClass OptionsView { get { return _optionsView; } }
 
 
@@ -194,10 +195,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         /// <summary>
@@ -333,9 +331,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 //On by default. Also: needed to be able to specify port!
                 OptionsView.IsProtocolChecked = true;
             }
+
+            // By default one would usually make a rule on the target ip/port for outgoing connections
+            OptionsView.IsLocalPortChecked = false;
             OptionsView.IsTargetPortEnabled = FirewallHelper.IsIPProtocol(activeConn.Protocol);
             OptionsView.IsTargetPortChecked = FirewallHelper.IsIPProtocol(activeConn.Protocol);
-            OptionsView.IsLocalPortChecked = (activeConn.LocalPortArray.Count == 1 && activeConn.LocalPortArray[0] != 0 && activeConn.LocalPortArray[0] < IPHelper.GetMaxUserPort());
+            OptionsView.IsTargetIPChecked = FirewallHelper.IsIPProtocol(activeConn.Protocol);
 
             if (!String.IsNullOrEmpty(activeConn.CurrentService))
             {
