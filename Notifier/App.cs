@@ -289,7 +289,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 }
                 if (window.WindowState == WindowState.Minimized)
                 {
-                    window.ShowActivityTrayIcon($"Notifier has pending notifications - click the tray icon to show them");
+                    window.ShowActivityTrayIcon($"Notifier notifications pending - click the tray icon to show");  // max 64 chars
                 }
             }
             catch (Exception e)
