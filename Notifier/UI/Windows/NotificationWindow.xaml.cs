@@ -23,6 +23,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         private readonly System.Windows.Forms.ContextMenu contextMenu;
         private readonly System.Windows.Forms.MenuItem menuDiscard;
         private readonly System.Windows.Forms.MenuItem menuShow;
+        private readonly System.Windows.Forms.MenuItem menuConsole;
         private readonly System.ComponentModel.IContainer components;
 
         private bool activitySwitch = false;
@@ -45,7 +46,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             menuShow = new System.Windows.Forms.MenuItem
             {
                 Index = 0,
-                Text = "&Show"
+                Text = "&Show Notifier"
             };
             menuShow.Click += new System.EventHandler(MenuShow_Click);
 
@@ -57,6 +58,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             //};
             //menuBlockSilently.Click += new System.EventHandler(MenuBlockSilently_Click);
 
+            menuConsole = new System.Windows.Forms.MenuItem
+            {
+                Index = 0,
+                Text = "&Open Console"
+            };
+            menuConsole.Click += new System.EventHandler(MenuConsole_Click);
+
             menuDiscard = new System.Windows.Forms.MenuItem
             {
                 Index = 0,
@@ -64,17 +72,16 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             };
             menuDiscard.Click += new System.EventHandler(MenuClose_Click);
 
-
             contextMenu = new System.Windows.Forms.ContextMenu();
             contextMenu.MenuItems.AddRange(
-                  new System.Windows.Forms.MenuItem[] {menuShow, menuDiscard });
+                  new System.Windows.Forms.MenuItem[] {menuShow, menuConsole, menuDiscard });
 
             // Create the NotifyIcon. 
             trayIcon = new System.Windows.Forms.NotifyIcon(components)
             {
                 Icon = Notifier.Properties.Resources.TrayIcon22,
                 ContextMenu = contextMenu,
-                Text = "Notifier stays hidden when minimized - click to open",
+                Text = "Notifier stays hidden when minimized - click to open", // max 64 chars
                 Visible = false
             };
 
@@ -94,6 +101,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             window.Close();
         }
 
+        private void MenuConsole_Click(object Sender, EventArgs e)
+        {
+            Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "WFN.exe"));
+        }
+
+
         private void TrayIcon_Click(object Sender, EventArgs e)
         {
             window.RestoreWindowState();
@@ -110,6 +123,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         public void ShowActivity(string tooltipText)
         {
+            tooltipText = tooltipText ?? "Notifier";
+            if (tooltipText.Length > 64)
+            {
+                // limited to 64 chars in windows
+                tooltipText = tooltipText.Substring(0, 64);
+            }
             if (trayIcon.Visible)
             {
                 if (activitySwitch)
