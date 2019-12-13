@@ -14,8 +14,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Managers
 
         protected override bool OnStartup(StartupEventArgs e)
         {
-            application = new App(e.CommandLine);
-            application.Run();
+            //application = new App(e.CommandLine);
+            //application.Run();
 
             return false;
         }
@@ -27,7 +27,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Managers
 
             base.OnStartupNextInstance(e);
 
-            application.NextInstance(e.CommandLine);
+            //application.NextInstance(e.CommandLine);
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -238,7 +239,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             lstConnections.SelectedIndex = 0;
 
             //Make sure the showConn function is triggered on initial load.
-            showConn();
+            //showConn();
             NotifyPropertyChanged(nameof(NbConnectionsAfter));
             NotifyPropertyChanged(nameof(NbConnectionsBefore));
 
@@ -330,7 +331,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
             else
             {
-                this.Close();
+                //this.Close();
+                WindowState = WindowState.Minimized;
             }
         }
 
@@ -429,8 +431,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         /// <param name="e"></param>
         private void btnNext_Click(object sender, RoutedEventArgs e)
         {
-            lstConnections.SelectedIndex++;
-            lstConnections.ScrollIntoView(lstConnections.SelectedItem);
+            if (lstConnections.Items.Count > 0)
+            {
+                lstConnections.SelectedIndex++;
+                lstConnections.ScrollIntoView(lstConnections.SelectedItem);
+            }
         }
 
         /// <summary>
@@ -440,8 +445,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         /// <param name="e"></param>
         private void btnPrev_Click(object sender, RoutedEventArgs e)
         {
-            lstConnections.SelectedIndex--;
-            lstConnections.ScrollIntoView(lstConnections.SelectedItem);
+            if (lstConnections.Items.Count > 0)
+            {
+                lstConnections.SelectedIndex--;
+                lstConnections.ScrollIntoView(lstConnections.SelectedItem);
+            }
         }
 
         /// <summary>
@@ -475,8 +483,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         private void btnSkip_Click(object sender, RoutedEventArgs e)
         {
             var tmpSelectedItem = (CurrentConn)lstConnections.SelectedItem;
-            lstConnections.SelectedIndex -= 1;
-            ((App)System.Windows.Application.Current).Connections.Remove(tmpSelectedItem);
+            if (tmpSelectedItem != null && lstConnections.Items.Count > 0)
+            {
+                lstConnections.SelectedIndex -= 1;
+                ((App)System.Windows.Application.Current).Connections.Remove(tmpSelectedItem);
+            }
         }
 
         private void btnSkipProgram_Click(object sender, RoutedEventArgs e)
@@ -500,13 +511,15 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
             if (lstConnections.Items.Count == 0)
             {
-                this.Close();
+                //this.Close();
+                WindowState = WindowState.Minimized;
             }
         }
 
         private void btnSkipAll_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            //this.Close();
+            WindowState = WindowState.Minimized;
         }
 
         private void expand_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -587,7 +600,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 if (((App)System.Windows.Application.Current).Connections.Count == 0)
                 {
                     LogHelper.Debug("No connections left; closing notification window.");
-                    this.Close();
+                    //this.Close();
+                    WindowState = WindowState.Minimized;
                 }
             }
             else

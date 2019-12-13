@@ -15,3 +15,6 @@ dotnet_diagnostic.CA1819.severity = silent
 
 # CA1034: Nested types should not be visible
 dotnet_diagnostic.CA1034.severity = silent
+
+# CA1031: Do not catch general exception types
+dotnet_diagnostic.CA1031.severity = none
