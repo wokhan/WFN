@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Wokhan.WindowsFirewallNotifier.Common;
@@ -25,17 +26,154 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
         private string[] exclusions = null;
 
-        public App()
+        /// <summary>
+        /// Main entrypoint of the application.
+        /// </summary>
+        [STAThread]
+        static void Main(string[] argv)
+        {
+            try
+            {
+                App app = new App();
+                app.Run();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Environment.Exit(1);
+            }
+            Environment.Exit(0);
+        }
+
+        public App() : base()
         {
             this.ShutdownMode = ShutdownMode.OnMainWindowClose;
             CommonHelper.OverrideSettingsFile("WFN.config");
+            LogHelper.Debug("Init notification window...");
+            LogHelper.Debug("Initializing exclusions...");
+            initExclusions();
+
+            window = new NotificationWindow
+            {
+                WindowState = WindowState.Normal
+            };
+
+            LogHelper.Debug("Start security log polling task...");
+            _ = EventLogPollingTaskAsync();
+
         }
 
-        public App(ReadOnlyCollection<string> argv) : this()
+        DateTime lastLogEntryTimeStamp = DateTime.Now;
+        internal async Task EventLogPollingTaskAsync()
         {
-            NextInstance(argv);
+            while (true)
+            {
+                using (EventLog securityLog = new EventLog("security"))
+                {
+                    List<EventLogEntry> newEntryList = new List<EventLogEntry>();
+                    int entryIndex = securityLog.Entries.Count - 1;
+                    for (int i=entryIndex; i >= 0; i--)
+                    {
+                        EventLogEntry entry = securityLog.Entries[i];
+                        bool isNewEntry = entry.TimeWritten > lastLogEntryTimeStamp;
+                        if (isNewEntry)
+                        {
+                            if (FirewallHelper.isEventInstanceIdAccepted(entry.InstanceId))
+                            {
+                                newEntryList.Insert(0, entry);
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    lastLogEntryTimeStamp = securityLog.Entries[entryIndex].TimeWritten;
+
+                    foreach (EventLogEntry entry in newEntryList)
+                    {
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                // dispatch to ui thread
+                                Console.WriteLine($"{DateTime.Now} New entry from security log being added ....");
+                                HandleEventLogNotification(entry);
+                            });
+                    }
+                }
+                await Task.Delay(1000).ConfigureAwait(false);
+            }
+        }
+        //public App(ReadOnlyCollection<string> argv) : this()
+        //{
+        //    NextInstance(argv);
+        //}
+
+        enum Direction
+        {
+            In, Out
         }
 
+        //private void InitEventLogHandler()
+        //{
+        //    using (EventLog securityLog = new EventLog("Security"))
+        //    {
+        //        securityLog.EntryWritten += (sender, args) =>
+        //        {
+        //            EventLogEntry entry = args.Entry;
+        //            if (FirewallHelper.isEventInstanceIdAccepted(entry.InstanceId)) {
+        //                HandleEventLogNotification(entry);
+        //            }
+        //        };
+        //        securityLog.EnableRaisingEvents = true;
+        //    }
+        //}
+
+        private void HandleEventLogNotification(EventLogEntry entry)
+        {
+
+            try
+            {
+                int pid = int.Parse(GetReplacementString(entry, 0));
+                int threadId = 0;
+                Direction direction = GetReplacementString(entry, 2) == @"%%14593" ? Direction.Out : Direction.In;
+                int protocol = int.Parse(GetReplacementString(entry, 7));
+                string targetIp = GetReplacementString(entry, 5);
+                int targetPort = int.Parse(GetReplacementString(entry, 6));
+                string sourceIp = GetReplacementString(entry, 3);
+                int sourcePort = int.Parse(GetReplacementString(entry, 4));
+                string friendlyPath = GetReplacementString(entry, 1) == "-" ? "System" : FileHelper.GetFriendlyPath(GetReplacementString(entry, 1));
+
+                LogHelper.Debug("Adding item...");
+                if (!AddItem(pid, threadId, friendlyPath, targetIp, protocol, targetPort, sourcePort))
+                {
+                    //This connection is blocked by a specific rule. No action necessary.
+                    LogHelper.Info("Connection is blocked by a rule - ignored.");
+                    return;
+                }
+
+                if (window.WindowState == WindowState.Minimized)
+                {
+                    window.ShowActivityTrayIcon($"Notifier notifications pending - click the tray icon to show");  // max 64 chars
+                }
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("Error in HandleEventLogNotification", e);
+            }
+        }
+
+        private static string GetReplacementString(EventLogEntry entry, int i)
+        {
+            // check out of bounds
+            if (i < entry.ReplacementStrings.Length)
+            {
+                return entry.ReplacementStrings[i];
+            }
+            else
+            {
+                return "";
+            }
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -69,7 +207,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         /// <param name="targetPort"></param>
         /// <param name="localPort"></param>
         /// <returns>false if item is blocked and was thus not added to internal query list</returns>
-        public bool AddItem(int pid, int threadid, string path, string target, int protocol, int targetPort, int localPort)
+        internal bool AddItem(int pid, int threadid, string path, string target, int protocol, int targetPort, int localPort)
         {
             try
             {
@@ -249,54 +387,54 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         }
 
 
-        internal void NextInstance(ReadOnlyCollection<string> argv)
-        {
-            try
-            {
-                Dictionary<string, string> pars = ProcessHelper.ParseParameters(argv);
-                int pid = int.Parse(pars["pid"]);
-                int threadid = int.Parse(pars["threadid"]);
-                string currentTarget = pars["ip"];
-                int currentTargetPort = int.Parse(pars["port"]);
-                int currentProtocol = int.Parse(pars["protocol"]);
-                int currentLocalPort = int.Parse(pars["localport"]);
-                string currentPath = pars["path"];
-                pars = null; //Release memory for GC
+        //internal void NextInstance(ReadOnlyCollection<string> argv)
+        //{
+        //    try
+        //    {
+        //        Dictionary<string, string> pars = ProcessHelper.ParseParameters(argv);
+        //        int pid = int.Parse(pars["pid"]);
+        //        int threadid = int.Parse(pars["threadid"]);
+        //        string currentTarget = pars["ip"];
+        //        int currentTargetPort = int.Parse(pars["port"]);
+        //        int currentProtocol = int.Parse(pars["protocol"]);
+        //        int currentLocalPort = int.Parse(pars["localport"]);
+        //        string currentPath = pars["path"];
+        //        pars = null; //Release memory for GC
 
-                LogHelper.Debug("Initializing exclusions...");
-                initExclusions();
+        //        LogHelper.Debug("Initializing exclusions...");
+        //        initExclusions();
 
-                LogHelper.Debug("Adding item...");
-                if (!AddItem(pid, threadid, currentPath, currentTarget, currentProtocol, currentTargetPort, currentLocalPort))
-                {
-                    //This connection is blocked. No action necessary.
-                    LogHelper.Info("Connection is blocked.");
-                    if (window == null)
-                    {
-                        LogHelper.Debug("No notification window loaded; shutting down...");
-                        this.Shutdown();
-                    }
-                    return;
-                }
+        //        LogHelper.Debug("Adding item...");
+        //        if (!AddItem(pid, threadid, currentPath, currentTarget, currentProtocol, currentTargetPort, currentLocalPort))
+        //        {
+        //            //This connection is blocked by a specific rule. No action necessary.
+        //            LogHelper.Info("Connection is blocked.");
+        //            if (window == null)
+        //            {
+        //                LogHelper.Debug("No notification window loaded; shutting down...");
+        //                this.Shutdown();
+        //            }
+        //            return;
+        //        }
 
-                LogHelper.Debug("Displaying notification window...");
-                if (window == null)
-                {
-                    LogHelper.Debug("No notification window loaded; creating a new one...");
-                    window = new NotificationWindow();
-                    MainWindow = window;
-                    //this.Run(window);
-                }
-                if (window.WindowState == WindowState.Minimized)
-                {
-                    window.ShowActivityTrayIcon($"Notifier notifications pending - click the tray icon to show");  // max 64 chars
-                }
-            }
-            catch (Exception e)
-            {
-                LogHelper.Error("Error in NextInstance", e);
-            }
+        //        LogHelper.Debug("Displaying notification window...");
+        //        if (window == null)
+        //        {
+        //            LogHelper.Debug("No notification window loaded; creating a new one...");
+        //            window = new NotificationWindow();
+        //            MainWindow = window;
+        //            //this.Run(window);
+        //        }
+        //        if (window.WindowState == WindowState.Minimized)
+        //        {
+        //            window.ShowActivityTrayIcon($"Notifier notifications pending - click the tray icon to show");  // max 64 chars
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        LogHelper.Error("Error in NextInstance", e);
+        //    }
 
-        }
+        //}
     }
 }

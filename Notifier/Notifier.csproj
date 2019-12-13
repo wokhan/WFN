@@ -63,7 +63,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Wokhan.WindowsFirewallNotifier.Notifier.Program</StartupObject>
+    <StartupObject>Wokhan.WindowsFirewallNotifier.Notifier.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
