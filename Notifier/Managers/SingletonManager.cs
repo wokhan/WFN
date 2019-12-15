@@ -1,7 +1,11 @@
 ﻿using Microsoft.VisualBasic.ApplicationServices;
+using System;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.Managers
 {
+    /// <summary>
+    /// Assures that the program is only stated once.
+    /// </summary>
     class SingletonManager : WindowsFormsApplicationBase
     {
         private static App application;
@@ -14,8 +18,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Managers
 
         protected override bool OnStartup(StartupEventArgs e)
         {
-            //application = new App(e.CommandLine);
-            //application.Run();
+            application = new App();
+            application.Run();
 
             return false;
         }
@@ -24,10 +28,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Managers
         {
             //Give focus to the main instance
             e.BringToForeground = true;
-
             base.OnStartupNextInstance(e);
-
-            //application.NextInstance(e.CommandLine);
         }
     }
 }
