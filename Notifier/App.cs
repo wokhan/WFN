@@ -6,6 +6,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,6 +36,14 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         {
             try
             {
+                LogHelper.Info("Checking access rights...");
+                if (!IsUserAdministrator())
+                {
+                    LogHelper.Error("User must have admin rights to access to run Notifier.", null);
+                    MessageBox.Show($"User must have admin rights to run Notifier\nNotifier will exit now!", "Not enough priviledge", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Environment.Exit(1);
+                }
+
                 App app = new App();
                 app.Run();
             }
@@ -49,10 +59,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         {
             this.ShutdownMode = ShutdownMode.OnMainWindowClose;
             CommonHelper.OverrideSettingsFile("WFN.config");
-            LogHelper.Debug("Init notification window...");
+
             LogHelper.Debug("Initializing exclusions...");
             initExclusions();
 
+            LogHelper.Debug("Init notification window...");
             window = new NotificationWindow
             {
                 WindowState = WindowState.Normal
@@ -66,47 +77,83 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         DateTime lastLogEntryTimeStamp = DateTime.Now;
         internal async Task EventLogPollingTaskAsync()
         {
-            while (true)
+            try
             {
-                using (EventLog securityLog = new EventLog("security"))
+                while (true)
                 {
-                    List<EventLogEntry> newEntryList = new List<EventLogEntry>();
-                    int entryIndex = securityLog.Entries.Count - 1;
-                    for (int i=entryIndex; i >= 0; i--)
+                    using (EventLog securityLog = new EventLog("security"))
                     {
-                        EventLogEntry entry = securityLog.Entries[i];
-                        bool isNewEntry = entry.TimeWritten > lastLogEntryTimeStamp;
-                        if (isNewEntry)
+                        List<EventLogEntry> newEntryList = new List<EventLogEntry>();
+                        int entryIndex = securityLog.Entries.Count - 1;
+                        for (int i = entryIndex; i >= 0; i--)
                         {
-                            if (FirewallHelper.isEventInstanceIdAccepted(entry.InstanceId))
+                            EventLogEntry entry = securityLog.Entries[i];
+                            bool isNewEntry = entry.TimeWritten > lastLogEntryTimeStamp;
+                            if (isNewEntry)
                             {
-                                newEntryList.Insert(0, entry);
+                                if (FirewallHelper.isEventInstanceIdAccepted(entry.InstanceId))
+                                {
+                                    newEntryList.Insert(0, entry);
+                                }
+                            }
+                            else
+                            {
+                                break;
                             }
                         }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    lastLogEntryTimeStamp = securityLog.Entries[entryIndex].TimeWritten;
+                        lastLogEntryTimeStamp = securityLog.Entries[entryIndex].TimeWritten;
 
-                    foreach (EventLogEntry entry in newEntryList)
-                    {
+                        foreach (EventLogEntry entry in newEntryList)
+                        {
                             Application.Current.Dispatcher.Invoke(() =>
                             {
                                 // dispatch to ui thread
                                 Console.WriteLine($"{DateTime.Now} New entry from security log being added ....");
                                 HandleEventLogNotification(entry);
                             });
+                        }
                     }
+                    await Task.Delay(1000).ConfigureAwait(false);
                 }
-                await Task.Delay(1000).ConfigureAwait(false);
+            }
+
+            catch (SecurityException se)
+            {
+                LogHelper.Error("Security event log polling task exception: " + se.Message, se);
+                MessageBox.Show($"Notifier cannot access security event log:\n{se.Message}\nNotifier needs to be started with admin rights.\nNotifier will exit.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                window.Close();
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("Security event log polling task exception: " + e.Message, e);
+                MessageBox.Show($"Security log polling exception:\n{e.Message}\nNotifier will exit.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                window.Close();
             }
         }
         //public App(ReadOnlyCollection<string> argv) : this()
         //{
         //    NextInstance(argv);
         //}
+
+        internal static bool IsUserAdministrator()
+        {
+            bool isAdmin;
+            try
+            {
+                WindowsIdentity user = WindowsIdentity.GetCurrent();
+                WindowsPrincipal principal = new WindowsPrincipal(user);
+                isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                isAdmin = false;
+            }
+            catch (Exception ex)
+            {
+                isAdmin = false;
+            }
+            return isAdmin;
+        }
 
         enum Direction
         {

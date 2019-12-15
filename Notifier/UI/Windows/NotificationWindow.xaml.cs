@@ -544,6 +544,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             bool success = false;
             var activeConn = ((CurrentConn)lstConnections.SelectedItem);
+            if (activeConn == null)
+            {
+                return;
+            }
 
             if ((!_optionsView.IsProtocolChecked) && (_optionsView.IsLocalPortChecked || _optionsView.IsTargetPortChecked))
             {
