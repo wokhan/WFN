@@ -605,7 +605,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         IntPtr hProcess = OpenProcess(ProcessHelper.ProcessAccessFlags.QueryInformation, false, (uint)pid);
         if (hProcess == IntPtr.Zero)
         {
-            LogHelper.Warning("Unable to retrieve process local user owner: process cannot be found!");
+            LogHelper.Warning($"Unable to retrieve process local user owner: process pid={pid} cannot be found!");
             return String.Empty;
         }
         try
@@ -613,7 +613,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             IntPtr hToken;
             if (OpenProcessToken(hProcess, TOKEN_QUERY, out hToken) == false)
             {
-                LogHelper.Warning("Unable to retrieve process local user owner: process cannot be opened!");
+                LogHelper.Warning("Unable to retrieve process local user owner: process pid={pid} cannot be opened!");
                 return String.Empty;
             }
             try
