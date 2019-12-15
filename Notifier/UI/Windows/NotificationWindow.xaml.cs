@@ -255,7 +255,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             */
         }
 
-        internal void RestoreWindowState()
+        public void RestoreWindowState()
         {
             Show(); // required to trigger state changed events
             WindowState = WindowState.Normal;
