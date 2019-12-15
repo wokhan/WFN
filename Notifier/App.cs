@@ -9,7 +9,6 @@ using System.Net;
 using System.Security;
 using System.Security.Principal;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Wokhan.WindowsFirewallNotifier.Common;
@@ -27,6 +26,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         public ObservableCollection<CurrentConn> Connections { get { return _conns; } }
 
         private string[] exclusions = null;
+
+        public static Dictionary<int, ProcessHelper.ServiceInfoResult> SERVICES = ProcessHelper.GetAllServicesByPidWMI();
 
         /// <summary>
         /// Main entrypoint of the application.
@@ -49,7 +50,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                LogHelper.Error(e.Message, e);
                 Environment.Exit(1);
             }
             Environment.Exit(0);
@@ -70,15 +71,39 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             };
 
             LogHelper.Debug("Start security log polling task...");
-            _ = EventLogPollingTaskAsync();
+            _ = EventLogPollingTaskAsync(1_000);
+
+            LogHelper.Debug("Start update services task...");
+            _ = UpdateServiceInfoTaskAsync(30_000);
 
         }
 
-        DateTime lastLogEntryTimeStamp = DateTime.Now;
-        internal async Task EventLogPollingTaskAsync()
+        internal async Task UpdateServiceInfoTaskAsync(int waitMillis)
         {
             try
             {
+                DateTime timeStamp = DateTime.Now;
+                while (true)
+                {
+                    await Task.Delay(waitMillis).ConfigureAwait(false);
+                    Dictionary<int, ProcessHelper.ServiceInfoResult> dict = ProcessHelper.GetAllServicesByPidWMI();
+                    SERVICES = dict;
+                    Console.WriteLine($"-> {DateTime.Now} Update service info");
+                }
+            } 
+            catch (Exception e)
+            {
+                LogHelper.Error($"UpdateServiceInfoTask exception", e);
+                MessageBox.Show($"UpdateServiceInfoTask exception:\n{e.Message}\nNotifier will exit.", "Update service info exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                window.Close();
+            }
+        }
+
+        internal async Task EventLogPollingTaskAsync(int waitMillis)
+        {
+            try
+            {
+                DateTime lastLogEntryTimeStamp = DateTime.Now;
                 while (true)
                 {
                     using (EventLog securityLog = new EventLog("security"))
@@ -108,12 +133,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                             Application.Current.Dispatcher.Invoke(() =>
                             {
                                 // dispatch to ui thread
-                                Console.WriteLine($"{DateTime.Now} New entry from security log being added ....");
                                 HandleEventLogNotification(entry);
                             });
                         }
                     }
-                    await Task.Delay(1000).ConfigureAwait(false);
+                    await Task.Delay(waitMillis).ConfigureAwait(false);
                 }
             }
 
@@ -130,10 +154,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 window.Close();
             }
         }
-        //public App(ReadOnlyCollection<string> argv) : this()
-        //{
-        //    NextInstance(argv);
-        //}
 
         internal static bool IsUserAdministrator()
         {
@@ -160,21 +180,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             In, Out
         }
 
-        //private void InitEventLogHandler()
-        //{
-        //    using (EventLog securityLog = new EventLog("Security"))
-        //    {
-        //        securityLog.EntryWritten += (sender, args) =>
-        //        {
-        //            EventLogEntry entry = args.Entry;
-        //            if (FirewallHelper.isEventInstanceIdAccepted(entry.InstanceId)) {
-        //                HandleEventLogNotification(entry);
-        //            }
-        //        };
-        //        securityLog.EnableRaisingEvents = true;
-        //    }
-        //}
-
         private void HandleEventLogNotification(EventLogEntry entry)
         {
 
@@ -189,18 +194,22 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 string sourceIp = GetReplacementString(entry, 3);
                 int sourcePort = int.Parse(GetReplacementString(entry, 4));
                 string friendlyPath = GetReplacementString(entry, 1) == "-" ? "System" : FileHelper.GetFriendlyPath(GetReplacementString(entry, 1));
+                string fileName = System.IO.Path.GetFileName(friendlyPath);
 
-                LogHelper.Debug("Adding item...");
+                // try to get the servicename from pid (works only if service is running)
+                string serviceName = SERVICES.ContainsKey(pid) ? SERVICES[pid].Name : "-";
+
+                LogHelper.Debug($"Adding {direction}-going connection for '{fileName}', service: {serviceName} ...");
                 if (!AddItem(pid, threadId, friendlyPath, targetIp, protocol, targetPort, sourcePort))
                 {
                     //This connection is blocked by a specific rule. No action necessary.
-                    LogHelper.Info("Connection is blocked by a rule - ignored.");
+                    LogHelper.Debug($"{direction} connection for '{fileName}' is blocked by a rule - ignored.");
                     return;
                 }
 
                 if (window.WindowState == WindowState.Minimized)
                 {
-                    window.ShowActivityTrayIcon($"Notifier notifications pending - click the tray icon to show");  // max 64 chars
+                    window.ShowActivityTrayIcon($"Notifier blocked connections - click tray icon to show");  // max 64 chars
                 }
             }
             catch (Exception e)
@@ -258,6 +267,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         {
             try
             {
+                string fileName = System.IO.Path.GetFileName(path);
                 if (path != "System")
                 {
                     path = FileHelper.GetFriendlyPath(path);
@@ -312,7 +322,18 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
                         if (Settings.Default.EnableServiceDetection)
                         {
-                            ProcessHelper.GetService(pid, threadid, path, protocol, localPort, target, targetPort, out svc, out svcdsc, out unsure);
+                            ProcessHelper.ServiceInfoResult svcInfo = null;
+                            if (SERVICES.TryGetValue(pid, out svcInfo))
+                            {
+                                svc = new string[] { svcInfo.Name };
+                                svcdsc = new string[] { svcInfo.DisplayName };
+                                unsure = false;
+                                LogHelper.Debug($"Service detected for '{fileName}': '{svc[0]}'");
+                            } else
+                            {
+                                //ProcessHelper.GetService(pid, threadid, path, protocol, localPort, target, targetPort, out svc, out svcdsc, out unsure);
+                                LogHelper.Debug($"No service detected for '{fileName}'");
+                            }
                         }
                     }
 
@@ -432,56 +453,5 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 LogHelper.Warning($"Cannot resolve host name for {conn.Target} - Exception: {e.Message}");
             }
         }
-
-
-        //internal void NextInstance(ReadOnlyCollection<string> argv)
-        //{
-        //    try
-        //    {
-        //        Dictionary<string, string> pars = ProcessHelper.ParseParameters(argv);
-        //        int pid = int.Parse(pars["pid"]);
-        //        int threadid = int.Parse(pars["threadid"]);
-        //        string currentTarget = pars["ip"];
-        //        int currentTargetPort = int.Parse(pars["port"]);
-        //        int currentProtocol = int.Parse(pars["protocol"]);
-        //        int currentLocalPort = int.Parse(pars["localport"]);
-        //        string currentPath = pars["path"];
-        //        pars = null; //Release memory for GC
-
-        //        LogHelper.Debug("Initializing exclusions...");
-        //        initExclusions();
-
-        //        LogHelper.Debug("Adding item...");
-        //        if (!AddItem(pid, threadid, currentPath, currentTarget, currentProtocol, currentTargetPort, currentLocalPort))
-        //        {
-        //            //This connection is blocked by a specific rule. No action necessary.
-        //            LogHelper.Info("Connection is blocked.");
-        //            if (window == null)
-        //            {
-        //                LogHelper.Debug("No notification window loaded; shutting down...");
-        //                this.Shutdown();
-        //            }
-        //            return;
-        //        }
-
-        //        LogHelper.Debug("Displaying notification window...");
-        //        if (window == null)
-        //        {
-        //            LogHelper.Debug("No notification window loaded; creating a new one...");
-        //            window = new NotificationWindow();
-        //            MainWindow = window;
-        //            //this.Run(window);
-        //        }
-        //        if (window.WindowState == WindowState.Minimized)
-        //        {
-        //            window.ShowActivityTrayIcon($"Notifier notifications pending - click the tray icon to show");  // max 64 chars
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        LogHelper.Error("Error in NextInstance", e);
-        //    }
-
-        //}
     }
 }

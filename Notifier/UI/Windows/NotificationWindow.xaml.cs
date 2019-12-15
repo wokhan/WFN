@@ -110,7 +110,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void TrayIcon_Click(object Sender, EventArgs e)
         {
-            window.RestoreWindowState();
+            if (window.WindowState == WindowState.Minimized)
+            {
+                window.RestoreWindowState();
+            } else
+            {
+                window.HideWindowState();
+            }
         }
 
         public void Show()
@@ -184,8 +190,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             get { return SystemParameters.WorkArea.Width - this.ActualWidth; }
         }
 
-        public int NbConnectionsAfter { get { return lstConnections != null ? lstConnections.Items.Count - lstConnections.SelectedIndex - 1 : 0; } }
-        public int NbConnectionsBefore { get { return lstConnections != null ? lstConnections.SelectedIndex : 0; } }
+        public int NbConnectionsAfter { get { return lstConnections != null && lstConnections.SelectedIndex >= 0 ? lstConnections.Items.Count - lstConnections.SelectedIndex - 1 : 0; } }
+        public int NbConnectionsBefore { get { return lstConnections != null && lstConnections.SelectedIndex >= 0 ? lstConnections.SelectedIndex : 0; } }
 
         public class OptionsViewClass
         {
@@ -240,6 +246,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             //Make sure the showConn function is triggered on initial load.
             //showConn();
+
             NotifyPropertyChanged(nameof(NbConnectionsAfter));
             NotifyPropertyChanged(nameof(NbConnectionsBefore));
 
@@ -250,20 +257,28 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         internal void RestoreWindowState()
         {
+            Show(); // required to trigger state changed events
             WindowState = WindowState.Normal;
+        }
+
+        internal void HideWindowState()
+        {
+            Hide();
+            ShowInTaskbar = false;
+            WindowState = WindowState.Minimized;
+            notifierTrayIcon.Show();
         }
 
         private void NotificationWindow_StateChanged(object sender, EventArgs e)
         {
             if (WindowState == WindowState.Minimized)
             {
-                notifierTrayIcon.Show();
-                ShowInTaskbar = false;
+                //
             }
-            else 
+            else
             {
-                notifierTrayIcon.Hide();
-                ShowInTaskbar = true;
+                //notifierTrayIcon.Hide();
+                //ShowInTaskbar = false;
             }
         }
 
@@ -273,12 +288,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             {
                 notifierTrayIcon.ShowActivity(tooltipText);
             }
-        }
-
-        private void NotificationWindow_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            NotifyPropertyChanged(nameof(NbConnectionsAfter));
-            NotifyPropertyChanged(nameof(NbConnectionsBefore));
         }
 
         private void NotificationWindow_Initialized(object sender, EventArgs e)
@@ -300,19 +309,45 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             this.Top = ExpectedTop;
             this.Left = ExpectedLeft;
 
+            StartAnimation();
+        }
+
+        private void NotificationWindow_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            StopAnimation();
+            this.Focus();  //  focus the element
+        }
+
+        private void StartAnimation()
+        {
             if (Settings.Default.UseAnimation)
             {
                 ((Storyboard)this.Resources["animate"]).Begin(Main, true);
             }
+
         }
 
-        private void NotificationWindow_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        private void StopAnimation()
         {
             if (Settings.Default.UseAnimation)
             {
                 ((Storyboard)this.Resources["animate"]).Stop(Main);
             }
             this.Opacity = 1.0; //@
+        }
+
+        private void NotificationWindow_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (lstConnections.Items.Count > 0)
+            {
+                if (lstConnections.SelectedItem == null)
+                {
+                    lstConnections.SelectedIndex = 0;
+                }
+
+            }
+            NotifyPropertyChanged(nameof(NbConnectionsAfter));
+            NotifyPropertyChanged(nameof(NbConnectionsBefore));
         }
 
         private void LstConnections_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -323,23 +358,21 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 {
                     lstConnections.SelectedIndex = 0;
                 }
-
                 showConn();
-
-                NotifyPropertyChanged(nameof(NbConnectionsAfter));
-                NotifyPropertyChanged(nameof(NbConnectionsBefore));
             }
             else
             {
-                //this.Close();
-                WindowState = WindowState.Minimized;
+                // HideWindowState();
             }
+            Console.WriteLine($"-> lstConnections.SelectedIndex={lstConnections.SelectedIndex}");
+            NotifyPropertyChanged(nameof(NbConnectionsAfter));
+            NotifyPropertyChanged(nameof(NbConnectionsBefore));
         }
 
         /// <summary>
         /// Updates all controls contents according to the currently selected blocked connection
         /// </summary>
-        private void showConn()
+        public void showConn()
         {
             var activeConn = (CurrentConn)lstConnections.SelectedItem;
 
@@ -431,11 +464,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         /// <param name="e"></param>
         private void btnNext_Click(object sender, RoutedEventArgs e)
         {
-            if (lstConnections.Items.Count > 0)
+            lstConnections.SelectedIndex = Math.Min(lstConnections.Items.Count - 1, lstConnections.SelectedIndex + 1);
+            if (lstConnections.SelectedItem != null)
             {
-                lstConnections.SelectedIndex++;
                 lstConnections.ScrollIntoView(lstConnections.SelectedItem);
             }
+            Console.WriteLine($"Next_click: SelectedIndex={lstConnections.SelectedIndex}");
         }
 
         /// <summary>
@@ -445,11 +479,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         /// <param name="e"></param>
         private void btnPrev_Click(object sender, RoutedEventArgs e)
         {
-            if (lstConnections.Items.Count > 0)
+            lstConnections.SelectedIndex = lstConnections.SelectedIndex >= 0 ? lstConnections.SelectedIndex - 1 : -1;
+            if (lstConnections.SelectedItem != null)
             {
-                lstConnections.SelectedIndex--;
                 lstConnections.ScrollIntoView(lstConnections.SelectedItem);
             }
+            Console.WriteLine($"Prev_click: SelectedIndex={lstConnections.SelectedIndex}");
         }
 
         /// <summary>
@@ -459,7 +494,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         /// <param name="e"></param>
         private void btnMin_Click(object sender, RoutedEventArgs e)
         {
-            this.WindowState = WindowState.Minimized;
+            HideWindowState();
         }
 
         private void lblService_Click(object sender, RoutedEventArgs e) //FIXME: Not referenced (anymore!)
@@ -485,13 +520,18 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             var tmpSelectedItem = (CurrentConn)lstConnections.SelectedItem;
             if (tmpSelectedItem != null && lstConnections.Items.Count > 0)
             {
-                lstConnections.SelectedIndex -= 1;
+                lstConnections.SelectedIndex = Math.Max(-1, lstConnections.SelectedIndex);
                 ((App)System.Windows.Application.Current).Connections.Remove(tmpSelectedItem);
             }
+            Console.WriteLine($"Skip_click: SelectedIndex={lstConnections.SelectedIndex}");
         }
 
         private void btnSkipProgram_Click(object sender, RoutedEventArgs e)
         {
+            if (lstConnections.SelectedItem == null) 
+            {
+                return;
+            }
             String skipPath = ((CurrentConn)lstConnections.SelectedItem).CurrentPath;
             List<CurrentConn> toRemove = new List<CurrentConn>(); //Can't remove while iterating.
             foreach (var connection in lstConnections.Items)
@@ -505,21 +545,23 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             {
                 if (lstConnections.SelectedItem == connection)
                 {
-                    lstConnections.SelectedIndex -= 1;
+                    lstConnections.SelectedIndex = Math.Max(-1, lstConnections.SelectedIndex);
                 }
                 ((App)System.Windows.Application.Current).Connections.Remove(connection);
             }
             if (lstConnections.Items.Count == 0)
             {
                 //this.Close();
-                WindowState = WindowState.Minimized;
+                // HideWindowState();
             }
+            Console.WriteLine($"SkipProgram_click: SelectedIndex={lstConnections.SelectedIndex}");
         }
 
         private void btnSkipAll_Click(object sender, RoutedEventArgs e)
         {
-            //this.Close();
-            WindowState = WindowState.Minimized;
+            lstConnections.SelectedIndex = -1;
+            ((App)System.Windows.Application.Current).Connections.Clear();
+            HideWindowState();
         }
 
         private void expand_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -605,7 +647,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 {
                     LogHelper.Debug("No connections left; closing notification window.");
                     //this.Close();
-                    WindowState = WindowState.Minimized;
+                    HideWindowState();
                 }
             }
             else
