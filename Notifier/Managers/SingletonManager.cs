@@ -28,6 +28,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Managers
         {
             //Give focus to the main instance
             e.BringToForeground = true;
+            application.ShowNotifierWindow();  // show the minimized window
+
             base.OnStartupNextInstance(e);
         }
     }

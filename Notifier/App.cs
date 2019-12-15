@@ -20,7 +20,7 @@ using Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows;
 namespace Wokhan.WindowsFirewallNotifier.Notifier
 {
     /// <summary>
-    /// Notifier main program.
+    /// Notifier2 main program
     /// </summary>
     public class App : Application
     {
@@ -105,6 +105,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             }
         }
 
+        public void ShowNotifierWindow()
+        {
+            window.RestoreWindowState();
+        }
+
         internal async Task EventLogPollingTaskAsync(int waitMillis)
         {
             try
@@ -122,7 +127,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                             bool isNewEntry = entry.TimeWritten > lastLogEntryTimeStamp;
                             if (isNewEntry)
                             {
-                                if (FirewallHelper.isEventInstanceIdAccepted(entry.InstanceId))
+                                if (IsEventInstanceIdAccepted(entry.InstanceId))
                                 {
                                     newEntryList.Insert(0, entry);
                                 }
@@ -159,6 +164,15 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 MessageBox.Show($"Security log polling exception:\n{e.Message}\nNotifier will exit.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 window.Close();
             }
+        }
+
+        private static Boolean IsEventInstanceIdAccepted(long instanceId)
+        {
+            // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
+            return
+                instanceId == 5157 // block connection
+                || instanceId == 5152 // drop packet
+                ;
         }
 
         internal static bool IsUserAdministrator()
