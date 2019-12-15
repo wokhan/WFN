@@ -14,20 +14,24 @@ using System.Windows;
 using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
+using Wokhan.WindowsFirewallNotifier.Notifier.Managers;
 using Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier
 {
+    /// <summary>
+    /// Notifier main program.
+    /// </summary>
     public class App : Application
     {
-        NotificationWindow window;
+        private readonly NotificationWindow window;
 
         private ObservableCollection<CurrentConn> _conns = new ObservableCollection<CurrentConn>();
         public ObservableCollection<CurrentConn> Connections { get { return _conns; } }
 
         private string[] exclusions = null;
 
-        public static Dictionary<int, ProcessHelper.ServiceInfoResult> SERVICES = ProcessHelper.GetAllServicesByPidWMI();
+        internal static Dictionary<int, ProcessHelper.ServiceInfoResult> SERVICES = ProcessHelper.GetAllServicesByPidWMI();
 
         /// <summary>
         /// Main entrypoint of the application.
@@ -44,9 +48,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     MessageBox.Show($"User must have admin rights to run Notifier\nNotifier will exit now!", "Not enough priviledge", MessageBoxButton.OK, MessageBoxImage.Error);
                     Environment.Exit(1);
                 }
-
-                App app = new App();
-                app.Run();
+                string[] args = Environment.GetCommandLineArgs();
+                // Ensures that notifier is only started once.
+                SingletonManager singleton = new SingletonManager();
+                singleton.Run(argv);  // runs new App();
             }
             catch (Exception e)
             {
@@ -69,6 +74,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             {
                 WindowState = WindowState.Normal
             };
+            MainWindow = window;
 
             LogHelper.Debug("Start security log polling task...");
             _ = EventLogPollingTaskAsync(1_000);
