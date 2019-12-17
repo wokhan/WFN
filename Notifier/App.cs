@@ -110,6 +110,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             window.RestoreWindowState();
         }
 
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+        }
+
         internal async Task EventLogPollingTaskAsync(int waitMillis)
         {
             try
@@ -117,36 +122,43 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 DateTime lastLogEntryTimeStamp = DateTime.Now;
                 while (true)
                 {
-                    using (EventLog securityLog = new EventLog("security"))
+                    try
                     {
-                        List<EventLogEntry> newEntryList = new List<EventLogEntry>();
-                        int entryIndex = securityLog.Entries.Count - 1;
-                        for (int i = entryIndex; i >= 0; i--)
+                        using (EventLog securityLog = new EventLog("security"))
                         {
-                            EventLogEntry entry = securityLog.Entries[i];
-                            bool isNewEntry = entry.TimeWritten > lastLogEntryTimeStamp;
-                            if (isNewEntry)
+                            List<EventLogEntry> newEntryList = new List<EventLogEntry>();
+                            int entryIndex = securityLog.Entries.Count - 1;
+                            DateTime newestEntryTimeWritten = securityLog.Entries[entryIndex].TimeWritten;
+                            for (int i = entryIndex; i >= 0; i--)
                             {
-                                if (IsEventInstanceIdAccepted(entry.InstanceId))
+                                EventLogEntry entry = securityLog.Entries[i];
+                                bool isNewEntry = entry.TimeWritten > lastLogEntryTimeStamp;
+                                if (isNewEntry)
                                 {
-                                    newEntryList.Insert(0, entry);
+                                    if (IsEventInstanceIdAccepted(entry.InstanceId))
+                                    {
+                                        newEntryList.Insert(0, entry);
+                                    }
+                                }
+                                else
+                                {
+                                    break;
                                 }
                             }
-                            else
+                            lastLogEntryTimeStamp = newestEntryTimeWritten;
+
+                            foreach (EventLogEntry entry in newEntryList)
                             {
-                                break;
+                                Application.Current.Dispatcher.Invoke(() =>
+                                {
+                                    // dispatch to ui thread
+                                    HandleEventLogNotification(entry);
+                                });
                             }
                         }
-                        lastLogEntryTimeStamp = securityLog.Entries[entryIndex].TimeWritten;
-
-                        foreach (EventLogEntry entry in newEntryList)
-                        {
-                            Application.Current.Dispatcher.Invoke(() =>
-                            {
-                                // dispatch to ui thread
-                                HandleEventLogNotification(entry);
-                            });
-                        }
+                    } catch (IndexOutOfRangeException e)
+                    {
+                        LogHelper.Error($"Security log entry does not exist anymore:" + e.Message, e);
                     }
                     await Task.Delay(waitMillis).ConfigureAwait(false);
                 }
@@ -157,14 +169,17 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 LogHelper.Error("Security event log polling task exception: " + se.Message, se);
                 MessageBox.Show($"Notifier cannot access security event log:\n{se.Message}\nNotifier needs to be started with admin rights.\nNotifier will exit.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 window.Close();
+                Environment.Exit(1);
             }
             catch (Exception e)
             {
                 LogHelper.Error("Security event log polling task exception: " + e.Message, e);
                 MessageBox.Show($"Security log polling exception:\n{e.Message}\nNotifier will exit.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 window.Close();
+                Environment.Exit(1);
             }
         }
+
 
         private static Boolean IsEventInstanceIdAccepted(long instanceId)
         {
