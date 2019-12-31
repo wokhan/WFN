@@ -56,7 +56,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     await Task.Delay(waitMillis, cancellationToken).ConfigureAwait(false);
                     Dictionary<int, ProcessHelper.ServiceInfoResult> dict = ProcessHelper.GetAllServicesByPidWMI();
                     SERVICES = dict;
-                    LogHelper.Debug($"{DateTime.Now} Update service info");
+                    LogHelper.Debug($"Update service info");
                 }
             }
             catch (OperationCanceledException e)
@@ -154,12 +154,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             }
         }
 
-        internal string GetServicName(int pid)
+        internal static string GetServicName(int pid)
         {
             return SERVICES.ContainsKey(pid) ? SERVICES[pid].Name : "-";
         }
 
-        internal ProcessHelper.ServiceInfoResult GetServiceInfo(int pid, string fileName)
+        internal static ProcessHelper.ServiceInfoResult GetServiceInfo(int pid, string fileName)
         {
             if (SERVICES.TryGetValue(pid, out ProcessHelper.ServiceInfoResult svcInfo))
             {
@@ -316,7 +316,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 string fileName = System.IO.Path.GetFileName(friendlyPath);
 
                 // try to get the servicename from pid (works only if service is running)
-                string serviceName = asyncTaskRunner.GetServicName(pid);
+                string serviceName = AsyncTaskRunner.GetServicName(pid);
 
                 LogHelper.Debug($"Adding {direction}-going connection for '{fileName}', service: {serviceName} ...");
                 if (!AddItem(pid, threadId, friendlyPath, targetIp, protocol, targetPort, sourcePort))
@@ -441,7 +441,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
                         if (Settings.Default.EnableServiceDetection)
                         {
-                            ProcessHelper.ServiceInfoResult svcInfo = asyncTaskRunner.GetServiceInfo(pid, fileName);
+                            ProcessHelper.ServiceInfoResult svcInfo = AsyncTaskRunner.GetServiceInfo(pid, fileName);
                             if (svcInfo != null)
                             {
                                 svc = new string[] { svcInfo.Name };
