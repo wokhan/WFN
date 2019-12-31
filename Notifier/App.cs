@@ -9,6 +9,7 @@ using System.Net;
 using System.Security;
 using System.Security.Principal;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Wokhan.WindowsFirewallNotifier.Common;
@@ -19,6 +20,184 @@ using Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier
 {
+    internal class AsyncTaskRunner : IDisposable
+
+    {
+        private readonly CancellationTokenSource _eventLogPollingTaskCancellationTokenSource = new CancellationTokenSource();
+        private readonly CancellationTokenSource _updateServiceTaskCancellationTokenSource = new CancellationTokenSource();
+
+        internal static Dictionary<int, ProcessHelper.ServiceInfoResult> SERVICES = ProcessHelper.GetAllServicesByPidWMI();
+
+        private readonly App _application;
+
+        internal AsyncTaskRunner(App application)
+        {
+            _application = application;
+        }
+
+        internal void StartTasks()
+        {
+            LogHelper.Debug("Start security log polling task...");
+            _ = EventLogPollingTaskAsync(1_000);
+
+            LogHelper.Debug("Start update services task...");
+            _ = UpdateServiceInfoTaskAsync(30_000);
+        }
+
+        private async Task UpdateServiceInfoTaskAsync(int waitMillis)
+        {
+            try
+            {
+                DateTime timeStamp = DateTime.Now;
+                CancellationToken cancellationToken = _updateServiceTaskCancellationTokenSource.Token;
+                while (true)
+                {
+                    CheckCancelTaskRequestedAndThrow(cancellationToken);
+                    await Task.Delay(waitMillis, cancellationToken).ConfigureAwait(false);
+                    Dictionary<int, ProcessHelper.ServiceInfoResult> dict = ProcessHelper.GetAllServicesByPidWMI();
+                    SERVICES = dict;
+                    LogHelper.Debug($"{DateTime.Now} Update service info");
+                }
+            }
+            catch (OperationCanceledException e)
+            {
+                LogHelper.Info($"UpdateServiceInfoTask cancelled: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error($"UpdateServiceInfoTask exception", e);
+                MessageBox.Show($"UpdateServiceInfoTask exception:\n{e.Message}\nNotifier will exit.", "Update service info exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async Task EventLogPollingTaskAsync(int waitMillis)
+        {
+            try
+            {
+                DateTime lastLogEntryTimeStamp = DateTime.Now;
+                CancellationToken cancellationToken = _eventLogPollingTaskCancellationTokenSource.Token;
+                while (true)
+                {
+                    try
+                    {
+                        LogHelper.Debug($"Polling security event log...");
+                        using (EventLog securityLog = new EventLog("security"))
+                        {
+                            List<EventLogEntry> newEntryList = new List<EventLogEntry>();
+                            int entryIndex = securityLog.Entries.Count - 1;
+                            DateTime newestEntryTimeWritten = securityLog.Entries[entryIndex].TimeWritten;
+                            for (int i = entryIndex; i >= 0; i--)
+                            {
+                                CheckCancelTaskRequestedAndThrow(cancellationToken);
+                                EventLogEntry entry = securityLog.Entries[i];
+                                bool isNewEntry = entry.TimeWritten > lastLogEntryTimeStamp;
+                                if (isNewEntry)
+                                {
+                                    if (IsEventInstanceIdAccepted(entry.InstanceId))
+                                    {
+                                        newEntryList.Insert(0, entry);
+                                    }
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                            lastLogEntryTimeStamp = newestEntryTimeWritten;
+
+                            foreach (EventLogEntry entry in newEntryList)
+                            {
+                                CheckCancelTaskRequestedAndThrow(cancellationToken);
+                                Application.Current.Dispatcher.Invoke(() =>
+                                {
+                                    // dispatch to ui thread
+                                    _application.HandleEventLogNotification(entry);
+                                });
+                            }
+                        }
+                    }
+                    catch (IndexOutOfRangeException e)
+                    {
+                        LogHelper.Error($"Security log entry does not exist anymore:" + e.Message, e);
+                    }
+                    CheckCancelTaskRequestedAndThrow(cancellationToken);
+                    await Task.Delay(waitMillis, cancellationToken).ConfigureAwait(false);
+                }
+            }
+            catch (SecurityException se)
+            {
+                LogHelper.Error("EventLogPollingTaskAsync exception: " + se.Message, se);
+                MessageBox.Show($"Notifier cannot access security event log:\n{se.Message}\nNotifier needs to be started with admin rights.\nNotifier will exit.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("EventLogPollingTaskAsync exception: " + e.Message, e);
+                MessageBox.Show($"Security event log polling exception:\n{e.Message}\nNotifier will exit.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void CheckCancelTaskRequestedAndThrow(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+        }
+
+        internal void CancelTasks()
+        {
+            LogHelper.Debug($"AsyncTaskRunner: CancelTasks requested...");
+            if (_eventLogPollingTaskCancellationTokenSource != null)
+            {
+                _eventLogPollingTaskCancellationTokenSource.Cancel();
+            }
+            if (_updateServiceTaskCancellationTokenSource != null)
+            {
+                _updateServiceTaskCancellationTokenSource.Cancel();
+            }
+        }
+
+        internal string GetServicName(int pid)
+        {
+            return SERVICES.ContainsKey(pid) ? SERVICES[pid].Name : "-";
+        }
+
+        internal ProcessHelper.ServiceInfoResult GetServiceInfo(int pid, string fileName)
+        {
+            if (SERVICES.TryGetValue(pid, out ProcessHelper.ServiceInfoResult svcInfo))
+            {
+                LogHelper.Debug($"Service detected for '{fileName}': '{svcInfo.Name}'");
+                return svcInfo;
+            }
+            else
+            {
+                //ProcessHelper.GetService(pid, threadid, path, protocol, localPort, target, targetPort, out svc, out svcdsc, out unsure);
+                LogHelper.Debug($"No service detected for '{fileName}'");
+                return null;
+            }
+        }
+
+
+        internal static Boolean IsEventInstanceIdAccepted(long instanceId)
+        {
+            // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
+            return
+                instanceId == 5157 // block connection
+                || instanceId == 5152 // drop packet
+                ;
+        }
+
+        public void Dispose()
+        {
+            LogHelper.Debug($"AsyncTaskRunner: Disposing resources...");
+            if (_eventLogPollingTaskCancellationTokenSource != null)
+            {
+                _eventLogPollingTaskCancellationTokenSource.Dispose();
+            }
+            if (_updateServiceTaskCancellationTokenSource != null)
+            {
+                _updateServiceTaskCancellationTokenSource.Dispose();
+            }
+        }
+    }
+
     /// <summary>
     /// Notifier2 main program
     /// </summary>
@@ -31,7 +210,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
         private string[] exclusions = null;
 
-        internal static Dictionary<int, ProcessHelper.ServiceInfoResult> SERVICES = ProcessHelper.GetAllServicesByPidWMI();
+        private readonly AsyncTaskRunner asyncTaskRunner;
 
         /// <summary>
         /// Main entrypoint of the application.
@@ -76,33 +255,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             };
             MainWindow = window;
 
-            LogHelper.Debug("Start security log polling task...");
-            _ = EventLogPollingTaskAsync(1_000);
-
-            LogHelper.Debug("Start update services task...");
-            _ = UpdateServiceInfoTaskAsync(30_000);
-
-        }
-
-        internal async Task UpdateServiceInfoTaskAsync(int waitMillis)
-        {
-            try
-            {
-                DateTime timeStamp = DateTime.Now;
-                while (true)
-                {
-                    await Task.Delay(waitMillis).ConfigureAwait(false);
-                    Dictionary<int, ProcessHelper.ServiceInfoResult> dict = ProcessHelper.GetAllServicesByPidWMI();
-                    SERVICES = dict;
-                    Console.WriteLine($"-> {DateTime.Now} Update service info");
-                }
-            } 
-            catch (Exception e)
-            {
-                LogHelper.Error($"UpdateServiceInfoTask exception", e);
-                MessageBox.Show($"UpdateServiceInfoTask exception:\n{e.Message}\nNotifier will exit.", "Update service info exception", MessageBoxButton.OK, MessageBoxImage.Error);
-                window.Close();
-            }
+            asyncTaskRunner = new AsyncTaskRunner(this);
+            asyncTaskRunner.StartTasks();
         }
 
         public void ShowNotifierWindow()
@@ -112,82 +266,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
         protected override void OnExit(ExitEventArgs e)
         {
+            asyncTaskRunner.CancelTasks();
+            if (window != null)
+            {
+                window.Close();
+            }
             base.OnExit(e);
-        }
-
-        internal async Task EventLogPollingTaskAsync(int waitMillis)
-        {
-            try
-            {
-                DateTime lastLogEntryTimeStamp = DateTime.Now;
-                while (true)
-                {
-                    try
-                    {
-                        using (EventLog securityLog = new EventLog("security"))
-                        {
-                            List<EventLogEntry> newEntryList = new List<EventLogEntry>();
-                            int entryIndex = securityLog.Entries.Count - 1;
-                            DateTime newestEntryTimeWritten = securityLog.Entries[entryIndex].TimeWritten;
-                            for (int i = entryIndex; i >= 0; i--)
-                            {
-                                EventLogEntry entry = securityLog.Entries[i];
-                                bool isNewEntry = entry.TimeWritten > lastLogEntryTimeStamp;
-                                if (isNewEntry)
-                                {
-                                    if (IsEventInstanceIdAccepted(entry.InstanceId))
-                                    {
-                                        newEntryList.Insert(0, entry);
-                                    }
-                                }
-                                else
-                                {
-                                    break;
-                                }
-                            }
-                            lastLogEntryTimeStamp = newestEntryTimeWritten;
-
-                            foreach (EventLogEntry entry in newEntryList)
-                            {
-                                Application.Current.Dispatcher.Invoke(() =>
-                                {
-                                    // dispatch to ui thread
-                                    HandleEventLogNotification(entry);
-                                });
-                            }
-                        }
-                    } catch (IndexOutOfRangeException e)
-                    {
-                        LogHelper.Error($"Security log entry does not exist anymore:" + e.Message, e);
-                    }
-                    await Task.Delay(waitMillis).ConfigureAwait(false);
-                }
-            }
-
-            catch (SecurityException se)
-            {
-                LogHelper.Error("Security event log polling task exception: " + se.Message, se);
-                MessageBox.Show($"Notifier cannot access security event log:\n{se.Message}\nNotifier needs to be started with admin rights.\nNotifier will exit.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                window.Close();
-                Environment.Exit(1);
-            }
-            catch (Exception e)
-            {
-                LogHelper.Error("Security event log polling task exception: " + e.Message, e);
-                MessageBox.Show($"Security log polling exception:\n{e.Message}\nNotifier will exit.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                window.Close();
-                Environment.Exit(1);
-            }
-        }
-
-
-        private static Boolean IsEventInstanceIdAccepted(long instanceId)
-        {
-            // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
-            return
-                instanceId == 5157 // block connection
-                || instanceId == 5152 // drop packet
-                ;
         }
 
         internal static bool IsUserAdministrator()
@@ -215,7 +299,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             In, Out
         }
 
-        private void HandleEventLogNotification(EventLogEntry entry)
+        internal void HandleEventLogNotification(EventLogEntry entry)
         {
 
             try
@@ -232,7 +316,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 string fileName = System.IO.Path.GetFileName(friendlyPath);
 
                 // try to get the servicename from pid (works only if service is running)
-                string serviceName = SERVICES.ContainsKey(pid) ? SERVICES[pid].Name : "-";
+                string serviceName = asyncTaskRunner.GetServicName(pid);
 
                 LogHelper.Debug($"Adding {direction}-going connection for '{fileName}', service: {serviceName} ...");
                 if (!AddItem(pid, threadId, friendlyPath, targetIp, protocol, targetPort, sourcePort))
@@ -357,17 +441,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
                         if (Settings.Default.EnableServiceDetection)
                         {
-                            ProcessHelper.ServiceInfoResult svcInfo = null;
-                            if (SERVICES.TryGetValue(pid, out svcInfo))
+                            ProcessHelper.ServiceInfoResult svcInfo = asyncTaskRunner.GetServiceInfo(pid, fileName);
+                            if (svcInfo != null)
                             {
                                 svc = new string[] { svcInfo.Name };
                                 svcdsc = new string[] { svcInfo.DisplayName };
                                 unsure = false;
-                                LogHelper.Debug($"Service detected for '{fileName}': '{svc[0]}'");
-                            } else
-                            {
-                                //ProcessHelper.GetService(pid, threadid, path, protocol, localPort, target, targetPort, out svc, out svcdsc, out unsure);
-                                LogHelper.Debug($"No service detected for '{fileName}'");
                             }
                         }
                     }
