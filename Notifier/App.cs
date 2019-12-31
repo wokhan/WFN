@@ -201,7 +201,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
     /// <summary>
     /// Notifier2 main program
     /// </summary>
-    public class App : Application
+    public class App : Application, IDisposable
     {
         private readonly NotificationWindow window;
 
@@ -565,6 +565,14 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             catch (Exception e) 
             {
                 LogHelper.Warning($"Cannot resolve host name for {conn.Target} - Exception: {e.Message}");
+            }
+        }
+
+        public void Dispose()
+        {
+            if (asyncTaskRunner != null)
+            {
+                asyncTaskRunner.Dispose();
             }
         }
     }
