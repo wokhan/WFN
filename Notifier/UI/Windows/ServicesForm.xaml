@@ -4,34 +4,30 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows"
-        mc:Ignorable="d" ShowInTaskbar="False" WindowStyle="None" 
+        mc:Ignorable="d" ShowInTaskbar="False" WindowStyle="ToolWindow" 
         Title="Service selection" Height="350" Width="500" WindowStartupLocation="CenterScreen"
         DataContext="{Binding RelativeSource={RelativeSource Self}}" ResizeMode="CanResizeWithGrip">
     <Border BorderBrush="Black" BorderThickness="1">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Label Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Content="Services selection" />
-            <TextBlock Background="LightYellow" Padding="10"  TextWrapping="Wrap" Grid.Row="1">
+            <TextBlock Background="LightYellow" Padding="10" TextWrapping="Wrap" Grid.Row="0">
             Windows Firewall Notifier was not able to determine which service actually attempted to create an outgoing connection.
 <LineBreak />Please pick up the service(s) you would like to allow.
             </TextBlock>
-            <DataGrid Margin="10,0,10,10" CanUserAddRows="false" Grid.Row="4" ItemsSource="{Binding Services}" SelectedValue="{Binding SelectedServices}" SelectedValuePath="@Name" AutoGenerateColumns="False">
+            <DataGrid Margin="10,0,10,10" CanUserAddRows="false" Grid.Row="1" ItemsSource="{Binding Services}" SelectedValue="{Binding SelectedServices}" SelectedValuePath="@Name" AutoGenerateColumns="False">
                 <DataGrid.Columns>
                     <DataGridCheckBoxColumn Binding="{Binding IsSelected}" />
                     <DataGridTextColumn Header="Service" Binding="{Binding Name}" />
                     <DataGridTextColumn Header="Description" Binding="{Binding Description}" />
                 </DataGrid.Columns>
             </DataGrid>
-            <WrapPanel Grid.Row="5" HorizontalAlignment="Center">
-                <Button x:Name="btnOK" HorizontalAlignment="Center" Margin="5" Width="75" Content="OK" IsDefault="True" Click="btnOK_Click" />
-                <Button HorizontalAlignment="Center" Margin="5" Width="75" Content="Cancel" IsCancel="True" />
+            <WrapPanel Grid.Row="2" HorizontalAlignment="Center">
+                <Button x:Name="btnOK" Margin="5" Width="75" Content="OK" IsDefault="True" Click="btnOK_Click" />
+                <Button Margin="5" Width="75" Content="Cancel" IsCancel="True" />
             </WrapPanel>
         </Grid>
     </Border>
