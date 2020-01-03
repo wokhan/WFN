@@ -40,12 +40,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         internal void UpdateInner(NetworkInterface inter)
         {
             this._interface = inter;
-            NotifyPropertyChanged("Information");
-            NotifyPropertyChanged("Statistics");
-            NotifyPropertyChanged("Properties");
-            NotifyPropertyChanged("MAC");
-            NotifyPropertyChanged("FormattedBytesSent");
-            NotifyPropertyChanged("FormattedBytesReceived");
+            NotifyPropertyChanged(nameof(Information));
+            NotifyPropertyChanged(nameof(Statistics));
+            NotifyPropertyChanged(nameof(Properties));
+            NotifyPropertyChanged(nameof(MAC));
+            NotifyPropertyChanged(nameof(FormattedBytesSent));
+            NotifyPropertyChanged(nameof(FormattedBytesReceived));
         }
     }
 }

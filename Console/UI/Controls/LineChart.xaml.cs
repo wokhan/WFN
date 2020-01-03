@@ -55,7 +55,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
                     {
                         SelectionChanged(this, null);
                     }
-                    NotifyPropertyChanged("IsSelected");
+                    NotifyPropertyChanged(nameof(IsSelected));
                 }
             }
 
@@ -91,7 +91,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
                     PointsCollectionChanged(sender, e);
                 }
 
-                NotifyPropertyChanged("PointsCollection");
+                NotifyPropertyChanged(nameof(PointsCollection));
             }
         }
 
@@ -192,14 +192,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
 
             if (SetAutomaticScale(points.Min(p => p.X), points.Max(p => p.X), XMaxStartDelta, XTicksFrequency, _xs))
             {
-                NotifyPropertyChanged("Xs");
+                NotifyPropertyChanged(nameof(Xs));
             }
 
             // Have to use the whole points source instead of the added ones, probably because of some latency preventing
             // things to occur when needed.
             if (SetAutomaticScale(source.Min(p => p.Y), source.Max(p => p.Y), YMaxStartDelta, YTicksFrequency, _ys))
             {
-                NotifyPropertyChanged("Ys");
+                NotifyPropertyChanged(nameof(Ys));
             }
         }
 

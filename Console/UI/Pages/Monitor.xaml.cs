@@ -27,14 +27,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         public bool IsTrackingEnabled
         {
             get { return timer.IsEnabled; }
-            set { timer.IsEnabled = value; NotifyPropertyChanged("IsTrackingEnabled"); }
+            set { timer.IsEnabled = value; NotifyPropertyChanged(nameof(IsTrackingEnabled)); }
         }
 
         private bool _isSingleMode;
         public bool IsSingleMode
         {
             get { return _isSingleMode; }
-            set { _isSingleMode = value; _groupedConnections.Clear(); NotifyPropertyChanged("IsSingleMode"); }
+            set { _isSingleMode = value; _groupedConnections.Clear(); NotifyPropertyChanged(nameof(IsSingleMode)); }
         }
 
         public List<double> Intervals { get { return new List<double> { 0.2, 0.5, 1, 5, 10 }; } }
