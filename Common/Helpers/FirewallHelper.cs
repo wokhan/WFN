@@ -474,7 +474,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
                     if (Protocol != -1)
                     {
-                        firewallRule.Protocol = normalizeProtocol(Protocol);
+                        firewallRule.Protocol = (int)normalizeProtocol(Protocol);
                     }
 
                     if (!String.IsNullOrEmpty(LocalPorts))
@@ -722,7 +722,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
                     if (Protocol != -1)
                     {
-                        firewallRule.Protocol = normalizeProtocol(Protocol);
+                        firewallRule.Protocol = (int)normalizeProtocol(Protocol);
                     }
 
                     if (!String.IsNullOrEmpty(LocalPorts))
@@ -899,6 +899,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
                 case 40:
                     return "IL"; // IL Transport protocol
+
                 case 42:
                     return "SDRP"; // Source Demand Routing Protocol
 
@@ -921,15 +922,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         /// Converts the protocol integer to its NET_FW_IP_PROTOCOL_ representation.
         /// </summary>
         /// <returns></returns>
-        public static int normalizeProtocol(int protocol)
+        public static NET_FW_IP_PROTOCOL_ normalizeProtocol(int protocol)
         {
             try
             {
-                return (int)(NET_FW_IP_PROTOCOL_)protocol;
+                return (NET_FW_IP_PROTOCOL_)protocol;
             }
             catch
             {
-                return (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY;
+                return NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY;
             }
         }
 
