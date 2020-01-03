@@ -282,6 +282,9 @@
     <None Include="LICENSE.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="LICENSE_MaxMind.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="lisezmoi.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
