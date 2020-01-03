@@ -454,7 +454,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             this.WindowState = WindowState.Minimized;
         }
 
-        public void lblService_Click(object sender, RoutedEventArgs e)
+        private void lblService_Click(object sender, RoutedEventArgs e)
         {
             Process.Start("services.msc");
         }
