@@ -13,7 +13,7 @@ using Wokhan.WindowsFirewallNotifier.Common.Properties;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
-    public class FirewallHelper
+    public static class FirewallHelper
     {
         //[DllImport("user32.dll", SetLastError = true)]
         //private static extern int LoadString(IntPtr hInstance, uint uID, StringBuilder lpBuffer, int nBufferMax);

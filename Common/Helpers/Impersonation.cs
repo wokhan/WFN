@@ -70,26 +70,26 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             out PROCESS_INFORMATION lpProcessInformation);
 
         [StructLayout(LayoutKind.Sequential)] public struct STARTUPINFO
-		{
-			public uint cb;
-			public String lpReserved;
-			public String lpDesktop;
-			public String lpTitle;
-			public uint dwX;
-			public uint dwY;
-			public uint dwXSize;
-			public uint dwYSize;
-			public uint dwXCountChars;
-			public uint dwYCountChars;
-			public uint dwFillAttribute;
-			public uint dwFlags;
-			public short wShowWindow;
-			public short cbReserved2;
-			public IntPtr lpReserved2;
-			public IntPtr hStdInput;
-			public IntPtr hStdOutput;
-			public IntPtr hStdError;
-		}
+        {
+            public uint cb;
+            public string lpReserved;
+            public string lpDesktop;
+            public string lpTitle;
+            public uint dwX;
+            public uint dwY;
+            public uint dwXSize;
+            public uint dwYSize;
+            public uint dwXCountChars;
+            public uint dwYCountChars;
+            public uint dwFillAttribute;
+            public uint dwFlags;
+            public short wShowWindow;
+            public short cbReserved2;
+            public IntPtr lpReserved2;
+            public IntPtr hStdInput;
+            public IntPtr hStdOutput;
+            public IntPtr hStdError;
+        }
 
         [DllImport("advapi32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
