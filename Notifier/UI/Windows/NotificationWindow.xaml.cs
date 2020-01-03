@@ -90,8 +90,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             //Make sure the showConn function is triggered on initial load.
             showConn();
-            NotifyPropertyChanged("NbConnectionsAfter");
-            NotifyPropertyChanged("NbConnectionsBefore");
+            NotifyPropertyChanged(nameof(NbConnectionsAfter));
+            NotifyPropertyChanged(nameof(NbConnectionsBefore));
 
             /*ttip.SetToolTip(btnAlwaysAllow, Resources.MSG_ALLOW);
             ttip.SetToolTip(btnAlwaysBlock, Resources.MSG_BLOCK);
@@ -100,8 +100,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void NotificationWindow_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            NotifyPropertyChanged("NbConnectionsAfter");
-            NotifyPropertyChanged("NbConnectionsBefore");
+            NotifyPropertyChanged(nameof(NbConnectionsAfter));
+            NotifyPropertyChanged(nameof(NbConnectionsBefore));
         }
 
         private void NotificationWindow_Initialized(object sender, EventArgs e)
@@ -149,8 +149,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
                 showConn();
 
-                NotifyPropertyChanged("NbConnectionsAfter");
-                NotifyPropertyChanged("NbConnectionsBefore");
+                NotifyPropertyChanged(nameof(NbConnectionsAfter));
+                NotifyPropertyChanged(nameof(NbConnectionsBefore));
             }
             else
             {
@@ -210,7 +210,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             OptionsView.IsAppEnabled = !String.IsNullOrEmpty(activeConn.CurrentAppPkgId);
 
-            NotifyPropertyChanged("OptionsView");
+            NotifyPropertyChanged(nameof(OptionsView));
         }
 
         /// <summary>
