@@ -80,28 +80,28 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         public bool IsAccessDenied
         {
             get { return _isAccessDenied; }
-            set { _isAccessDenied = value; NotifyPropertyChanged("IsAccessDenied"); }
+            set { _isAccessDenied = value; NotifyPropertyChanged(nameof(IsAccessDenied)); }
         }
 
         private bool _isSelected;
         public bool IsSelected
         {
             get { return _isSelected; }
-            set { _isSelected = value; NotifyPropertyChanged("IsSelected"); }
+            set { _isSelected = value; NotifyPropertyChanged(nameof(IsSelected)); }
         }
 
         private bool _isDead;
         public bool IsDead
         {
             get { return _isDead; }
-            set { _isDead = value; NotifyPropertyChanged("IsDead"); }
+            set { _isDead = value; NotifyPropertyChanged(nameof(IsDead)); }
         }
 
         private string _lastError;
         public string LastError
         {
             get { return _lastError; }
-            set { _lastError = value; NotifyPropertyChanged("LastError"); }
+            set { _lastError = value; NotifyPropertyChanged(nameof(LastError)); }
         }
 
         public string GroupKey { get; private set; }
@@ -139,42 +139,42 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         public string Protocol
         {
             get { return _protocol; }
-            set { _protocol = value; NotifyPropertyChanged("Protocol"); }
+            set { _protocol = value; NotifyPropertyChanged(nameof(Protocol)); }
         }
 
         private string _state;
         public string State
         {
             get { return _state; }
-            set { _state = value; NotifyPropertyChanged("State"); }
+            set { _state = value; NotifyPropertyChanged(nameof(State)); }
         }
 
         private string _localAddress;
         public string LocalAddress
         {
             get { return _localAddress; }
-            set { _localAddress = value; NotifyPropertyChanged("LocalAddress"); }
+            set { _localAddress = value; NotifyPropertyChanged(nameof(LocalAddress)); }
         }
 
         private string _localPort;
         public string LocalPort
         {
             get { return _localPort; }
-            set { _localPort = value; NotifyPropertyChanged("LocalPort"); }
+            set { _localPort = value; NotifyPropertyChanged(nameof(LocalPort)); }
         }
 
         private string _remoteAddress;
         public string RemoteAddress
         {
             get { return _remoteAddress; }
-            set { _remoteAddress = value; NotifyPropertyChanged("RemoteAddress"); }
+            set { _remoteAddress = value; NotifyPropertyChanged(nameof(RemoteAddress)); }
         }
 
         private string _remotePort;
         public string RemotePort
         {
             get { return _remotePort; }
-            set { _remotePort = value; NotifyPropertyChanged("RemotePort"); }
+            set { _remotePort = value; NotifyPropertyChanged(nameof(RemotePort)); }
         }
 
         public string Owner { get; private set; }
@@ -186,14 +186,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         public bool IsDying
         {
             get { return _isDying; }
-            set { _isDying = value; NotifyPropertyChanged("IsDying"); }
+            set { _isDying = value; NotifyPropertyChanged(nameof(IsDying)); }
         }
 
         private bool _isNew;
         public bool IsNew
         {
             get { return _isNew; }
-            set { _isNew = value; NotifyPropertyChanged("IsNew"); }
+            set { _isNew = value; NotifyPropertyChanged(nameof(IsNew)); }
         }
     }
 }

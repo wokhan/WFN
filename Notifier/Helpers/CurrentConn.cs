@@ -25,7 +25,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
         public ImageSource Icon
         {
             get { return _icon; }
-            set { _icon = value; NotifyPropertyChanged("Icon"); }
+            set { _icon = value; NotifyPropertyChanged(nameof(Icon)); }
 
         }
 
@@ -49,7 +49,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
         public string ResolvedHost
         {
             get { return _resolvedHost; }
-            set { _resolvedHost = value; NotifyPropertyChanged("ResolvedHost"); }
+            set { _resolvedHost = value; NotifyPropertyChanged(nameof(ResolvedHost)); }
         }
 
         public string[] PossibleServices { get; set; }
@@ -59,7 +59,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
         public int TentativesCounter
         {
             get { return _tentativesCounter; }
-            set { _tentativesCounter = value; NotifyPropertyChanged("TentativesCounter"); }
+            set { _tentativesCounter = value; NotifyPropertyChanged(nameof(TentativesCounter)); }
         }
     }
 

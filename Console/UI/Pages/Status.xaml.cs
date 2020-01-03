@@ -20,7 +20,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         public string LastMessage
         {
             get { return _lastMessage; }
-            private set { _lastMessage = value; NotifyPropertyChanged("LastMessage"); }
+            private set { _lastMessage = value; NotifyPropertyChanged(nameof(LastMessage)); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

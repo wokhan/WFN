@@ -33,20 +33,20 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         public bool IsFullRouteDisplayed
         {
             get { return _isFullRouteDisplayed; }
-            set { _isFullRouteDisplayed = value; NotifyPropertyChanged("IsFullRouteDisplayed"); }
+            set { _isFullRouteDisplayed = value; NotifyPropertyChanged(nameof(IsFullRouteDisplayed)); }
         }
 
         public bool IsAerial
         {
             get { return _mode is AerialMode; }
-            set { Mode = (value ? new AerialMode(true) : (MapMode)new RoadMode()); NotifyPropertyChanged("IsAerial"); }
+            set { Mode = (value ? new AerialMode(true) : (MapMode)new RoadMode()); NotifyPropertyChanged(nameof(IsAerial)); }
         }
 
         private MapMode _mode = new RoadMode();
         public MapMode Mode
         {
             get { return _mode; }
-            set { _mode = value; NotifyPropertyChanged("Mode"); }
+            set { _mode = value; NotifyPropertyChanged(nameof(Mode)); }
         }
 
         public List<int> Intervals { get { return new List<int> { 1, 5, 10 }; } }

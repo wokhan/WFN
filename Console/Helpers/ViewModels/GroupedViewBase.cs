@@ -10,7 +10,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         public Brush Brush
         {
             get { return _brush; }
-            set { _brush = value; NotifyPropertyChanged("Brush"); }
+            set { _brush = value; NotifyPropertyChanged(nameof(Brush)); }
         }
 
         public string Name { get; set; }
@@ -18,7 +18,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         public int Count
         {
             get { return _count; }
-            set { _count = value; NotifyPropertyChanged("Count"); }
+            set { _count = value; NotifyPropertyChanged(nameof(Count)); }
         }
 
 
@@ -26,21 +26,21 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         public bool IsAccessDenied
         {
             get { return _isAccessDenied; }
-            set { _isAccessDenied = value; NotifyPropertyChanged("IsAccessDenied"); }
+            set { _isAccessDenied = value; NotifyPropertyChanged(nameof(IsAccessDenied)); }
         }
 
         private string _lastError;
         public string LastError
         {
             get { return _lastError; }
-            set { _lastError = value; NotifyPropertyChanged("LastError"); }
+            set { _lastError = value; NotifyPropertyChanged(nameof(LastError)); }
         }
 
         private bool _isSelected;
         public bool IsSelected
         {
             get { return _isSelected; }
-            set { _isSelected = value; NotifyPropertyChanged("IsSelected"); }
+            set { _isSelected = value; NotifyPropertyChanged(nameof(IsSelected)); }
         }
 
         public ImageSource Icon { get; set; }
