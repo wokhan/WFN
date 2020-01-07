@@ -48,6 +48,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         {
             try
             {
+                LogHelper.Info($"Start update service info task ...");
                 DateTime timeStamp = DateTime.Now;
                 CancellationToken cancellationToken = _updateServiceTaskCancellationTokenSource.Token;
                 while (true)
@@ -56,7 +57,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     await Task.Delay(waitMillis, cancellationToken).ConfigureAwait(false);
                     Dictionary<int, ProcessHelper.ServiceInfoResult> dict = ProcessHelper.GetAllServicesByPidWMI();
                     SERVICES = dict;
-                    LogHelper.Debug($"Update service info");
+                    LogHelper.Debug($"Service info updated");
                 }
             }
             catch (OperationCanceledException e)
@@ -66,7 +67,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             catch (Exception e)
             {
                 LogHelper.Error($"UpdateServiceInfoTask exception", e);
-                MessageBox.Show($"UpdateServiceInfoTask exception:\n{e.Message}\nNotifier will exit.", "Update service info exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"UpdateServiceInfoTask exception:\n{e.Message}", "Update service info exception", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -74,13 +75,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         {
             try
             {
+                LogHelper.Info($"Start security event log polling ...");
                 DateTime lastLogEntryTimeStamp = DateTime.Now;
                 CancellationToken cancellationToken = _eventLogPollingTaskCancellationTokenSource.Token;
                 while (true)
                 {
                     try
                     {
-                        LogHelper.Debug($"Polling security event log...");
                         using (EventLog securityLog = new EventLog("security"))
                         {
                             List<EventLogEntry> newEntryList = new List<EventLogEntry>();
@@ -128,11 +129,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             {
                 LogHelper.Error("EventLogPollingTaskAsync exception: " + se.Message, se);
                 MessageBox.Show($"Notifier cannot access security event log:\n{se.Message}\nNotifier needs to be started with admin rights.\nNotifier will exit.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                this._application.Shutdown();
             }
             catch (Exception e)
             {
                 LogHelper.Error("EventLogPollingTaskAsync exception: " + e.Message, e);
-                MessageBox.Show($"Security event log polling exception:\n{e.Message}\nNotifier will exit.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Security event log polling exception:\n{e.Message}", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -318,17 +320,17 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 // try to get the servicename from pid (works only if service is running)
                 string serviceName = AsyncTaskRunner.GetServicName(pid);
 
-                LogHelper.Debug($"Adding {direction}-going connection for '{fileName}', service: {serviceName} ...");
-                if (!AddItem(pid, threadId, friendlyPath, targetIp, protocol, targetPort, sourcePort))
+                LogHelper.Debug($"Adding {direction.ToString().ToUpper(CultureInfo.InvariantCulture)}-going connection for '{fileName}', service: {serviceName} ...");
+                if (!AddItem(pid, threadId, friendlyPath, targetIp, protocol: protocol, targetPort, sourcePort))
                 {
                     //This connection is blocked by a specific rule. No action necessary.
-                    LogHelper.Debug($"{direction} connection for '{fileName}' is blocked by a rule - ignored.");
+                    LogHelper.Info($"{direction}-going connection for '{fileName}' is blocked by a rule - ignored.");
                     return;
                 }
 
                 if (window.WindowState == WindowState.Minimized)
                 {
-                    window.ShowActivityTrayIcon($"Notifier blocked connections - click tray icon to show");  // max 64 chars
+                    window.ShowActivityTrayIcon($"Notifier blocked connections - click tray icon to show");  // max 64 chars!
                 }
             }
             catch (Exception e)
@@ -396,7 +398,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 var existing = this.Connections.FirstOrDefault(c => c.CurrentPath == path && c.Target == target && c.TargetPort == targetPort.ToString() && (localPort >= IPHelper.GetMaxUserPort() || c.LocalPort == localPort.ToString()) && c.Protocol == protocol);
                 if (existing != null)
                 {
-                    LogHelper.Debug("Matches an already existing connection request.");
+                    LogHelper.Debug("Connection matches an already existing connection request.");
                     if (!existing.LocalPortArray.Contains(localPort))
                     {
                         existing.LocalPortArray.Add(localPort);

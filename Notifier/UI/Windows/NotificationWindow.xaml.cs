@@ -523,7 +523,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 lstConnections.SelectedIndex = Math.Max(-1, lstConnections.SelectedIndex);
                 ((App)System.Windows.Application.Current).Connections.Remove(tmpSelectedItem);
             }
-            Console.WriteLine($"Skip_click: SelectedIndex={lstConnections.SelectedIndex}");
+            //Console.WriteLine($"Skip_click: SelectedIndex={lstConnections.SelectedIndex}");
         }
 
         private void btnSkipProgram_Click(object sender, RoutedEventArgs e)
@@ -554,7 +554,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 //this.Close();
                 // HideWindowState();
             }
-            Console.WriteLine($"SkipProgram_click: SelectedIndex={lstConnections.SelectedIndex}");
+            //Console.WriteLine($"SkipProgram_click: SelectedIndex={lstConnections.SelectedIndex}");
         }
 
         private void btnSkipAll_Click(object sender, RoutedEventArgs e)
