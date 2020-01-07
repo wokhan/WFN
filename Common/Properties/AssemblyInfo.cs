@@ -15,6 +15,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
+// log4net - look for a configuration file in the base dir
+[assembly: log4net.Config.XmlConfigurator(ConfigFile="WFN.config.log4net", Watch = true)]
+
 // CA1824 Merk assemblies default resource language
 [assembly: NeutralResourcesLanguage("en")]
 
