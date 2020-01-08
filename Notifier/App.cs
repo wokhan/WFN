@@ -117,9 +117,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                             }
                         }
                     }
-                    catch (IndexOutOfRangeException e)
+                    catch (ArgumentException e)
                     {
-                        LogHelper.Error($"Security log entry does not exist anymore:" + e.Message, e);
+                        LogHelper.Warning($"Security log entry does not exist anymore:" + e.Message);
                     }
                     CheckCancelTaskRequestedAndThrow(cancellationToken);
                     await Task.Delay(waitMillis, cancellationToken).ConfigureAwait(false);
@@ -127,14 +127,15 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             }
             catch (SecurityException se)
             {
-                LogHelper.Error("EventLogPollingTaskAsync exception: " + se.Message, se);
+                LogHelper.Error($"Notifier cannot access security event log: { se.Message}. Notifier needs to be started with admin rights and will exit now", se);
                 MessageBox.Show($"Notifier cannot access security event log:\n{se.Message}\nNotifier needs to be started with admin rights.\nNotifier will exit.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 this._application.Shutdown();
             }
             catch (Exception e)
             {
                 LogHelper.Error("EventLogPollingTaskAsync exception: " + e.Message, e);
-                MessageBox.Show($"Security event log polling exception:\n{e.Message}", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"Security event log polling exception:\n{e.Message}\nNotifier will exit", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                this._application.Shutdown();
             }
         }
 
@@ -226,7 +227,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 if (!IsUserAdministrator())
                 {
                     LogHelper.Error("User must have admin rights to access to run Notifier.", null);
-                    MessageBox.Show($"User must have admin rights to run Notifier\nNotifier will exit now!", "Not enough priviledge", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"User must have admin rights to run Notifier\nNotifier will exit now!", "Security check", MessageBoxButton.OK, MessageBoxImage.Error);
                     Environment.Exit(1);
                 }
                 string[] args = Environment.GetCommandLineArgs();
@@ -320,7 +321,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 // try to get the servicename from pid (works only if service is running)
                 string serviceName = AsyncTaskRunner.GetServicName(pid);
 
-                LogHelper.Debug($"Adding {direction.ToString().ToUpper(CultureInfo.InvariantCulture)}-going connection for '{fileName}', service: {serviceName} ...");
+                LogHelper.Info($"Handle {direction.ToString().ToUpper(CultureInfo.InvariantCulture)}-going connection for '{fileName}', service: {serviceName} ...");
                 if (!AddItem(pid, threadId, friendlyPath, targetIp, protocol: protocol, targetPort, sourcePort))
                 {
                     //This connection is blocked by a specific rule. No action necessary.
@@ -335,7 +336,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             }
             catch (Exception e)
             {
-                LogHelper.Error("Error in HandleEventLogNotification", e);
+                LogHelper.Error("HandleEventLogNotification exception", e);
             }
         }
 
