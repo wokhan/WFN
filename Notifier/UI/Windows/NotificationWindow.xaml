@@ -31,7 +31,7 @@
             <ThicknessAnimation Storyboard.TargetProperty="Margin" From="250,0,-250,0" To="0,0,0,0" Duration="0:0:0.5" />
             <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5" />
         </Storyboard>
-        <SolidColorBrush x:Key="AccentColorBrush" Color="Coral" />
+        <SolidColorBrush x:Key="AccentColorBrush" Color="LightBlue" />
         <SolidColorBrush x:Key="PressedColorBrush" Color="OrangeRed" />
         <WFN:Settings x:Key="WFN" />
         <Style x:Key="SplitButton" TargetType="Grid">
@@ -41,7 +41,7 @@
             <Style.Resources>
                 <Style TargetType="{x:Type Button}">
                     <Setter Property="OverridesDefaultStyle" Value="True" />
-                    <Setter Property="Background" Value="LightGray" />
+                    <Setter Property="Background" Value="Transparent" />
                     <Setter Property="VerticalAlignment" Value="Stretch" />
                     <Setter Property="VerticalContentAlignment" Value="Center" />
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -75,7 +75,7 @@
                 </Style>
                 <Style TargetType="{x:Type ToggleButton}">
                     <Setter Property="OverridesDefaultStyle" Value="True" />
-                    <Setter Property="Background" Value="LightGray" />
+                    <Setter Property="Background" Value="Transparent" />
                     <Setter Property="VerticalContentAlignment" Value="Center" />
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
                     <Setter Property="BorderBrush" Value="Gray" />
@@ -187,6 +187,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
+                <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" Background="{DynamicResource AccentColorBrush}">
@@ -249,7 +250,27 @@
                 </Button>
                 <Button Grid.Column="4" Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" Style="{StaticResource RoundedButton}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="2" Content="0" FontFamily="Marlett" FontSize="14" Width="28" Height="28" Click="btnMin_Click" Margin="2,0" Padding="2,0"/>
             </Grid>
-            <Expander Grid.Row="2" Background="Transparent" Margin="0,5,0,0" SizeChanged="expand_SizeChanged" DockPanel.Dock="Bottom" x:Name="expand" IsExpanded="{Binding AlwaysShowDetails,Source={x:Static settings:Settings.Default}}">
+            <Expander Grid.Row="2" Background="Transparent" Margin="0,5,0,0" SizeChanged="expand_SizeChanged" DockPanel.Dock="Bottom" x:Name="expandButtons" IsExpanded="False">
+                <Expander.Header>
+                    <TextBlock Text="Buttons expand"/>
+                </Expander.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Row="0" Margin="2" Style="{StaticResource BigRoundedButton}" Height="{Binding ActualHeight,ElementName=btnIgnore}" x:Name="btnAllowTemp2" Click="btnAllowTemp_Click">Allow temporarily</Button>
+                    <Button Grid.Row="0" Grid.Column="1" Margin="2" Style="{StaticResource BigRoundedButton}" Height="{Binding ActualHeight,ElementName=btnIgnore}" x:Name="btnBlockTemp2" Click="btnBlockTemp_Click">Block temporarily</Button>
+                    <Button Grid.Row="0" Grid.Column="2" Margin="2" Style="{StaticResource BigRoundedButton}" Height="{Binding ActualHeight,ElementName=btnSkip}" x:Name="btnSkipProgram2" Click="btnSkipProgram_Click" Content="{x:Static resx:Resources.FW_RULE_SKIP_PROGRAM}"/>
+                </Grid>
+            </Expander>
+            <Expander Grid.Row="3" Background="Transparent" Margin="0,5,0,0" SizeChanged="expand_SizeChanged" DockPanel.Dock="Bottom" x:Name="expand" IsExpanded="{Binding AlwaysShowDetails,Source={x:Static settings:Settings.Default}}">
                 <Expander.Header>
                     <TextBlock Text="{x:Static resx:Resources.FW_RULE_ADVANCED}"/>
                 </Expander.Header>
@@ -387,7 +408,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
                 <Canvas>
-                    <Border Canvas.Top="20" Canvas.Left="3" Width="{Binding ActualWidth,ElementName=sbAllow}" CornerRadius="0,0,20,20" Padding="0,15,0,0" Background="{DynamicResource AccentColorBrush}">
+                    <Border Canvas.Top="20" Canvas.Left="3" Width="{Binding ActualWidth,ElementName=sbAllow}" CornerRadius="0,0,0,0" Padding="0,15,0,0" Background="{DynamicResource AccentColorBrush}">
                         <Border.Style>
                             <Style TargetType="Border">
                                 <Setter Property="Visibility" Value="Collapsed" />
@@ -440,13 +461,16 @@
                         <Button Margin="2" Style="{StaticResource BigRoundedButton}" Height="{Binding ActualHeight,ElementName=btnSkip}" x:Name="btnSkipAll" Click="btnSkipAll_Click" Content="{x:Static resx:Resources.FW_RULE_SKIP_ALL}"/>
                     </Border>
                 </Canvas>
-                <UniformGrid Rows="1" Columns="3" Margin="0,0,41.8,0">
+                <UniformGrid Rows="3" Columns="3" Margin="0,0,41.8,0" Height="108">
                     <Grid Style="{StaticResource SplitButton}" x:Name="sbAllow">
+                        <Grid.RowDefinitions >
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="btnAllow" Click="btnAllow_Click" ToolTip="{x:Static resx:Resources.MSG_ALLOW}">
+                        <Button Grid.Row="0" x:Name="btnAllow" Click="btnAllow_Click" ToolTip="{x:Static resx:Resources.MSG_ALLOW}">
                             <StackPanel Orientation="Horizontal">
                                 <Path Height="18" Stretch="Uniform" Fill="#FF4AAA4A" Data="F1 M 32.222,33.4875L 39.1886,40.0582L 51.3802,26.1251L 54.7052,29.0542L 39.5845,47.5L 28.897,36.8125L 32.222,33.4875 Z M 24,27L 48.5,27L 45.5,30L 27,30L 27,49L 46,49L 46,42.5L 49,38.75L 49,52L 24,52L 24,27 Z" />
                                 <Label Content="{x:Static resx:Resources.FW_RULE_ALLOW}" VerticalContentAlignment="Center" />
