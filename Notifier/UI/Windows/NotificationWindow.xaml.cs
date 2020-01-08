@@ -9,6 +9,7 @@ using System.Net;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 using Wokhan.WindowsFirewallNotifier.Common;
@@ -706,5 +707,34 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
             e.Handled = true;
         }
+
+        private void tglAllow_click(object sender, RoutedEventArgs e)
+        {
+            changeButtonVisibility((bool)tglAllow.IsChecked, btnAllowTemp);
+        }
+
+        private void tglBlock_Click(object sender, RoutedEventArgs e)
+        {
+            changeButtonVisibility((bool)tglBlock.IsChecked, btnBlockTemp);
+        }
+
+        private void tglSkip_Click(object sender, RoutedEventArgs e)
+        {
+            changeButtonVisibility((bool)tglSkip.IsChecked, btnSkipProgram);
+            changeButtonVisibility((bool)tglSkip.IsChecked, btnSkipAll);
+        }
+        private void changeButtonVisibility(bool isChecked, Button button)
+        {
+            if (isChecked)
+            {
+                button.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                button.Visibility = Visibility.Collapsed;
+            }
+
+        }
+
     }
 }
