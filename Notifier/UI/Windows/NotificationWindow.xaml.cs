@@ -708,22 +708,24 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             e.Handled = true;
         }
 
-        private void tglAllow_click(object sender, RoutedEventArgs e)
-        {
-            changeButtonVisibility((bool)tglAllow.IsChecked, btnAllowTemp);
-        }
+        //private void tglAllow_click(object sender, RoutedEventArgs e)
+        //{
+        //    ChangeControlVisibility((bool)tglAllow.IsChecked, btnAllowTemp);
+        //}
 
-        private void tglBlock_Click(object sender, RoutedEventArgs e)
-        {
-            changeButtonVisibility((bool)tglBlock.IsChecked, btnBlockTemp);
-        }
+        //private void tglBlock_Click(object sender, RoutedEventArgs e)
+        //{
+        //    ChangeControlVisibility((bool)tglBlock.IsChecked, btnBlockTemp);
+        //}
 
         private void tglSkip_Click(object sender, RoutedEventArgs e)
         {
-            changeButtonVisibility((bool)tglSkip.IsChecked, btnSkipProgram);
-            changeButtonVisibility((bool)tglSkip.IsChecked, btnSkipAll);
+            ChangeControlVisibility((bool)tglSkip.IsChecked, btnBlockTemp);
+            ChangeControlVisibility((bool)tglSkip.IsChecked, btnAllowTemp);
+            ChangeControlVisibility((bool)tglSkip.IsChecked, btnSkipProgram);
+            ChangeControlVisibility((bool)tglSkip.IsChecked, btnSkipAll);
         }
-        private void changeButtonVisibility(bool isChecked, Button button)
+        private void ChangeControlVisibility(bool isChecked, Control button)
         {
             if (isChecked)
             {
