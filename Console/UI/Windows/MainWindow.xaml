@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Windows.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="WFN v2.0 BETA"
+        Title="WFN v2.0 BETA (v2019.12-u5-beta)"
         Height="{DynamicResource ConsoleSizeHeight}" 
         Width="{DynamicResource ConsoleSizeWidth}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
