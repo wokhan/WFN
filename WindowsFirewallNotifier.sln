@@ -4,6 +4,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.29201.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notifier", "Notifier\Notifier.csproj", "{B0777CD1-8F34-4370-8D9F-C4F896AD542B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E6C00065-F1D9-407C-99D9-14DD3EECFF45} = {E6C00065-F1D9-407C-99D9-14DD3EECFF45}
+		{A963FA80-520F-4952-82C9-5FDF54FC35F6} = {A963FA80-520F-4952-82C9-5FDF54FC35F6}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuleManager", "RuleManager\RuleManager.csproj", "{A963FA80-520F-4952-82C9-5FDF54FC35F6}"
 EndProject
