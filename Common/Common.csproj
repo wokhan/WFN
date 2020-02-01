@@ -151,7 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
     <None Include="Settings.settings">
@@ -181,11 +181,14 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>del WFN.config
-ren "$(TargetPath).config" WFN.config
-if "$(ConfigurationName)" == "Release" (mkdir "$(TargetDir)..\Published")
-if "$(ConfigurationName)" == "Release" (copy "$(TargetPath)" "$(TargetDir)..\Published")
+    <PostBuildEvent>del "WFN.config"
+ren "$(TargetPath).config" "WFN.config"
+del "app.config"
 </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -203,5 +206,13 @@ if "$(ConfigurationName)" == "Release" (copy "$(TargetPath)" "$(TargetDir)..\Pub
   </Target>
   <Target Name="AfterBuild">
   </Target>
+  <Target Name="AfterBuild" Condition="'$(ConfigurationName)' == 'Release'">
+    <EXEC command="mkdir &quot;$(TargetDir)..\Release_Publish&quot;" />
+    <EXEC command="copy &quot;$(TargetDir)&quot; &quot;$(TargetDir)..\Release_Publish&quot;"/>
+  </Target>
   -->
+  <Target Name="Clean">
+    <RemoveDir Directories="$(TargetDir)" />
+    <!--<RemoveDir Directories="$(TargetDir)..\Release_Publish" /> -->
+  </Target>
 </Project>
