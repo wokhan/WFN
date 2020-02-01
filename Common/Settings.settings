@@ -36,7 +36,7 @@
       <Value Profile="(Default)">900</Value>
     </Setting>
     <Setting Name="AccentColor" Roaming="true" Type="System.Windows.Media.SolidColorBrush" Scope="User">
-      <Value Profile="(Default)">#FFFF7F50</Value>
+      <Value Profile="(Default)">#FFC0C0C0</Value>
     </Setting>
     <Setting Name="EnableVerboseLogging" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
