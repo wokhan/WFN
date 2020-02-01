@@ -156,7 +156,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FFFF7F50")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFC0C0C0")]
         [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Windows.Media.SolidColorBrush AccentColor {
             get {
