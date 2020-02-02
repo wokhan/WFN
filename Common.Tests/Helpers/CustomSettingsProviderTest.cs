@@ -19,6 +19,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             // is the path to the global config file WFN.config correct?
             Assert.IsTrue(File.Exists(CustomSettingsProvider.SharedConfigurationPath));
 
+            // Reset to default
+            Settings.Default.Reset();
+            Settings.Default.FirstRun = true;
+            Settings.Default.Save();
+
+            // Reload user settings (should be same as default now)
+            Settings.Default.Reload();
+
             // can we read the first run parameter?
             Assert.IsTrue(Settings.Default.FirstRun);
         }

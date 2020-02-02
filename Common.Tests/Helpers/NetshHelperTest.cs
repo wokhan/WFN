@@ -93,7 +93,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         [TestMethod]
         public void TestGetMatchingFilterInfo_notfound()
         {
-            FilterResult result = NetshHelper.FindMatchingFilterInfo(1); 
+            FilterResult result = NetshHelper.FindMatchingFilterInfo(0); 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.HasErrors);
         }

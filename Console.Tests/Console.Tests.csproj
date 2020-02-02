@@ -111,6 +111,12 @@
     <Compile Include="Helpers\ViewModels\GeoConnection2Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Console\Console.csproj">
+      <Project>{95c82925-3b3c-4ad5-840e-55a2c4ea28a2}</Project>
+      <Name>Console</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -17,7 +17,7 @@ namespace Common.Tests.Helpers
             string exePath = @"C:\Windows\System32\svchost.exe";
             IEnumerable<FirewallHelper.Rule> results = FirewallHelper.GetMatchingRulesForEvent(pid: 0, path: exePath, target: "*", targetPort: "*", blockOnly: false);
             Assert.IsNotNull(results);
-            Assert.IsTrue(results.ToList().Count == 1, "Has no results or number of results does not match");
+            Assert.IsTrue(results.ToList().Count >= 1, "Has no results or number of results does not match");
             foreach (FirewallHelper.Rule rule in results) {
                 Console.WriteLine($"{rule.Name}, {rule.RemoteAddresses}");
             }
