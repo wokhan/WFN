@@ -35,6 +35,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
+            Settings.Default.FirstRun = true;   // reset the flag to log os info again once
             Settings.Default.Save();
             InstallHelper.SetAuditPolConnection(enableSuccess: Settings.Default.AuditPolEnableSuccessEvent, enableFailure:true);
         }
@@ -57,6 +58,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private void txtCurrentLogPath_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             Process.Start("explorer.exe", LogHelper.CurrentLogsPath);
+        }
+
+        private void btnResetDefault_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.Reset();
+            Settings.Default.FirstRun = true;
+            Settings.Default.EnableVerboseLogging = false;
+            Settings.Default.AlwaysRunAs = true;
         }
     }
 }
