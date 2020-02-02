@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Pages" x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.Status" 
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="600"
-      Title="Status">
+      Title="Status" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
     <DockPanel>
         <Border Background="#FFFF7B7B" Style="{StaticResource NonAdminPanel}">
             <WrapPanel>
