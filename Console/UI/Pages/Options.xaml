@@ -35,6 +35,12 @@
                         <TextBlock Margin="20,0,0,0" Text="Reload" />
                     </Grid>
                 </Button>
+                <Button x:Name="btnResetDefault" Click="btnResetDefault_Click">
+                    <Grid>
+                        <Path HorizontalAlignment="Left" Height="14" Stretch="Uniform" Fill="Red" Data="{StaticResource Image_Refresh}" />
+                        <TextBlock Margin="20,0,0,0" Text="Reset" />
+                    </Grid>
+                </Button>
             </WrapPanel>
         </Border>
         <StackPanel>
