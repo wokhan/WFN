@@ -8,7 +8,7 @@
       xmlns:helpers="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Helpers;assembly=Wokhan.WindowsFirewallNotifier.Common"
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="600"
-      Title="Settings" DataContext="{Binding RelativeSource={RelativeSource Self}}">
+      Title="Settings" DataContext="{Binding RelativeSource={RelativeSource Self}}" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
     <DockPanel>
         <Border Background="#FFFF7B7B" Style="{StaticResource NonAdminPanel}">
             <WrapPanel>
