@@ -32,16 +32,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             string appVersion = assembly.Version.ToString();
             string assemblyName = assembly.Name;
             CurrentLogsPath = AppDomain.CurrentDomain.BaseDirectory;
+            if (Settings.Default?.FirstRun ?? true)
+            {
+                WriteLog(LogLevel.INFO, String.Format("OS: {0} ({1} bit) / .Net CLR: {2} / Path: {3} / Version: {4} ({5} bit)", Environment.OSVersion, Environment.Is64BitOperatingSystem ? 64 : 32, Environment.Version, AppDomain.CurrentDomain.BaseDirectory, appVersion, Environment.Is64BitProcess ? 64 : 32));
+                WriteLog(LogLevel.INFO, $"Process elevated: {IsAdmin}");
                 if (Settings.Default != null)
                 {
                     Settings.Default.FirstRun = false;
                     Settings.Default.Save();
                 }
-
-            if (Settings.Default?.FirstRun ?? true)
-            {
-                WriteLog(LogLevel.INFO, String.Format("OS: {0} ({1} bit) / .Net CLR: {2} / Path: {3} / Version: {4} ({5} bit)", Environment.OSVersion, Environment.Is64BitOperatingSystem ? 64 : 32, Environment.Version, AppDomain.CurrentDomain.BaseDirectory, appVersion, Environment.Is64BitProcess ? 64 : 32));
-                WriteLog(LogLevel.INFO, $"Process elevated: {IsAdmin}");
             }
         }
 
