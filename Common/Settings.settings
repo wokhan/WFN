@@ -42,13 +42,13 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="AlwaysRunAs" Roaming="true" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="EnableDnsResolver" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="FilterTcpOnlyEvents" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="AuditPolEnableSuccessEvent" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
