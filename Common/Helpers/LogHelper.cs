@@ -103,6 +103,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             if (Settings.Default?.FirstRun ?? true)  // avoid crash if corrupt settings cause an exception to be written at the same time
             {
                 writeLog("INIT", String.Format("OS: {0} ({1} bit) / .Net CLR: {2} / Path: {3} / Version: {4} ({5} bit)", Environment.OSVersion, Environment.Is64BitOperatingSystem ? 64 : 32, Environment.Version, AppDomain.CurrentDomain.BaseDirectory, appVersion, Environment.Is64BitProcess ? 64 : 32));
+                if (Settings.Default != null)
+                {
+                    Settings.Default.FirstRun = false;
+                    Settings.Default.Save();
+                }
             }
         }
 
@@ -202,7 +207,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         private static void writeLog(string type, string msg)
 #endif
         {
-            System.Diagnostics.Debug.WriteLine(msg);
+            if (isDebugEnabled())
+            {
+                System.Diagnostics.Debug.WriteLine(msg);
+            }
 
             bool LoggingFailed = false;
 
