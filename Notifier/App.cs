@@ -433,6 +433,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                             }
                             else
                             {
+                                // TODO: this happens when accessing system32 files from a x86 application i.e. File.Exists always returns false; solution would be to target AnyCPU
                                 description = path;
                             }
                         }
