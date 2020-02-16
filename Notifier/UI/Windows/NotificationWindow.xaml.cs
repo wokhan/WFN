@@ -364,7 +364,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             {
                 // HideWindowState();
             }
-            Console.WriteLine($"-> lstConnections.SelectedIndex={lstConnections.SelectedIndex}");
+            //Console.WriteLine($"-> lstConnections.SelectedIndex={lstConnections.SelectedIndex}");
             NotifyPropertyChanged(nameof(NbConnectionsAfter));
             NotifyPropertyChanged(nameof(NbConnectionsBefore));
         }
@@ -469,7 +469,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             {
                 lstConnections.ScrollIntoView(lstConnections.SelectedItem);
             }
-            Console.WriteLine($"Next_click: SelectedIndex={lstConnections.SelectedIndex}");
+            //Console.WriteLine($"Next_click: SelectedIndex={lstConnections.SelectedIndex}");
         }
 
         /// <summary>
@@ -484,7 +484,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             {
                 lstConnections.ScrollIntoView(lstConnections.SelectedItem);
             }
-            Console.WriteLine($"Prev_click: SelectedIndex={lstConnections.SelectedIndex}");
+            //Console.WriteLine($"Prev_click: SelectedIndex={lstConnections.SelectedIndex}");
         }
 
         /// <summary>
