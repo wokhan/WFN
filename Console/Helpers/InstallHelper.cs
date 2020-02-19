@@ -166,11 +166,22 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
             string newtask;
             using (var taskStr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Wokhan.WindowsFirewallNotifier.Console.Resources.TaskTemplate.xml")))
             {
-                 newtask = String.Format(taskStr.ReadToEnd(),
-                                         allUsers ? "<UserId>NT AUTHORITY\\SYSTEM</UserId>"//"<GroupId>S-1-5-32-545</GroupId>" 
-                                                  : "<UserId><![CDATA[" + WindowsIdentity.GetCurrent().Name + "]]></UserId>",
-                                         "\"" + Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe") + "\"",
-                                         DateTime.Now.ToString("s"));
+                // TODO: Unclear why SYSTEM was required in case of all users - however task scheduler does not properly start notifier with this
+                //newtask = String.Format(taskStr.ReadToEnd(),
+                //                        allUsers ? "<UserId>NT AUTHORITY\\SYSTEM</UserId>"//"<GroupId>S-1-5-32-545</GroupId>" 
+                //                                 : "<UserId><![CDATA[" + WindowsIdentity.GetCurrent().Name + "]]></UserId>",
+                //                        "\"" + Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe") + "\"",
+                //                        DateTime.Now.ToString("s"));
+
+                string principle = "<UserId><![CDATA[" + WindowsIdentity.GetCurrent().Name + "]]></UserId>";
+                string command = "\"" + Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe") + "\"";
+                string arguments = "-minimized"; // TODO: To be implemented
+                string dateTime = DateTime.Now.ToString("s");
+                newtask = String.Format(taskStr.ReadToEnd(),
+                                        principle,
+                                        command,
+                                        arguments,
+                                        dateTime);
             }
 
             File.WriteAllText(tmpXML, newtask, Encoding.Unicode);

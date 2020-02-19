@@ -255,6 +255,7 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="Resources\TaskTemplate.xml" />
     <None Include="app.config" />
     <Content Include="IPDatabase\GeoLite2-City.mmdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -267,7 +268,6 @@
     <None Include="Resources\Images\WFN Logo.png" />
     <Resource Include="Resources\Images\WFN.ico" />
     <Resource Include="Resources\Shield.ico" />
-    <EmbeddedResource Include="Resources\TaskTemplate.xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="IPDatabase\LICENSE.txt">
