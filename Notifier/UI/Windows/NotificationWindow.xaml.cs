@@ -191,6 +191,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             get { return SystemParameters.WorkArea.Width - this.ActualWidth; }
         }
 
+        public double ExpectedWidth
+        {
+            get { return SystemParameters.WorkArea.Width - this.ExpectedLeft; }
+        }
+
         public int NbConnectionsAfter { get { return lstConnections != null && lstConnections.SelectedIndex >= 0 ? lstConnections.Items.Count - lstConnections.SelectedIndex - 1 : 0; } }
         public int NbConnectionsBefore { get { return lstConnections != null && lstConnections.SelectedIndex >= 0 ? lstConnections.SelectedIndex : 0; } }
 
@@ -234,7 +239,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             notifierTrayIcon = NotifierTrayIcon.Init(this);
 
-            this.isDetailsExpanded = expand.IsExpanded;
+            isDetailsExpanded = expand.IsExpanded;
+            tglSkip.IsChecked = false;
+            ChangeAdditionalButtonsVisibility((bool)tglSkip.IsChecked);
 
             if (Settings.Default.AccentColor != null)
             {
@@ -568,6 +575,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         private void expand_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             this.Top = ExpectedTop;
+            this.Left = ExpectedLeft;
 
             if (isDetailsExpanded != expand.IsExpanded)
             {
@@ -710,21 +718,27 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void tglButtons_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Allow/Block program?
-            ChangeControlVisibility((bool)tglSkip.IsChecked, btnBlockTemp);
-            ChangeControlVisibility((bool)tglSkip.IsChecked, btnAllowTemp);
-            ChangeControlVisibility((bool)tglSkip.IsChecked, btnSkipProgram);
-            ChangeControlVisibility((bool)tglSkip.IsChecked, btnSkipAll);
+            ChangeAdditionalButtonsVisibility((bool)tglSkip.IsChecked);
         }
-        private void ChangeControlVisibility(bool isChecked, Control button)
+
+        private void ChangeAdditionalButtonsVisibility(bool isChecked)
+        {
+            // TODO: Allow/Block program?
+            ChangeControlVisibility(isChecked, btnBlockTemp);
+            ChangeControlVisibility(isChecked, btnAllowTemp);
+            ChangeControlVisibility(isChecked, btnSkipProgram);
+            ChangeControlVisibility(isChecked, btnSkipAll);
+        }
+
+        private void ChangeControlVisibility(bool isChecked, Control control)
         {
             if (isChecked)
             {
-                button.Visibility = Visibility.Visible;
+                control.Visibility = Visibility.Visible;
             }
             else
             {
-                button.Visibility = Visibility.Collapsed;
+                control.Visibility = Visibility.Collapsed;
             }
 
         }

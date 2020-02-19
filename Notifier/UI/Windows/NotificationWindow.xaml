@@ -134,7 +134,8 @@
             <!-- was WhiteSmoke -->
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="WhiteSmoke" />   <!-- Value="{DynamicResource AccentColorBrush}" /> -->
+                    <Setter Property="Background" Value="WhiteSmoke" />
+                    <!-- Value="{DynamicResource AccentColorBrush}" /> -->
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
                     <Setter Property="Background" Value="{DynamicResource PressedColorBrush}" />
@@ -148,7 +149,7 @@
             <Setter Property="Padding" Value="3,0,0,0" />
             <Setter Property="BorderBrush" Value="Black" />
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
@@ -215,12 +216,12 @@
     <Border x:Name="Main" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
         <Grid Margin="0.2,-0.8,0.2,0.2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" MinHeight="32" />
+                <RowDefinition Height="Auto" MinHeight="32"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" MaxHeight="80"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0" Background="{DynamicResource AccentColorBrush}" Margin="0,0,0.4,0">
+            <Grid Grid.Row="0" Background="{DynamicResource AccentColorBrush}" Margin="0,0,0,59.8" Grid.RowSpan="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*" />
@@ -345,67 +346,59 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </Grid>
-            <StackPanel Grid.Row="2" VerticalAlignment="Top" Orientation="Horizontal">
-                <UniformGrid Rows="1" Columns="5" Margin="0,0,10,0" Height="Auto" HorizontalAlignment="Left">
-                    <StackPanel Orientation="Vertical">
-                        <Button x:Name="btnAllow" Click="btnAllow_Click" Style="{StaticResource BorderButton}" ToolTip="{x:Static resx:Resources.MSG_ALLOW}">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Height="18" Stretch="Uniform" Fill="#FF4AAA4A" Data="F1 M 32.222,33.4875L 39.1886,40.0582L 51.3802,26.1251L 54.7052,29.0542L 39.5845,47.5L 28.897,36.8125L 32.222,33.4875 Z M 24,27L 48.5,27L 45.5,30L 27,30L 27,49L 46,49L 46,42.5L 49,38.75L 49,52L 24,52L 24,27 Z" />
-                                <Label Content="{x:Static resx:Resources.FW_RULE_ALLOW}" VerticalContentAlignment="Center" />
-                            </StackPanel>
-                        </Button>
-                        <Button x:Name="btnAllowTemp" Visibility="Collapsed" Style="{StaticResource BorderButton}" Height="{Binding ActualHeight,ElementName=btnAllow}" Click="btnAllowTemp_Click">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Height="18" Stretch="Uniform" Fill="#FF4AAA4A" Data="F1 M 32.222,33.4875L 39.1886,40.0582L 51.3802,26.1251L 54.7052,29.0542L 39.5845,47.5L 28.897,36.8125L 32.222,33.4875 Z M 24,27L 48.5,27L 45.5,30L 27,30L 27,49L 46,49L 46,42.5L 49,38.75L 49,52L 24,52L 24,27 Z" />
-                                <Label Content="Allow temp" VerticalContentAlignment="Center" Padding="3,3,5,3" />
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                    <StackPanel Orientation="Vertical">
-                        <Button x:Name="btnIgnore" Click="btnIgnore_Click" Style="{StaticResource BorderButton}" ToolTip="{x:Static resx:Resources.MSG_BLOCK}">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Height="18" Stretch="Uniform" Fill="#FFDE6032" Data="F1 M 31.6667,19L 44.3333,19L 57,31.6667L 57,44.3333L 44.3333,57L 31.6667,57L 19,44.3333L 19,31.6667L 31.6667,19 Z M 26.4762,45.0454L 30.9546,49.5238L 38,42.4783L 45.0454,49.5238L 49.5237,45.0454L 42.4783,38L 49.5238,30.9546L 45.0454,26.4763L 38,33.5217L 30.9546,26.4762L 26.4762,30.9546L 33.5217,38L 26.4762,45.0454 Z"/>
-                                <Label Content="{x:Static resx:Resources.FW_RULE_BLOCK}" VerticalContentAlignment="Center" />
-                            </StackPanel>
-                        </Button>
-                        <Button x:Name="btnBlockTemp"  Visibility="Collapsed" Style="{StaticResource BorderButton}" Height="{Binding ActualHeight,ElementName=btnIgnore}"  Click="btnBlockTemp_Click" HorizontalContentAlignment="Left">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Height="18" Stretch="Uniform" Fill="#FFDE6032" Data="F1 M 31.6667,19L 44.3333,19L 57,31.6667L 57,44.3333L 44.3333,57L 31.6667,57L 19,44.3333L 19,31.6667L 31.6667,19 Z M 26.4762,45.0454L 30.9546,49.5238L 38,42.4783L 45.0454,49.5238L 49.5237,45.0454L 42.4783,38L 49.5238,30.9546L 45.0454,26.4763L 38,33.5217L 30.9546,26.4762L 26.4762,30.9546L 33.5217,38L 26.4762,45.0454 Z"/>
-                                <Label Content="Block temp" VerticalContentAlignment="Center" />
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                    <StackPanel Orientation="Vertical">
-                        <Button x:Name="btnSkip" Style="{StaticResource BorderButton}" Click="btnSkip_Click">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Height="18" Stretch="Uniform" Data="M3,8 H5V16H3V8 M7,8 H9V16H7V8 M11,8H13V16H11V8 M15,19.25V4.75 L22.25,12 L15,19.25Z" Fill="#FF599CEC" />
-                                <Label Content="{x:Static resx:Resources.FW_RULE_SKIP}" VerticalContentAlignment="Center"  />
-                            </StackPanel>
-                        </Button>
-                        <Button x:Name="btnSkipProgram" Visibility="Collapsed" Style="{StaticResource BorderButton}" Height="{Binding ActualHeight,ElementName=btnSkip}"  Click="btnSkipProgram_Click" HorizontalContentAlignment="Left">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Height="18" Stretch="Uniform" Data="M3,8H5V16H3V8M7,8H9V16H7V8M11,8H13V16H11V8M15,19.25V4.75L22.25,12L15,19.25Z" Fill="#FF599CEC" />
-                                <Label Content="{x:Static resx:Resources.FW_RULE_SKIP_PROGRAM}"  VerticalContentAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button x:Name="btnSkipAll" Visibility="Collapsed" Style="{StaticResource BorderButton}" Height="{Binding ActualHeight,ElementName=btnSkip}"  Click="btnSkipAll_Click" HorizontalContentAlignment="Left">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Height="18" Stretch="Uniform" Data="M3,8H5V16H3V8M7,8H9V16H7V8M11,8H13V16H11V8M15,19.25V4.75L22.25,12L15,19.25Z" Fill="#FF599CEC" />
-                                <Label Content="{x:Static resx:Resources.FW_RULE_SKIP_ALL}" VerticalContentAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
-                        <Grid Style="{StaticResource SplitButtonGridStyle}" VerticalAlignment="Bottom">
-                            <ToggleButton x:Name="tglSkip" Margin="5,0" Click="tglButtons_Click" VerticalContentAlignment="Top"/>
-                        </Grid>
-                    </StackPanel>
+            <StackPanel Grid.Row="2" Height="Auto" Margin="0,0,50,0">
+                <UniformGrid Rows="1" Columns="4" Margin="0,0,0,0" Height="Auto">
+                    <Button x:Name="btnAllow" Click="btnAllow_Click" Style="{StaticResource BorderButton}" ToolTip="{x:Static resx:Resources.MSG_ALLOW}" Margin="3,0,0,3">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Height="18" Stretch="Uniform" Fill="#FF4AAA4A" Data="F1 M 32.222,33.4875L 39.1886,40.0582L 51.3802,26.1251L 54.7052,29.0542L 39.5845,47.5L 28.897,36.8125L 32.222,33.4875 Z M 24,27L 48.5,27L 45.5,30L 27,30L 27,49L 46,49L 46,42.5L 49,38.75L 49,52L 24,52L 24,27 Z" />
+                            <Label Content="{x:Static resx:Resources.FW_RULE_ALLOW}" VerticalContentAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="btnIgnore" Click="btnIgnore_Click" Style="{StaticResource BorderButton}" ToolTip="{x:Static resx:Resources.MSG_BLOCK}" Margin="3,0,0,3">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Height="18" Stretch="Uniform" Fill="#FFDE6032" Data="F1 M 31.6667,19L 44.3333,19L 57,31.6667L 57,44.3333L 44.3333,57L 31.6667,57L 19,44.3333L 19,31.6667L 31.6667,19 Z M 26.4762,45.0454L 30.9546,49.5238L 38,42.4783L 45.0454,49.5238L 49.5237,45.0454L 42.4783,38L 49.5238,30.9546L 45.0454,26.4763L 38,33.5217L 30.9546,26.4762L 26.4762,30.9546L 33.5217,38L 26.4762,45.0454 Z"/>
+                            <Label Content="{x:Static resx:Resources.FW_RULE_BLOCK}" VerticalContentAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="btnSkip" Style="{StaticResource BorderButton}" Click="btnSkip_Click" Margin="3,0,0,3">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Height="18" Stretch="Uniform" Data="M3,8 H5V16H3V8 M7,8 H9V16H7V8 M11,8H13V16H11V8 M15,19.25V4.75 L22.25,12 L15,19.25Z" Fill="#FF599CEC" />
+                            <Label Content="{x:Static resx:Resources.FW_RULE_SKIP}" VerticalContentAlignment="Center"  />
+                        </StackPanel>
+                    </Button>
+                    <CheckBox x:Name="tglSkip" Content="" Margin="5.4,0,4.6,0" Click="tglButtons_Click" VerticalContentAlignment="Top" VerticalAlignment="Center" />
+                </UniformGrid>
+                <UniformGrid Rows="1" Columns="4" Margin="0,0,0,0" Height="Auto" SizeChanged="expand_SizeChanged">
+                    <Button Grid.Row="0" Grid.Column="0" x:Name="btnAllowTemp" Visibility="Visible" Style="{StaticResource BorderButton}" Height="{Binding ActualHeight,ElementName=btnAllow}" Click="btnAllowTemp_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Height="18" Stretch="Uniform" Fill="#FF4AAA4A" Data="F1 M 32.222,33.4875L 39.1886,40.0582L 51.3802,26.1251L 54.7052,29.0542L 39.5845,47.5L 28.897,36.8125L 32.222,33.4875 Z M 24,27L 48.5,27L 45.5,30L 27,30L 27,49L 46,49L 46,42.5L 49,38.75L 49,52L 24,52L 24,27 Z" />
+                            <Label Content="Allow temp" VerticalContentAlignment="Center" Padding="3,3,5,3" />
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Row="0" Grid.Column="1" x:Name="btnBlockTemp"  Visibility="Visible" Style="{StaticResource BorderButton}" Height="{Binding ActualHeight,ElementName=btnIgnore}"  Click="btnBlockTemp_Click" HorizontalContentAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Height="18" Stretch="Uniform" Fill="#FFDE6032" Data="F1 M 31.6667,19L 44.3333,19L 57,31.6667L 57,44.3333L 44.3333,57L 31.6667,57L 19,44.3333L 19,31.6667L 31.6667,19 Z M 26.4762,45.0454L 30.9546,49.5238L 38,42.4783L 45.0454,49.5238L 49.5237,45.0454L 42.4783,38L 49.5238,30.9546L 45.0454,26.4763L 38,33.5217L 30.9546,26.4762L 26.4762,30.9546L 33.5217,38L 26.4762,45.0454 Z"/>
+                            <Label Content="Block temp" VerticalContentAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Row="0" Grid.Column="2" x:Name="btnSkipProgram" Visibility="Visible" Style="{StaticResource BorderButton}" Height="{Binding ActualHeight,ElementName=btnSkip}"  Click="btnSkipProgram_Click" HorizontalContentAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Height="18" Stretch="Uniform" Data="M3,8H5V16H3V8M7,8H9V16H7V8M11,8H13V16H11V8M15,19.25V4.75L22.25,12L15,19.25Z" Fill="#FF599CEC" />
+                            <Label Content="{x:Static resx:Resources.FW_RULE_SKIP_PROGRAM}"  VerticalContentAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Row="0" Grid.Column="3" x:Name="btnSkipAll" Visibility="Visible" Style="{StaticResource BorderButton}" Height="{Binding ActualHeight,ElementName=btnSkip}"  Click="btnSkipAll_Click" HorizontalContentAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Height="18" Stretch="Uniform" Data="M3,8H5V16H3V8M7,8H9V16H7V8M11,8H13V16H11V8M15,19.25V4.75L22.25,12L15,19.25Z" Fill="#FF599CEC" />
+                            <Label Content="{x:Static resx:Resources.FW_RULE_SKIP_ALL}" VerticalContentAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
                 </UniformGrid>
             </StackPanel>
-            <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource RoundedButton}" ToolTip="WFN console" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="6" Margin="0,3,3,3" Background="{DynamicResource AccentColorBrush}" BorderThickness="0" Click="btnOptions_Click" Height="30" Width="30" >
+            <Button Grid.Row="2" Style="{StaticResource RoundedButton}" ToolTip="WFN console" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="6" Margin="0,3.2,3,0" Background="{DynamicResource AccentColorBrush}" BorderThickness="0" Click="btnOptions_Click" Height="30" Width="30" >
                 <Path Stretch="Uniform" Fill="White" Data="F1 M 54.8392,24.4749C 55.3507,24.2457 55.8111,24.1311 56.2202,24.1311C 56.6172,24.1311 56.966,24.2232 57.2668,24.4073C 57.5675,24.5915 57.8171,24.8339 58.0156,25.1347L 58.4575,26.1536L 58.6017,27.2737C 58.6017,29.6143 58.4667,31.8014 58.1966,33.8351C 57.9266,35.8688 57.5522,37.7644 57.0734,39.5218C 56.5947,41.2793 56.0289,42.8997 55.3763,44.383C 54.7236,45.8663 54.0167,47.232 53.2556,48.4801C 52.4946,49.7281 51.6925,50.8636 50.8496,51.8866C 50.0067,52.9095 49.1556,53.8302 48.2963,54.6486C 45.2682,57.5252 41.8351,59.6285 37.9969,60.9583C 34.1505,59.6285 30.7174,57.5252 27.6976,54.6486C 26.4086,53.421 25.1463,51.9633 23.9105,50.2754C 22.6748,48.5875 21.5751,46.6244 20.6114,44.3861C 19.6478,42.1478 18.8713,39.616 18.2821,36.7905C 17.6929,33.965 17.3982,30.7928 17.3982,27.2737L 17.5609,26.1413L 18.0397,25.1439C 18.2504,24.8493 18.5123,24.613 18.8253,24.435C 19.1383,24.257 19.4933,24.168 19.8902,24.168C 20.2871,24.168 20.7106,24.2703 21.1608,24.4749C 22.196,24.9495 23.1484,25.2851 24.0179,25.4815C 24.8875,25.6779 25.6925,25.7761 26.4332,25.7761C 27.4193,25.7761 28.3052,25.6298 29.0909,25.3372C 29.8765,25.0447 30.5987,24.6743 31.2575,24.2263L 33.0805,22.787L 34.7009,21.3476L 36.2906,20.2336C 36.8266,19.939 37.3954,19.7917 37.9969,19.7917C 38.6107,19.7917 39.1866,19.939 39.7247,20.2336L 41.3175,21.3476L 42.9471,22.787L 44.7701,24.2263C 45.4227,24.6743 46.1419,25.0447 46.9275,25.3372C 47.7132,25.6298 48.5991,25.7761 49.5852,25.7761C 50.3258,25.7761 51.1279,25.6779 51.9913,25.4815C 52.8546,25.2851 53.804,24.9495 54.8392,24.4749 Z" />
             </Button>
-            <Expander Grid.Row="3" Background="Transparent" Margin="0,5.4,0.4,0.4" SizeChanged="expand_SizeChanged" DockPanel.Dock="Bottom" x:Name="expand" IsExpanded="{Binding AlwaysShowDetails,Source={x:Static settings:Settings.Default}}">
+            <Expander Grid.Row="4" Background="Transparent" Margin="0,0,0,0" SizeChanged="expand_SizeChanged" DockPanel.Dock="Bottom" x:Name="expand" IsExpanded="{Binding AlwaysShowDetails,Source={x:Static settings:Settings.Default}}">
                 <Expander.Header>
                     <TextBlock Text="{x:Static resx:Resources.FW_RULE_ADVANCED}"/>
                 </Expander.Header>
