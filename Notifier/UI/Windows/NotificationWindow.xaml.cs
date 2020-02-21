@@ -16,170 +16,19 @@ using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Properties;
 using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
+using Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
-{ 
-    public class NotifierTrayIcon
-    {
-        private readonly System.Windows.Forms.NotifyIcon trayIcon;
-        private readonly System.Windows.Forms.ContextMenu contextMenu;
-        private readonly System.Windows.Forms.MenuItem menuDiscard;
-        private readonly System.Windows.Forms.MenuItem menuShow;
-        private readonly System.Windows.Forms.MenuItem menuConsole;
-        private readonly System.ComponentModel.IContainer components;
-
-        private bool activitySwitch = false;
-        private bool activityTipShown = false;
-
-        private readonly NotificationWindow window;
-
-        public static NotifierTrayIcon Init(NotificationWindow window)
-        {
-            NotifierTrayIcon factory = new NotifierTrayIcon(window);
-            return factory;
-        }
-
-        private NotifierTrayIcon() { }
-        private NotifierTrayIcon(NotificationWindow window) {
-            //  https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.notifyicon?redirectedfrom=MSDN&view=netframework-4.8
-            this.window = window;
-            components = new System.ComponentModel.Container();
-
-            menuShow = new System.Windows.Forms.MenuItem
-            {
-                Index = 0,
-                Text = "&Show Notifier"
-            };
-            menuShow.Click += new System.EventHandler(MenuShow_Click);
-
-            // TODO: maybe??
-            //menuBlockSilently = new System.Windows.Forms.MenuItem
-            //{
-            //    Index = 0,
-            //    Text = "&Exit and block silently"
-            //};
-            //menuBlockSilently.Click += new System.EventHandler(MenuBlockSilently_Click);
-
-            menuConsole = new System.Windows.Forms.MenuItem
-            {
-                Index = 0,
-                Text = "&Open Console"
-            };
-            menuConsole.Click += new System.EventHandler(MenuConsole_Click);
-
-            menuDiscard = new System.Windows.Forms.MenuItem
-            {
-                Index = 0,
-                Text = "&Discard and close"
-            };
-            menuDiscard.Click += new System.EventHandler(MenuClose_Click);
-
-            contextMenu = new System.Windows.Forms.ContextMenu();
-            contextMenu.MenuItems.AddRange(
-                  new System.Windows.Forms.MenuItem[] {menuShow, menuConsole, menuDiscard });
-
-            // Create the NotifyIcon. 
-            trayIcon = new System.Windows.Forms.NotifyIcon(components)
-            {
-                Icon = Notifier.Properties.Resources.TrayIcon22,
-                ContextMenu = contextMenu,
-                Text = "Notifier stays hidden when minimized - click to open", // max 64 chars
-                Visible = false
-            };
-
-            trayIcon.Click += new System.EventHandler(TrayIcon_Click);
-        }
-
-        private void MenuShow_Click(object Sender, EventArgs e)
-        {
-            window.RestoreWindowState();
-        }
-        
-
-        private void MenuClose_Click(object Sender, EventArgs e)
-        {
-            // Dispose and close the window which exits the app
-            Dispose();
-            window.Close();
-        }
-
-        private void MenuConsole_Click(object Sender, EventArgs e)
-        {
-            Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "WFN.exe"));
-        }
-
-
-        private void TrayIcon_Click(object Sender, EventArgs e)
-        {
-            if (window.WindowState == WindowState.Minimized)
-            {
-                window.RestoreWindowState();
-            } else
-            {
-                window.HideWindowState();
-            }
-        }
-
-        public void Show()
-        {
-            trayIcon.Visible = true;
-        }
-        public void Hide()
-        {
-            trayIcon.Visible = false;
-        }
-
-        public void ShowActivity(string tooltipText)
-        {
-            tooltipText = tooltipText ?? "Notifier";
-            if (tooltipText.Length > 64)
-            {
-                // limited to 64 chars in windows
-                tooltipText = tooltipText.Substring(0, 64);
-            }
-            if (trayIcon.Visible)
-            {
-                if (activitySwitch)
-                {
-                    activitySwitch = false;
-                    trayIcon.Icon = Notifier.Properties.Resources.TrayIcon22;
-                }
-                else
-                {
-                    activitySwitch = true;
-                    trayIcon.Icon = Notifier.Properties.Resources.TrayIcon21;
-                }
-                ShowBalloonTip(tooltipText);
-            }
-        }
-
-        private void ShowBalloonTip(string tooltipText)
-        {
-            if (!activityTipShown)
-            {
-                activityTipShown = true;
-                trayIcon.BalloonTipTitle = "WFN Notifier";
-                trayIcon.BalloonTipText = tooltipText;
-                trayIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Warning;
-                trayIcon.ShowBalloonTip(400);
-            }
-        }
-
-        public void Dispose()
-        {
-            if (components != null)
-                components.Dispose();
-        }
-    }
-
-    /// <summary>
-    /// Interaction logic for NotificationWindow.xaml
-    /// </summary>
-    public partial class NotificationWindow : System.Windows.Window, INotifyPropertyChanged
+{
+/// <summary>
+/// Interaction logic for NotificationWindow.xaml
+/// </summary>
+public partial class NotificationWindow : System.Windows.Window, INotifyPropertyChanged
     {
         private bool isDetailsExpanded;
 
         private readonly NotifierTrayIcon notifierTrayIcon;
+        private readonly ActivityWindow activityWindow;
 
         public double ExpectedTop
         {
@@ -238,6 +87,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             InitializeComponent();
 
             notifierTrayIcon = NotifierTrayIcon.Init(this);
+            activityWindow = ActivityWindow.Init(this);
 
             isDetailsExpanded = expand.IsExpanded;
             tglSkip.IsChecked = false;
@@ -267,6 +117,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             Show(); // required to trigger state changed events
             WindowState = WindowState.Normal;
+            activityWindow.HideIt();
         }
 
         internal void HideWindowState()
@@ -275,6 +126,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             ShowInTaskbar = false;
             WindowState = WindowState.Minimized;
             notifierTrayIcon.Show();
+            activityWindow.ShowIt();
         }
 
         private void NotificationWindow_StateChanged(object sender, EventArgs e)
