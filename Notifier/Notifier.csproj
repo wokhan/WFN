@@ -139,17 +139,25 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Windows\NotifierTrayIcon.cs" />
     <Compile Include="UI\Windows\NotificationWindow.xaml.cs">
       <DependentUpon>NotificationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Windows\ServicesForm.xaml.cs">
       <DependentUpon>ServicesForm.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Windows\ActivityWindow.xaml.cs">
+      <DependentUpon>ActivityWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="UI\Windows\NotificationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Windows\ServicesForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Windows\ActivityWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

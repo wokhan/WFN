@@ -1,0 +1,22 @@
+﻿<Window x:Name="ActivWindow" x:Class="Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows.ActivityWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows"
+        Title="ActivityWindow" 
+        Background="{x:Null}"
+        WindowStyle="None"
+        BorderBrush="Black"
+        BorderThickness="0"
+        AllowsTransparency="True"
+        WindowStartupLocation="Manual" Width="90" Height="50"
+        ResizeMode="NoResize"
+        >
+    <StackPanel Orientation="Horizontal" MouseLeftButtonDown="StackPanel_MouseLeftButtonDown" MouseMove="StackPanel_MouseMove">
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="30" Margin="0" VerticalAlignment="Top" Width="30">
+           <Image Stretch="Fill" Source="/Notifier;component/Resources/TrayIcon2.ico"/>
+        </Border>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="30" Margin="0" VerticalAlignment="Top" Width="30" Background="#FF22BF0A"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="30" Margin="0" VerticalAlignment="Top" Width="30" Background="#FFBF0A0A"/>
+    </StackPanel>
+</Window>
