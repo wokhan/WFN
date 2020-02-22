@@ -12,29 +12,36 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 {
 
-    /// <summary>
-    /// Interaction logic for Window1.xaml
-    /// </summary>
+    /*
+     Activity window with lights for allow/block activities.
+    */
     public partial class ActivityWindow : Window
 
     {
         private readonly NotificationWindow notifierWindow;
 
-        private bool HasWindowMoved = false;
+        private bool HasPositionChanged = false;  // used to remember the position when moved by a user
+        private bool DisableClick = false;
 
+        public enum WindowAlignmentEnum
+        {
+            Horizontal, Vertical
+        }
+        readonly WindowAlignmentEnum WindowAlignment = WindowAlignmentEnum.Horizontal;
 
         private double ExpectedTop
         {
-            get { return HasWindowMoved ? this.Top : SystemParameters.WorkArea.Height - this.ActualHeight; }
+            get { return HasPositionChanged ? this.Top : SystemParameters.WorkArea.Height - this.ActualHeight; }
         }
 
         private double ExpectedLeft
         {
-            get { return HasWindowMoved ? this.Left : SystemParameters.WorkArea.Width - this.ActualWidth; }
+            get { return HasPositionChanged ? this.Left : SystemParameters.WorkArea.Width - this.ActualWidth; }
         }
 
         private double ExpectedWidth
@@ -54,8 +61,19 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             notifierWindow = window;
 
             InitializeComponent();
+            if (WindowAlignment.Equals(WindowAlignmentEnum.Horizontal))
+            {
+                // switch orientation
+                double origWidth = this.Width;
+                this.Width = this.Height;
+                this.Height = origWidth;
+                ControlsContainer.Orientation = Orientation.Horizontal;
+                ControlsContainer.Height = this.Height;
+                ControlsContainer.Width = this.Width;
+            }
 
-            ShowInTaskbar = false;
+            ShowInTaskbar = false;  // hide the task icon
+
         }
 
         public void ShowIt()
@@ -74,11 +92,68 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             this.Hide();
         }
 
+        private void ToggleGreen()
+        {
+            GreenLight.Background = (Brushes.DarkGreen.Equals(GreenLight.Background)) ? Brushes.LightGreen : Brushes.DarkGreen;
+        }
+        private void ToggleRed()
+        {
+            RedLight.Background = (Brushes.DarkRed.Equals(RedLight.Background)) ? Brushes.Red : Brushes.DarkRed;
+        }
+
+        private async void ToggleLightsTask(Border control, int waitMillis)
+        {
+            Brush origBrush = control.Background;
+            void action()
+            {
+                if (GreenLight.Equals(control))
+                {
+                    ToggleGreen();
+                } 
+                else if (RedLight.Equals(control))
+                {
+                    ToggleRed();
+                }
+            };
+
+            for (int i = 0; i < 2; i++)
+            {
+                Dispatcher.Invoke(action);
+                await Task.Delay(waitMillis).ConfigureAwait(false);
+            }
+        }
+
+        public enum ActivityEnum
+        {
+            Allowed, Blocked
+        }
+        public void ShowActivity(ActivityEnum activity)
+        {
+            if (ActivityEnum.Allowed.Equals(activity))
+            {
+                ToggleLightsTask(GreenLight, 200);
+            }
+            else
+            {
+                ToggleLightsTask(RedLight, 200);
+            }
+        }
+
         private Point MouseDownPos;
         private void StackPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // Converts a relative position to screen coordinates
             MouseDownPos = PointToScreen(e.GetPosition(this));
+            DisableClick = false;
+        }
+
+        private void Button_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (!DisableClick)
+            {
+                ShowActivity(ActivityEnum.Allowed);
+                notifierWindow.RestoreWindowState();
+            }
         }
 
         private void StackPanel_MouseMove(object sender, MouseEventArgs e)
@@ -91,35 +166,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 this.Top = Top + deltaY;
                 this.Left = Left + deltaX;
                 MouseDownPos = p;
-                HasWindowMoved = true;
-                System.Console.WriteLine($"topY {Top}, leftX {Left}, pPos={p}, delta={deltaX},{deltaY}");
+                HasPositionChanged = true;
+                DisableClick = true;
             }
-        }
-
-        [DllImport("User32.dll")]
-        static extern IntPtr GetDC(IntPtr hwnd);
-
-        [DllImport("gdi32.dll")]
-        static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
-
-        [DllImport("user32.dll")]
-        static extern bool ReleaseDC(IntPtr hWnd, IntPtr hDC);
-
-        private Point ConvertPixelsToUnits(int x, int y)
-        {
-            // get the system DPI
-            IntPtr dDC = GetDC(IntPtr.Zero); // Get desktop DC
-            int dpi = GetDeviceCaps(dDC, 88);
-            bool rv = ReleaseDC(IntPtr.Zero, dDC);
-
-            // WPF's physical unit size is calculated by taking the 
-            // "Device-Independant Unit Size" (always 1/96)
-            // and scaling it by the system DPI
-            double physicalUnitSize = (1d / 96d) * (double)dpi;
-            Point wpfUnits = new Point(physicalUnitSize * (double)x,
-                physicalUnitSize * (double)y);
-
-            return wpfUnits;
         }
     }
 }
