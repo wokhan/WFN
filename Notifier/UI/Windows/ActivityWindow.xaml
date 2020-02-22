@@ -7,16 +7,18 @@
         Background="{x:Null}"
         WindowStyle="None"
         BorderBrush="Black"
-        BorderThickness="0"
+        BorderThickness="1"
         AllowsTransparency="True"
-        WindowStartupLocation="Manual" Width="90" Height="50"
+        WindowStartupLocation="Manual" 
+        Width="20" Height="60"
         ResizeMode="NoResize"
         >
-    <StackPanel Orientation="Horizontal" MouseLeftButtonDown="StackPanel_MouseLeftButtonDown" MouseMove="StackPanel_MouseMove">
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="30" Margin="0" VerticalAlignment="Top" Width="30">
-           <Image Stretch="Fill" Source="/Notifier;component/Resources/TrayIcon2.ico"/>
+    <!-- Note: the orientation and window dimensions are set in code based on preference -->
+    <StackPanel x:Name="ControlsContainer" Orientation="Vertical" MouseLeftButtonDown="StackPanel_MouseLeftButtonDown" MouseMove="StackPanel_MouseMove">
+        <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="20" MouseLeftButtonUp="Button_MouseLeftButtonUp" Background="White">
+            <Image Stretch="Fill" Source="/Notifier;component/Resources/TrayIcon22.ico" Margin="2,2,2,2" />
         </Border>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="30" Margin="0" VerticalAlignment="Top" Width="30" Background="#FF22BF0A"/>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="30" Margin="0" VerticalAlignment="Top" Width="30" Background="#FFBF0A0A"/>
+        <Border x:Name="GreenLight" BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="20" Background="DarkGreen"/>
+        <Border x:Name="RedLight" BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="20" Background="DarkRed"/>
     </StackPanel>
 </Window>
