@@ -131,6 +131,7 @@
   <ItemGroup>
     <Compile Include="App.cs" />
     <Compile Include="AppDataSample.cs" />
+    <Compile Include="Helpers\WPFUtils.cs" />
     <Compile Include="Helpers\CurrentConn.cs" />
     <Compile Include="Managers\SingletonManager.cs" />
     <Compile Include="Program.cs" />
