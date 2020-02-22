@@ -113,6 +113,11 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
             */
         }
 
+        public ActivityWindow getActivityWindow()
+        {
+            return this.activityWindow;
+        }
+
         public void RestoreWindowState()
         {
             Show(); // required to trigger state changed events
