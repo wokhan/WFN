@@ -26,7 +26,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         private readonly System.Windows.Forms.MenuItem menuConsole;
         private readonly System.ComponentModel.IContainer components;
 
-        private bool activitySwitch = false;
         private bool activityTipShown = false;
 
         private readonly NotificationWindow window;
@@ -108,7 +107,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         }
 
 
-        private void TrayIcon_Click(object Sender, EventArgs e)
+        public void TrayIcon_Click(object Sender, EventArgs e)
         {
             if (window.WindowState == WindowState.Minimized)
             {
@@ -122,6 +121,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         public void Show()
         {
+            trayIcon.Icon = Notifier.Properties.Resources.TrayIcon22;
             trayIcon.Visible = true;
         }
         public void Hide()
@@ -134,21 +134,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             tooltipText = tooltipText ?? "Notifier";
             if (tooltipText.Length > 64)
             {
-                // limited to 64 chars in windows
-                tooltipText = tooltipText.Substring(0, 64);
+                // limited to 64 chars in Win10
+                tooltipText = tooltipText.Substring(0, 63);
             }
             if (trayIcon.Visible)
             {
-                if (activitySwitch)
-                {
-                    activitySwitch = false;
-                    trayIcon.Icon = Notifier.Properties.Resources.TrayIcon22;
-                }
-                else
-                {
-                    activitySwitch = true;
-                    trayIcon.Icon = Notifier.Properties.Resources.TrayIcon21;
-                }
+                trayIcon.Icon = Notifier.Properties.Resources.TrayIcon21;
                 ShowBalloonTip(tooltipText);
             }
         }

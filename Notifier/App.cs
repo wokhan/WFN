@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
@@ -21,7 +22,6 @@ using Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows;
 namespace Wokhan.WindowsFirewallNotifier.Notifier
 {
     internal class AsyncTaskRunner : IDisposable
-
     {
         private readonly CancellationTokenSource _eventLogPollingTaskCancellationTokenSource = new CancellationTokenSource();
         private readonly CancellationTokenSource _updateServiceTaskCancellationTokenSource = new CancellationTokenSource();
@@ -96,7 +96,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                                 {
                                     if (IsEventInstanceIdAccepted(entry.InstanceId))
                                     {
+                                        WPFUtils.DispatchUI(() => _application.GetActivityWindow().ShowActivity(ActivityWindow.ActivityEnum.Blocked));
                                         newEntryList.Insert(0, entry);
+                                    } else
+                                    {
+                                        WPFUtils.DispatchUI(() => _application.GetActivityWindow().ShowActivity(ActivityWindow.ActivityEnum.Allowed));
                                     }
                                 }
                                 else
@@ -206,7 +210,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
     /// </summary>
     public class App : Application, IDisposable
     {
-        private readonly NotificationWindow window;
+        private readonly NotificationWindow notifierWindow;
+        private readonly ActivityWindow activityWindow;
 
         private ObservableCollection<CurrentConn> _conns = new ObservableCollection<CurrentConn>();
         public ObservableCollection<CurrentConn> Connections { get { return _conns; } }
@@ -252,27 +257,33 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             initExclusions();
 
             LogHelper.Debug("Init notification window...");
-            window = new NotificationWindow
+            notifierWindow = new NotificationWindow
             {
                 WindowState = WindowState.Normal
             };
-            MainWindow = window;
+            MainWindow = notifierWindow;
+            activityWindow = notifierWindow.getActivityWindow();
 
             asyncTaskRunner = new AsyncTaskRunner(this);
             asyncTaskRunner.StartTasks();
         }
 
+        public ActivityWindow GetActivityWindow()
+        {
+            return this.activityWindow;
+        }
+
         public void ShowNotifierWindow()
         {
-            window.RestoreWindowState();
+            notifierWindow.RestoreWindowState();
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
             asyncTaskRunner.CancelTasks();
-            if (window != null)
+            if (notifierWindow != null)
             {
-                window.Close();
+                notifierWindow.Close();
             }
             base.OnExit(e);
         }
@@ -329,9 +340,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     return;
                 }
 
-                if (window.WindowState == WindowState.Minimized)
+                if (notifierWindow.WindowState == WindowState.Minimized)
                 {
-                    window.ShowActivityTrayIcon($"Notifier blocked connections - click tray icon to show");  // max 64 chars!
+                    notifierWindow.ShowActivityTrayIcon($"Notifier blocked connections - click tray icon to show");  // max 64 chars!
                 }
             }
             catch (Exception e)
