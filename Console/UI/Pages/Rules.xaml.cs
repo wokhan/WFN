@@ -54,7 +54,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             LogHelper.Debug("Retrieving all rules...");
             try
             {
-                allRules = FirewallHelper.GetRules().ToList();
+                allRules = FirewallHelper.GetRules(AlsoGetInactive: true).ToList();
             }
             catch (Exception e)
             {
@@ -82,7 +82,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                         pred += WSHRulesPredicate;
                         break;
 
-                    case 0:
+                    case 0:  // all
                     default:
                         break;
                 }
