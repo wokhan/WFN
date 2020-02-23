@@ -289,4 +289,13 @@ Click on the shield icon to remove this rule.</value>
   <data name="NotifierTrayIcon_ShowNotifier" xml:space="preserve">
     <value>&amp;Show Notifier</value>
   </data>
+  <data name="ActivityWindow_DiscardAndClose" xml:space="preserve">
+    <value>Discard and close</value>
+  </data>
+  <data name="ActivityWindow_OpenConsole" xml:space="preserve">
+    <value>OpenConsole</value>
+  </data>
+  <data name="ActivityWindow_ShowNotifier" xml:space="preserve">
+    <value>Show Notifier</value>
+  </data>
 </root>
