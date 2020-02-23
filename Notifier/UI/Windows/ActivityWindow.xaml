@@ -16,7 +16,7 @@
     <!-- Note: the orientation and window dimensions are set in code based on preference -->
     <StackPanel x:Name="ControlsContainer" Orientation="Vertical" MouseLeftButtonDown="StackPanel_MouseLeftButtonDown" MouseMove="StackPanel_MouseMove">
         <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="20" MouseLeftButtonUp="Button_MouseLeftButtonUp" Background="White">
-            <Image Stretch="Fill" Source="/Notifier;component/Resources/TrayIcon22.ico" Margin="2,2,2,2" />
+            <Image x:Name="ClickableIcon" Stretch="Fill" Source="/Notifier;component/Resources/TrayIcon22.ico" Margin="2,2,2,2" />
         </Border>
         <Border x:Name="GreenLight" BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="20" Background="DarkGreen"/>
         <Border x:Name="RedLight" BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="20" Background="DarkRed"/>

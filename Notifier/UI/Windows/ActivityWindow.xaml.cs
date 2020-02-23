@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
+using WinForms = System.Windows.Forms;
+using Wokhan.WindowsFirewallNotifier.Common.Properties;
+using Messages = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
+using System.Diagnostics;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 {
@@ -72,13 +69,47 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 ControlsContainer.Width = this.Width;
             }
 
-            ShowInTaskbar = false;  // hide the task icon
+            ShowInTaskbar = false;  // hide the icon in the taskbar
 
+            ClickableIcon.ContextMenu = InitMenu();
+            ClickableIcon.ToolTip = Messages.NotifierTrayIcon_NotifierStaysHiddenWhenMinimizedClickToOpen;
         }
 
-        public void ShowIt()
+        private ContextMenu InitMenu()
         {
-            this.Show();
+            void MenuShow_Click(object Sender, RoutedEventArgs e)
+            {
+                notifierWindow.RestoreWindowState();
+            }
+            void MenuClose_Click(object Sender, EventArgs e)
+            {
+                notifierWindow.Close();
+                Close();
+            }
+            void MenuConsole_Click(object Sender, EventArgs e)
+            {
+                Process.Start(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "WFN.exe"));
+            }
+            void addMenuItem(ContextMenu cm, string caption, RoutedEventHandler eh)
+            {
+                MenuItem mi = new MenuItem
+                {
+                    Header = caption
+                };
+                mi.Click += eh;
+                cm.Items.Add(mi);
+            }
+            ContextMenu contextMenu = new ContextMenu();
+            addMenuItem(contextMenu, Messages.ActivityWindow_ShowNotifier, MenuShow_Click);
+            addMenuItem(contextMenu, Messages.ActivityWindow_OpenConsole, MenuConsole_Click);
+            addMenuItem(contextMenu, Messages.ActivityWindow_DiscardAndClose, MenuClose_Click);
+
+            return contextMenu;
+        }
+
+        public new void Show()
+        {
+            base.Show();
 
             // initial position needs to be calculated after Show()
             Top = ExpectedTop;
@@ -87,9 +118,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             Topmost = true;
         }
 
-        public void HideIt()
+        public new void Hide()
         {
-            this.Hide();
+            base.Hide();
         }
 
         private void ToggleGreen()
@@ -152,7 +183,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             if (!DisableClick)
             {
                 ShowActivity(ActivityEnum.Allowed);
-                notifierWindow.RestoreWindowState();
+                if (WindowState.Minimized == notifierWindow.WindowState)
+                {
+                    notifierWindow.RestoreWindowState();
+                } else
+                {
+                    notifierWindow.HideWindowState();
+                }
             }
         }
 
