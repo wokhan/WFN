@@ -19,7 +19,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -392,6 +392,60 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
         public static string MSG_UNINST_UNBLOCK_ERR {
             get {
                 return ResourceManager.GetString("MSG_UNINST_UNBLOCK_ERR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Discard and close.
+        /// </summary>
+        public static string NotifierTrayIcon_DiscardAndClose {
+            get {
+                return ResourceManager.GetString("NotifierTrayIcon_DiscardAndClose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notifier stays hidden when minimized - click to open.
+        /// </summary>
+        public static string NotifierTrayIcon_NotifierStaysHiddenWhenMinimizedClickToOpen {
+            get {
+                return ResourceManager.GetString("NotifierTrayIcon_NotifierStaysHiddenWhenMinimizedClickToOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;OpenConsole.
+        /// </summary>
+        public static string NotifierTrayIcon_OpenConsole {
+            get {
+                return ResourceManager.GetString("NotifierTrayIcon_OpenConsole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notifier.
+        /// </summary>
+        public static string NotifierTrayIcon_ShowActivity_Notifier {
+            get {
+                return ResourceManager.GetString("NotifierTrayIcon_ShowActivity_Notifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WFN Notifier.
+        /// </summary>
+        public static string NotifierTrayIcon_ShowBalloonTip_WFNNotifier {
+            get {
+                return ResourceManager.GetString("NotifierTrayIcon_ShowBalloonTip_WFNNotifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Show Notifier.
+        /// </summary>
+        public static string NotifierTrayIcon_ShowNotifier {
+            get {
+                return ResourceManager.GetString("NotifierTrayIcon_ShowNotifier", resourceCulture);
             }
         }
         
