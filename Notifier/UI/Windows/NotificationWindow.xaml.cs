@@ -28,7 +28,6 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
         private bool isDetailsExpanded;
 
         private readonly NotifierTrayIcon notifierTrayIcon;
-        private readonly ActivityWindow activityWindow;
 
         public double ExpectedTop
         {
@@ -87,7 +86,6 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
             InitializeComponent();
 
             notifierTrayIcon = NotifierTrayIcon.Init(this);
-            activityWindow = ActivityWindow.Init(this);
 
             isDetailsExpanded = expand.IsExpanded;
             tglSkip.IsChecked = false;
@@ -113,16 +111,10 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
             */
         }
 
-        public ActivityWindow getActivityWindow()
-        {
-            return this.activityWindow;
-        }
-
         public void RestoreWindowState()
         {
             Show(); // required to trigger state changed events
             WindowState = WindowState.Normal;
-            activityWindow.HideIt();
         }
 
         internal void HideWindowState()
@@ -131,7 +123,6 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
             ShowInTaskbar = false;
             WindowState = WindowState.Minimized;
             notifierTrayIcon.Show();
-            activityWindow.ShowIt();
         }
 
         private void NotificationWindow_StateChanged(object sender, EventArgs e)
