@@ -263,7 +263,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             };
             MainWindow = notifierWindow;
             activityWindow = ActivityWindow.Init(notifierWindow);
-            activityWindow.ShowIt();
+            activityWindow.Show();
 
             asyncTaskRunner = new AsyncTaskRunner(this);
             asyncTaskRunner.StartTasks();
