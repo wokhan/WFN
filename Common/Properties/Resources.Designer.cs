@@ -61,6 +61,33 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Discard and close.
+        /// </summary>
+        public static string ActivityWindow_DiscardAndClose {
+            get {
+                return ResourceManager.GetString("ActivityWindow_DiscardAndClose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OpenConsole.
+        /// </summary>
+        public static string ActivityWindow_OpenConsole {
+            get {
+                return ResourceManager.GetString("ActivityWindow_OpenConsole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Notifier.
+        /// </summary>
+        public static string ActivityWindow_ShowNotifier {
+            get {
+                return ResourceManager.GetString("ActivityWindow_ShowNotifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to WFN_update.txt.
         /// </summary>
         public static string FILENAME_UPDATE {
