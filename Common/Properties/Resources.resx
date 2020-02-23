@@ -271,4 +271,22 @@ Click on the shield icon to remove this rule.</value>
   <data name="TXT_SERVICES_TOOLTIP" xml:space="preserve">
     <value>Services:</value>
   </data>
+  <data name="NotifierTrayIcon_DiscardAndClose" xml:space="preserve">
+    <value>&amp;Discard and close</value>
+  </data>
+  <data name="NotifierTrayIcon_NotifierStaysHiddenWhenMinimizedClickToOpen" xml:space="preserve">
+    <value>Notifier stays hidden when minimized - click to open</value>
+  </data>
+  <data name="NotifierTrayIcon_OpenConsole" xml:space="preserve">
+    <value>&amp;OpenConsole</value>
+  </data>
+  <data name="NotifierTrayIcon_ShowActivity_Notifier" xml:space="preserve">
+    <value>Notifier</value>
+  </data>
+  <data name="NotifierTrayIcon_ShowBalloonTip_WFNNotifier" xml:space="preserve">
+    <value>WFN Notifier</value>
+  </data>
+  <data name="NotifierTrayIcon_ShowNotifier" xml:space="preserve">
+    <value>&amp;Show Notifier</value>
+  </data>
 </root>
