@@ -41,16 +41,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             this.window = window;
             components = new System.ComponentModel.Container();
 
-            WinForms::ContextMenu contextMenu = new WinForms::ContextMenu();
-            contextMenu.MenuItems.Add(Messages.NotifierTrayIcon_ShowNotifier, MenuShow_Click);
-            contextMenu.MenuItems.Add(Messages.NotifierTrayIcon_OpenConsole, MenuConsole_Click);
-            contextMenu.MenuItems.Add(Messages.NotifierTrayIcon_DiscardAndClose, MenuClose_Click);
-
             // Create the NotifyIcon. 
-            trayIcon = new System.Windows.Forms.NotifyIcon(components)
+            trayIcon = new WinForms::NotifyIcon(components)
             {
                 Icon = Notifier.Properties.Resources.TrayIcon22,
-                ContextMenu = contextMenu,
+                ContextMenu = initMenu(),
                 Text = Messages.NotifierTrayIcon_NotifierStaysHiddenWhenMinimizedClickToOpen, // max 64 chars
                 Visible = false
             };
@@ -58,21 +53,32 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             trayIcon.Click += new System.EventHandler(TrayIcon_Click);
         }
 
-        private void MenuShow_Click(object Sender, EventArgs e)
+        private WinForms::ContextMenu initMenu()
         {
-            window.RestoreWindowState();
-        }
+            WinForms::ContextMenu contextMenu = new WinForms::ContextMenu();
+            void MenuShow_Click(object Sender, EventArgs e)
+            {
+                window.RestoreWindowState();
+            }
 
-        private void MenuClose_Click(object Sender, EventArgs e)
-        {
-            // Dispose and close the window which exits the app
-            Dispose();
-            window.Close();
-        }
+            void MenuClose_Click(object Sender, EventArgs e)
+            {
+                // Dispose and close the window which exits the app
+                window.Close();
+                contextMenu.Dispose();
+                trayIcon.Dispose();
+                Environment.Exit(0);
+            }
 
-        private void MenuConsole_Click(object Sender, EventArgs e)
-        {
-            Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "WFN.exe"));
+            void MenuConsole_Click(object Sender, EventArgs e)
+            {
+                Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "WFN.exe"));
+            }
+            contextMenu.MenuItems.Add(Messages.NotifierTrayIcon_ShowNotifier, MenuShow_Click);
+            contextMenu.MenuItems.Add(Messages.NotifierTrayIcon_OpenConsole, MenuConsole_Click);
+            contextMenu.MenuItems.Add(Messages.NotifierTrayIcon_DiscardAndClose, MenuClose_Click);
+
+            return contextMenu;
         }
 
         private void TrayIcon_Click(object Sender, EventArgs e)
