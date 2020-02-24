@@ -68,12 +68,12 @@
                 </DataGrid.CellStyle>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=OneTime}" SortDirection="Ascending"/>
-                    <DataGridTemplateColumn Header="Path" SortMemberPath="ApplicationName">
+                    <DataGridTemplateColumn Header="Path" SortMemberPath="ApplicationShortName">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
                                     <Image Source="{Binding Icon, Mode=OneTime}" Width="16" HorizontalAlignment="Left"/>
-                                    <Label Content="{Binding ApplicationName, Mode=OneWay}" Margin="20,0,0,0" />
+                                    <Label Content="{Binding ApplicationShortName, Mode=OneWay}" Margin="20,0,0,0" ToolTip="{Binding ApplicationName}" />
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
