@@ -22,8 +22,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
     {
         private readonly NotificationWindow notifierWindow;
 
-        private bool HasPositionChanged = false;  // used to remember the position when moved by a user
-        private bool DisableClick = false;
+        private bool hasDefaultPositionChanged = false;  // remember if windows was re-positioned by a user
 
         public enum WindowAlignmentEnum
         {
@@ -33,12 +32,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private double ExpectedTop
         {
-            get { return HasPositionChanged ? this.Top : SystemParameters.WorkArea.Height - this.ActualHeight; }
+            get { return hasDefaultPositionChanged ? this.Top : SystemParameters.WorkArea.Height - this.ActualHeight; }
         }
 
         private double ExpectedLeft
         {
-            get { return HasPositionChanged ? this.Left : SystemParameters.WorkArea.Width - this.ActualWidth; }
+            get { return hasDefaultPositionChanged ? this.Left : SystemParameters.WorkArea.Width - this.ActualWidth; }
         }
 
         private double ExpectedWidth
@@ -57,6 +56,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             notifierWindow = window;
 
+            this.Resources.Add("WindowWidthKey", 30d);
+            this.Resources.Add("WindowHeightKey", 90d);
+
             InitializeComponent();
             if (WindowAlignment.Equals(WindowAlignmentEnum.Horizontal))
             {
@@ -69,11 +71,46 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 ControlsContainer.Width = this.Width;
             }
 
+            InitWindowsMouseEvents();
+
             ShowInTaskbar = false;  // hide the icon in the taskbar
 
             ClickableIcon.ContextMenu = InitMenu();
             ClickableIcon.ToolTip = Messages.NotifierTrayIcon_NotifierStaysHiddenWhenMinimizedClickToOpen;
         }
+
+        private void InitWindowsMouseEvents()
+        {
+            Point previousWindowPos = new Point(this.Left, this.Top);
+            Point actualWindowsPos = previousWindowPos;
+            MouseLeftButtonUp += (object sender, MouseButtonEventArgs e) =>
+            {
+                actualWindowsPos = new Point(this.Left, this.Top);
+                if (actualWindowsPos.Equals(previousWindowPos))
+                {
+                    ShowActivity(ActivityEnum.Allowed);
+                    ShowActivity(ActivityEnum.Blocked);
+                    if (WindowState.Minimized == notifierWindow.WindowState)
+                    {
+                        notifierWindow.RestoreWindowState();
+                    }
+                    else
+                    {
+                        notifierWindow.HideWindowState();
+                    }
+                }
+                else
+                {
+                    hasDefaultPositionChanged = true;
+                    previousWindowPos = actualWindowsPos;
+                }
+            };
+            MouseLeftButtonDown += (object sender, MouseButtonEventArgs e) =>
+            {
+                DragMove();
+            };
+        }
+
 
         private ContextMenu InitMenu()
         {
@@ -170,42 +207,5 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
         }
 
-        private Point MouseDownPos;
-        private void StackPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            // Converts a relative position to screen coordinates
-            MouseDownPos = PointToScreen(e.GetPosition(this));
-            DisableClick = false;
-        }
-
-        private void Button_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (!DisableClick)
-            {
-                ShowActivity(ActivityEnum.Allowed);
-                if (WindowState.Minimized == notifierWindow.WindowState)
-                {
-                    notifierWindow.RestoreWindowState();
-                } else
-                {
-                    notifierWindow.HideWindowState();
-                }
-            }
-        }
-
-        private void StackPanel_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                Point p = PointToScreen(e.GetPosition(this));
-                double deltaX = p.X - MouseDownPos.X;
-                double deltaY = p.Y - MouseDownPos.Y;
-                this.Top = Top + deltaY;
-                this.Left = Left + deltaX;
-                MouseDownPos = p;
-                HasPositionChanged = true;
-                DisableClick = true;
-            }
-        }
     }
 }
