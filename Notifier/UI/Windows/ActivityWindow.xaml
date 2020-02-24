@@ -10,15 +10,26 @@
         BorderThickness="1"
         AllowsTransparency="True"
         WindowStartupLocation="Manual" 
-        Width="20" Height="60"
+        Width="{StaticResource WindowWidthKey}" Height="{StaticResource WindowHeightKey}"
         ResizeMode="NoResize"
         >
+    <Window.Resources>
+        <Style x:Key="BorderStyle" TargetType="Border">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="0"/>
+        </Style>
+    </Window.Resources>
     <!-- Note: the orientation and window dimensions are set in code based on preference -->
-    <StackPanel x:Name="ControlsContainer" Orientation="Vertical" MouseLeftButtonDown="StackPanel_MouseLeftButtonDown" MouseMove="StackPanel_MouseMove">
-        <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="20" MouseLeftButtonUp="Button_MouseLeftButtonUp" Background="White">
-            <Image x:Name="ClickableIcon" Stretch="Fill" Source="/Notifier;component/Resources/TrayIcon22.ico" Margin="2,2,2,2" />
+    <StackPanel x:Name="ControlsContainer" Orientation="Vertical">
+        <Border Margin="0" Style="{StaticResource BorderStyle}">
+            <Image x:Name="ClickableIcon" Stretch="Fill" Source="/Notifier;component/Resources/TrayIcon22.ico" Margin="0,0,1,0" />
         </Border>
-        <Border x:Name="GreenLight" BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="20" Background="DarkGreen"/>
-        <Border x:Name="RedLight" BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="20" Background="DarkRed"/>
+        <Border x:Name="GreenLight" Background="DarkGreen" Style="{StaticResource BorderStyle}"/>
+        <Border x:Name="RedLight" Background="DarkRed" Style="{StaticResource BorderStyle}"/>
     </StackPanel>
 </Window>
