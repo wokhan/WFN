@@ -50,6 +50,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             public abstract object Interfaces { get; }
             public abstract string InterfaceTypes { get; }
             public abstract string ApplicationName { get; }
+            public abstract string ApplicationShortName { get; }
             public abstract string ServiceName { get; }
             public abstract NET_FW_ACTION_ Action { get; }
             public abstract bool Enabled { get; } //Flags & FW_RULE_FLAGS_ACTIVE
@@ -205,6 +206,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     return parsed["app"].FirstOrDefault();
                 }
             }
+
+            public override string ApplicationShortName
+            {
+                get
+                {
+                    return System.IO.Path.GetFileName(FileHelper.GetFriendlyPath(ApplicationName));
+                }
+            }
+
 
             public override string AppPkgId
             {
@@ -549,6 +559,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     return _applicationName;
                 }
             }
+            public override string ApplicationShortName
+            {
+                get
+                {
+                    return (ApplicationName != null ? System.IO.Path.GetFileName(ApplicationName) : String.Empty);
+                }
+            }
 
             public override string AppPkgId
             {
@@ -664,6 +681,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             public override NET_FW_ACTION_ Action { get; }
             public override string ApplicationName { get; }
+            public override string ApplicationShortName { get; }
             public override string AppPkgId { get; }
             public override string Description { get; }
             public override NET_FW_RULE_DIRECTION_ Direction { get; }
