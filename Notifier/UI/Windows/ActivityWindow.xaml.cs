@@ -10,6 +10,7 @@ using WinForms = System.Windows.Forms;
 using Wokhan.WindowsFirewallNotifier.Common.Properties;
 using Messages = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
 using System.Diagnostics;
+using System.Windows.Media.Imaging;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 {
@@ -23,6 +24,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         private readonly NotificationWindow notifierWindow;
 
         private bool hasDefaultPositionChanged = false;  // remember if windows was re-positioned by a user
+
+        BitmapImage NormalIcon = new BitmapImage(new Uri(@"/Notifier;component/Resources/TrayIcon22.ico", UriKind.Relative));
+        BitmapImage BlockedIcon = new BitmapImage(new Uri(@"/Notifier;component/Resources/TrayIcon21.ico", UriKind.Relative));
 
         public enum WindowAlignmentEnum
         {
@@ -75,8 +79,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             ShowInTaskbar = false;  // hide the icon in the taskbar
 
+            ClickableIcon.Source = NormalIcon;
             ClickableIcon.ContextMenu = InitMenu();
-            ClickableIcon.ToolTip = Messages.NotifierTrayIcon_NotifierStaysHiddenWhenMinimizedClickToOpen;
+            ClickableIcon.ToolTip = Messages.ActivityWindow_ClickableIcon_Tooltip;
         }
 
         private void InitWindowsMouseEvents()
@@ -89,10 +94,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 if (actualWindowsPos.Equals(previousWindowPos))
                 {
                     ShowActivity(ActivityEnum.Allowed);
-                    ShowActivity(ActivityEnum.Blocked);
                     if (WindowState.Minimized == notifierWindow.WindowState)
                     {
                         notifierWindow.RestoreWindowState();
+                        ClickableIcon.Source = NormalIcon;
                     }
                     else
                     {
@@ -195,6 +200,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             Allowed, Blocked
         }
+
         public void ShowActivity(ActivityEnum activity)
         {
             if (ActivityEnum.Allowed.Equals(activity))
@@ -204,7 +210,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             else
             {
                 ToggleLightsTask(RedLight, 200);
+                ClickableIcon.Source = BlockedIcon;
             }
+            Topmost = true;
         }
 
     }
