@@ -65,7 +65,7 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
                         tmpnames = new List<string>();
                         foreach (var service in services)
                         {
-                            string tmpRuleName = "[WFN Temp Rule] " + Guid.NewGuid().ToString();
+                            string tmpRuleName = Common.Properties.Resources.RULE_TEMP_PREFIX + " " + Guid.NewGuid().ToString();
                             tmpnames.Add(tmpRuleName);
                             FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(tmpRuleName, path, appPkgId, localUserOwner, service, protocol, target, targetPort, localPort, profile, "A"); //FIXME: Hardcoded action!
                             ret = ret && newRule.Apply(true);
@@ -86,7 +86,7 @@ namespace Wokhan.WindowsFirewallNotifier.RuleManager
                     NotifyIcon ni = new NotifyIcon();
                     ni.Click += new EventHandler(ni_Click);
                     ni.BalloonTipIcon = ToolTipIcon.Info;
-                    ni.BalloonTipTitle = Resources.RULE_TEMP;
+                    ni.BalloonTipTitle = Resources.RULE_TEMP_TITLE;
                     ni.BalloonTipText = String.Format(Resources.RULE_TEMP_DESCRIPTION, path);
                     ni.Icon = new Icon(SystemIcons.Shield, new Size(16, 16));
                     ni.Visible = true;

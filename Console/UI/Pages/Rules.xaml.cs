@@ -114,15 +114,17 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         }
 
         private static readonly string rulePrefix = Common.Properties.Resources.RULE_NAME_FORMAT.Split('-')[0];
-        private static readonly string tempRuleSuffix = Common.Properties.Resources.RULE_TEMP;
+        private static readonly string oldRulePrefix = Common.Properties.Resources.RULE_NAME_FILTER_PREFIX2;
+        private static readonly string rulePrefixAlt2 = Common.Properties.Resources.RULE_NAME_FILTER_PREFIX3;
+        private static readonly string tempRulePrefix = Common.Properties.Resources.RULE_TEMP_PREFIX;
         private bool WFNRulesPredicate(FirewallHelper.Rule r)
         {
-            return r.Name.StartsWith(rulePrefix) || r.Name.StartsWith("[WFN ") || r.Name.EndsWith(tempRuleSuffix);
+            return r.Name.StartsWith(rulePrefix) || r.Name.StartsWith(oldRulePrefix) || r.Name.StartsWith(rulePrefixAlt2) || r.Name.StartsWith(tempRulePrefix);
         }
 
         private bool WSHRulesPredicate(FirewallHelper.Rule r)
         {
-            return r.Name.StartsWith("WSH -");
+            return r.Name.StartsWith(Common.Properties.Resources.RULE_WSH_PREFIX);
         }
 
         private bool activeRulesPredicate(FirewallHelper.Rule r)

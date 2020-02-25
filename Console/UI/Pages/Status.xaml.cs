@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers;
+using Messages = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
