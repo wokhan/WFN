@@ -3,7 +3,9 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Pages" x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.Status" 
+      xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Pages" 
+      xmlns:resx="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Properties;assembly=Wokhan.WindowsFirewallNotifier.Common" 
+      x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.Status" 
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="600"
       Title="Status" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
@@ -50,12 +52,12 @@
             </Grid>
         </Border>
         <StackPanel x:Name="stackOptions">
-            <TextBlock Margin="5" TextWrapping="Wrap" Text="WFN is not a firewall and relies on the Windows embedded firewall when it comes to connections filtering. The table below shows the current Windows firewall status and allows you to manage the same directly." />
+            <TextBlock Margin="5" TextWrapping="Wrap" Text="{x:Static resx:Resources.Status_Heading1 }" />
             <WrapPanel>
                 <Label FontWeight="Bold" Content="Current profile: "/>
                 <Label Content="{Binding CurrentProfile, FallbackValue=Unknown}" />
             </WrapPanel>
-            <TextBlock Margin="5" TextWrapping="Wrap" FontStyle="Italic" Text="Note: if you don't know what a profile is all about, the private one usually refers to your home network, while the public one is for public places (restaurant, hotels...). A domain profile is usually for workplaces." />
+            <TextBlock Margin="5" TextWrapping="Wrap" FontStyle="Italic" Text="{x:Static resx:Resources.Status_NoteAboutProfiles}" />
             <Grid IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}">
                 <Grid.Style>
                     <Style>
@@ -113,7 +115,7 @@
                 <Label Grid.Column="3" HorizontalContentAlignment="Center" FontWeight="Bold" Content="Domain" />
                 <Label Grid.Column="4" HorizontalContentAlignment="Center" FontWeight="Bold" Content="All" />
                 <!-- -->
-                <Label Grid.Row="1" Grid.ColumnSpan="4" FontWeight="Bold" Content="Windows firewall global status" Background="{DynamicResource AccentColorBrush}" />
+                <Label Grid.Row="1" Grid.ColumnSpan="4" FontWeight="Bold" Content="{x:Static resx:Resources.Status_WindowsFirewallGlobalStatus}" Background="{DynamicResource AccentColorBrush}" />
                 <!-- -->
                 <ToggleButton Padding="5" Grid.Row="2" Grid.Column="1" IsChecked="{Binding PrivateIsEnabled}" />
                 <ToggleButton Grid.Row="2" Grid.Column="2" IsChecked="{Binding PublicIsEnabled}" />
@@ -121,7 +123,7 @@
                 <ToggleButton Grid.Row="2" Grid.Column="4" IsChecked="{Binding AllIsEnabled}" />
 
                 <!-- -->
-                <Label Grid.Row="4" FontWeight="Bold" Grid.ColumnSpan="4" Content="Default actions (when no filtering rule matches)" Background="{DynamicResource AccentColorBrush}" />
+                <Label Grid.Row="4" FontWeight="Bold" Grid.ColumnSpan="4" Content="{x:Static resx:Resources.Status_DefaultActionsWhenNoFilteringRuleMatches}" Background="{DynamicResource AccentColorBrush}" />
                 <!-- -->
                 <Label Grid.Row="5" Content="Inbound" FontWeight="Bold" />
                 <StackPanel Grid.Row="5" Grid.Column="1" IsEnabled="{Binding PrivateIsEnabled}">
@@ -166,7 +168,7 @@
                     <RadioButton GroupName="rdbOutAll" Padding="0,10,0,0" IsChecked="{Binding AllIsOutBlockedNotif}" Content="Block and prompt*" />
                 </StackPanel>
             </Grid>
-            <TextBlock Margin="10" FontStyle="Italic" TextWrapping="Wrap" Text="* The outgoing notifications are handled by WFN and cannot be applied to a specific profile. Selecting 'Block and prompt' for at least one profile will enable notifications for all of them. It also means that you'll need to disable them for all profiles at once if you wish to." />
+            <TextBlock Margin="10" FontStyle="Italic" TextWrapping="Wrap" Text="{x:Static resx:Resources.Status_FooterRemark}" />
         </StackPanel>
     </DockPanel>
 </Page>

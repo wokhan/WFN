@@ -222,7 +222,8 @@ This application has NOT been totally disabled.</value>
     <value>A protocol must be specified in order to be able to base rules on ports.</value>
   </data>
   <data name="RULE_NAME_FORMAT" xml:space="preserve">
-    <value>Custom Rule - {0}</value>
+    <value>[WFN] - {0}</value>
+    <comment>Prefix and format for rules creation in the windows firewall. The '-' is required i.e. 1. part filter prefix, 2. part rule name</comment>
   </data>
   <data name="SERVICES_MULTIPLE" xml:space="preserve">
     <value>Multiple matches found.</value>
@@ -239,8 +240,9 @@ This application has NOT been totally disabled.</value>
   <data name="FW_RULE_SKIP_ALL" xml:space="preserve">
     <value>Skip all</value>
   </data>
-  <data name="RULE_TEMP" xml:space="preserve">
+  <data name="RULE_TEMP_SUFFIX" xml:space="preserve">
     <value>Temporary rule</value>
+    <comment>Temporary rule suffix</comment>
   </data>
   <data name="RULE_TEMP_DESCRIPTION" xml:space="preserve">
     <value>A temporary rule has been created.
@@ -272,30 +274,68 @@ Click on the shield icon to remove this rule.</value>
     <value>Services:</value>
   </data>
   <data name="NotifierTrayIcon_DiscardAndClose" xml:space="preserve">
-    <value>&amp;Discard and close</value>
+    <value>Exit Notifier</value>
   </data>
   <data name="NotifierTrayIcon_NotifierStaysHiddenWhenMinimizedClickToOpen" xml:space="preserve">
     <value>Notifier stays hidden when minimized - click to open</value>
   </data>
   <data name="NotifierTrayIcon_OpenConsole" xml:space="preserve">
-    <value>&amp;OpenConsole</value>
+    <value>Open Console</value>
   </data>
   <data name="NotifierTrayIcon_ShowActivity_Notifier" xml:space="preserve">
-    <value>Notifier</value>
+    <value>Open Notifier</value>
   </data>
   <data name="NotifierTrayIcon_ShowBalloonTip_WFNNotifier" xml:space="preserve">
     <value>WFN Notifier</value>
   </data>
   <data name="NotifierTrayIcon_ShowNotifier" xml:space="preserve">
-    <value>&amp;Show Notifier</value>
+    <value>Show Notifier</value>
   </data>
   <data name="ActivityWindow_DiscardAndClose" xml:space="preserve">
-    <value>Discard and close</value>
+    <value>Exit Notifier</value>
   </data>
   <data name="ActivityWindow_OpenConsole" xml:space="preserve">
-    <value>OpenConsole</value>
+    <value>Open Console</value>
   </data>
   <data name="ActivityWindow_ShowNotifier" xml:space="preserve">
     <value>Show Notifier</value>
+  </data>
+  <data name="ActivityWindow_ClickableIcon_Tooltip" xml:space="preserve">
+    <value>Click to open Notifier or press and hold left mouse button to move</value>
+  </data>
+  <data name="Status_Heading1" xml:space="preserve">
+    <value>WFN is not a firewall and relies on the Windows embedded firewall when it comes to connections filtering. The table below shows the current Windows firewall status and allows you to manage the same directly.</value>
+  </data>
+  <data name="Status_NoteAboutProfiles" xml:space="preserve">
+    <value>Note: if you don't know what a profile is all about, the private one usually refers to your home network, while the public one is for public places (restaurant, hotels...). A domain profile is usually for workplaces.</value>
+  </data>
+  <data name="Status_FooterRemark" xml:space="preserve">
+    <value>* The outgoing notifications are handled by WFN and cannot be applied to a specific profile. Selecting 'Block and prompt' for at least one profile will enable notifications for all of them. It also means that you'll need to disable them for all profiles at once if you wish to.</value>
+  </data>
+  <data name="Status_WindowsFirewallGlobalStatus" xml:space="preserve">
+    <value>Windows firewall global status</value>
+  </data>
+  <data name="Status_DefaultActionsWhenNoFilteringRuleMatches" xml:space="preserve">
+    <value>Default actions (when no filtering rule matches)</value>
+  </data>
+  <data name="RULE_NAME_FILTER_PREFIX2" xml:space="preserve">
+    <value>Custom Rule</value>
+    <comment>Alternate filter prefix (corresponds to old filter prefix)</comment>
+  </data>
+  <data name="RULE_NAME_FILTER_PREFIX3" xml:space="preserve">
+    <value>[MY_RULE]</value>
+    <comment>Alternative filter prefix for my custom rules</comment>
+  </data>
+  <data name="RULE_TEMP_PREFIX" xml:space="preserve">
+    <value>[WFN_TEMP]</value>
+    <comment>Used to create and filter temporarely created rules</comment>
+  </data>
+  <data name="RULE_TEMP_TITLE" xml:space="preserve">
+    <value>Temporary rule</value>
+    <comment>Ballon tip title for temporary tray icon</comment>
+  </data>
+  <data name="RULE_WSH_PREFIX" xml:space="preserve">
+    <value>WSH -</value>
+    <comment>Windows hidden rules prefix</comment>
   </data>
 </root>
