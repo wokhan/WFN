@@ -203,7 +203,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             {
                 get
                 {
-                    return parsed["app"].FirstOrDefault();
+                    return FileHelper.GetFriendlyPath(parsed["app"].FirstOrDefault());
                 }
             }
 
@@ -211,7 +211,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             {
                 get
                 {
-                    return System.IO.Path.GetFileName(FileHelper.GetFriendlyPath(ApplicationName));
+                    return System.IO.Path.GetFileName(ApplicationName);
                 }
             }
 

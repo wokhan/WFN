@@ -56,6 +56,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         /// <returns></returns>
         public static string GetFriendlyPath(string p)
         {
+            if (String.IsNullOrEmpty(p))
+            {
+                return String.Empty;
+            }
             if (deviceNameMap == null)
             {
                 initDriveMapping();
