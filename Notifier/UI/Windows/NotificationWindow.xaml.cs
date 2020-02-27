@@ -20,10 +20,10 @@ using Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 {
-/// <summary>
-/// Interaction logic for NotificationWindow.xaml
-/// </summary>
-public partial class NotificationWindow : System.Windows.Window, INotifyPropertyChanged
+    /// <summary>
+    /// Interaction logic for NotificationWindow.xaml
+    /// </summary>
+    public partial class NotificationWindow : System.Windows.Window, INotifyPropertyChanged
     {
         private bool isDetailsExpanded;
 
@@ -290,12 +290,12 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
         /// <param name="e"></param>
         private void btnAllow_Click(object sender, RoutedEventArgs e)
         {
-            createRule(true, false);
+            createRule(doAllow: true, isTemp: false);
         }
 
         private void btnAllowTemp_Click(object sender, RoutedEventArgs e)
         {
-            createRule(true, true);
+            createRule(doAllow: true, isTemp: true);
         }
 
         /// <summary>
@@ -305,12 +305,12 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
         /// <param name="e"></param>
         private void btnIgnore_Click(object sender, RoutedEventArgs e) //FIXME: Naming?
         {
-            createRule(false, false);
+            createRule(doAllow: false, isTemp: false);
         }
 
         private void btnBlockTemp_Click(object sender, RoutedEventArgs e)
         {
-            createRule(false, true);
+            createRule(doAllow: false, isTemp: true);
         }
 
         /// <summary>
@@ -384,7 +384,7 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
 
         private void btnSkipProgram_Click(object sender, RoutedEventArgs e)
         {
-            if (lstConnections.SelectedItem == null) 
+            if (lstConnections.SelectedItem == null)
             {
                 return;
             }
@@ -516,31 +516,28 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
         private bool createBlockRule(CurrentConn activeConn, string[] services, bool isTemp)
         {
             bool success = false;
-            if (!isTemp)
+            if (Settings.Default.UseBlockRules)
             {
-                if (Settings.Default.UseBlockRules)
+                int Profiles = _optionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
+                FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(activeConn.RuleName, activeConn.CurrentPath, _optionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null, activeConn.CurrentLocalUserOwner, services, _optionsView.IsProtocolChecked ? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked ? activeConn.Target : null, _optionsView.IsTargetPortChecked ? activeConn.TargetPort : null, _optionsView.IsLocalPortChecked ? activeConn.LocalPort : null, Profiles, "B");
+                success = newRule.ApplyIndirect(isTemp);
+                if (!success)
                 {
-                    int Profiles = _optionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
-                    FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(activeConn.RuleName, activeConn.CurrentPath, _optionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null, activeConn.CurrentLocalUserOwner, services, _optionsView.IsProtocolChecked ? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked ? activeConn.Target : null, _optionsView.IsTargetPortChecked ? activeConn.TargetPort : null, _optionsView.IsLocalPortChecked ? activeConn.LocalPort : null, Profiles, "B");
-                    success = newRule.ApplyIndirect(isTemp);
-                    if (!success)
-                    {
-                        MessageBox.Show(Common.Properties.Resources.MSG_RULE_FAILED, Common.Properties.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    MessageBox.Show(Common.Properties.Resources.MSG_RULE_FAILED, Common.Properties.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                else
+            }
+            else
+            {
+                string entry = (!_optionsView.IsServiceRuleChecked || String.IsNullOrEmpty(activeConn.CurrentService) ? activeConn.CurrentPath : activeConn.CurrentService) +
+                               (_optionsView.IsLocalPortChecked ? ";" + activeConn.LocalPort : ";") +
+                               (_optionsView.IsTargetIPChecked ? ";" + activeConn.Target : ";") +
+                               (_optionsView.IsTargetPortChecked ? ";" + activeConn.TargetPort : ";"); //FIXME: Need to add more?
+                using (StreamWriter sw = new StreamWriter(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exclusions.set"), true))
                 {
-                    string entry = (!_optionsView.IsServiceRuleChecked || String.IsNullOrEmpty(activeConn.CurrentService) ? activeConn.CurrentPath : activeConn.CurrentService) +
-                                   (_optionsView.IsLocalPortChecked ? ";" + activeConn.LocalPort : ";") +
-                                   (_optionsView.IsTargetIPChecked ? ";" + activeConn.Target : ";") +
-                                   (_optionsView.IsTargetPortChecked ? ";" + activeConn.TargetPort : ";"); //FIXME: Need to add more?
-                    using (StreamWriter sw = new StreamWriter(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exclusions.set"), true))
-                    {
-                        sw.WriteLine(entry);
-                    }
+                    sw.WriteLine(entry);
+                }
 
-                    success = true;
-                }
+                success = true;
             }
             return success;
         }
@@ -548,7 +545,7 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
         private bool createAllowRule(CurrentConn activeConn, string[] services, bool isTemp)
         {
             int Profiles = _optionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
-            FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(activeConn.RuleName, activeConn.CurrentPath, _optionsView.IsAppChecked? activeConn.CurrentAppPkgId : null, activeConn.CurrentLocalUserOwner, services, _optionsView.IsProtocolChecked? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked? activeConn.Target: null, _optionsView.IsTargetPortChecked? activeConn.TargetPort: null, _optionsView.IsLocalPortChecked? activeConn.LocalPort: null, Profiles, "A");
+            FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(activeConn.RuleName, activeConn.CurrentPath, _optionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null, activeConn.CurrentLocalUserOwner, services, _optionsView.IsProtocolChecked ? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked ? activeConn.Target : null, _optionsView.IsTargetPortChecked ? activeConn.TargetPort : null, _optionsView.IsLocalPortChecked ? activeConn.LocalPort : null, Profiles, "A");
             return newRule.ApplyIndirect(isTemp);
         }
 
