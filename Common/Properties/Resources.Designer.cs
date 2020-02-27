@@ -524,7 +524,16 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [WFN_TEMP].
+        ///   Looks up a localized string similar to Temp {0} rule for: {1} - click to remove it.
+        /// </summary>
+        public static string RULE_TEMP_DESCRIPTION_SHORT {
+            get {
+                return ResourceManager.GetString("RULE_TEMP_DESCRIPTION_SHORT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [-WFN_TEMP-].
         /// </summary>
         public static string RULE_TEMP_PREFIX {
             get {
