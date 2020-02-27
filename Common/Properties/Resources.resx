@@ -327,7 +327,7 @@ Click on the shield icon to remove this rule.</value>
     <comment>Alternative filter prefix for my custom rules</comment>
   </data>
   <data name="RULE_TEMP_PREFIX" xml:space="preserve">
-    <value>[WFN_TEMP]</value>
+    <value>[-WFN_TEMP-]</value>
     <comment>Used to create and filter temporarely created rules</comment>
   </data>
   <data name="RULE_TEMP_TITLE" xml:space="preserve">
@@ -337,5 +337,8 @@ Click on the shield icon to remove this rule.</value>
   <data name="RULE_WSH_PREFIX" xml:space="preserve">
     <value>WSH -</value>
     <comment>Windows hidden rules prefix</comment>
+  </data>
+  <data name="RULE_TEMP_DESCRIPTION_SHORT" xml:space="preserve">
+    <value>Temp {0} rule for: {1} - click to remove it</value>
   </data>
 </root>
