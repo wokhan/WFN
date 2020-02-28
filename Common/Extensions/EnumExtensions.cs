@@ -21,6 +21,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Extensions
                 [Description("Description for Bar")]
                 Bar
             }
+            MyEnum x = MyEnum.Foo;
+            string description = x.GetDescription();
          * 
          */
         public static string GetDescription(this Enum value)
