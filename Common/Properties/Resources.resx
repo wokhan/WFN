@@ -245,9 +245,8 @@ This application has NOT been totally disabled.</value>
     <comment>Temporary rule suffix</comment>
   </data>
   <data name="RULE_TEMP_DESCRIPTION" xml:space="preserve">
-    <value>A temporary rule has been created.
-Path: {0}
-Click on the shield icon to remove this rule.</value>
+    <value>Temporary rules have been created - click the shield icon to remove them.</value>
+    <comment>Show as ballon tip for the temporary notifier icon and message center</comment>
   </data>
   <data name="MSG_RULE_DELETE_FAILED" xml:space="preserve">
     <value>Could not delete the rule.</value>
@@ -277,7 +276,7 @@ Click on the shield icon to remove this rule.</value>
     <value>Exit Notifier</value>
   </data>
   <data name="NotifierTrayIcon_NotifierStaysHiddenWhenMinimizedClickToOpen" xml:space="preserve">
-    <value>Notifier stays hidden when minimized - click to open</value>
+    <value>Notifier stays hidden when minimized - click to open it.</value>
   </data>
   <data name="NotifierTrayIcon_OpenConsole" xml:space="preserve">
     <value>Open Console</value>
@@ -327,8 +326,8 @@ Click on the shield icon to remove this rule.</value>
     <comment>Alternative filter prefix for my custom rules</comment>
   </data>
   <data name="RULE_TEMP_PREFIX" xml:space="preserve">
-    <value>[-WFN_TEMP-]</value>
-    <comment>Used to create and filter temporarely created rules</comment>
+    <value>#</value>
+    <comment>Prefix for temporary rules e.g RULE_TEMP_PREFIX + FULE_NAME_FORMAT</comment>
   </data>
   <data name="RULE_TEMP_TITLE" xml:space="preserve">
     <value>Temporary rule</value>
@@ -339,6 +338,7 @@ Click on the shield icon to remove this rule.</value>
     <comment>Windows hidden rules prefix</comment>
   </data>
   <data name="RULE_TEMP_DESCRIPTION_SHORT" xml:space="preserve">
-    <value>Temp {0} rule for: {1} - click to remove it</value>
+    <value>Click icon to remove temporary rules</value>
+    <comment>Shown as tooltip on the temporary notifier icon</comment>
   </data>
 </root>
