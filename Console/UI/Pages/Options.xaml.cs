@@ -65,7 +65,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             Settings.Default.Reset();
             Settings.Default.FirstRun = true;
             Settings.Default.EnableVerboseLogging = false;
-            Settings.Default.AlwaysRunAs = true;
+            //Settings.Default.AlwaysRunAs = true;
         }
     }
 }

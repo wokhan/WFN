@@ -180,16 +180,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool AlwaysRunAs {
             get {
                 return ((bool)(this["AlwaysRunAs"]));
-            }
-            set {
-                this["AlwaysRunAs"] = value;
             }
         }
         
