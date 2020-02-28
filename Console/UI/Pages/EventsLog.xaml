@@ -22,7 +22,7 @@
         <Border Style="{StaticResource ToolBarPanel}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
             <Grid>
                 <WrapPanel>
-                    <ToggleButton x:Name="btnAutoRefreshToggle" IsChecked="{Binding IsTrackingEnabled}" ToolTip="Toggle auto-refreshs - turned off when selecting an item">
+                    <ToggleButton x:Name="btnAutoRefreshToggle" IsChecked="{Binding IsTrackingEnabled}" ToolTip="Toggle auto-refresh - turned off if a row is selected">
                         <Grid>
                             <Path HorizontalAlignment="Left" Height="16" Stretch="Uniform" Fill="Green">
                                 <Path.Style>
@@ -73,7 +73,7 @@
             </Grid>
         </Border>
         <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
-            <DataGrid BorderThickness="0" x:Name="gridLog" AlternatingRowBackground="Gainsboro" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column" SelectionChanged="GridLog_SelectionChanged" DataGridCell.Selected="GridLog_CellSelected" GotFocus="GridLog_GotFocus">
+            <DataGrid BorderThickness="0" x:Name="gridLog" AlternatingRowBackground="Gainsboro" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column" SelectionChanged="GridLog_SelectionChanged" DataGridCell.Selected="GridLog_CellSelected" GotFocus="GridLog_GotFocus" GridLinesVisibility="None">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp}" Width="Auto"/>
                     <DataGridTextColumn Header="PID" Binding="{Binding Pid}" Width="Auto"/>
