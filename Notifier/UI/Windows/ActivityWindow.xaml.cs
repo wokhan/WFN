@@ -36,7 +36,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private double ExpectedTop
         {
-            get { return hasDefaultPositionChanged ? this.Top : SystemParameters.WorkArea.Height - this.ActualHeight; }
+            //get { return hasDefaultPositionChanged ? this.Top : SystemParameters.WorkArea.Height - this.ActualHeight; }
+            get { return hasDefaultPositionChanged ? this.Top : SystemParameters.WorkArea.Height / 2; }
         }
 
         private double ExpectedLeft
@@ -94,10 +95,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 if (actualWindowsPos.Equals(previousWindowPos))
                 {
                     ShowActivity(ActivityEnum.Allowed);
+                    ClickableIcon.Source = NormalIcon;
                     if (WindowState.Minimized == notifierWindow.WindowState)
                     {
                         notifierWindow.RestoreWindowState();
-                        ClickableIcon.Source = NormalIcon;
                     }
                     else
                     {
