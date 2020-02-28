@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Media;
 using Wokhan.WindowsFirewallNotifier.Common.Annotations;
 using Wokhan.WindowsFirewallNotifier.Common.Properties;
+using Wokhan.WindowsFirewallNotifier.Common.Extensions;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -145,29 +146,29 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 return FirewallHelper.GetProfileAsText(profile_type);
             }
 
-            public bool ApplyIndirect(bool isTemp)
-            {
-                string actionString;
-                switch (Action)
-                {
-                    case NET_FW_ACTION_.NET_FW_ACTION_ALLOW:
-                        actionString = "A";
-                        break;
+            //public bool ApplyIndirect(bool isTemp)
+            //{
+            //    string actionString;
+            //    switch (Action)
+            //    {
+            //        case NET_FW_ACTION_.NET_FW_ACTION_ALLOW:
+            //            actionString = "A";
+            //            break;
 
-                    case NET_FW_ACTION_.NET_FW_ACTION_BLOCK:
-                        actionString = "B";
-                        break;
+            //        case NET_FW_ACTION_.NET_FW_ACTION_BLOCK:
+            //            actionString = "B";
+            //            break;
 
-                    default:
-                        throw new Exception("Unknown action type: " + Action.ToString());
-                }
-                if (isTemp)
-                {
-                    actionString = "T";
-                }
-                string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, Name, ApplicationName, AppPkgId, LUOwn, ServiceName, Protocol, RemoteAddresses, RemotePorts, LocalPorts, Profiles, actionString)));
-                return ProcessHelper.getProcessFeedback(WFNRuleManagerEXE, param, true, isTemp);
-            }
+            //        default:
+            //            throw new Exception("Unknown action type: " + Action.ToString());
+            //    }
+            //    if (isTemp)
+            //    {
+            //        actionString = "T";
+            //    }
+            //    string param = Convert.ToBase64String(Encoding.Unicode.GetBytes(String.Format(indParamFormat, Name, ApplicationName, AppPkgId, LUOwn, ServiceName, Protocol, RemoteAddresses, RemotePorts, LocalPorts, Profiles, actionString)));
+            //    return ProcessHelper.getProcessFeedback(WFNRuleManagerEXE, args: param, runas: true, dontwait: isTemp);
+            //}
 
             public abstract bool Apply(bool isTemp);
         }
@@ -679,6 +680,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         public class CustomRule : Rule
         {
+            public enum CustomRuleAction
+            {
+                [Description("Allow")]
+                A,
+                [Description("Block")]
+                B
+            }
+
             public override NET_FW_ACTION_ Action { get; }
             public override string ApplicationName { get; }
             public override string ApplicationShortName { get; }
@@ -790,12 +799,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 return false;
             }
 
-            public CustomRule(string ruleName, string currentPath, string currentAppPkgId, string localUserOwner, string[] services, int protocol, string target, string targetPort, string localport, int profiles, string action) : this(ruleName, currentPath, currentAppPkgId, localUserOwner, services != null ? String.Join(",", services) : null, protocol, target, targetPort, localport, profiles, action)
+            public CustomRule(string ruleName, string currentPath, string currentAppPkgId, string localUserOwner, string[] services, int protocol, string target, string targetPort, string localport
+                , int profiles, CustomRuleAction action) 
+                : this(ruleName, currentPath, currentAppPkgId, localUserOwner, (services != null ? String.Join(",", services) : null), protocol, target, targetPort, localport, profiles, action)
             {
                 //Chained to the constructor below!
             }
 
-            public CustomRule(string ruleName, string currentPath, string currentAppPkgId, string localUserOwner, string services, int protocol, string target, string targetPort, string localport, int profiles, string action)
+            public CustomRule(string ruleName, string currentPath, string currentAppPkgId, string localUserOwner, string services, int protocol, string target
+                , string targetPort, string localport, int profiles, CustomRuleAction action)
             {
                 Name = ruleName;
                 ApplicationName = currentPath;
@@ -809,11 +821,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 Profiles = profiles;
                 switch (action)
                 {
-                    case "A":
+                    case CustomRuleAction.A:
                         Action = NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
                         break;
 
-                    case "B":
+                    case CustomRuleAction.B:
                         Action = NET_FW_ACTION_.NET_FW_ACTION_BLOCK;
                         break;
 
@@ -864,7 +876,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return
                 instanceId == 5157 // block connection
                 || instanceId == 5152 // drop packet
-                // Cannot parse this event: || instanceId == 5031 
+                                      // Cannot parse this event: || instanceId == 5031 
                 || instanceId == 5150
                 || instanceId == 5151
                 || instanceId == 5154
@@ -877,24 +889,24 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             string reason = "Block: {0} ";
             switch (eventId)
             {
-               case 5157:
-                    return string.Format(reason,  "connection");
+                case 5157:
+                    return string.Format(reason, "connection");
                 case 5152:
-                    return string.Format(reason,  "packet droped");
+                    return string.Format(reason, "packet droped");
                 case 5031:
-                    return string.Format(reason,  "app connection"); //  Firewall blocked an application from accepting incoming connections on the network.
+                    return string.Format(reason, "app connection"); //  Firewall blocked an application from accepting incoming connections on the network.
                 case 5150:
-                    return string.Format(reason,  "packet");
+                    return string.Format(reason, "packet");
                 case 5151:
-                    return string.Format(reason,  "packet (other FW)");
+                    return string.Format(reason, "packet (other FW)");
                 case 5154:
                     return "Allow: listen";
                 case 5155:
-                    return string.Format(reason,  "listen");
+                    return string.Format(reason, "listen");
                 case 5156:
                     return "Allow: connection";
                 default:
-                    return "[UNKNOWN] eventId:" + eventId.ToString(); 
+                    return "[UNKNOWN] eventId:" + eventId.ToString();
             }
         }
 
@@ -1153,7 +1165,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 return obj.Name.GetHashCode();
             }
         }
-        
+
         /// <summary>
         /// Get the rules matching an eventlog item taking process appPkgId and svcName into account.
         /// </summary>
@@ -1166,7 +1178,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         public static IEnumerable<Rule> GetMatchingRulesForEvent(int pid, string path, string target, string targetPort, bool blockOnly = true, bool outgoingOnly = false)
         {
             String appPkgId = (pid > 0) ? ProcessHelper.getAppPkgId(pid) : String.Empty;
-            int currentProfile = GetCurrentProfile(); 
+            int currentProfile = GetCurrentProfile();
             string svcName = "*";
             path = path ?? "";
             if (pid > 0 && path.EndsWith("svchost.exe", StringComparison.OrdinalIgnoreCase))
@@ -1213,7 +1225,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                        ;
             if (ret && LogHelper.isDebugEnabled())
             {
-                LogHelper.Debug("Found enabled "+ r.ActionStr + " " + r.DirectionStr + " Rule '" + r.Name + "'");
+                LogHelper.Debug("Found enabled " + r.ActionStr + " " + r.DirectionStr + " Rule '" + r.Name + "'");
                 LogHelper.Debug("\t" + r.Profiles.ToString() + " <--> " + currentProfile.ToString() + " : " + (((r.Profiles & currentProfile) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0)).ToString());
                 LogHelper.Debug("\t" + ruleFriendlyPath + " <--> " + friendlyPath + " : " + ((String.IsNullOrEmpty(ruleFriendlyPath) || ruleFriendlyPath.Equals(friendlyPath, StringComparison.OrdinalIgnoreCase)).ToString()));
                 LogHelper.Debug("\t" + r.RemoteAddresses + " <--> " + target + " : " + CheckRuleAddresses(r.RemoteAddresses, target).ToString());
@@ -1658,7 +1670,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     OnPropertyChanged(nameof(DomainIsInBlocked));
                 }
             }
-            
+
             public bool AllIsInAllowed
             {
                 get => PublicIsInAllowed && PrivateIsInAllowed && DomainIsInAllowed;
@@ -1666,7 +1678,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 {
                     PublicIsInAllowed = value;
                     PrivateIsInAllowed = value;
-                    DomainIsInAllowed = value; 
+                    DomainIsInAllowed = value;
                     OnPropertyChanged(nameof(PublicIsInAllowed));
                     OnPropertyChanged(nameof(PrivateIsInAllowed));
                     OnPropertyChanged(nameof(DomainIsInAllowed));
@@ -1694,7 +1706,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 {
                     PublicIsOutAllowed = value;
                     PrivateIsOutAllowed = value;
-                    DomainIsOutAllowed = value; 
+                    DomainIsOutAllowed = value;
                     OnPropertyChanged(nameof(PublicIsOutAllowed));
                     OnPropertyChanged(nameof(PrivateIsOutAllowed));
                     OnPropertyChanged(nameof(DomainIsOutAllowed));
