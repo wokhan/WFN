@@ -41,7 +41,7 @@
     <Setting Name="EnableVerboseLogging" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="AlwaysRunAs" Roaming="true" Type="System.Boolean" Scope="User">
+    <Setting Name="AlwaysRunAs" Roaming="true" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="EnableDnsResolver" Type="System.Boolean" Scope="User">
