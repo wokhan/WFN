@@ -441,7 +441,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Notifier stays hidden when minimized - click to open.
+        ///   Looks up a localized string similar to Notifier stays hidden when minimized - click to open it..
         /// </summary>
         public static string NotifierTrayIcon_NotifierStaysHiddenWhenMinimizedClickToOpen {
             get {
@@ -513,9 +513,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A temporary rule has been created.
-        ///Path: {0}
-        ///Click on the shield icon to remove this rule..
+        ///   Looks up a localized string similar to Temporary rules have been created - click the shield icon to remove them..
         /// </summary>
         public static string RULE_TEMP_DESCRIPTION {
             get {
@@ -524,7 +522,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Temp {0} rule for: {1} - click to remove it.
+        ///   Looks up a localized string similar to Click icon to remove temporary rules.
         /// </summary>
         public static string RULE_TEMP_DESCRIPTION_SHORT {
             get {
@@ -533,7 +531,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [-WFN_TEMP-].
+        ///   Looks up a localized string similar to #.
         /// </summary>
         public static string RULE_TEMP_PREFIX {
             get {
