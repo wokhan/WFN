@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
+
 using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
@@ -18,8 +21,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
     {
         NotificationWindow window;
 
-        private ObservableCollection<CurrentConn> _conns = new ObservableCollection<CurrentConn>();
-        public ObservableCollection<CurrentConn> Connections { get { return _conns; } }
+        public ObservableCollection<CurrentConn> Connections { get; } = new ObservableCollection<CurrentConn>();
 
         private string[] exclusions = null;
 
@@ -29,9 +31,34 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             CommonHelper.OverrideSettingsFile("WFN.config");
         }
 
-        public App(ReadOnlyCollection<string> argv) : this()
+        public App(string[] argv) : this()
         {
+            Task.Run(InitiateNamedPipeServer);
             NextInstance(argv);
+        }
+
+        private async void InitiateNamedPipeServer()
+        {
+            // Maybe instantiate 5 parallel server (arbitrarily), a perf test could be useful here.
+            var pipeServer = new NamedPipeServerStream("WFN_Notifier_Pipe", PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Message, PipeOptions.Asynchronous);
+            await pipeServer.WaitForConnectionAsync();
+
+#pragma warning disable CS4014 // Dans la mesure où cet appel n'est pas attendu, l'exécution de la méthode actuelle continue avant la fin de l'appel
+
+            Task.Run(() =>
+            {
+                string msg;
+                using (var sr = new StreamReader(pipeServer))
+                {
+                    msg = sr.ReadLine();
+                }
+                // Warning: could fail if any of the arguments contains the string we are splitting on (program path can and will...).
+                NextInstance(msg.Split(" -").SelectMany(arg => arg.Split(' ', 2)).ToArray());
+            });
+            Task.Run(InitiateNamedPipeServer);
+
+#pragma warning restore CS4014 // Dans la mesure où cet appel n'est pas attendu, l'exécution de la méthode actuelle continue avant la fin de l'appel
+
         }
 
         /// <summary>
@@ -107,7 +134,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                             if (File.Exists(path))
                             {
                                 description = FileVersionInfo.GetVersionInfo(path).FileDescription;
-                                if(String.IsNullOrWhiteSpace(description))
+                                if (String.IsNullOrWhiteSpace(description))
                                 {
                                     description = path.Substring(path.LastIndexOf('\\') + 1);
                                 }
@@ -240,8 +267,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             catch { }
         }
 
-
-        internal void NextInstance(ReadOnlyCollection<string> argv)
+        internal void NextInstance(string[] argv)
         {
             try
             {

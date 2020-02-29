@@ -37,7 +37,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
             Configuration cfg = null;
 
-            ExeConfigurationFileMap configMap = new ExeConfigurationFileMap();
+            var configMap = new ExeConfigurationFileMap();
             configMap.ExeConfigFilename = SharedConfigurationPath;
             if (!WindowsIdentity.GetCurrent().IsSystem)
             {

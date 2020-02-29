@@ -724,7 +724,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         try
         {
             ret = new Dictionary<string, string>(args.Count / 2);
-            for (int i = args.Count % 2; i < args.Count(); i += 2)
+            for (int i = args.Count % 2; i < args.Count; i += 2)
             {
                 key = args[i].TrimStart('-');
                 ret.Add(key, args[i + 1]);

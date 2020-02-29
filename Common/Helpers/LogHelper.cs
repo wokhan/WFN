@@ -43,7 +43,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             logFileMutexSecurity.AddAccessRule(rule);
             rule = new MutexAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), MutexRights.ChangePermissions | MutexRights.TakeOwnership, AccessControlType.Deny);
             logFileMutexSecurity.AddAccessRule(rule);
-            logFileMutex = new Mutex(false, "Global\\" + logFileMutexName, out bool createdNew, logFileMutexSecurity); //Note: We don't use createdNew
+            logFileMutex = new Mutex(false, "Global\\" + logFileMutexName, out bool createdNew);
+            logFileMutex.SetAccessControl(logFileMutexSecurity); //Note: We don't use createdNew
 
             bool LoggingFailed = false;
 

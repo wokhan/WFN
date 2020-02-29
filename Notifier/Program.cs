@@ -2,22 +2,24 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using Microsoft.VisualBasic.ApplicationServices;
+using System.Text;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
-using Wokhan.WindowsFirewallNotifier.Notifier.Managers;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier
 {
     static class Program
     {
+        private const string PIPE_NAME = "WFN_Notifier_Pipe";
+        private const string ARG_IMPERSONATED = "impersonated";
+
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool CloseHandle(IntPtr hObject);
-
-        const uint RetrySingleInstance = 3;
 
         /// <summary>
         /// Main entrypoint of the application.
@@ -36,41 +38,55 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 Dictionary<string, string> pars = ProcessHelper.ParseParameters(argv);
                 int pid = int.Parse(pars["pid"]);
 
-                // Check if impersonation has already taken place (to avoid repeated relaunched and infinite loops)
-                string impersonated = "0";
-                pars.TryGetValue("impersonated", out impersonated);
+                // Check if impersonation has already taken place (to avoid repeated relaunch and infinite loops)
+                pars.TryGetValue(ARG_IMPERSONATED, out string impersonated);
                 if (impersonated != "1")
                 {
                     EnsureUserSession(pid, argv);
                 }
-
+                
                 pars = null; //Release for GC
 
-                //There's a race condition when the previous instance is shutting down, so we have to retry a couple of times.
-                bool success = false;
-                uint RetryCount = 0;
-                while (true)
+                try
                 {
-                    try
-                    {
-                        SingletonManager app = new SingletonManager();
-                        app.Run(argv);
-                        success = true;
-                        break;
-                    }
-                    catch (CantStartSingleInstanceException)
-                    {
-                        if (RetryCount == RetrySingleInstance)
-                        {
-                            break;
-                        }
-                        RetryCount++;
-                    }
+                    // First tries to create a named pipe (if it exists, it means the notifier is already running since we allow only one instance)
+                    // Should probably use either a mutex or a semaphore here (to be improved... later).
+                    using var pipeServer = new NamedPipeServerStream("WFN_Notifier_Pipe_Fake", PipeDirection.In, 1);
+                    new App(argv).Run();
                 }
-                if (!success)
+                catch (IOException exc)
                 {
-                    throw new Exception("Repeated failure to connect to previous instance. Aborting.");
+                    // Already running: sending message to the server.
+                    using var pipeClient = new NamedPipeClientStream(".", PIPE_NAME, PipeDirection.Out);
+                    pipeClient.Connect();
+                    pipeClient.Write(Encoding.UTF8.GetBytes(String.Join(" ", argv)));
                 }
+
+                ////There's a race condition when the previous instance is shutting down, so we have to retry a couple of times.
+                //uint RetryCount = 0;
+                //bool success = false;
+                //while (true)
+                //{
+                //    try
+                //    {
+                //        SingletonManager app = new SingletonManager();
+                //        app.Run(argv);
+                //        success = true;
+                //        break;
+                //    }
+                //    catch (CantStartSingleInstanceException)
+                //    {
+                //        if (RetryCount == RetrySingleInstance)
+                //        {
+                //            break;
+                //        }
+                //        RetryCount++;
+                //    }
+                //}
+                //if (!success)
+                //{
+                //    throw new Exception("Repeated failure to connect to previous instance. Aborting.");
+                //}
             }
             catch (Exception e)
             {
@@ -78,6 +94,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 Environment.Exit(1);
             }
             Environment.Exit(0);
+        }
+
+        private static void callback(IAsyncResult ar)
+        {
+            throw new NotImplementedException();
         }
 
         private static void EnsureUserSession(int pid, string[] argv)
@@ -91,7 +112,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 // Retrieves the target process Session ID
                 try
                 {
-                    using (Process srcPr = Process.GetProcessById(pid))
+                    using (var srcPr = Process.GetProcessById(pid))
                     {
                         targetSessionID = (uint)srcPr.SessionId;
                     }
@@ -126,7 +147,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
                 try
                 {
-                    string argstr = String.Join(" ", argv.Select(a => a.Contains(" ") ? "\"" + a + "\"" : a).ToArray()) + " -impersonated 1";
+                    string argstr = String.Join(" ", argv.Select(a => $"\"{a}\"")) + $" -{ARG_IMPERSONATED} 1";
                     LogHelper.Debug("Impersonating. Parameters: " + argstr);
 
                     Impersonation.LaunchProcessAsUser(Process.GetCurrentProcess().MainModule.FileName, argstr, userToken);
