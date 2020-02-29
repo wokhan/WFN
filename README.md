@@ -34,8 +34,5 @@ _Please do not ask for a Windows XP version, since WFN relies on features introd
 **Notification popup for unknown outgoing connections (optional)**  
 ![](http://wokhan.online.fr/progs/wfn/notifier.PNG)
 
-## Donations (or _"How can I show how much I like this project?"_)
-If you feel generous, you can head to [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=P9N65WDYMH9KA&currency_code=EUR&source=url).  
-
 ## Thanks
 Thanks to everyone who contributed and donated, and of course to people who will!
