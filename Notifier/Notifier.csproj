@@ -140,6 +140,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Events\ActivityEventArgs.cs" />
+    <Compile Include="UI\Events\StaticActivityPublisher.cs" />
     <Compile Include="UI\Windows\NotifierTrayIcon.cs" />
     <Compile Include="UI\Windows\NotificationWindow.xaml.cs">
       <DependentUpon>NotificationWindow.xaml</DependentUpon>
