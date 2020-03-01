@@ -24,6 +24,10 @@
   <ItemGroup>
     <PackageReference Include="MaxMind.Db" Version="2.6.1" />
     <PackageReference Include="MaxMind.GeoIP2" Version="3.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Maps.MapControl.WPF" Version="1.0.0.3" />
     <!--<Reference Include="System" />
     <Reference Include="System.Data" />
