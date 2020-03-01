@@ -17,17 +17,22 @@
         <Style x:Key="BorderStyle" TargetType="Border">
             <Setter Property="Height" Value="25"/>
             <Setter Property="Width" Value="25"/>
+            <Setter Property="Background" Value="Black" />
             <Setter Property="BorderBrush" Value="Black"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="VerticalAlignment" Value="Top"/>
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="CornerRadius" Value="3" />
         </Style>
     </Window.Resources>
     <!-- Note: the orientation and window dimensions are set in code based on preference -->
     <StackPanel x:Name="ControlsContainer" Orientation="Vertical">
-        <Border Margin="0" Style="{StaticResource BorderStyle}">
-            <Image x:Name="ClickableIcon" Stretch="Fill" Source="/Notifier;component/Resources/TrayIcon22.ico" Margin="0,0,1,0" />
+        <Border Style="{StaticResource BorderStyle}">
+            <Image x:Name="ClickableIcon" Stretch="Fill" Source="/Notifier;component/Resources/TrayIcon22.ico" />
         </Border>
         <Border x:Name="GreenLight" Background="DarkGreen" Style="{StaticResource BorderStyle}"/>
         <Border x:Name="RedLight" Background="DarkRed" Style="{StaticResource BorderStyle}"/>

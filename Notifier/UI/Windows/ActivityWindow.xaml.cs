@@ -11,6 +11,7 @@ using Wokhan.WindowsFirewallNotifier.Common.Properties;
 using Messages = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
 using System.Diagnostics;
 using System.Windows.Media.Imaging;
+using Wokhan.WindowsFirewallNotifier.Common;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 {
@@ -26,32 +27,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
     {
         private readonly NotificationWindow notifierWindow;
 
-        private bool hasDefaultPositionChanged = false;  // remember if windows was re-positioned by a user
-
         private readonly BitmapImage ICON_NORMAL = new BitmapImage(new Uri(@"/Notifier;component/Resources/TrayIcon22.ico", UriKind.Relative));
         private readonly BitmapImage ICON_BLOCKED = new BitmapImage(new Uri(@"/Notifier;component/Resources/TrayIcon21.ico", UriKind.Relative));
 
-        public enum WindowAlignmentEnum
-        {
-            Horizontal, Vertical
-        }
-        readonly WindowAlignmentEnum WindowAlignment = WindowAlignmentEnum.Vertical;  // can be switch to horizontal
-
-        private double ExpectedTop
-        {
-            //get { return hasDefaultPositionChanged ? this.Top : SystemParameters.WorkArea.Height - this.ActualHeight; }
-            get { return hasDefaultPositionChanged ? this.Top : SystemParameters.WorkArea.Height / 2; }
-        }
-
-        private double ExpectedLeft
-        {
-            get { return hasDefaultPositionChanged ? this.Left : SystemParameters.WorkArea.Width - this.ActualWidth; }
-        }
-
-        private double ExpectedWidth
-        {
-            get { return SystemParameters.WorkArea.Width - this.ExpectedLeft; }
-        }
+        readonly Orientation WindowAlignment = Settings.Default.ActivityWindow_Orientation;
 
         public static ActivityWindow Init(NotificationWindow window)
         {
@@ -66,7 +45,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             InitializeComponent();
 
-            if (WindowAlignment.Equals(WindowAlignmentEnum.Horizontal))
+            if (WindowAlignment.Equals(Orientation.Horizontal))
             {
                 // switch orientation from vertical
                 double origWidth = this.Width;
@@ -78,7 +57,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
 
             InitWindowsMouseEvents();
-            
+
             ShowInTaskbar = false;  // hide the icon in the taskbar
 
             ClickableIcon.Source = ICON_NORMAL;
@@ -116,8 +95,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 }
                 else
                 {
-                    hasDefaultPositionChanged = true;
                     previousWindowPos = actualWindowsPos;
+                    Settings.Default.ActivityWindow_Position = actualWindowsPos;
+                    Settings.Default.Save();
                 }
             };
             MouseLeftButtonDown += (object sender, MouseButtonEventArgs e) =>
@@ -140,11 +120,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
             void MenuConsole_Click(object Sender, EventArgs e)
             {
-                Process.Start(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "WFN.exe"));
+                notifierWindow.ShowConsole();
             }
             void MenuHide_Click(object Sender, EventArgs e)
             {
-                this.Hide();
+                Hide();
             }
             void addMenuItem(ContextMenu cm, string caption, RoutedEventHandler eh)
             {
@@ -167,17 +147,33 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         public new void Show()
         {
             base.Show();
-
             // initial position needs to be calculated after Show()
-            Top = ExpectedTop;
-            Left = ExpectedLeft;
+            void initWindowsPosition()
+            {
+                Point defaultPos = Settings.Default.ActivityWindow_Position;
+                if (defaultPos == new Point(0d, 0d) || defaultPos == null)
+                {
+                    defaultPos.X = SystemParameters.WorkArea.Width - this.ActualWidth;
+                    defaultPos.Y = SystemParameters.WorkArea.Height / 2;
+                    Settings.Default.ActivityWindow_Position = defaultPos;
+                    Settings.Default.Save();
+                }
+                Top = defaultPos.Y;
+                Left = defaultPos.X;
+            }
 
+            initWindowsPosition();
             Topmost = true;
+            ResetVisibility();
+            Settings.Default.ActivityWindow_Shown = true;
+            Settings.Default.Save();
         }
 
         public new void Hide()
         {
             base.Hide();
+            Settings.Default.ActivityWindow_Shown = false;
+            Settings.Default.Save();
         }
 
         private void ToggleGreen()
@@ -196,7 +192,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 if (GreenLight.Equals(control))
                 {
                     ToggleGreen();
-                } 
+                }
                 else if (RedLight.Equals(control))
                 {
                     ToggleRed();
@@ -224,7 +220,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                     ClickableIcon.Source = ICON_BLOCKED;
                     ResetVisibility();
                 }
-            } else
+            }
+            else
             {
                 if (ICON_NORMAL != ClickableIcon.Source)
                 {
@@ -235,9 +232,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void ResetVisibility()
         {
-            // resets visibility to assure topmost visibility
-            Visibility = Visibility.Hidden;
-            Visibility = Visibility.Visible;
+            //Visibility = Visibility.Hidden;
+            //Visibility = Visibility.Visible;
+            Activate();
         }
 
         public void ShowActivity(ActivityEnum activity)
@@ -250,8 +247,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             {
                 ToggleLightsTask(RedLight, 200);
             }
-            Topmost = true;
         }
-
     }
 }

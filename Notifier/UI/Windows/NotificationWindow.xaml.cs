@@ -344,10 +344,16 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void btnOptions_Click(object sender, RoutedEventArgs e)
         {
+            ShowConsole();
+       }
+
+        public void ShowConsole()
+        {
             if (Process.GetProcessesByName(WFN_PROCESS_NAME).Length == 0)
             {
                 Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, WFN_EXE));
-            } else
+            }
+            else
             {
                 ProcessHelper.RestoreProcessWindowState(WFN_PROCESS_NAME);
             }
@@ -406,7 +412,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         public new void Close()
         {
             RemoveTempRulesAndNotfyIcon();
-            notifierTrayIcon.Dispose();
+            notifierTrayIcon?.Dispose();
+            base.Close();
         }
 
         private void btnSkipAll_Click(object sender, RoutedEventArgs e)

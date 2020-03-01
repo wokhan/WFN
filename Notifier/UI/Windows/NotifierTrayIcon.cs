@@ -86,7 +86,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             void MenuShowActivity_Click(object Sender, EventArgs e)
             {
-                App.GetActivityWindow().Show();
+                 App.GetActivityWindow().Show();
             }
 
             contextMenu.MenuItems.Add(Messages.NotifierTrayIcon_ShowNotifier, MenuShow_Click);
