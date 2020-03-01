@@ -347,4 +347,8 @@ This application has NOT been totally disabled.</value>
   <data name="NotifierTrayIcon_ShowActivityWindow" xml:space="preserve">
     <value>Show Activity Window</value>
   </data>
+  <data name="GeoConnection2_CannotRetrieveConnectionLocationForPublicIp" xml:space="preserve">
+    <value>Cannot retrieve connection location for public ip - connection may be blocked by the firewall. 
+You may need to create a rule for WFN in the Notifier to unblock it.</value>
+  </data>
 </root>
