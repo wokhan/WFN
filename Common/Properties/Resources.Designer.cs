@@ -79,6 +79,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hide this window.
+        /// </summary>
+        public static string ActivityWindow_HideThisWindow {
+            get {
+                return ResourceManager.GetString("ActivityWindow_HideThisWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Console.
         /// </summary>
         public static string ActivityWindow_OpenConsole {
@@ -464,6 +473,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
         public static string NotifierTrayIcon_ShowActivity_Notifier {
             get {
                 return ResourceManager.GetString("NotifierTrayIcon_ShowActivity_Notifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Activity Window.
+        /// </summary>
+        public static string NotifierTrayIcon_ShowActivityWindow {
+            get {
+                return ResourceManager.GetString("NotifierTrayIcon_ShowActivityWindow", resourceCulture);
             }
         }
         

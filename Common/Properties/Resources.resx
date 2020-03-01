@@ -341,4 +341,10 @@ This application has NOT been totally disabled.</value>
     <value>Click icon to remove temporary rules</value>
     <comment>Shown as tooltip on the temporary notifier icon</comment>
   </data>
+  <data name="ActivityWindow_HideThisWindow" xml:space="preserve">
+    <value>Hide this window</value>
+  </data>
+  <data name="NotifierTrayIcon_ShowActivityWindow" xml:space="preserve">
+    <value>Show Activity Window</value>
+  </data>
 </root>
