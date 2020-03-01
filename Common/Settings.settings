@@ -59,5 +59,14 @@
     <Setting Name="TargetPortUrl" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://www.speedguide.net/port.php?port={0}</Value>
     </Setting>
+    <Setting Name="ActivityWindow_Position" Type="System.Windows.Point" Scope="User">
+      <Value Profile="(Default)">0,0</Value>
+    </Setting>
+    <Setting Name="ActivityWindow_Shown" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ActivityWindow_Orientation" Type="System.Windows.Controls.Orientation" Scope="User">
+      <Value Profile="(Default)">Vertical</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

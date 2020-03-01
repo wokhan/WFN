@@ -248,5 +248,41 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
                 this["TargetPortUrl"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0,0")]
+        public global::System.Windows.Point ActivityWindow_Position {
+            get {
+                return ((global::System.Windows.Point)(this["ActivityWindow_Position"]));
+            }
+            set {
+                this["ActivityWindow_Position"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ActivityWindow_Shown {
+            get {
+                return ((bool)(this["ActivityWindow_Shown"]));
+            }
+            set {
+                this["ActivityWindow_Shown"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Vertical")]
+        public global::System.Windows.Controls.Orientation ActivityWindow_Orientation {
+            get {
+                return ((global::System.Windows.Controls.Orientation)(this["ActivityWindow_Orientation"]));
+            }
+            set {
+                this["ActivityWindow_Orientation"] = value;
+            }
+        }
     }
 }
