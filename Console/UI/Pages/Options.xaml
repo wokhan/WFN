@@ -140,6 +140,28 @@ Please note that you will be able to do it later through the Options panel." Tex
                     <TextBox Text="{Binding ConsoleSizeHeight, Source={x:Static settings:Settings.Default}}" ToolTip="Needs a restart to take effect." IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Width="50" Height="20" />
                 </StackPanel>
             </StackPanel>
+            <Expander VerticalAlignment="Bottom" Header="Display setting file location" IsExpanded="False" Padding="0,5,0,0" Margin="10,0,0,0">
+                <StackPanel>
+                <TextBlock Margin="0,0,0,10" Text="The following setting files are used (in order of priority - click to open)" />
+                <Grid Margin="10,0,0,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0">1. User local:</Label>
+                    <TextBlock Grid.Row="0" Grid.Column="1" x:Name="txtUserLocalConfigurationPath" MouseDown="txtUserLocalConfigurationPath_MouseDown" Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding UserLocalConfigurationPath}"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
+                    <Label Grid.Row="1" Grid.Column="0">2. User roaming:</Label>
+                    <TextBlock Grid.Row="1" Grid.Column="1" x:Name="txtUserConfigurationPath" MouseDown="txtUserConfigurationPath_MouseDown" Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding UserConfigurationPath}"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
+                    <Label Grid.Row="2" Grid.Column="0">3. Application default:</Label>
+                    <TextBlock Grid.Row="2" Grid.Column="1" x:Name="txtSharedConfigurationPath" MouseDown="txtSharedConfigurationPath_MouseDown" Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding SharedConfigurationPath}"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
+                </Grid>
+                </StackPanel>
+            </Expander>
         </StackPanel>
     </DockPanel>
 </Page>

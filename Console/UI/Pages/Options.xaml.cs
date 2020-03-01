@@ -28,6 +28,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             set { Application.Current.Resources["AccentColorBrush"] = value; Settings.Default.AccentColor = value; }
         }
 
+        public string SharedConfigurationPath { get; set; } = CustomSettingsProvider.SharedConfigurationPath;
+        public string UserConfigurationPath { get; set; } = CustomSettingsProvider.UserConfigurationPath;
+        public string UserLocalConfigurationPath { get; set; } = CustomSettingsProvider.UserLocalConfigurationPath;
+
         public Options()
         {
             InitializeComponent();
@@ -66,6 +70,21 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             Settings.Default.FirstRun = true;
             Settings.Default.EnableVerboseLogging = false;
             //Settings.Default.AlwaysRunAs = true;
+        }
+
+        private void txtUserLocalConfigurationPath_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Process.Start("explorer.exe", UserLocalConfigurationPath);
+        }
+
+        private void txtUserConfigurationPath_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Process.Start("explorer.exe", UserConfigurationPath);
+        }
+
+        private void txtSharedConfigurationPath_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Process.Start("explorer.exe", SharedConfigurationPath);
         }
     }
 }
