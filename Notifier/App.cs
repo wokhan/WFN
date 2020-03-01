@@ -96,11 +96,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                                 {
                                     if (IsEventInstanceIdAccepted(entry.InstanceId))
                                     {
-                                        WPFUtils.DispatchUI(() => _application.GetActivityWindow().ShowActivity(ActivityWindow.ActivityEnum.Blocked));
+                                        WPFUtils.DispatchUI(() => App.GetActivityWindow().ShowActivity(ActivityWindow.ActivityEnum.Blocked));
                                         newEntryList.Insert(0, entry);
                                     } else
                                     {
-                                        WPFUtils.DispatchUI(() => _application.GetActivityWindow().ShowActivity(ActivityWindow.ActivityEnum.Allowed));
+                                        WPFUtils.DispatchUI(() => App.GetActivityWindow().ShowActivity(ActivityWindow.ActivityEnum.Allowed));
                                     }
                                 }
                                 else
@@ -210,8 +210,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
     /// </summary>
     public class App : Application, IDisposable
     {
-        private readonly NotificationWindow notifierWindow;
-        private readonly ActivityWindow activityWindow;
+        private static NotificationWindow notifierWindow;
+        private static ActivityWindow activityWindow;
 
         private ObservableCollection<CurrentConn> _conns = new ObservableCollection<CurrentConn>();
         public ObservableCollection<CurrentConn> Connections { get { return _conns; } }
@@ -269,9 +269,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             asyncTaskRunner.StartTasks();
         }
 
-        public ActivityWindow GetActivityWindow()
+        public static ActivityWindow GetActivityWindow()
         {
-            return this.activityWindow;
+            return activityWindow;
         }
 
         public void ShowNotifierWindow()
@@ -341,10 +341,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     return;
                 }
 
-                if (notifierWindow.WindowState == WindowState.Minimized)
-                {
-                    notifierWindow.ShowActivityTrayIcon($"Notifier blocked connections - click tray icon to show");  // max 64 chars!
-                }
+                //if (notifierWindow.WindowState == WindowState.Minimized)
+                //{
+                //    notifierWindow.ShowActivityTrayIcon($"Notifier blocked connections - click tray icon to show");  // max 64 chars!
+                //}
             }
             catch (Exception e)
             {
@@ -369,6 +369,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         /// </summary>
         private void initExclusions()
         {
+            // FIXME: Remove - only use global block rules.
             try
             {
                 if (!Settings.Default.UseBlockRules && exclusions == null) //@wokhan: WHY NOT~Settings.Default.UseBlockRules ??
