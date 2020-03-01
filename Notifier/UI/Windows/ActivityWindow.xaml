@@ -10,13 +10,13 @@
         BorderThickness="1"
         AllowsTransparency="True"
         WindowStartupLocation="Manual" 
-        Width="{StaticResource WindowWidthKey}" Height="{StaticResource WindowHeightKey}"
+        Width="25" Height="75"
         ResizeMode="NoResize"
         >
     <Window.Resources>
         <Style x:Key="BorderStyle" TargetType="Border">
-            <Setter Property="Height" Value="30"/>
-            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Width" Value="25"/>
             <Setter Property="BorderBrush" Value="Black"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="VerticalAlignment" Value="Top"/>

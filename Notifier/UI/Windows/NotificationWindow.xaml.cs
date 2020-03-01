@@ -18,11 +18,18 @@ using System.Drawing;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 {
-    /// <summary>
-    /// Interaction logic for NotificationWindow.xaml
-    /// </summary>
+    /**
+    * Interaction logic for NotificationWindow.xaml
+    * 
+    * authors: 
+    *   harrwiss
+    *   wokhan
+    */
     public partial class NotificationWindow : System.Windows.Window, INotifyPropertyChanged
     {
+        private const string WFN_PROCESS_NAME = "WFN"; // TODO: move to settings?
+        private const string WFN_EXE = "WFN.exe";
+
         private bool isDetailsExpanded;
 
         private readonly NotifierTrayIcon notifierTrayIcon;
@@ -61,14 +68,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             public string SingleServiceName { get; set; }
         }
 
-        private readonly OptionsViewClass _optionsView = new OptionsViewClass();
-        public OptionsViewClass OptionsView { get { return _optionsView; } }
+        public OptionsViewClass OptionsView { get; } = new OptionsViewClass();
 
-
-        public string CurrentProfile { get { return FirewallHelper.GetCurrentProfileAsText(); } }
-
-
-        //private ToolTip ttip = new ToolTip();
+        public static string CurrentProfile { get { return FirewallHelper.GetCurrentProfileAsText(); } }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChanged(string propertyName)
@@ -100,10 +102,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             NotifyPropertyChanged(nameof(NbConnectionsAfter));
             NotifyPropertyChanged(nameof(NbConnectionsBefore));
-
-            /*ttip.SetToolTip(btnAlwaysAllow, Resources.MSG_ALLOW);
-            ttip.SetToolTip(btnAlwaysBlock, Resources.MSG_BLOCK);
-            */
         }
 
         public void RestoreWindowState()
@@ -128,16 +126,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
             else
             {
-                //notifierTrayIcon.Hide();
                 //ShowInTaskbar = false;
-            }
-        }
-
-        public void ShowActivityTrayIcon(string tooltipText)
-        {
-            if (WindowState == WindowState.Minimized)
-            {
-                notifierTrayIcon.ShowActivity(tooltipText);
             }
         }
 
@@ -355,7 +344,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void btnOptions_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "WFN.exe"));
+            if (Process.GetProcessesByName(WFN_PROCESS_NAME).Length == 0)
+            {
+                Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, WFN_EXE));
+            } else
+            {
+                ProcessHelper.RestoreProcessWindowState(WFN_PROCESS_NAME);
+            }
         }
 
         private void ctxtCopy_Click(object sender, RoutedEventArgs e) //FIXME: Not referenced (anymore!)
@@ -449,14 +444,14 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 return;
             }
 
-            if ((!_optionsView.IsProtocolChecked) && (_optionsView.IsLocalPortChecked || _optionsView.IsTargetPortChecked))
+            if ((!OptionsView.IsProtocolChecked) && (OptionsView.IsLocalPortChecked || OptionsView.IsTargetPortChecked))
             {
                 MessageBox.Show(Common.Properties.Resources.MSG_RULE_PROTOCOL_NEEDED, Common.Properties.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             string[] services = null;
-            if (_optionsView.IsServiceRuleChecked)
+            if (OptionsView.IsServiceRuleChecked)
             {
                 if (activeConn.PossibleServices != null && activeConn.PossibleServices.Length > 0)
                 {
@@ -518,11 +513,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             bool success = false;
             if (Settings.Default.UseBlockRules)
             {
-                int Profiles = _optionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
+                int Profiles = OptionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
                 string ruleName = (isTemp) ? Common.Properties.Resources.RULE_TEMP_PREFIX + activeConn.RuleName : activeConn.RuleName;
-                FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(ruleName, activeConn.CurrentPath, _optionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null
-                    , activeConn.CurrentLocalUserOwner, services, _optionsView.IsProtocolChecked ? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked ? activeConn.Target : null
-                    , _optionsView.IsTargetPortChecked ? activeConn.TargetPort : null, _optionsView.IsLocalPortChecked ? activeConn.LocalPort : null, Profiles
+                FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(ruleName, activeConn.CurrentPath, OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null
+                    , activeConn.CurrentLocalUserOwner, services, OptionsView.IsProtocolChecked ? activeConn.Protocol : -1, OptionsView.IsTargetIPChecked ? activeConn.Target : null
+                    , OptionsView.IsTargetPortChecked ? activeConn.TargetPort : null, OptionsView.IsLocalPortChecked ? activeConn.LocalPort : null, Profiles
                     , FirewallHelper.CustomRule.CustomRuleAction.B);
                 success = newRule.Apply(isTemp); // does not use RuleManager
                 if (success && isTemp)
@@ -539,10 +534,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 // FIXME: Remove and always use Global Rules?
                 throw new ArgumentException("Only global block rules can be used - check options");
 
-                string entry = (!_optionsView.IsServiceRuleChecked || String.IsNullOrEmpty(activeConn.CurrentService) ? activeConn.CurrentPath : activeConn.CurrentService) +
-                               (_optionsView.IsLocalPortChecked ? ";" + activeConn.LocalPort : ";") +
-                               (_optionsView.IsTargetIPChecked ? ";" + activeConn.Target : ";") +
-                               (_optionsView.IsTargetPortChecked ? ";" + activeConn.TargetPort : ";"); //FIXME: Need to add more?
+                string entry = (!OptionsView.IsServiceRuleChecked || String.IsNullOrEmpty(activeConn.CurrentService) ? activeConn.CurrentPath : activeConn.CurrentService) +
+                               (OptionsView.IsLocalPortChecked ? ";" + activeConn.LocalPort : ";") +
+                               (OptionsView.IsTargetIPChecked ? ";" + activeConn.Target : ";") +
+                               (OptionsView.IsTargetPortChecked ? ";" + activeConn.TargetPort : ";"); //FIXME: Need to add more?
                 using (StreamWriter sw = new StreamWriter(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exclusions.set"), true))
                 {
                     sw.WriteLine(entry);
@@ -556,11 +551,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private bool createAllowRule(CurrentConn activeConn, string[] services, bool isTemp)
         {
-            int Profiles = _optionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
+            int Profiles = OptionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
             string ruleName = (isTemp) ? Common.Properties.Resources.RULE_TEMP_PREFIX + activeConn.RuleName : activeConn.RuleName;
-            FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(ruleName, activeConn.CurrentPath, _optionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null
-                , activeConn.CurrentLocalUserOwner, services, _optionsView.IsProtocolChecked ? activeConn.Protocol : -1, _optionsView.IsTargetIPChecked ? activeConn.Target : null
-                , _optionsView.IsTargetPortChecked ? activeConn.TargetPort : null, _optionsView.IsLocalPortChecked ? activeConn.LocalPort : null, Profiles
+            FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(ruleName, activeConn.CurrentPath, OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null
+                , activeConn.CurrentLocalUserOwner, services, OptionsView.IsProtocolChecked ? activeConn.Protocol : -1, OptionsView.IsTargetIPChecked ? activeConn.Target : null
+                , OptionsView.IsTargetPortChecked ? activeConn.TargetPort : null, OptionsView.IsLocalPortChecked ? activeConn.LocalPort : null, Profiles
                 , FirewallHelper.CustomRule.CustomRuleAction.A);
 
             bool success = newRule.Apply(isTemp); // does not use RuleManager

@@ -26,7 +26,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private bool activityTipShown = false;
 
-        private readonly NotificationWindow window;
+        private readonly NotificationWindow notifierWindow;
 
         public static NotifierTrayIcon Init(NotificationWindow window)
         {
@@ -35,10 +35,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         }
 
         private NotifierTrayIcon() { }
-        private NotifierTrayIcon(NotificationWindow window)
+        private NotifierTrayIcon(NotificationWindow notifierWindow)
         {
             //  https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.notifyicon?redirectedfrom=MSDN&view=netframework-4.8
-            this.window = window;
+            this.notifierWindow = notifierWindow;
             components = new System.ComponentModel.Container();
 
             // Create the NotifyIcon. 
@@ -51,6 +51,15 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             };
 
             trayIcon.Click += new System.EventHandler(TrayIcon_Click);
+
+            notifierWindow.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == nameof(notifierWindow.NbConnectionsAfter))
+                {
+                    ShowActivity();
+                }
+            };
+
         }
 
         private WinForms::ContextMenu initMenu()
@@ -58,13 +67,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             WinForms::ContextMenu contextMenu = new WinForms::ContextMenu();
             void MenuShow_Click(object Sender, EventArgs e)
             {
-                window.RestoreWindowState();
+                notifierWindow.RestoreWindowState();
             }
 
             void MenuClose_Click(object Sender, EventArgs e)
             {
                 // Dispose and close the window which exits the app
-                window.Close();
+                notifierWindow.Close();
                 contextMenu.Dispose();
                 trayIcon.Dispose();
                 Environment.Exit(0);
@@ -74,8 +83,15 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             {
                 Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "WFN.exe"));
             }
+
+            void MenuShowActivity_Click(object Sender, EventArgs e)
+            {
+                App.GetActivityWindow().Show();
+            }
+
             contextMenu.MenuItems.Add(Messages.NotifierTrayIcon_ShowNotifier, MenuShow_Click);
             contextMenu.MenuItems.Add(Messages.NotifierTrayIcon_OpenConsole, MenuConsole_Click);
+            contextMenu.MenuItems.Add(Messages.NotifierTrayIcon_ShowActivityWindow, MenuShowActivity_Click);
             contextMenu.MenuItems.Add(Messages.NotifierTrayIcon_DiscardAndClose, MenuClose_Click);
 
             return contextMenu;
@@ -84,13 +100,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         private void TrayIcon_Click(object Sender, EventArgs e)
         {
             if (WinForms::MouseButtons.Left.Equals(((WinForms::MouseEventArgs)e).Button)) {
-                if (window.WindowState == WindowState.Minimized)
+                if (notifierWindow.WindowState == WindowState.Minimized)
                 {
-                    window.RestoreWindowState();
+                    notifierWindow.RestoreWindowState();
                 }
                 else
                 {
-                    window.HideWindowState();
+                    notifierWindow.HideWindowState();
                 }
             }
         }
@@ -105,9 +121,21 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             trayIcon.Visible = false;
         }
 
-        public void ShowActivity(string tooltipText)
+        public void ShowActivity()
         {
-            tooltipText = tooltipText ?? Messages.NotifierTrayIcon_ShowActivity_Notifier;
+            string tooltipText = Messages.NotifierTrayIcon_ShowActivity_Notifier;
+            void ShowBalloonTip()
+            {
+                if (!activityTipShown)
+                {
+                    activityTipShown = true;
+                    trayIcon.BalloonTipTitle = Messages.NotifierTrayIcon_ShowBalloonTip_WFNNotifier;
+                    trayIcon.BalloonTipText = tooltipText;
+                    trayIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Warning;
+                    trayIcon.ShowBalloonTip(400);
+                }
+            }
+
             if (tooltipText.Length > 64)
             {
                 // limited to 64 chars in Win10
@@ -115,20 +143,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
             if (trayIcon.Visible)
             {
-                trayIcon.Icon = Notifier.Properties.Resources.TrayIcon21;
-                ShowBalloonTip(tooltipText);
-            }
-        }
-
-        private void ShowBalloonTip(string tooltipText)
-        {
-            if (!activityTipShown)
-            {
-                activityTipShown = true;
-                trayIcon.BalloonTipTitle = Messages.NotifierTrayIcon_ShowBalloonTip_WFNNotifier;
-                trayIcon.BalloonTipText = tooltipText;
-                trayIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Warning;
-                trayIcon.ShowBalloonTip(400);
+                trayIcon.Icon = Notifier.Properties.Resources.TrayIcon21; // with exclamation mark
+                ShowBalloonTip();
             }
         }
 

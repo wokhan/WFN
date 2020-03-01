@@ -16,7 +16,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 {
 
     /*
-     Activity window with lights for allow/block activities.
+        Activity window with lights for allow/block activities.
+     
+        Author: 
+            harrwiss
     */
     public partial class ActivityWindow : Window
 
@@ -25,14 +28,14 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private bool hasDefaultPositionChanged = false;  // remember if windows was re-positioned by a user
 
-        BitmapImage NormalIcon = new BitmapImage(new Uri(@"/Notifier;component/Resources/TrayIcon22.ico", UriKind.Relative));
-        BitmapImage BlockedIcon = new BitmapImage(new Uri(@"/Notifier;component/Resources/TrayIcon21.ico", UriKind.Relative));
+        private readonly BitmapImage ICON_NORMAL = new BitmapImage(new Uri(@"/Notifier;component/Resources/TrayIcon22.ico", UriKind.Relative));
+        private readonly BitmapImage ICON_BLOCKED = new BitmapImage(new Uri(@"/Notifier;component/Resources/TrayIcon21.ico", UriKind.Relative));
 
         public enum WindowAlignmentEnum
         {
             Horizontal, Vertical
         }
-        readonly WindowAlignmentEnum WindowAlignment = WindowAlignmentEnum.Horizontal;
+        readonly WindowAlignmentEnum WindowAlignment = WindowAlignmentEnum.Vertical;  // can be switch to horizontal
 
         private double ExpectedTop
         {
@@ -61,13 +64,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             notifierWindow = window;
 
-            this.Resources.Add("WindowWidthKey", 30d);
-            this.Resources.Add("WindowHeightKey", 90d);
-
             InitializeComponent();
+
             if (WindowAlignment.Equals(WindowAlignmentEnum.Horizontal))
             {
-                // switch orientation
+                // switch orientation from vertical
                 double origWidth = this.Width;
                 this.Width = this.Height;
                 this.Height = origWidth;
@@ -77,12 +78,20 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
 
             InitWindowsMouseEvents();
-
+            
             ShowInTaskbar = false;  // hide the icon in the taskbar
 
-            ClickableIcon.Source = NormalIcon;
+            ClickableIcon.Source = ICON_NORMAL;
             ClickableIcon.ContextMenu = InitMenu();
             ClickableIcon.ToolTip = Messages.ActivityWindow_ClickableIcon_Tooltip;
+
+            notifierWindow.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == nameof(notifierWindow.NbConnectionsAfter))
+                {
+                    RefreshClickableIcon();
+                }
+            };
         }
 
         private void InitWindowsMouseEvents()
@@ -95,7 +104,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 if (actualWindowsPos.Equals(previousWindowPos))
                 {
                     ShowActivity(ActivityEnum.Allowed);
-                    ClickableIcon.Source = NormalIcon;
+                    ClickableIcon.Source = ICON_NORMAL;
                     if (WindowState.Minimized == notifierWindow.WindowState)
                     {
                         notifierWindow.RestoreWindowState();
@@ -133,6 +142,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             {
                 Process.Start(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "WFN.exe"));
             }
+            void MenuHide_Click(object Sender, EventArgs e)
+            {
+                this.Hide();
+            }
             void addMenuItem(ContextMenu cm, string caption, RoutedEventHandler eh)
             {
                 MenuItem mi = new MenuItem
@@ -146,6 +159,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             addMenuItem(contextMenu, Messages.ActivityWindow_ShowNotifier, MenuShow_Click);
             addMenuItem(contextMenu, Messages.ActivityWindow_OpenConsole, MenuConsole_Click);
             addMenuItem(contextMenu, Messages.ActivityWindow_DiscardAndClose, MenuClose_Click);
+            addMenuItem(contextMenu, Messages.ActivityWindow_HideThisWindow, MenuHide_Click);
 
             return contextMenu;
         }
@@ -177,7 +191,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private async void ToggleLightsTask(Border control, int waitMillis)
         {
-            Brush origBrush = control.Background;
             void action()
             {
                 if (GreenLight.Equals(control))
@@ -202,6 +215,31 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             Allowed, Blocked
         }
 
+        private void RefreshClickableIcon()
+        {
+            if (notifierWindow.NbConnectionsAfter > 0)
+            {
+                if (IsVisible && ClickableIcon.Source != ICON_BLOCKED)
+                {
+                    ClickableIcon.Source = ICON_BLOCKED;
+                    ResetVisibility();
+                }
+            } else
+            {
+                if (ICON_NORMAL != ClickableIcon.Source)
+                {
+                    ClickableIcon.Source = ICON_NORMAL;
+                }
+            }
+        }
+
+        private void ResetVisibility()
+        {
+            // resets visibility to assure topmost visibility
+            Visibility = Visibility.Hidden;
+            Visibility = Visibility.Visible;
+        }
+
         public void ShowActivity(ActivityEnum activity)
         {
             if (ActivityEnum.Allowed.Equals(activity))
@@ -211,7 +249,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             else
             {
                 ToggleLightsTask(RedLight, 200);
-                ClickableIcon.Source = BlockedIcon;
             }
             Topmost = true;
         }
