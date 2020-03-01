@@ -100,6 +100,25 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             ((ObservableCollection<CurrentConn>)lstConnections.ItemsSource).CollectionChanged += NotificationWindow_CollectionChanged;
             lstConnections.SelectedIndex = 0;
 
+            PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == nameof(NbConnectionsAfter))
+                {
+                    if (NbConnectionsAfter > 0)
+                    {
+                        MainGrid.Visibility = Visibility.Visible;
+                        OverlayGrid.Visibility = Visibility.Collapsed;
+                        Top = ExpectedTop;
+                    }
+                    else
+                    {
+                        OverlayGrid.Visibility = Visibility.Visible;
+                        MainGrid.Visibility = Visibility.Collapsed;
+                        Top = ExpectedTop;
+                    }
+                }
+            };
+
             NotifyPropertyChanged(nameof(NbConnectionsAfter));
             NotifyPropertyChanged(nameof(NbConnectionsBefore));
         }
@@ -345,7 +364,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         private void btnOptions_Click(object sender, RoutedEventArgs e)
         {
             ShowConsole();
-       }
+        }
 
         public void ShowConsole()
         {
@@ -670,6 +689,5 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
 
         }
-
     }
 }
