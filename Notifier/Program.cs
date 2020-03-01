@@ -2,19 +2,17 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
-using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using System.Text;
+
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier
 {
-    static class Program
+    internal static class Program
     {
-        private const string PIPE_NAME = "WFN_Notifier_Pipe";
         private const string ARG_IMPERSONATED = "impersonated";
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -25,7 +23,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         /// Main entrypoint of the application.
         /// </summary>
         [STAThread]
-        static void Main(string[] argv)
+        private static void Main(string[] argv)
         {
             LogHelper.Debug("Starting Notifier: " + Environment.CommandLine);
             try
@@ -35,58 +33,16 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     argv = new string[] { "-pid", Process.GetCurrentProcess().Id.ToString(), "-threadid", "0", "-ip", "127.0.0.1", "-port", "0", "-protocol", "0", "-localport", "0", "-path", "DEMO MODE", "-impersonated", "1" };// + new Random().Next().ToString() };
                 }
 
-                Dictionary<string, string> pars = ProcessHelper.ParseParameters(argv);
-                int pid = int.Parse(pars["pid"]);
+                var parsedParameters = ProcessHelper.ParseParameters(argv);
+                var pid = int.Parse(parsedParameters["pid"]);
 
                 // Check if impersonation has already taken place (to avoid repeated relaunch and infinite loops)
-                pars.TryGetValue(ARG_IMPERSONATED, out string impersonated);
-                if (impersonated != "1")
+                if (parsedParameters.TryGetValue(ARG_IMPERSONATED, out var impersonated) && impersonated != "1")
                 {
                     EnsureUserSession(pid, argv);
                 }
-                
-                pars = null; //Release for GC
 
-                try
-                {
-                    // First tries to create a named pipe (if it exists, it means the notifier is already running since we allow only one instance)
-                    // Should probably use either a mutex or a semaphore here (to be improved... later).
-                    using var pipeServer = new NamedPipeServerStream("WFN_Notifier_Pipe_Fake", PipeDirection.In, 1);
-                    new App(argv).Run();
-                }
-                catch (IOException exc)
-                {
-                    // Already running: sending message to the server.
-                    using var pipeClient = new NamedPipeClientStream(".", PIPE_NAME, PipeDirection.Out);
-                    pipeClient.Connect();
-                    pipeClient.Write(Encoding.UTF8.GetBytes(String.Join(" ", argv)));
-                }
-
-                ////There's a race condition when the previous instance is shutting down, so we have to retry a couple of times.
-                //uint RetryCount = 0;
-                //bool success = false;
-                //while (true)
-                //{
-                //    try
-                //    {
-                //        SingletonManager app = new SingletonManager();
-                //        app.Run(argv);
-                //        success = true;
-                //        break;
-                //    }
-                //    catch (CantStartSingleInstanceException)
-                //    {
-                //        if (RetryCount == RetrySingleInstance)
-                //        {
-                //            break;
-                //        }
-                //        RetryCount++;
-                //    }
-                //}
-                //if (!success)
-                //{
-                //    throw new Exception("Repeated failure to connect to previous instance. Aborting.");
-                //}
+                SingleInstanceApp<Dictionary<string, string>>.RunOrJoin<App>(parsedParameters);
             }
             catch (Exception e)
             {
@@ -96,16 +52,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             Environment.Exit(0);
         }
 
-        private static void callback(IAsyncResult ar)
-        {
-            throw new NotImplementedException();
-        }
-
         private static void EnsureUserSession(int pid, string[] argv)
         {
             if (WindowsIdentity.GetCurrent().IsSystem)
             {
-                uint targetSessionID = uint.MaxValue;
+                var targetSessionID = uint.MaxValue;
 
                 IntPtr userToken = IntPtr.Zero;
 
@@ -147,7 +98,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
                 try
                 {
-                    string argstr = String.Join(" ", argv.Select(a => $"\"{a}\"")) + $" -{ARG_IMPERSONATED} 1";
+                    var argstr = String.Join(" ", argv.Select(a => $"\"{a}\"")) + $" -{ARG_IMPERSONATED} 1";
                     LogHelper.Debug("Impersonating. Parameters: " + argstr);
 
                     Impersonation.LaunchProcessAsUser(Process.GetCurrentProcess().MainModule.FileName, argstr, userToken);
