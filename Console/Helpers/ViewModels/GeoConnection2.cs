@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Threading.Tasks;
 using MaxMind.GeoIP2;
 using MaxMind.GeoIP2.Responses;
+using Resources = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
@@ -31,7 +32,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
                     IPAddress address = IPHelper.GetPublicIpAddress();
                     if (address == null)
                     {
-                        throw new Exception("Cannot retrieve connection location for public ip.");
+                        throw new Exception(Resources.GeoConnection2_CannotRetrieveConnectionLocationForPublicIp);
                     }
                     _currentCoordinates = IPToLocation(address);
                 }

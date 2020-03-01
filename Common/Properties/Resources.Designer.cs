@@ -250,6 +250,16 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot retrieve connection location for public ip - connection may be blocked by the firewall. 
+        ///You may need to create a rule for WFN in the Notifier to unblock it..
+        /// </summary>
+        public static string GeoConnection2_CannotRetrieveConnectionLocationForPublicIp {
+            get {
+                return ResourceManager.GetString("GeoConnection2_CannotRetrieveConnectionLocationForPublicIp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allow: a firewall rule will be created for the concerned application,
         ///except if you tick the checkbox below to allow it temporarily..
         /// </summary>
