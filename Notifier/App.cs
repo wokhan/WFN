@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Pipes;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 using Wokhan.WindowsFirewallNotifier.Common;
@@ -17,7 +15,7 @@ using Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier
 {
-    public class App : Application
+    public class App : SingleInstanceApp<Dictionary<string, string>>
     {
         NotificationWindow window;
 
@@ -27,38 +25,19 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
         public App()
         {
+            Init();
+        }
+
+
+        public App(Dictionary<string, string> pars) : base(pars)
+        {
+            Init();
+        }
+
+        private void Init()
+        {
             this.ShutdownMode = ShutdownMode.OnMainWindowClose;
             CommonHelper.OverrideSettingsFile("WFN.config");
-        }
-
-        public App(string[] argv) : this()
-        {
-            Task.Run(InitiateNamedPipeServer);
-            NextInstance(argv);
-        }
-
-        private async void InitiateNamedPipeServer()
-        {
-            // Maybe instantiate 5 parallel server (arbitrarily), a perf test could be useful here.
-            var pipeServer = new NamedPipeServerStream("WFN_Notifier_Pipe", PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Message, PipeOptions.Asynchronous);
-            await pipeServer.WaitForConnectionAsync();
-
-#pragma warning disable CS4014 // Dans la mesure où cet appel n'est pas attendu, l'exécution de la méthode actuelle continue avant la fin de l'appel
-
-            Task.Run(() =>
-            {
-                string msg;
-                using (var sr = new StreamReader(pipeServer))
-                {
-                    msg = sr.ReadLine();
-                }
-                // Warning: could fail if any of the arguments contains the string we are splitting on (program path can and will...).
-                NextInstance(msg.Split(" -").SelectMany(arg => arg.Split(' ', 2)).ToArray());
-            });
-            Task.Run(InitiateNamedPipeServer);
-
-#pragma warning restore CS4014 // Dans la mesure où cet appel n'est pas attendu, l'exécution de la méthode actuelle continue avant la fin de l'appel
-
         }
 
         /// <summary>
@@ -68,7 +47,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         {
             try
             {
-                if (!Settings.Default.UseBlockRules && exclusions == null) //@wokhan: WHY NOT~Settings.Default.UseBlockRules ??
+                // UseBlockRules option tells WFN to use an actual blocking rule instead of the exclusions list.
+                // If disabled, it means exclusions will need to be loaded if not already (hence the null check)
+                if (!Settings.Default.UseBlockRules && exclusions == null)
                 {
                     string exclusionsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exclusions.set");
                     if (File.Exists(exclusionsPath))
@@ -267,11 +248,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             catch { }
         }
 
-        internal void NextInstance(string[] argv)
+        internal override void HandleNextInstance(Dictionary<string, string> pars)
         {
             try
             {
-                Dictionary<string, string> pars = ProcessHelper.ParseParameters(argv);
                 int pid = int.Parse(pars["pid"]);
                 int threadid = int.Parse(pars["threadid"]);
                 string currentTarget = pars["ip"];

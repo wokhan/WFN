@@ -25,7 +25,6 @@
     <PackageReference Include="MaxMind.Db" Version="2.6.1" />
     <PackageReference Include="MaxMind.GeoIP2" Version="3.1.0" />
     <PackageReference Include="Microsoft.Maps.MapControl.WPF" Version="1.0.0.3" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <!--<Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -45,7 +44,6 @@
     <Reference Include="PresentationFramework" />-->
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <Content Include="IPDatabase\GeoLite2-City.mmdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
