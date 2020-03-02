@@ -214,7 +214,7 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <Grid x:Name="OverlayGrid" Margin="0" Panel.ZIndex="1000" Visibility="Visible" >
+        <Grid x:Name="OverlayGrid" Margin="0" Panel.ZIndex="1000" Visibility="Collapsed" >
             <Grid.Background>
                 <SolidColorBrush Color="WhiteSmoke" Opacity="1"/>
             </Grid.Background>

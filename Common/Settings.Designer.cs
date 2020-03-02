@@ -275,7 +275,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Vertical")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Horizontal")]
         public global::System.Windows.Controls.Orientation ActivityWindow_Orientation {
             get {
                 return ((global::System.Windows.Controls.Orientation)(this["ActivityWindow_Orientation"]));
