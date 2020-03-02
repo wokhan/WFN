@@ -164,7 +164,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             initWindowsPosition();
             Topmost = true;
-            ResetVisibility();
+            ResetTopmostVisibility();
             Settings.Default.ActivityWindow_Shown = true;
             Settings.Default.Save();
         }
@@ -218,7 +218,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 if (IsVisible && ClickableIcon.Source != ICON_BLOCKED)
                 {
                     ClickableIcon.Source = ICON_BLOCKED;
-                    ResetVisibility();
+                    ResetTopmostVisibility();
                 }
             }
             else
@@ -230,11 +230,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
         }
 
-        private void ResetVisibility()
+        private void ResetTopmostVisibility()
         {
-            //Visibility = Visibility.Hidden;
-            //Visibility = Visibility.Visible;
-            Activate();
+            // make it topmost visible
+            Visibility = Visibility.Hidden;
+            Visibility = Visibility.Visible;
+
+            //Activate(); // dont use it - moves the focus as well to the window
         }
 
         public void ShowActivity(ActivityEnum activity)

@@ -104,23 +104,57 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             {
                 if (args.PropertyName == nameof(NbConnectionsAfter))
                 {
-                    if (NbConnectionsAfter > 0)
-                    {
-                        MainGrid.Visibility = Visibility.Visible;
-                        OverlayGrid.Visibility = Visibility.Collapsed;
-                        Top = ExpectedTop;
-                    }
-                    else
-                    {
-                        OverlayGrid.Visibility = Visibility.Visible;
-                        MainGrid.Visibility = Visibility.Collapsed;
-                        Top = ExpectedTop;
-                    }
+                    CheckPendingConnections();
                 }
             };
 
+            // Overlay handling and re-calculate ExpectedTop
+            Activated += (sender, args) => { CheckPendingConnections(); };
+            SizeChanged += (sender, args) => { Top = ExpectedTop; };
+
             NotifyPropertyChanged(nameof(NbConnectionsAfter));
             NotifyPropertyChanged(nameof(NbConnectionsBefore));
+        }
+
+        private void CheckPendingConnections()
+        {
+            void showOverlay(bool shouldShow)
+            {
+                if (shouldShow && !OverlayGrid.IsVisible)
+                {
+                    OverlayGrid.Visibility = Visibility.Visible;
+                    MainGrid.Visibility = Visibility.Collapsed;
+                    logLocation($"showOverlay: {shouldShow}");
+                }
+                else if (!shouldShow && OverlayGrid.IsVisible)
+                {
+                    MainGrid.Visibility = Visibility.Visible;
+                    OverlayGrid.Visibility = Visibility.Collapsed;
+                    logLocation($"showOverlay: {shouldShow}");
+                }
+            }
+            if (NbConnectionsAfter > 0)
+            {
+                showOverlay(false);
+            }
+            else
+            {
+                showOverlay(true);
+            }
+        }
+
+        private void logLocation(string method)
+        {
+            System.Console.WriteLine($"{method} Top: {Top} ExpTop: {ExpectedTop} Height: {Height} ActualHeight: {ActualHeight}");
+        }
+
+        public new void Show()
+        {
+            System.Console.WriteLine($"Show Top: {Top} ExpTop: {ExpectedTop}");
+
+            base.Show();
+
+            //Top = ExpectedTop;
         }
 
         public void RestoreWindowState()
@@ -444,8 +478,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void expand_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            this.Top = ExpectedTop;
-            this.Left = ExpectedLeft;
+            //this.Top = ExpectedTop;
+            //this.Left = ExpectedLeft;
 
             if (isDetailsExpanded != expand.IsExpanded)
             {
