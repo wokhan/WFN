@@ -15,7 +15,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         public static void OverrideSettingsFile(string fileName)
         {
-            AppDomain.CurrentDomain.SetupInformation.ConfigurationFile = fileName;
+            //AppDomain.CurrentDomain.SetupInformation.ConfigurationFile = fileName;
         }
 
         [DllImport("shlwapi.dll", BestFitMapping = false, CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = false, ThrowOnUnmappableChar = true)]
