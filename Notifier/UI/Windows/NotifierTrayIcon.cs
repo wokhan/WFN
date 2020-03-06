@@ -45,7 +45,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             trayIcon = new WinForms::NotifyIcon(components)
             {
                 Icon = Notifier.Properties.Resources.TrayIcon22,
-                ContextMenu = initMenu(),
+                ContextMenu = InitMenu(),
                 Text = Messages.NotifierTrayIcon_NotifierStaysHiddenWhenMinimizedClickToOpen, // max 64 chars
                 Visible = false
             };
@@ -62,8 +62,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         }
 
-        private WinForms::ContextMenu initMenu()
+        private WinForms::ContextMenu InitMenu()
         {
+            System.Windows.Forms.contextmenu
             WinForms::ContextMenu contextMenu = new WinForms::ContextMenu();
             void MenuShow_Click(object Sender, EventArgs e)
             {

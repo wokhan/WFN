@@ -99,7 +99,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             try
             {
-                return (ClientSettingsSection)cfg.GetSectionGroup(applicationSectionName).Sections[SectionName];
+                return (ClientSettingsSection)cfg.GetSectionGroup(applicationSectionName)?.Sections[SectionName];
             }
             catch (ConfigurationErrorsException e)
             {
@@ -116,7 +116,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             try
             {
-                return (ClientSettingsSection)cfg.GetSectionGroup(userSectionName).Sections[SectionName];
+                return (ClientSettingsSection)cfg.GetSectionGroup(userSectionName)?.Sections[SectionName];
             }
             catch (ConfigurationErrorsException e)
             {
