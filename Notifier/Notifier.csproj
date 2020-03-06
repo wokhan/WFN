@@ -3,6 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>Notifier</AssemblyName>
     <RootNamespace>Wokhan.WindowsFirewallNotifier.Notifier</RootNamespace>
     <StartupObject>Wokhan.WindowsFirewallNotifier.Notifier.Program</StartupObject>
@@ -11,9 +12,12 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <Description>Windows Firewall Notifier - Notification handler</Description>
     <Product>Windows Firewall Notifier</Product>
-    <Copyright>2011-2020 Wokhan (https://github.com/wokhansoft/WFN)</Copyright>
-    <Authors>Wokhan Solutions</Authors>
+    <Copyright>2011-2020 Wokhan and others (https://github.com/wokhansoft/WFN)</Copyright>
+    <Authors>Wokhan Solutions, harrwiss</Authors>
     <OutputPath>..\bin\$(ConfigurationName)</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\WFN.ico" />
@@ -65,5 +69,37 @@
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
     <PostBuildEvent>if "$(ConfigurationName)" == "Release" (copy "$(TargetPath)" "$(TargetDir)..\Published")</PostBuildEvent>
   </PropertyGroup>-->
-  
+  <ItemGroup>
+    <Resource Include="Resources\TrayIconBlocked.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIconBlocked2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIconBlocked3.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon3.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon2off.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon21.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon22.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon23.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon24.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TrayIcon1.ico" />
+  </ItemGroup>
 </Project>
