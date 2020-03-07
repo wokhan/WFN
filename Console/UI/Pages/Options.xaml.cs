@@ -61,7 +61,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void txtCurrentLogPath_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            Process.Start("explorer.exe", LogHelper.CurrentLogsPath);
+            ProcessHelper.StartShellExecutable("explorer.exe", LogHelper.CurrentLogsPath, true);
         }
 
         private void btnResetDefault_Click(object sender, RoutedEventArgs e)
@@ -74,17 +74,17 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void txtUserLocalConfigurationPath_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            Process.Start("explorer.exe", UserLocalConfigurationPath);
+            ProcessHelper.StartShellExecutable("explorer.exe", UserLocalConfigurationPath, true);
         }
 
         private void txtUserConfigurationPath_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            Process.Start("explorer.exe", UserConfigurationPath);
+            ProcessHelper.StartShellExecutable("explorer.exe", UserConfigurationPath, true);
         }
 
         private void txtSharedConfigurationPath_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            Process.Start("explorer.exe", SharedConfigurationPath);
+            ProcessHelper.StartShellExecutable("explorer.exe", SharedConfigurationPath, true);
         }
     }
 }
