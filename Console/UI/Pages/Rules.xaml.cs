@@ -171,12 +171,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 //@
                 return;
             }
-            Process.Start("explorer.exe", "/select," + selectedRule.ApplicationName);
+            ProcessHelper.StartShellExecutable("explorer.exe", "/select," + selectedRule.ApplicationName, true);
         }
 
         private void btnStartAdvConsole_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("WF.msc");
+            ProcessHelper.StartShellExecutable("WF.msc", null, true);
         }
 
         private void btnRefresh_Click(object sender, RoutedEventArgs e)

@@ -252,12 +252,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 //@
                 return;
             }
-            Process.Start("explorer.exe", "/select," + selectedLog.FriendlyPath);
+            ProcessHelper.StartShellExecutable("explorer.exe", "/select," + selectedLog.FriendlyPath, true);
         }
 
         private void btnEventLogVwr_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("eventvwr.msc");
+            ProcessHelper.StartShellExecutable("eventvwr.msc", null, true);
         }
 
         private void btnRestartAdmin_Click(object sender, RoutedEventArgs e)
