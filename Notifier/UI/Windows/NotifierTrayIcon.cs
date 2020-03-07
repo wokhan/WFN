@@ -45,7 +45,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             trayIcon = new WinForms::NotifyIcon(components)
             {
                 Icon = Notifier.Properties.Resources.TrayIcon22,
-                ContextMenu = InitMenu(),
+                ContextMenuStrip = InitMenu(),
                 Text = Messages.NotifierTrayIcon_NotifierStaysHiddenWhenMinimizedClickToOpen, // max 64 chars
                 Visible = false
             };
@@ -62,10 +62,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         }
 
-        private WinForms::ContextMenu InitMenu()
+        private WinForms::ContextMenuStrip InitMenu()
         {
-            System.Windows.Forms.contextmenu
-            WinForms::ContextMenu contextMenu = new WinForms::ContextMenu();
+            WinForms::ContextMenuStrip contextMenu = new WinForms::ContextMenuStrip();
             void MenuShow_Click(object Sender, EventArgs e)
             {
                 notifierWindow.RestoreWindowState();
@@ -87,14 +86,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             void MenuShowActivity_Click(object Sender, EventArgs e)
             {
-                 App.GetActivityWindow().Show();
+                App.GetActivityWindow().Show();
             }
 
-            contextMenu.MenuItems.Add(Messages.NotifierTrayIcon_ShowNotifier, MenuShow_Click);
-            contextMenu.MenuItems.Add(Messages.NotifierTrayIcon_OpenConsole, MenuConsole_Click);
-            contextMenu.MenuItems.Add(Messages.NotifierTrayIcon_ShowActivityWindow, MenuShowActivity_Click);
-            contextMenu.MenuItems.Add(Messages.NotifierTrayIcon_DiscardAndClose, MenuClose_Click);
-
+            contextMenu.Items.Add(Messages.NotifierTrayIcon_ShowNotifier, null, MenuShow_Click);
+            contextMenu.Items.Add(Messages.NotifierTrayIcon_OpenConsole, null, MenuConsole_Click);
+            contextMenu.Items.Add(Messages.NotifierTrayIcon_ShowActivityWindow, null, MenuShowActivity_Click);
+            contextMenu.Items.Add(Messages.NotifierTrayIcon_DiscardAndClose, null, MenuClose_Click);
             return contextMenu;
         }
 
