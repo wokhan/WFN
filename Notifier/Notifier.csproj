@@ -6,20 +6,24 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>Notifier</AssemblyName>
     <RootNamespace>Wokhan.WindowsFirewallNotifier.Notifier</RootNamespace>
-    <StartupObject>Wokhan.WindowsFirewallNotifier.Notifier.Program</StartupObject>
+    <StartupObject>Wokhan.WindowsFirewallNotifier.Notifier.App</StartupObject>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <Description>Windows Firewall Notifier - Notification handler</Description>
     <Product>Windows Firewall Notifier</Product>
     <Copyright>2011-2020 Wokhan and others (https://github.com/wokhansoft/WFN)</Copyright>
-    <Authors>Wokhan Solutions, harrwiss</Authors>
+    <Authors>Wokhan Solutions, Harrwiss</Authors>
     <OutputPath>..\bin\$(ConfigurationName)</OutputPath>
+    <Company>Wokhan Solutions</Company>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Helpers\SingleInstanceApp.cs_" />
+    <None Remove="Program.cs_" />
+    <None Remove="Properties\AssemblyInfo.cs_" />
     <None Remove="Resources\WFN.ico" />
   </ItemGroup>
 
