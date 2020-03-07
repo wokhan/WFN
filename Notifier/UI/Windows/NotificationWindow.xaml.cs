@@ -392,7 +392,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void lblService_Click(object sender, RoutedEventArgs e) //FIXME: Not referenced (anymore!)
         {
-            Process.Start("services.msc");
+            ProcessHelper.StartShellExecutable("services.msc", null, true);
         }
 
         private void btnOptions_Click(object sender, RoutedEventArgs e)
@@ -687,13 +687,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void hlkPath_Navigate(object sender, RequestNavigateEventArgs e)
         {
-            LogHelper.Debug("Calling external program: explorer.exe /select,\"" + e.Uri + "\"");
-            Process.Start("explorer.exe", String.Format("/select,\"{0}\"", e.Uri));
+            ProcessHelper.StartShellExecutable("explorer.exe", String.Format("/select,\"{0}\"", e.Uri), true);
         }
 
         private void hlk_Navigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            ProcessHelper.StartShellExecutable(e.Uri?.AbsoluteUri, null, true);
             e.Handled = true;
         }
 
