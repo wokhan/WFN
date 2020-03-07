@@ -15,6 +15,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common.Net.Dns;
 using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
 using Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows;
 using WinForms = System.Windows.Forms;
