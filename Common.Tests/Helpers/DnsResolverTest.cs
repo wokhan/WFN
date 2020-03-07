@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Wokhan.WindowsFirewallNotifier.Common.Net.Dns;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -25,7 +26,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             };
 
             System.Console.WriteLine("Resolve first 3 entries:");
-            Task<bool> t = DnsResolver.ResolveIpAddresses(ipList, maxEntriesToResolve: 4);
+            Task t = DnsResolver.ResolveIpAddresses(ipList, maxEntriesToResolve: 4);
             t.Wait();
             LogDictEntries();
             Assert.AreEqual("dns.google", DnsResolver.CachedIPHostEntryDict[IPAddress.Parse("8.8.8.8")].HostEntry.HostName);
@@ -55,7 +56,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 "1.9.1.9", // cdns01.tm.net.my
             };
             Console.WriteLine("Unresolvabe IPs:");
-            Task<bool> t = DnsResolver.ResolveIpAddresses(ipList);
+            Task t = DnsResolver.ResolveIpAddresses(ipList);
             t.Wait();
             LogDictEntries();
 

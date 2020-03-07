@@ -870,7 +870,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return Enum.GetName(typeof(NET_FW_PROFILE_TYPE2_), type);
         }
 
-        public static Boolean isEventInstanceIdAccepted(long instanceId)
+        public static bool isEventInstanceIdAccepted(long instanceId)
         {
             // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
             return
@@ -883,6 +883,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 || instanceId == 5155
                 || instanceId == 5156;
         }
+
         public static string getEventInstanceIdAsString(long eventId)
         {
             // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection

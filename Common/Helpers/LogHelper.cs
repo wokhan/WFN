@@ -91,6 +91,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
         }
 
+        internal static T WarnAndReturn<T>(string msg, T value)
+        {
+            Warning(msg);
+            return value;
+        }
+
 #if DEBUG
         public static void Warning(string msg,
             [CallerMemberName] string memberName = null,

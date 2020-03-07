@@ -3,11 +3,13 @@ using System.Windows.Media;
 using System.Net;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common;
+using Wokhan.WindowsFirewallNotifier.Common.Net.Dns;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
     public class LogEntryViewModel
     {
+        public int Id { get; set; }
         public int Pid { get; set; }
         public DateTime Timestamp { get; set; }
         public ImageSource Icon { get; set; }
@@ -16,7 +18,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         public string FriendlyPath { get; set; }
         public string ServiceName { get; set; }
         public string TargetIP { get; set; }
-        public string TargetHostName { get
+        public string TargetHostName
+        {
+            get
             {
                 try
                 {

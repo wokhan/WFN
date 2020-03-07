@@ -6,6 +6,7 @@ using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using System.Linq;
 using System.Collections.Generic;
 using System.Net;
+using Wokhan.WindowsFirewallNotifier.Common.Net.Dns;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
