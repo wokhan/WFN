@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Text;
 using System.Management;
 using System.Text.RegularExpressions;
+using System.Windows;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -873,6 +874,27 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
         }
 
+        /**
+         * Starts a default shell executable (netcore31) with arguments and optional message box.
+         * 
+         */
+        public static void StartShellExecutable(string executable, string args, bool showMessageBox)
+        {
+            try
+            {
+                LogHelper.Debug($"Starting shell executable: {executable}, args: {args}"); 
+                Process.Start(new ProcessStartInfo(executable, args) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error($"{ex.Message}: {executable} {args}", ex);
+                if (showMessageBox)
+                {
+                    MessageBox.Show($"Cannot start shell program: {executable}, Message: {ex.Message}");
+                }
+            }
+        }
     }
+
 }
 
