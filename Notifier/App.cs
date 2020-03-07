@@ -16,8 +16,8 @@ using System.Windows.Threading;
 using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
-using Wokhan.WindowsFirewallNotifier.Notifier.Managers;
 using Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows;
+using WinForms = System.Windows.Forms;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier
 {
@@ -210,6 +210,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
     /// </summary>
     public class App : Application, IDisposable
     {
+        private static App APP_INSTANCE;
         private static NotificationWindow notifierWindow;
         private static ActivityWindow activityWindow;
 
@@ -237,8 +238,24 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 }
                 string[] args = Environment.GetCommandLineArgs();
                 // Ensures that notifier is only started once.
-                SingletonManager singleton = new SingletonManager();
-                singleton.Run(argv);  // runs new App();
+                using (Mutex mtex = new Mutex(true, "MTX_NotificationWindowInstance", out bool instanceCountOne))
+                {
+                    if (instanceCountOne)
+                    {
+                        // TODO: maybe not required - remove?
+                        WinForms::Application.EnableVisualStyles();
+                        WinForms::Application.SetCompatibleTextRenderingDefault(false);
+
+                        APP_INSTANCE = new App();
+                        APP_INSTANCE.Run();
+                        mtex.ReleaseMutex();
+                    }
+                    else
+                    {
+                        MessageBox.Show("A notifier instance is already running");
+                        APP_INSTANCE.ShowNotifierWindow();  // FIXME: show it - seems not to work as it should
+                    }
+                }
             }
             catch (Exception e)
             {
