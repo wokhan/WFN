@@ -11,6 +11,7 @@ using System.Windows.Media;
 using Wokhan.WindowsFirewallNotifier.Common.Annotations;
 using Wokhan.WindowsFirewallNotifier.Common.Properties;
 using Wokhan.WindowsFirewallNotifier.Common.Extensions;
+using System.Diagnostics;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -870,8 +871,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return Enum.GetName(typeof(NET_FW_PROFILE_TYPE2_), type);
         }
 
-        public static bool isEventInstanceIdAccepted(long instanceId)
+        public static bool IsEventAccepted(EventLogEntry entry)
         {
+            var instanceId = entry.InstanceId;
+
             // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
             return
                 instanceId == 5157 // block connection
