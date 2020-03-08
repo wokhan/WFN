@@ -107,10 +107,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
 
             dataView = CollectionViewSource.GetDefaultView(gridLog.ItemsSource);
-            if (dataView.SortDescriptions.Count == 0)
-            {
-                dataView.SortDescriptions.Add(new SortDescription(nameof(LogEntryViewModel.Timestamp), ListSortDirection.Descending));
-            }
+            dataView.SortDescriptions.Add(new SortDescription(nameof(LogEntryViewModel.Timestamp), ListSortDirection.Descending));
 
             SetTCPFilter();
 
@@ -149,10 +146,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 throw;
             }
 
-            Task.Run(() => InitEventLog(EntryLogScanProgress));
+            Task.Run(() => InitEventLog(value => ScanProgress = value));
         }
-
-        private void EntryLogScanProgress(int value) => ScanProgress = value;
 
         private void SecurityLog_EntryWritten(object sender, EntryWrittenEventArgs e)
         {
@@ -194,7 +189,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     _ = DnsResolver.ResolveIpAddresses(entries.Select(entry => entry.TargetIP).Distinct());
                 }
             }
-            catch (ObjectDisposedException _)
+            catch (ObjectDisposedException)
             {
                 // Could use a cancellation token instead, but chances are that dispose will occur before the token is actually checked. Going for the ugly way then.
             }
