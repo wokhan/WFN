@@ -183,7 +183,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                                         .Take(MAX_ENTRIES)
                                         .Select(EntryViewFromLogEntry)
                                         .Where(entry => entry != null)
-                                        .Select(entry => { Dispatcher.Invoke(() => { lock (LogEntries) LogEntries.Add(entry); }); return entry; })
+                                        .Select(entry => { Dispatcher.Invoke(() => { LogEntries.Add(entry); }); return entry; })
                                         .ToList();
 
                 if (Settings.Default.EnableDnsResolver)
