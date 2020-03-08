@@ -26,13 +26,13 @@
     </layout>
   </appender>
 
-  <appender name="OutputDebugStringAppender" type="log4net.Appender.OutputDebugStringAppender" >
+  <appender name="DebugAppender" type="log4net.Appender.DebugAppender">
     <layout type="log4net.Layout.PatternLayout">
-      <conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
+      <conversionPattern value="%date{HH:mm:ss,fff}  %-5level [%3thread] - %message%newline" />
     </layout>
   </appender>
 
-  <appender name="DebugAppender" type="log4net.Appender.DebugAppender">
+  <appender name="TraceAppender" type="log4net.Appender.TraceAppender">
     <layout type="log4net.Layout.PatternLayout">
       <conversionPattern value="%date{HH:mm:ss,fff}  %-5level [%3thread] - %message%newline" />
     </layout>
@@ -50,9 +50,11 @@
   </appender>
 
   <root>
-    <level value="DEBUG" />
-    <appender-ref ref="ConsoleAppender" />
-    <!--<appender-ref ref="DebugAppender" />-->
+    <level value="ALL" />
+    <!-- Does not write to debug output in VS anymore (with netcore31) - also System.Console.WriteLine doesn't 
+    <appender-ref ref="ConsoleAppender" /> -->
+    <appender-ref ref="DebugAppender" />
+    <!-- <appender-ref ref="TraceAppender" /> -->
     <appender-ref ref="RollingFile" />
   </root>
 </log4net>

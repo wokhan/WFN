@@ -12,6 +12,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
     {
         [TestMethod]
 
+        // See testoutput for result (test method doesn't write to debug out)
         public void TestInit()
         {
             Assert.IsNotNull(Settings.Default);
@@ -20,6 +21,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             Assert.IsTrue(File.Exists("WFN.config.log4net"));
 
             LogHelper.Info("info log message");
+
+            LogHelper.Warning("warning log message");
+
+            LogHelper.Error("error log message", new Exception("Testexception"));
 
             LogHelper.Debug("debug log message");
 
