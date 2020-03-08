@@ -1,10 +1,6 @@
 name: .NET Core
 
-on:
-  push:
-    branches: [ netcore31 ]
-  pull_request:
-    branches: [ netcore31 ]
+on: push
 
 jobs:
   build:
@@ -19,3 +15,5 @@ jobs:
         dotnet-version: 3.1.101
     - name: Build with dotnet
       run: dotnet build --configuration Release
+    - name: Test with dotnet
+      run: dotnet test --project Console.Tests/Console.Tests.csproj
