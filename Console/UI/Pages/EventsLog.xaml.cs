@@ -26,6 +26,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// </summary>
     public partial class EventsLog : Page, INotifyPropertyChanged
     {
+        private const int MAX_ENTRIES = 1000;
         private readonly Dictionary<int, ProcessHelper.ServiceInfoResult> services = ProcessHelper.GetAllServicesByPidWMI();
         private readonly ICollectionView dataView;
 
@@ -179,6 +180,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 var entries = Enumerable.Range(0, ScanProgressMax)
                                         .Select(i => { progressCallback?.Invoke(i + 1); return securityLog.Entries[ScanProgressMax - i - 1]; })
                                         .Where(FirewallHelper.IsEventAccepted)
+                                        .Take(MAX_ENTRIES)
                                         .Select(EntryViewFromLogEntry)
                                         .Where(entry => entry != null)
                                         .Select(entry => { Dispatcher.Invoke(() => { lock (LogEntries) LogEntries.Add(entry); }); return entry; })
