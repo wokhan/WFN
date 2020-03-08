@@ -6,6 +6,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Windows;
 using log4net;
+using log4net.Config;
 
 #if DEBUG
 using System.Runtime.CompilerServices;
@@ -17,6 +18,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
     public static class LogHelper
     {
         private readonly static ILog LOGGER = LogManager.GetLogger(typeof(LogHelper));
+
+        private const string LOG4NET_CONFIG_FILE = "WFN.config.log4net";
 
         private static readonly bool IsAdmin = UacHelper.CheckProcessElevated();
         public static readonly string CurrentLogsPath;
@@ -32,6 +35,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             string appVersion = assembly.Version.ToString();
             string assemblyName = assembly.Name;
             CurrentLogsPath = AppDomain.CurrentDomain.BaseDirectory;
+
+            // log4net - look for a configuration file in the installation dir
+            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+            XmlConfigurator.ConfigureAndWatch(logRepository, new FileInfo(LOG4NET_CONFIG_FILE));
+
             if (Settings.Default?.FirstRun ?? true)
             {
                 WriteLog(LogLevel.INFO, String.Format("OS: {0} ({1} bit) / .Net CLR: {2} / Path: {3} / Version: {4} ({5} bit)", Environment.OSVersion, Environment.Is64BitOperatingSystem ? 64 : 32, Environment.Version, AppDomain.CurrentDomain.BaseDirectory, appVersion, Environment.Is64BitProcess ? 64 : 32));
