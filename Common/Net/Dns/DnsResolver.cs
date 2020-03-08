@@ -29,9 +29,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
                 return;
             }
 
-            var ipList = ipAddressList.AsParallel()
-                                     .Select(s => IPAddress.TryParse(s, out IPAddress parsedIP) ? parsedIP : LogHelper.WarnAndReturn<IPAddress>($"Cannot parse IP {s}", null))
-                                     .ToList();
+            var ipList = ipAddressList.Select(s => IPAddress.TryParse(s, out IPAddress parsedIP) ? parsedIP : LogHelper.WarnAndReturn<IPAddress>($"Cannot parse IP {s}", null));
 
             await ResolveIpAddresses(ipList, maxEntriesToResolve).ConfigureAwait(false);
         }

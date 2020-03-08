@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,10 +24,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// <summary>
     /// Interaction logic for EventLog.xaml
     /// </summary>
-    public partial class EventsLog : Page
+    public partial class EventsLog : Page, INotifyPropertyChanged
     {
-        private const int MaxEventsToLoad = 1500;
-
         private readonly Dictionary<int, ProcessHelper.ServiceInfoResult> services = ProcessHelper.GetAllServicesByPidWMI();
         private readonly ICollectionView dataView;
 
@@ -42,6 +41,43 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         public ObservableCollection<LogEntryViewModel> LogEntries { get; } = new ObservableCollection<LogEntryViewModel>();
 
+        private int _scanProgress;
+        public int ScanProgress
+        {
+            get => _scanProgress;
+            set
+            {
+                // TODO: replace with helpers from Wokhan libraries (once they are moved to github)
+                if (_scanProgress != value)
+                {
+                    _scanProgress = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ScanProgress)));
+                }
+            }
+        }
+
+        private int _scanProgressMax;
+
+        public int ScanProgressMax
+        {
+            get => _scanProgressMax;
+            set
+            {
+                // TODO: replace with helpers from Wokhan libraries (once they are moved to github)
+                if (_scanProgressMax != value)
+                {
+                    _scanProgressMax = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ScanProgressMax)));
+                }
+            }
+        }
+
+        public bool IsTrackingEnabled
+        {
+            get => securityLog?.EnableRaisingEvents ?? true;
+            set => securityLog.EnableRaisingEvents = value;
+        }
+
         public bool IsTCPOnlyEnabled
         {
             get => Settings.Default.FilterTcpOnlyEvents;
@@ -56,10 +92,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
         }
 
-        private readonly List<LogEntryViewModel> EntriesToAdd = new List<LogEntryViewModel>();
 
         private bool RefreshFilterData = true;
-        private bool initialLoading;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public EventsLog()
         {
@@ -113,8 +149,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 throw;
             }
 
-            Task.Run(InitEventLog);
+            Task.Run(() => InitEventLog(EntryLogScanProgress));
         }
+
+        private void EntryLogScanProgress(int value) => ScanProgress = value;
 
         private void SecurityLog_EntryWritten(object sender, EntryWrittenEventArgs e)
         {
@@ -134,30 +172,31 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private static bool TCPFilter(object le) => ((LogEntryViewModel)le).Protocol == "TCP";
 
-        private void InitEventLog()
+        private void InitEventLog(Action<int> progressCallback)
         {
             try
             {
-                lock (LogEntries)
+                Dispatcher.Invoke(() => LogEntries.Clear());
+
+                ScanProgressMax = securityLog.Entries.Count;
+
+                // Have to use a Enumerable.Range to enumerate the entries starting from the last one, since calling Reverse on the initial collection will first enumerate all entries
+                var entries = Enumerable.Range(0, ScanProgressMax)
+                                        .Select(i => { progressCallback?.Invoke(i + 1); return securityLog.Entries[ScanProgressMax - i - 1]; })
+                                        .Where(FirewallHelper.IsEventAccepted)
+                                        .Select(EntryViewFromLogEntry)
+                                        .Where(entry => entry != null)
+                                        .Select(entry => { Dispatcher.Invoke(() => { lock (LogEntries) LogEntries.Add(entry); }); return entry; })
+                                        .ToList();
+
+                if (Settings.Default.EnableDnsResolver)
                 {
-                    Dispatcher.Invoke(() => LogEntries.Clear());
-
-                    var entries = securityLog.Entries.Cast<EventLogEntry>()
-                                                     .Skip(securityLog.Entries.Count - MaxEventsToLoad)
-                                                     .AsParallel()
-                                                     .Where(entry => FirewallHelper.isEventInstanceIdAccepted(entry.InstanceId))
-                                                     .Take(MaxEventsToLoad)
-                                                     .Select(EntryViewFromLogEntry)
-                                                     .Where(entry => entry != null)
-                                                     .ToList();
-
-                    Dispatcher.Invoke(() => entries.ForEach(entry => LogEntries.Add(entry)));
-
-                    if (Settings.Default.EnableDnsResolver)
-                    {
-                        _ = DnsResolver.ResolveIpAddresses(entries.Select(entry => entry.TargetIP));
-                    }
+                    _ = DnsResolver.ResolveIpAddresses(entries.Select(entry => entry.TargetIP).Distinct());
                 }
+            }
+            catch (ObjectDisposedException _)
+            {
+                // Could use a cancellation token instead, but chances are that dispose will occur before the token is actually checked. Going for the ugly way then.
             }
             catch (Exception exc)
             {

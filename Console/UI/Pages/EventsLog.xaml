@@ -57,6 +57,14 @@
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Right">
                     <CheckBox x:Name="cbxIsTCPOnlyEnabled" Content="TCP only" IsChecked="{Binding IsTCPOnlyEnabled}" ToolTip="Only show TCP Protocol events" VerticalContentAlignment="Center" Padding="10,0" />
+                    <Grid Width="150" Margin="5">
+                        <ProgressBar Value="{Binding ScanProgress}" Maximum="{Binding ScanProgressMax}" />
+                        <TextBlock HorizontalAlignment="Center">
+                            <Run Text="{Binding ScanProgress, FallbackValue='-'}" />
+                                 /
+                            <Run Text="{Binding ScanProgressMax, FallbackValue='-'}" />
+                        </TextBlock>
+                    </Grid>
                     <ToggleButton x:Name="btnHelp">
                         <Path Fill="Chocolate" Data="{StaticResource Image_Help}"/>
                     </ToggleButton>
@@ -64,7 +72,7 @@
             </Grid>
         </Border>
         <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
-            <DataGrid BorderThickness="0" x:Name="gridLog" AlternatingRowBackground="Gainsboro" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column" SelectionChanged="GridLog_SelectionChanged" DataGridCell.Selected="GridLog_CellSelected" GotFocus="GridLog_GotFocus" GridLinesVisibility="None">
+            <DataGrid BorderThickness="0" x:Name="gridLog" EnableRowVirtualization="True" AlternatingRowBackground="Gainsboro" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column" SelectionChanged="GridLog_SelectionChanged" DataGridCell.Selected="GridLog_CellSelected" GotFocus="GridLog_GotFocus" GridLinesVisibility="None">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp}" Width="Auto"/>
                     <DataGridTextColumn Header="PID" Binding="{Binding Pid}" Width="Auto"/>
