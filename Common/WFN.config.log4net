@@ -27,6 +27,10 @@
   </appender>
 
   <appender name="DebugAppender" type="log4net.Appender.DebugAppender">
+    <!-- Add the <category> tag as below, this will remove %logger prefix in the output -->
+    <category type="log4net.Layout.PatternLayout">
+      <conversionPattern value="" />
+    </category>
     <layout type="log4net.Layout.PatternLayout">
       <conversionPattern value="%date{HH:mm:ss,fff}  %-5level [%3thread] - %message%newline" />
     </layout>
@@ -53,6 +57,7 @@
     <level value="ALL" />
     <!-- Does not write to debug output in VS anymore (with netcore31) - also System.Console.WriteLine doesn't 
     <appender-ref ref="ConsoleAppender" /> -->
+    <!-- Use this in place to write to the VS output window -->
     <appender-ref ref="DebugAppender" />
     <!-- <appender-ref ref="TraceAppender" /> -->
     <appender-ref ref="RollingFile" />
