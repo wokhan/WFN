@@ -16,9 +16,6 @@
     <Compile Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Resources\Shield.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <COMReference Include="NetFwTypeLib">
       <Guid>{58FBCF7C-E7A9-467C-80B3-FC65E8FCCA08}</Guid>
       <VersionMajor>1</VersionMajor>
@@ -40,7 +37,9 @@
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Shield.ico" />
+    <Resource Include="Resources\Shield.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Settings.Designer.cs">
@@ -54,19 +53,16 @@
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Update="WFN.config.log4net">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-
-  <!--<ItemGroup>
-    <Resource Include="Resources\Shield.ico" />
-  </ItemGroup>-->
-  
-    <PropertyGroup>
-    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
-    <PostBuildEvent>
-      del WFN.config
-      ren "Wokhan.WindowsFirewallNotifier.Common.dll.config" WFN.config
-      if "$(ConfigurationName)" == "Release" (mkdir "$(TargetDir)..\Published")
-      if "$(ConfigurationName)" == "Release" (copy "$(TargetPath)" "$(TargetDir)..\Published")
-    </PostBuildEvent>
-    </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <PostBuildEvent>del WFN.config
+ren "Wokhan.WindowsFirewallNotifier.Common.dll.config" WFN.config</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+  </PropertyGroup>
 </Project>
