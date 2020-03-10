@@ -6,11 +6,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     public class CustomSettingsProviderTest
     {
-        [Fact]
         ///
         /// Tests whether global settings are properly initialized from this test project (path names to config files e.g. WFN.config)
         /// If not, check the Probject properties > Build > Output path
         /// 
+        [Fact]
         public void TestInit()
         {
             Assert.NotNull(Settings.Default);
