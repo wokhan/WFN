@@ -48,7 +48,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             get
             {
-                if (_targetHostName == null) UpdateTargetHostname();
+                if (_targetHostName == null)
+                    DnsResolver.ResolveIpAddress(TargetIP, entry => TargetHostName = entry.DisplayText);
                 return _targetHostName;
             }
             set
@@ -59,13 +60,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TargetHostName)));
                 }
             }
-        }
-
-        private async void UpdateTargetHostname()
-        {
-            TargetHostName = "Resolving...";
-            var value = await DnsResolver.ResolveIpAddress(TargetIP).ConfigureAwait(false);
-            TargetHostName = value.DisplayText;
         }
 
         public string TargetPort { get; set; }

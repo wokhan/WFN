@@ -585,13 +585,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         {
             try
             {
-                conn.ResolvedHost = "...";
-                var host = (await DnsResolver.ResolveIpAddress(conn.Target).ConfigureAwait(true)).HostEntry.HostName; 
-                //var host = (await Dns.GetHostEntryAsync(conn.Target)).HostName;
-                if (conn.Target != host)
-                {
-                    conn.ResolvedHost = host;
-                }
+                DnsResolver.ResolveIpAddress(conn.Target, entry => conn.ResolvedHost = conn.Target != entry.HostEntry.HostName ? entry.HostEntry.HostName : "..."); 
             }
             catch (Exception e) 
             {

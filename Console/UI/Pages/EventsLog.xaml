@@ -74,26 +74,26 @@
         <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
             <DataGrid BorderThickness="0" x:Name="gridLog" EnableRowVirtualization="True" AlternatingRowBackground="Gainsboro" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column" SelectionChanged="GridLog_SelectionChanged" DataGridCell.Selected="GridLog_CellSelected" GotFocus="GridLog_GotFocus" GridLinesVisibility="None">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp}" Width="Auto"/>
-                    <DataGridTextColumn Header="PID" Binding="{Binding Pid}" Width="Auto"/>
+                    <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp,Mode=OneTime}" Width="Auto"/>
+                    <DataGridTextColumn Header="PID" Binding="{Binding Pid,Mode=OneTime}" Width="Auto"/>
                     <!-- <DataGridTextColumn Header="App"  Binding="{Binding FileName}" Width="0.3*"/> -->
-                    <DataGridTemplateColumn Header="App" SortMemberPath="FileName" Width="0.2*" >
+                    <DataGridTemplateColumn Header="App" SortMemberPath="FileName,Mode=OneTime" Width="0.2*" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
                                     <Image Source="{Binding Icon}" Width="16" HorizontalAlignment="Left" />
-                                    <Label Content="{Binding FileName}" Margin="20,0,0,0" ToolTip="{Binding FriendlyPath}"/>
+                                    <Label Content="{Binding FileName,Mode=OneTime}" Margin="20,0,0,0" ToolTip="{Binding FriendlyPath}"/>
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Service"  Binding="{Binding ServiceName}" Width="0.1*"/>
-                    <DataGridTextColumn Header="Remote IP" Binding="{Binding TargetIP}" Width="0.1*"/>
+                    <DataGridTextColumn Header="Service"  Binding="{Binding ServiceName,Mode=OneTime}" Width="0.1*"/>
+                    <DataGridTextColumn Header="Remote IP" Binding="{Binding TargetIP,Mode=OneTime}" Width="0.1*"/>
                     <DataGridTextColumn x:Name="RemoteHostCol" Header="Remote Host" Binding="{Binding TargetHostName}" Width="0.1*" />
-                    <DataGridTextColumn Header="Port" Binding="{Binding TargetPort}" Width="Auto"/>
-                    <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol}" Width="Auto"/>
-                    <DataGridTextColumn Header="FilterId" Binding="{Binding FilterId}" Width="Auto"/>
-                    <DataGridTextColumn Header="Dir" Binding="{Binding Direction}" Width="Auto">
+                    <DataGridTextColumn Header="Port" Binding="{Binding TargetPort,Mode=OneTime}" Width="Auto"/>
+                    <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol,Mode=OneTime}" Width="Auto"/>
+                    <DataGridTextColumn Header="FilterId" Binding="{Binding FilterId,Mode=OneTime}" Width="Auto"/>
+                    <DataGridTextColumn Header="Dir" Binding="{Binding Direction,Mode=OneTime}" Width="Auto">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Setter Property="Foreground" Value="{Binding DirectionColor}"/>
@@ -116,9 +116,7 @@
                 </DataGrid.Columns>
             </DataGrid>
             <Border Style="{StaticResource InfoBlock}">
-                <TextBlock >This page displays a list of the latest connections (for performance reasons, the list has been limited).<LineBreak/>
-                    If you need a complete list, please use the Windows events log viewer.<LineBreak/>
-                    <LineBreak/>
+                <TextBlock >This page displays a list of the latest connections, updated in real-time.<LineBreak/>
                     Click on a cell in the Action column to view details from the eventlog including the name of the filter rule which triggered the event.
                 </TextBlock>
             </Border>

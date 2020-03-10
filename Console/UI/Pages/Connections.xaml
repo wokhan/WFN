@@ -58,7 +58,7 @@
             </Grid>
         </Border>
         <Grid>
-            <DataGrid BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" ItemsSource="{Binding connectionsView}" AutoGenerateColumns="False" HeadersVisibility="Column" HorizontalAlignment="Stretch">
+            <DataGrid EnableRowVirtualization="True" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" ItemsSource="{Binding connectionsView}" AutoGenerateColumns="False" HeadersVisibility="Column" HorizontalAlignment="Stretch">
                 <DataGrid.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.ContainerStyle>
@@ -111,7 +111,7 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
-                                    <Image Source="{Binding Icon,Mode=OneTime}" Margin="5" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                    <Image Source="{Binding Icon}" Margin="5" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" />
                                     <TextBlock Margin="30,0,0,0" VerticalAlignment="Center" Text="{Binding Owner, Mode=OneTime}" />
                                 </Grid>
                             </DataTemplate>
