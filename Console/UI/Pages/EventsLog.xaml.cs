@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,7 +15,6 @@ using System.Windows.Threading;
 
 using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
-using Wokhan.WindowsFirewallNotifier.Common.Net.Dns;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
@@ -26,7 +24,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// </summary>
     public partial class EventsLog : Page, INotifyPropertyChanged
     {
-        private const int MAX_ENTRIES = 1000;
         private readonly Dictionary<int, ProcessHelper.ServiceInfoResult> services = ProcessHelper.GetAllServicesByPidWMI();
         private readonly ICollectionView dataView;
 
@@ -41,6 +38,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private EventLog securityLog;
 
         public ObservableCollection<LogEntryViewModel> LogEntries { get; } = new ObservableCollection<LogEntryViewModel>();
+        public List<LogEntryViewModel> TempEntries { get; } = new List<LogEntryViewModel>();
 
         private int _scanProgress;
         public int ScanProgress
@@ -73,10 +71,26 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
         }
 
+        private bool _isTrackingEnabled;
         public bool IsTrackingEnabled
         {
-            get => securityLog?.EnableRaisingEvents ?? true;
-            set => securityLog.EnableRaisingEvents = value;
+            get => _isTrackingEnabled;
+            set
+            {
+                if (_isTrackingEnabled != value)
+                {
+                    _isTrackingEnabled = value;
+                    if (_isTrackingEnabled)
+                    {
+                        TargetCollectionNewEntries = LogEntries;
+                        TempEntries.ForEach(entry => LogEntries.Add(entry));
+                        TempEntries.Clear();
+                    } else
+                    {
+                        TargetCollectionNewEntries = TempEntries;
+                    }
+                }
+            }
         }
 
         public bool IsTCPOnlyEnabled
@@ -95,6 +109,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
 
         private bool RefreshFilterData = true;
+        private ICollection<LogEntryViewModel> TargetCollectionNewEntries;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -111,6 +126,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             dataView.SortDescriptions.Add(new SortDescription(nameof(LogEntryViewModel.Timestamp), ListSortDirection.Descending));
 
             SetTCPFilter();
+
+            TargetCollectionNewEntries = LogEntries;
 
             if (((App)Application.Current).IsElevated)
             {
@@ -155,14 +172,13 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             LogEntryViewModel entry = EntryViewFromLogEntry(e.Entry);
             if (entry != null)
             {
-                lock (LogEntries)
-                    Dispatcher.Invoke(() =>
+                Dispatcher.Invoke(() =>
+                {
+                    if (!TargetCollectionNewEntries.Contains(entry, EntryComparer.Instance))
                     {
-                        if (!LogEntries.Contains(entry, EntryComparer.Instance))
-                        {
-                            LogEntries.Add(entry);
-                        }
-                    });
+                        TargetCollectionNewEntries.Add(entry);
+                    }
+                });
             }
         }
 
@@ -180,16 +196,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 var entries = Enumerable.Range(0, ScanProgressMax)
                                         .Select(i => { progressCallback?.Invoke(i + 1); return securityLog.Entries[ScanProgressMax - i - 1]; })
                                         .Where(FirewallHelper.IsEventAccepted)
-                                        .Take(MAX_ENTRIES)
                                         .Select(EntryViewFromLogEntry)
                                         .Where(entry => entry != null)
                                         .Select(entry => { Dispatcher.Invoke(() => { LogEntries.Add(entry); }); return entry; })
                                         .ToList();
-
-                if (Settings.Default.EnableDnsResolver)
-                {
-                    _ = DnsResolver.ResolveIpAddresses(entries.Select(entry => entry.TargetIP).Distinct());
-                }
             }
             catch (ObjectDisposedException)
             {
@@ -235,7 +245,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     Id = entry.Index,
                     Pid = pid,
                     Timestamp = entry.TimeGenerated,
-                    Icon = IconHelper.GetIcon(GetReplacementString(entry, 1)),
                     Path = GetReplacementString(entry, 1) == "-" ? "System" : GetReplacementString(entry, 1),
                     FriendlyPath = friendlyPath,
                     ServiceName = serviceName,
@@ -246,7 +255,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     Direction = direction,
                     FilterId = GetReplacementString(entry, 8),
                     Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId),
-                    Reason_Info = entry.Message,
+                    Reason_Info = entry.Message
                 };
 
                 le.ReasonColor = le.Reason.StartsWith("Block") ? Brushes.OrangeRed : Brushes.Blue;

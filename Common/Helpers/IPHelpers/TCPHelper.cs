@@ -353,10 +353,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
 
             if (row.OwningPid == 0)
             {
-                Owner owner = new Owner();
-                owner.ModuleName = "System";
-                owner.ModulePath = "System";
-                return owner;
+                return Owner.System;
             }
 
             IntPtr buffer = IntPtr.Zero;

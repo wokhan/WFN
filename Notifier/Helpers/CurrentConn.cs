@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
 using System.Windows.Media;
@@ -25,9 +26,27 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
         private ImageSource _icon;
         public ImageSource Icon
         {
-            get { return _icon; }
-            set { _icon = value; NotifyPropertyChanged(nameof(Icon)); }
+            get
+            {
+                if (_icon == null)
+                {
+                    UpdateIcon();
+                }
+                return _icon;
+            }
+            set
+            {
+                if (_icon != value)
+                {
+                    _icon = value; NotifyPropertyChanged(nameof(Icon));
+                }
+            }
 
+        }
+
+        private async void UpdateIcon()
+        {
+            Icon = await IconHelper.GetIconAsync(CurrentPath, true);
         }
 
         public string CurrentPath { get; set; }

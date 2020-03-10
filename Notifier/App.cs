@@ -566,8 +566,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     }
 
                     ResolveHostForConnection(conn);
-                    //retrieveIcon(conn);
-                    conn.Icon = IconHelper.GetIcon(conn.CurrentPath, true);
 
                     this.Connections.Add(conn);
 
@@ -582,12 +580,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             return false;
         }
 
-        private async void retrieveIcon(CurrentConn conn)
-        {
-            var icon = await IconHelper.GetIconAsync(conn.CurrentPath, true);
-            conn.Icon = icon;
-        }
-
+        
         private static async void ResolveHostForConnection(CurrentConn conn)
         {
             try

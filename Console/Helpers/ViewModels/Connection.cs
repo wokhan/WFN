@@ -1,13 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows.Media.Imaging;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
-using Harrwiss.Common.Network.Helper;
-using System.Linq;
 using System.Collections.Generic;
-using System.Net;
 using Wokhan.WindowsFirewallNotifier.Common.Net.Dns;
+using System.Runtime.CompilerServices;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
@@ -21,12 +18,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         /// </summary>
         public static Dictionary<int, string[]> LocalOwnerWMICache = null;
 
-        protected void NotifyPropertyChanged(string propertyName)
+        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public Connection(IPHelper.I_OWNER_MODULE ownerMod)
@@ -36,10 +30,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             this._localPort = ownerMod.LocalPort.ToString();
             this.CreationTime = ownerMod.CreationTime;
             this._localAddress = ownerMod.LocalAddress;
-            ResolveLocalIpToHostnameTask(this._localAddress);
             this._protocol = ownerMod.Protocol;
             this._remoteAddress = ownerMod.RemoteAddress;
-            ResolveRemoteIpToHostnameTask(this._remoteAddress);
             this._remotePort = (ownerMod.RemotePort == -1 ? String.Empty : ownerMod.RemotePort.ToString());
             this.LastSeen = DateTime.Now;
             this._state = Enum.GetName(typeof(IPHelper.MIB_TCP_STATE), ownerMod.State);
@@ -64,72 +56,90 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
                     ProcName = "System";
                     Owner = "System";
                     Path = "System";
-                    Icon = IconHelper.GetIcon("System", true);
                 }
                 else
                 {
                     Owner = "Unknown";
-                    Icon = IconHelper.GetIcon("?error", true);
+                    Path = Path ?? "Unresolved";
                 }
             }
             else
             {
-                Icon = ownerMod.OwnerModule.Icon;
                 Owner = ownerMod.OwnerModule.ModuleName;
+                IconPath = ownerMod.OwnerModule.ModulePath;
             }
 
             GroupKey = String.Format("{0} ({1}) - [{2}]", ProcName, Path, PID);
         }
 
-        internal void ResolveRemoteIpToHostnameTask(string ip)
+        internal async void ResolveRemoteIpToHostnameAsync(string ip)
         {
-            async void doResolve()
-            {
-                CachedIPHostEntry entry = await DnsResolver.ResolveIpAddress(ip).ConfigureAwait(true);
-                RemoteHostName = entry.DisplayText;
-            };
-            doResolve();
+            CachedIPHostEntry entry = await DnsResolver.ResolveIpAddress(ip).ConfigureAwait(true);
+            RemoteHostName = entry.DisplayText;
         }
-        internal void ResolveLocalIpToHostnameTask(string ip)
+
+        internal async void ResolveLocalIpToHostnameAsync(string ip)
         {
-            async void doResolve()
-            {
-                CachedIPHostEntry entry = await DnsResolver.ResolveIpAddress(ip).ConfigureAwait(true);
-                LocalHostName = entry.DisplayText;
-            };
-            doResolve();
+            CachedIPHostEntry entry = await DnsResolver.ResolveIpAddress(ip).ConfigureAwait(true);
+            LocalHostName = entry.DisplayText;
         }
 
         private bool _isAccessDenied;
         public bool IsAccessDenied
         {
             get { return _isAccessDenied; }
-            set { _isAccessDenied = value; NotifyPropertyChanged("IsAccessDenied"); }
+            set { _isAccessDenied = value; NotifyPropertyChanged(); }
         }
 
         private bool _isSelected;
         public bool IsSelected
         {
             get { return _isSelected; }
-            set { _isSelected = value; NotifyPropertyChanged("IsSelected"); }
+            set { _isSelected = value; NotifyPropertyChanged(); }
         }
 
         private bool _isDead;
         public bool IsDead
         {
             get { return _isDead; }
-            set { _isDead = value; NotifyPropertyChanged("IsDead"); }
+            set { _isDead = value; NotifyPropertyChanged(); }
         }
 
         private string _lastError;
         public string LastError
         {
             get { return _lastError; }
-            set { _lastError = value; NotifyPropertyChanged("LastError"); }
+            set { _lastError = value; NotifyPropertyChanged(); }
         }
 
         public string GroupKey { get; private set; }
-        public BitmapSource Icon { get; private set; }
+
+        private BitmapSource _icon;
+        public BitmapSource Icon
+        {
+            get
+            {
+                if (_icon == null)
+                {
+                    UpdateIcon();
+                }
+                return _icon;
+            }
+            private set
+            {
+                if (_icon != value)
+                {
+                    _icon = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private async void UpdateIcon()
+        {
+            Icon = await IconHelper.GetIconAsync(IconPath ?? Path).ConfigureAwait(false);
+        }
+
         public uint PID { get; private set; }
         public string ProcName { get; private set; }
         public string Path { get; private set; }
@@ -141,7 +151,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             //lvi.Protocol = b.Protocol;
             if (this.RemoteAddress != b.RemoteAddress)
             {
-                ResolveRemoteIpToHostnameTask(this._remoteAddress); 
+                ResolveRemoteIpToHostnameAsync(this._remoteAddress);
             }
 
             var newPort = (b.RemotePort == -1 ? String.Empty : b.RemotePort.ToString());
@@ -163,28 +173,35 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         public string Protocol
         {
             get { return _protocol; }
-            set { _protocol = value; NotifyPropertyChanged("Protocol"); }
+            set { _protocol = value; NotifyPropertyChanged(); }
         }
 
         private string _state;
         public string State
         {
             get { return _state; }
-            set { _state = value; NotifyPropertyChanged("State"); }
+            set { _state = value; NotifyPropertyChanged(); }
         }
 
         private string _localAddress;
         public string LocalAddress
         {
             get { return _localAddress; }
-            set { _localAddress = value; NotifyPropertyChanged(nameof(LocalAddress)); }
+            set { _localAddress = value; NotifyPropertyChanged(); }
         }
 
         private string _localHostName;
         public string LocalHostName
         {
-            get { return _localHostName; }
-            set { _localHostName = value; NotifyPropertyChanged(nameof(LocalHostName)); }
+            get
+            {
+                if (_localHostName == null)
+                {
+                    ResolveLocalIpToHostnameAsync(this._localAddress);
+                }
+                return _localHostName;
+            }
+            set { _localHostName = value; NotifyPropertyChanged(); }
         }
 
 
@@ -192,33 +209,49 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         public string LocalPort
         {
             get { return _localPort; }
-            set { _localPort = value; NotifyPropertyChanged("LocalPort"); }
+            set { _localPort = value; NotifyPropertyChanged(); }
         }
 
         private string _remoteAddress;
         public string RemoteAddress
         {
             get { return _remoteAddress; }
-            set { _remoteAddress = value;
-                NotifyPropertyChanged(nameof(RemoteAddress)); 
+            set
+            {
+                _remoteAddress = value;
+                NotifyPropertyChanged();
             }
         }
 
         private string _remoteHostName;
         public string RemoteHostName
         {
-            get { return _remoteHostName; }
-            set { _remoteHostName = value; NotifyPropertyChanged(nameof(RemoteHostName)); }
+            get
+            {
+                if (_remoteHostName == null)
+                {
+                    ResolveRemoteIpToHostnameAsync(_remoteAddress);
+                }
+                return _remoteHostName;
+            }
+            set
+            {
+                if (_remoteHostName != value)
+                {
+                    _remoteHostName = value; NotifyPropertyChanged();
+                }
+            }
         }
 
         private string _remotePort;
         public string RemotePort
         {
             get { return _remotePort; }
-            set { _remotePort = value; NotifyPropertyChanged("RemotePort"); }
+            set { _remotePort = value; NotifyPropertyChanged(); }
         }
 
         public string Owner { get; private set; }
+        public string IconPath { get; }
         public DateTime? CreationTime { get; set; }
 
         public DateTime LastSeen { get; set; }
@@ -227,14 +260,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         public bool IsDying
         {
             get { return _isDying; }
-            set { _isDying = value; NotifyPropertyChanged("IsDying"); }
+            set { _isDying = value; NotifyPropertyChanged(); }
         }
 
         private bool _isNew;
         public bool IsNew
         {
             get { return _isNew; }
-            set { _isNew = value; NotifyPropertyChanged("IsNew"); }
+            set { _isNew = value; NotifyPropertyChanged(); }
         }
     }
 }
