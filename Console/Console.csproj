@@ -16,6 +16,9 @@
     <Authors>Wokhan Solutions</Authors>
     <OutputPath>..\bin\$(ConfigurationName)</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+  </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />
@@ -97,12 +100,4 @@
     <Resource Include="Resources\Images\btnLEvents.Image.png" />
     <Resource Include="Resources\Images\btnOpenConsole.Image.png" />
   </ItemGroup>
-
-  <!--<PropertyGroup>
-    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
-    <PostBuildEvent>
-      del WFN.config
-      ren "Wokhan.WindowsFirewallNotifier.Common.dll.config" WFN.config
-    </PostBuildEvent>
-  </PropertyGroup>-->
 </Project>

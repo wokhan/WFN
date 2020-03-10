@@ -1,29 +1,28 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using static Wokhan.WindowsFirewallNotifier.Common.Helpers.FirewallHelper;
 using System.Linq;
 using NetFwTypeLib;
+using Xunit;
 
 namespace Common.Tests.Helpers
 {
-    [TestClass]
     public class FirewallHelperTest
     {
-        [TestMethod]
+        [Fact]
         public void TestGetMatchingRulesForEvent()
         {
             string exePath = @"C:\Windows\System32\svchost.exe";
             IEnumerable<FirewallHelper.Rule> results = FirewallHelper.GetMatchingRulesForEvent(pid: 0, path: exePath, target: "*", targetPort: "*", blockOnly: false);
-            Assert.IsNotNull(results);
-            Assert.IsTrue(results.ToList().Count >= 1, "Has no results or number of results does not match");
+            Assert.NotNull(results);
+            Assert.True(results.ToList().Count >= 1, "Has no results or number of results does not match");
             foreach (FirewallHelper.Rule rule in results) {
                 Console.WriteLine($"{rule.Name}, {rule.RemoteAddresses}");
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TestRuleMatchesEvent()
         {
             IEnumerable<Rule> ret = GetRules(AlsoGetInactive: false);
@@ -37,12 +36,12 @@ namespace Common.Tests.Helpers
                 if (matches)
                 {
                     string ruleFriendlyPath = String.IsNullOrWhiteSpace(rule.ApplicationName) ? rule.ApplicationName : FileHelper.GetFriendlyPath(rule.ApplicationName);
-                    Assert.IsTrue(String.IsNullOrWhiteSpace(ruleFriendlyPath) || exePath.Equals(ruleFriendlyPath, StringComparison.OrdinalIgnoreCase));
+                    Assert.True(String.IsNullOrWhiteSpace(ruleFriendlyPath) || exePath.Equals(ruleFriendlyPath, StringComparison.OrdinalIgnoreCase));
                     Console.WriteLine($"match found={matches}, rule={rule.Name}");
                     cntMatch++;
                 }
             }
-            Assert.IsTrue(cntMatch > 0);
+            Assert.True(cntMatch > 0);
 
         }
     }
