@@ -40,6 +40,11 @@
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Wokhan.Core">
+      <HintPath>..\TempSharedLib\Wokhan.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Resources\Shield.ico" />
   </ItemGroup>
 

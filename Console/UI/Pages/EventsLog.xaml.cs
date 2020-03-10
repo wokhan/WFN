@@ -71,7 +71,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
         }
 
-        private bool _isTrackingEnabled;
+        private bool _isTrackingEnabled = true;
         public bool IsTrackingEnabled
         {
             get => _isTrackingEnabled;
