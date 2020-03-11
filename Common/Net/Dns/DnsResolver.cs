@@ -41,8 +41,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
 
                     try
                     {
-                        if (CachedIPHostEntryDict.ContainsKey(ipa))
+                        if (CachedIPHostEntryDict.TryGetValue(ipa, out var entry))
                         {
+                            if (entry.IsResolved)
+                            {
+                                updateRemoteHostNameCallback(entry);
+                                return;
+                            }
+
                             NotifyCollectionChangedEventHandler add = (sender, args) =>
                             {
                                 if (args.Action == NotifyCollectionChangedAction.Replace)
@@ -62,13 +68,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
 
                             // http://www.dotnetframework.org/default.aspx/4@0/4@0/DEVDIV_TFS/Dev10/Releases/RTMRel/ndp/fx/src/Net/System/Net/DNS@cs/1305376/DNS@cs
                             IPHostEntry resolvedEntry = System.Net.Dns.GetHostEntry(ipa);
-                            var entry = new CachedIPHostEntry
-                            {
-                                HostEntry = resolvedEntry,
-                                IsResolved = true,
-                                DisplayText = resolvedEntry.HostName
-                            };
-                            PutEntry(ipa, entry);
+                            PutEntry(ipa, CachedIPHostEntry.WrapHostEntry(resolvedEntry));
                         }
                     }
                     catch (Exception e)

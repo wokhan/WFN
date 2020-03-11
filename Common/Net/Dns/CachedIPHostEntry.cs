@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using System.Net;
 
 /// <summary>
@@ -14,17 +15,32 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
     {
         public static readonly CachedIPHostEntry EMTPY = new CachedIPHostEntry();
 
-        internal static CachedIPHostEntry CreateErrorEntry(IPAddress ip, Exception e) => new CachedIPHostEntry
+        internal static CachedIPHostEntry CreateErrorEntry(IPAddress ip, Exception e)
         {
-            HostEntry = new IPHostEntry
+            return new CachedIPHostEntry
             {
-                HostName = "unknown",
-                AddressList = ip != null ? new IPAddress[] { ip } : Array.Empty<IPAddress>()
-            },
-            IsResolved = false,
-            HasErrors = true,
-            DisplayText = e.Message
-        };
+                HostEntry = new IPHostEntry
+                {
+                    HostName = "unknown",
+                    AddressList = ip != null ? new IPAddress[] { ip } : Array.Empty<IPAddress>()
+                },
+                IsResolved = false,
+                HasErrors = true,
+                DisplayText = e.Message
+            };
+        }
+
+        public static CachedIPHostEntry WrapHostEntry(IPHostEntry resolvedEntry)
+        {
+            Contract.Requires(!(resolvedEntry is null));
+
+            return new CachedIPHostEntry
+            {
+                HostEntry = resolvedEntry,
+                IsResolved = true,
+                DisplayText = resolvedEntry.HostName
+            };
+        }
 
         public IPHostEntry HostEntry { get; set; } = new IPHostEntry()
         {
