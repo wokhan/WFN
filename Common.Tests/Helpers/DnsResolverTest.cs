@@ -26,42 +26,45 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             };
 
             System.Console.WriteLine("Resolve first 3 entries:");
-            Task t = DnsResolver.ResolveIpAddresses(ipList, maxEntriesToResolve: 4);
-            t.Wait();
-            LogDictEntries();
-            Assert.AreEqual("dns.google", DnsResolver.CachedIPHostEntryDict[IPAddress.Parse("8.8.8.8")].HostEntry.HostName);
-            Assert.IsTrue(DnsResolver.CachedIPHostEntryDict.Values.Count == 4);
+            ipList.ForEach(ip => DnsResolver.ResolveIpAddress(ip, callback1));
+            
+            void callback1(CachedIPHostEntry e)
+            {
+                LogDictEntries();
+                Assert.AreEqual("dns.google", DnsResolver.CachedIPHostEntryDict[IPAddress.Parse("8.8.8.8")].HostEntry.HostName);
+                Assert.IsTrue(DnsResolver.CachedIPHostEntryDict.Values.Count == 4);
+            }
 
             ipList = new List<string>
             {
                 "2001:4860:4860::8888", // dns.google
                 "172.217.5.195", // lax28s10-in-f195.1e100.net (www.google.ch)
                 "23.211.5.15", // a23-211-5-15.deploy.static.akamaitechnologies.com
-                "1.78.64.10", // sp1-78-64-10.msa.spmode.ne.jp
             };
             System.Console.WriteLine("Resolve next 3 entries:");
-            t = DnsResolver.ResolveIpAddresses(ipList, maxEntriesToResolve: 3);
-            t.Wait();
-            LogDictEntries();
-            Assert.IsTrue(DnsResolver.CachedIPHostEntryDict.Values.Count == 7);
-            Assert.AreEqual("dns.google", DnsResolver.CachedIPHostEntryDict[IPAddress.Parse("2001:4860:4860::8888")].HostEntry.HostName);
+            ipList.ForEach(ip => DnsResolver.ResolveIpAddress(ip, callback));
+            
+            void callback(CachedIPHostEntry e)
+            {
+                LogDictEntries();
+                Assert.IsTrue(DnsResolver.CachedIPHostEntryDict.Values.Count == 7);
+                Assert.AreEqual("dns.google", DnsResolver.CachedIPHostEntryDict[IPAddress.Parse("2001:4860:4860::8888")].HostEntry.HostName);
+            }
 
         }
 
         public void TestDnsResolverResolveIpAddresses_unresolved()
         {
-            List<string> ipList = new List<string>
-            {
-                // unresolvable ips
-                "1.9.1.9", // cdns01.tm.net.my
-            };
             Console.WriteLine("Unresolvabe IPs:");
-            Task t = DnsResolver.ResolveIpAddresses(ipList);
-            t.Wait();
-            LogDictEntries();
+            DnsResolver.ResolveIpAddress("1.9.1.9" /* cdns01.tm.net.my */, callback);
+            
+            void callback(CachedIPHostEntry e)
+            {
+                LogDictEntries();
 
-            Assert.IsTrue(DnsResolver.CachedIPHostEntryDict.ContainsKey(IPAddress.Parse("1.9.1.9")));
-            Assert.IsFalse(DnsResolver.CachedIPHostEntryDict[IPAddress.Parse("1.9.1.9")].IsResolved);
+                Assert.IsTrue(DnsResolver.CachedIPHostEntryDict.ContainsKey(IPAddress.Parse("1.9.1.9")));
+                Assert.IsFalse(DnsResolver.CachedIPHostEntryDict[IPAddress.Parse("1.9.1.9")].IsResolved);
+            }
         }
 
         private static void LogDictEntries()
