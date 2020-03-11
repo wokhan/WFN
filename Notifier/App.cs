@@ -15,6 +15,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common.Net.Dns;
 using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
 using Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows;
 using WinForms = System.Windows.Forms;
@@ -565,8 +566,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     }
 
                     ResolveHostForConnection(conn);
-                    //retrieveIcon(conn);
-                    conn.Icon = IconHelper.GetIcon(conn.CurrentPath, true);
 
                     this.Connections.Add(conn);
 
@@ -581,23 +580,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             return false;
         }
 
-        private async void retrieveIcon(CurrentConn conn)
-        {
-            var icon = await IconHelper.GetIconAsync(conn.CurrentPath, true);
-            conn.Icon = icon;
-        }
-
+        
         private static async void ResolveHostForConnection(CurrentConn conn)
         {
             try
             {
-                conn.ResolvedHost = "...";
-                var host = (await DnsResolver.ResolveIpAddress(conn.Target).ConfigureAwait(true)).HostEntry.HostName; 
-                //var host = (await Dns.GetHostEntryAsync(conn.Target)).HostName;
-                if (conn.Target != host)
-                {
-                    conn.ResolvedHost = host;
-                }
+                DnsResolver.ResolveIpAddress(conn.Target, entry => conn.ResolvedHost = conn.Target != entry.HostEntry.HostName ? entry.HostEntry.HostName : "..."); 
             }
             catch (Exception e) 
             {

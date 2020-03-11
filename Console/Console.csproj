@@ -94,6 +94,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Wokhan.Core">
+      <HintPath>..\TempSharedLib\Wokhan.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Wokhan.WPF">
+      <HintPath>..\TempSharedLib\Wokhan.WPF.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="version.xml" />
   </ItemGroup>
   <ItemGroup>

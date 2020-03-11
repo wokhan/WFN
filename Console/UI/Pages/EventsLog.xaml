@@ -56,16 +56,15 @@
                     <TextBlock VerticalAlignment="Center" Text="{Binding LogEntries.Count, StringFormat='{}{0} item(s)', FallbackValue='No item found'}" />
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Right">
-                    <CheckBox x:Name="cbxIsTCPOnlyEnabled" IsChecked="{Binding IsTCPOnlyEnabled}" ToolTip="Only show TCP Protocol events">
-                        <Label Content="TCP only" VerticalAlignment="Center" Margin="0,0,10,0" />
-                    </CheckBox>
-                    <Border BorderBrush="White" Background="White" BorderThickness="0" CornerRadius="8" Padding="5,2" Margin="0,0,5,0">
-                        <WrapPanel>
-                            <Path Fill="#FFA2A2FF" Data="{StaticResource Image_UpdateRate}"/>
-                            <Label Margin="4,0" Content="Update rate:" />
-                            <ComboBox IsEditable="False" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
-                        </WrapPanel>
-                    </Border>
+                    <CheckBox x:Name="cbxIsTCPOnlyEnabled" Content="TCP only" IsChecked="{Binding IsTCPOnlyEnabled}" ToolTip="Only show TCP Protocol events" VerticalContentAlignment="Center" Padding="10,0" />
+                    <Grid Width="150" Margin="5">
+                        <ProgressBar Value="{Binding ScanProgress}" Maximum="{Binding ScanProgressMax}" />
+                        <TextBlock HorizontalAlignment="Center">
+                            <Run Text="{Binding ScanProgress, FallbackValue='-'}" />
+                                 /
+                            <Run Text="{Binding ScanProgressMax, FallbackValue='-'}" />
+                        </TextBlock>
+                    </Grid>
                     <ToggleButton x:Name="btnHelp">
                         <Path Fill="Chocolate" Data="{StaticResource Image_Help}"/>
                     </ToggleButton>
@@ -73,28 +72,28 @@
             </Grid>
         </Border>
         <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
-            <DataGrid BorderThickness="0" x:Name="gridLog" AlternatingRowBackground="Gainsboro" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column" SelectionChanged="GridLog_SelectionChanged" DataGridCell.Selected="GridLog_CellSelected" GotFocus="GridLog_GotFocus" GridLinesVisibility="None">
+            <DataGrid BorderThickness="0" x:Name="gridLog" EnableRowVirtualization="True" AlternatingRowBackground="Gainsboro" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column" SelectionChanged="GridLog_SelectionChanged" DataGridCell.Selected="GridLog_CellSelected" GotFocus="GridLog_GotFocus" GridLinesVisibility="None">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp}" Width="Auto"/>
-                    <DataGridTextColumn Header="PID" Binding="{Binding Pid}" Width="Auto"/>
+                    <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp,Mode=OneTime}" Width="Auto"/>
+                    <DataGridTextColumn Header="PID" Binding="{Binding Pid,Mode=OneTime}" Width="Auto"/>
                     <!-- <DataGridTextColumn Header="App"  Binding="{Binding FileName}" Width="0.3*"/> -->
-                    <DataGridTemplateColumn Header="App" SortMemberPath="FileName" Width="0.2*" >
+                    <DataGridTemplateColumn Header="App" SortMemberPath="FileName,Mode=OneTime" Width="0.2*" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
                                     <Image Source="{Binding Icon}" Width="16" HorizontalAlignment="Left" />
-                                    <Label Content="{Binding FileName}" Margin="20,0,0,0" ToolTip="{Binding FriendlyPath}"/>
+                                    <Label Content="{Binding FileName,Mode=OneTime}" Margin="20,0,0,0" ToolTip="{Binding FriendlyPath}"/>
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Service"  Binding="{Binding ServiceName}" Width="0.1*"/>
-                    <DataGridTextColumn Header="Remote IP" Binding="{Binding TargetIP}" Width="0.1*"/>
+                    <DataGridTextColumn Header="Service"  Binding="{Binding ServiceName,Mode=OneTime}" Width="0.1*"/>
+                    <DataGridTextColumn Header="Remote IP" Binding="{Binding TargetIP,Mode=OneTime}" Width="0.1*"/>
                     <DataGridTextColumn x:Name="RemoteHostCol" Header="Remote Host" Binding="{Binding TargetHostName}" Width="0.1*" />
-                    <DataGridTextColumn Header="Port" Binding="{Binding TargetPort}" Width="Auto"/>
-                    <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol}" Width="Auto"/>
-                    <DataGridTextColumn Header="FilterId" Binding="{Binding FilterId}" Width="Auto"/>
-                    <DataGridTextColumn Header="Dir" Binding="{Binding Direction}" Width="Auto">
+                    <DataGridTextColumn Header="Port" Binding="{Binding TargetPort,Mode=OneTime}" Width="Auto"/>
+                    <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol,Mode=OneTime}" Width="Auto"/>
+                    <DataGridTextColumn Header="FilterId" Binding="{Binding FilterId,Mode=OneTime}" Width="Auto"/>
+                    <DataGridTextColumn Header="Dir" Binding="{Binding Direction,Mode=OneTime}" Width="Auto">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Setter Property="Foreground" Value="{Binding DirectionColor}"/>
@@ -117,9 +116,7 @@
                 </DataGrid.Columns>
             </DataGrid>
             <Border Style="{StaticResource InfoBlock}">
-                <TextBlock >This page displays a list of the latest connections (for performance reasons, the list has been limited).<LineBreak/>
-                    If you need a complete list, please use the Windows events log viewer.<LineBreak/>
-                    <LineBreak/>
+                <TextBlock >This page displays a list of the latest connections, updated in real-time.<LineBreak/>
                     Click on a cell in the Action column to view details from the eventlog including the name of the filter rule which triggered the event.
                 </TextBlock>
             </Border>

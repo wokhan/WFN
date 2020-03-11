@@ -11,6 +11,8 @@ using System.Windows.Media;
 using Wokhan.WindowsFirewallNotifier.Common.Annotations;
 using Wokhan.WindowsFirewallNotifier.Common.Properties;
 using Wokhan.WindowsFirewallNotifier.Common.Extensions;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -35,7 +37,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         private const string indParamFormat = "{0}#$#{1}#$#{2}#$#{3}#$#{4}#$#{5}#$#{6}#$#{7}#$#{8}#$#{9}#$#{10}";
         private static string WFNRuleManagerEXE = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RuleManager.exe");
 
-        public abstract class Rule
+        public abstract class Rule : INotifyPropertyChanged
         {
             //Based on [MS-FASP] FW_RULE:
             public abstract string Name { get; }
@@ -72,17 +74,33 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             //FIXME: Need to parse: (RA42=) RmtIntrAnet
 
             private ImageSource _icon = null;
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
             public ImageSource Icon
             {
                 get
                 {
                     if (_icon == null)
                     {
-                        _icon = IconHelper.GetIcon(this.ApplicationName); //FIXME: This is now expanded... Is that a problem?!?
+                        UpdateIcon();
                     }
 
                     return _icon;
                 }
+                private set
+                {
+                    if (_icon != value)
+                    {
+                        _icon = value;
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Icon)));
+                    }
+                }
+            }
+
+            private async void UpdateIcon()
+            {
+                Icon = await IconHelper.GetIconAsync(this.ApplicationName); //FIXME: This is now expanded... Is that a problem?!?
             }
 
             public string ProfilesStr { get { return getProfile(this.Profiles); } }
@@ -800,7 +818,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
 
             public CustomRule(string ruleName, string currentPath, string currentAppPkgId, string localUserOwner, string[] services, int protocol, string target, string targetPort, string localport
-                , int profiles, CustomRuleAction action) 
+                , int profiles, CustomRuleAction action)
                 : this(ruleName, currentPath, currentAppPkgId, localUserOwner, (services != null ? String.Join(",", services) : null), protocol, target, targetPort, localport, profiles, action)
             {
                 //Chained to the constructor below!
@@ -870,8 +888,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return Enum.GetName(typeof(NET_FW_PROFILE_TYPE2_), type);
         }
 
-        public static Boolean isEventInstanceIdAccepted(long instanceId)
+        public static bool IsEventAccepted(EventLogEntry entry)
         {
+            var instanceId = entry.InstanceId;
+
             // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
             return
                 instanceId == 5157 // block connection
@@ -883,6 +903,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 || instanceId == 5155
                 || instanceId == 5156;
         }
+
         public static string getEventInstanceIdAsString(long eventId)
         {
             // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection

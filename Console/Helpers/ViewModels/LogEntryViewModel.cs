@@ -1,41 +1,67 @@
 ﻿using System;
 using System.Windows.Media;
-using System.Net;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common;
+using Wokhan.WindowsFirewallNotifier.Common.Net.Dns;
+using System.ComponentModel;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
-    public class LogEntryViewModel
+    public class LogEntryViewModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        public int Id { get; set; }
         public int Pid { get; set; }
         public DateTime Timestamp { get; set; }
-        public ImageSource Icon { get; set; }
+
+
+        private ImageSource _icon;
+        public ImageSource Icon
+        {
+            get
+            {
+                if (_icon == null) UpdateIcon();
+                return _icon;
+            }
+            set
+            {
+                if (_icon != value)
+                {
+                    _icon = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Icon)));
+                }
+            }
+        }
+
+        private async void UpdateIcon()
+        {
+            Icon = await IconHelper.GetIconAsync(Path).ConfigureAwait(false);
+        }
+
         public string FileName { get; set; }
         public string Path { get; set; }
         public string FriendlyPath { get; set; }
         public string ServiceName { get; set; }
         public string TargetIP { get; set; }
-        public string TargetHostName { get
+        private string _targetHostName;
+        public string TargetHostName
+        {
+            get
             {
-                try
+                if (_targetHostName == null)
+                    DnsResolver.ResolveIpAddress(TargetIP, entry => TargetHostName = entry.DisplayText);
+                return _targetHostName;
+            }
+            set
+            {
+                if (_targetHostName != value)
                 {
-                    if (Settings.Default.EnableDnsResolver && DnsResolver.CachedIPHostEntryDict.TryGetValue(IPAddress.Parse(TargetIP), out CachedIPHostEntry value))
-                    {
-                        return value.DisplayText;
-                    }
-                    else
-                    {
-                        return "...";
-                    }
+                    _targetHostName = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TargetHostName)));
                 }
-                catch (Exception e)
-                {
-                    LogHelper.Warning(e.Message);
-                }
-                return "";
             }
         }
+
         public string TargetPort { get; set; }
         public string Protocol { get; set; }
         public string Direction { get; set; }

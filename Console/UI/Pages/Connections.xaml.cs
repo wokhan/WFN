@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -27,11 +28,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             set { timer.IsEnabled = value; }
         }
 
-        public List<int> Intervals { get { return new List<int> { 1, 5, 10 }; } }
+        public List<int> Intervals => new List<int> { 1, 5, 10 };
 
         private DispatcherTimer timer = new DispatcherTimer() { IsEnabled = true };
 
-        public ObservableCollection<Connection> lstConnections = new ObservableCollection<Connection>();
+        public ObservableCollection<Connection> lstConnections { get; } = new ObservableCollection<Connection>();
 
         public ListCollectionView connectionsView { get; set; }
 
@@ -42,8 +43,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             set { _interval = value; timer.Interval = TimeSpan.FromSeconds(value); }
         }
 
+        private bool running;
+
         public Connections()
         {
+            //TODO: Use BindingOperations.EnableCollectionSynchronization(lstConnections, locker); instead of Dispatcher invocations
+
             connectionsView = (ListCollectionView)CollectionViewSource.GetDefaultView(lstConnections);
             connectionsView.GroupDescriptions.Add(new PropertyGroupDescription("GroupKey"));
             connectionsView.SortDescriptions.Add(new SortDescription("GroupKey", ListSortDirection.Ascending));
@@ -62,33 +67,45 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             timer.Stop();
         }
 
-        async void Connections_Loaded(object sender, RoutedEventArgs e)
+        void Connections_Loaded(object sender, RoutedEventArgs e)
         {
-            await Dispatcher.InvokeAsync(() => timer_Tick(null, null));
+            timer_Tick(null, null);
         }
 
-        void timer_Tick(object sender, EventArgs e)
+        async void timer_Tick(object sender, EventArgs e)
         {
-            // Resets the WMI cache (used for non admin users)
-            Connection.LocalOwnerWMICache = null;
-            foreach (var c in IPHelper.GetAllConnections())
+            if (running)
             {
-                AddOrUpdateConnection(c);
+                return;
             }
 
-            for (int i = lstConnections.Count - 1; i >= 0; i--)
+            running = true;
+
+            await Task.Run(() =>
             {
-                var item = lstConnections[i];
-                double elapsed = DateTime.Now.Subtract(item.LastSeen).TotalSeconds;
-                if (elapsed > ConnectionTimeoutRemove)
+                // Resets the WMI cache (used for non admin users)
+                Connection.LocalOwnerWMICache = null;
+                foreach (var c in IPHelper.GetAllConnections())
                 {
-                    lstConnections.Remove(item);
+                    Dispatcher.Invoke(() => AddOrUpdateConnection(c));
                 }
-                else if (elapsed > ConnectionTimeoutDying)
+
+                for (int i = lstConnections.Count - 1; i >= 0; i--)
                 {
-                    item.IsDying = true;
+                    var item = lstConnections[i];
+                    double elapsed = DateTime.Now.Subtract(item.LastSeen).TotalSeconds;
+                    if (elapsed > ConnectionTimeoutRemove)
+                    {
+                        Dispatcher.Invoke(() => lstConnections.Remove(item));
+                    }
+                    else if (elapsed > ConnectionTimeoutDying)
+                    {
+                        item.IsDying = true;
+                    }
                 }
-            }
+            }).ConfigureAwait(false);
+
+            running = false;
         }
 
         private void AddOrUpdateConnection(IPHelper.I_OWNER_MODULE b)
