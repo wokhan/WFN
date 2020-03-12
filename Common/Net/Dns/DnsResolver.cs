@@ -75,6 +75,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
                 }
                 catch (Exception e)
                 {
+                    LogHelper.Debug($"Unable to resolve {ip}, message was {e.Message}");
+                    
                     var ret = CachedIPHostEntry.CreateErrorEntry(ipa, e);
                     PutEntry(ipa, ret);
                     callback?.Invoke(ret);
