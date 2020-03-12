@@ -169,6 +169,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void SecurityLog_EntryWritten(object sender, EntryWrittenEventArgs e)
         {
+            if (!FirewallHelper.IsEventAccepted(e.Entry))
+            {
+                return;
+            }
+
             LogEntryViewModel entry = EntryViewFromLogEntry(e.Entry);
             if (entry != null)
             {

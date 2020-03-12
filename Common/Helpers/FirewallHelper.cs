@@ -934,6 +934,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         public static string getProtocolAsString(int protocol)
         {
             //These are the IANA protocol numbers.
+            // Source: https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
+            // TODO: Add all the others and use an array?
             switch (protocol)
             {
                 case 1:
@@ -962,6 +964,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
                 case 136:
                     return "UDPLite";
+
+                case 36:
+                    return "XTP";
 
                 default:
                     LogHelper.Warning("Unknown protocol type: " + protocol.ToString());

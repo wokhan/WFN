@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -25,62 +26,62 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
         public static readonly ObservableDictionary<IPAddress, CachedIPHostEntry> CachedIPHostEntryDict = new ObservableDictionary<IPAddress, CachedIPHostEntry>();
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
-        public static async void ResolveIpAddress(string ip, Action<CachedIPHostEntry> updateRemoteHostNameCallback)
+        public static async Task<bool?> ResolveIpAddress(string ip, Action<CachedIPHostEntry> callback = null)
         {
-            await Task.Run(() =>
+            return await Task.Run(() =>
             {
                 if (!IsIPValid(ip))
                 {
-                    updateRemoteHostNameCallback(CachedIPHostEntry.EMTPY);
-                    return;
+                    callback?.Invoke(CachedIPHostEntry.EMTPY);
+                    return false;
                 }
+
                 IPAddress ipa = null;
                 try
                 {
                     ipa = IPAddress.Parse(ip);
-
-                    try
+                    if (CachedIPHostEntryDict.TryGetValue(ipa, out var entry))
                     {
-                        if (CachedIPHostEntryDict.TryGetValue(ipa, out var entry))
+                        if (entry.IsResolved || entry.HasErrors)
                         {
-                            if (entry.IsResolved)
+                            callback?.Invoke(entry);
+                            return true;
+                        }
+
+                        NotifyCollectionChangedEventHandler add = (sender, args) =>
+                        {
+                            if (args.Action == NotifyCollectionChangedAction.Replace)
                             {
-                                updateRemoteHostNameCallback(entry);
-                                return;
+                                var entry = (KeyValuePair<IPAddress, CachedIPHostEntry>)args.NewItems[0];
+                                if (entry.Key == ipa)
+                                    callback?.Invoke(entry.Value);
                             }
-
-                            NotifyCollectionChangedEventHandler add = (sender, args) =>
-                            {
-                                if (args.Action == NotifyCollectionChangedAction.Replace)
-                                {
-                                    var entry = (KeyValuePair<IPAddress, CachedIPHostEntry>)args.NewItems[0];
-                                    if (entry.Key == ipa)
-                                        updateRemoteHostNameCallback(entry.Value);
-                                }
-                            };
-                            CachedIPHostEntryDict.CollectionChanged += add;
-                            CachedIPHostEntryDict.CollectionChanged += (s, e) => CachedIPHostEntryDict.CollectionChanged -= add;
-                        }
-                        else
-                        {
-                            PutEntry(ipa, CachedIPHostEntry.EMTPY);  // reserve slot
-                            updateRemoteHostNameCallback(CachedIPHostEntry.EMTPY);
-
-                            // http://www.dotnetframework.org/default.aspx/4@0/4@0/DEVDIV_TFS/Dev10/Releases/RTMRel/ndp/fx/src/Net/System/Net/DNS@cs/1305376/DNS@cs
-                            IPHostEntry resolvedEntry = System.Net.Dns.GetHostEntry(ipa);
-                            PutEntry(ipa, CachedIPHostEntry.WrapHostEntry(resolvedEntry));
-                        }
+                        };
+                        CachedIPHostEntryDict.CollectionChanged += add;
+                        CachedIPHostEntryDict.CollectionChanged += (s, e) => CachedIPHostEntryDict.CollectionChanged -= add;
+                        return (bool?)null;
                     }
-                    catch (Exception e)
+                    else
                     {
-                        PutEntry(ipa, CachedIPHostEntry.CreateErrorEntry(ipa, e));
-                    }
+                        PutEntry(ipa, CachedIPHostEntry.RESOLVING);  // reserve slot
+                        callback?.Invoke(CachedIPHostEntry.RESOLVING);
 
-                    updateRemoteHostNameCallback(CachedIPHostEntryDict[ipa]);
+                        // http://www.dotnetframework.org/default.aspx/4@0/4@0/DEVDIV_TFS/Dev10/Releases/RTMRel/ndp/fx/src/Net/System/Net/DNS@cs/1305376/DNS@cs
+                        IPHostEntry resolvedEntry = System.Net.Dns.GetHostEntry(ipa);
+                        PutEntry(ipa, CachedIPHostEntry.WrapHostEntry(resolvedEntry));
+                        callback?.Invoke(CachedIPHostEntryDict[ipa]);
+                        return true;
+                    }
                 }
                 catch (Exception e)
                 {
-                    updateRemoteHostNameCallback(CachedIPHostEntry.CreateErrorEntry(ipa, e));
+                    LogHelper.Debug($"Unable to resolve {ip}, message was {e.Message}");
+                    
+                    var ret = CachedIPHostEntry.CreateErrorEntry(ipa, e);
+                    PutEntry(ipa, ret);
+                    callback?.Invoke(ret);
+
+                    return false;
                 }
             }).ConfigureAwait(false);
         }
