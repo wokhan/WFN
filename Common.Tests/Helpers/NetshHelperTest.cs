@@ -13,7 +13,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
     /// FIXME: Since filter names and even keys and ids can change they are not reliable. Either create test rules on the fly or get some random rules
     /// from the netsh output.
     /// 
-    [FixmetCategory]
+    [FixmeCategory]
     public class NetshHelperTest : NUnitTestBase
     {
         public NetshHelperTest()

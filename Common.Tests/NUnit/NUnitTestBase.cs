@@ -30,7 +30,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Tests.NUnit
     /// Fixme test category.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
-    class FixmetCategory : CategoryAttribute { }
+    class FixmeCategory : CategoryAttribute { }
 
 
     /// <summary>
