@@ -1,16 +1,23 @@
 ﻿using System;
 using System.IO;
-using Xunit;
+using NUnit.Framework;
+using Common.Tests.NUnit;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
-    public class CustomSettingsProviderTest
+    [TestFixture]
+    public class CustomSettingsProviderTest : NUnitTestBase
     {
+        [SetUp]
+        protected void SetUp()
+        {
+
+        }
         ///
         /// Tests whether global settings are properly initialized from this test project (path names to config files e.g. WFN.config)
         /// If not, check the Probject properties > Build > Output path
         /// 
-        [Fact]
+        [Test, IntegrationTestCategory]
         public void TestInit()
         {
             Assert.NotNull(Settings.Default);
