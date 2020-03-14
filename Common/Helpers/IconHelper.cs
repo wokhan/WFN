@@ -47,6 +47,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                         if (!path.Contains("\\"))
                         {
                             LogHelper.Debug($"Skipped extract icon: '{friendlyPath}' because path has no directory info.");
+                            ic = SystemIcons.Application;
                             break;
                         }
                         try
