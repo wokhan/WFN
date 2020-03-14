@@ -1,16 +1,18 @@
 ﻿using System;
 using System.IO;
 using NUnit.Framework;
-using Common.Tests.NUnit;
+using Wokhan.WindowsFirewallNotifier.Console.Tests.NUnit;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
-    // Manual tests for loghelper functionality
+    // 
+    // Tests LogHelper functionality and configuration.
+    //
     public class LogHelperTest : NUnitTestBase
     {
         private const string TEST_OUTPUT = "[TEST_OUTPUT]";
 
-        [SetUp, IntegrationTestCategory]
+        [SetUp]
         public override void SetUp()
         {
             Assert.NotNull(Settings.Default);
@@ -18,24 +20,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             Assert.True(File.Exists("WFN.config.log4net"));
         }
 
-        [Test, ManualTestCategory]
-        public void TestWriters()
-        {
-            // See test result output
-            WriteTestOutput($"{TEST_OUTPUT} NUnitTestBase.WriteTestOutput(msg)");
-
-            // See Tests output window
-            WriteTestProgress($"{TEST_OUTPUT} NUnitTestBase.WriteTestProgress(msg)");
-
-            // See test result output
-            WriteConsoleOutput($"{TEST_OUTPUT} NUnitTestBase.WriteConsoleOutput(msg)");
-
-            // See Debug outtput window
-            WriteDebugOutput($"{TEST_OUTPUT} NUnitTestBase.WriteDebugOutput(msg)");
-        }
-
         // See testoutput for result (test method doesn't write to output window)
-        [Test, ManualTestCategory]
+        [Test, IntegrationTestCategory]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
         public void TestLogHelper()
         {

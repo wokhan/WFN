@@ -5,7 +5,7 @@ using static Wokhan.WindowsFirewallNotifier.Common.Helpers.FirewallHelper;
 using System.Linq;
 using NetFwTypeLib;
 using NUnit.Framework;
-using Common.Tests.NUnit;
+using Wokhan.WindowsFirewallNotifier.Console.Tests.NUnit;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {

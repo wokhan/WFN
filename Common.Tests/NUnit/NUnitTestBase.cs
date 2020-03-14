@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
 
-namespace Common.Tests.NUnit
+namespace Wokhan.WindowsFirewallNotifier.Console.Tests.NUnit
 {
 
     /// <summary>
@@ -105,7 +105,7 @@ namespace Common.Tests.NUnit
         {
             string cname = TestContext.CurrentContext.Test.ClassName.Split(".").LastOrDefault();
             string mname = TestContext.CurrentContext.Test.MethodName;
-            string testInfo = String.IsNullOrEmpty(mname) ? cname : String.Concat(cname, ".", mname);
+            string testInfo = string.IsNullOrEmpty(mname) ? cname : string.Concat(cname, ".", mname);
 
             return $"{DateTime.Now:HH:mm:ss,fff} [{testInfo}] {msg}";
         }

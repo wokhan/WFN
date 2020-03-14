@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using NUnit.Framework;
-using Common.Tests.NUnit;
+using Wokhan.WindowsFirewallNotifier.Console.Tests.NUnit;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -9,9 +9,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
     public class CustomSettingsProviderTest : NUnitTestBase
     {
         [SetUp]
-        protected void SetUp()
+        public override void SetUp()
         {
+            base.SetUp();
 
+            // test if the path to the global config file exists
+            Assert.True(File.Exists("WFN.config"));
+            // loads the settings
+            Assert.NotNull(Settings.Default);
         }
         ///
         /// Tests whether global settings are properly initialized from this test project (path names to config files e.g. WFN.config)
@@ -20,8 +25,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         [Test, IntegrationTestCategory]
         public void TestInit()
         {
-            Assert.NotNull(Settings.Default);
-
             // is the path to the global config file WFN.config correct?
             Assert.True(File.Exists(CustomSettingsProvider.SharedConfigurationPath));
 

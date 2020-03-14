@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using NUnit.Framework;
-using Common.Tests.NUnit;
+using Wokhan.WindowsFirewallNotifier.Console.Tests.NUnit;
 
 namespace Common.Tests.NUnit
 {
