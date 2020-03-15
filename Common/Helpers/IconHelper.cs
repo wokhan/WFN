@@ -72,7 +72,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     bitmap = Imaging.CreateBitmapSourceFromHIcon(ic.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                     bitmap.Freeze();
                     ic.Dispose();
-                    procIconLst.TryAdd(path, bitmap);
+                    lock (procIconLstLocker)
+                        procIconLst.TryAdd(path, bitmap);
                 }
             }
             return bitmap;

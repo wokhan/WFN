@@ -14,6 +14,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
     public class CachedIPHostEntry
     {
         public static readonly CachedIPHostEntry EMTPY = new CachedIPHostEntry();
+        public static readonly CachedIPHostEntry RESOLVING = new CachedIPHostEntry() { DisplayText = "..." };
 
         internal static CachedIPHostEntry CreateErrorEntry(IPAddress ip, Exception e)
         {
@@ -61,6 +62,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
         /// <summary>
         /// Text displayed on the ui - may also return an error message.
         /// </summary>
-        public string DisplayText { get; set; } = "...";
+        public string DisplayText { get; set; } = "?";
     }
 }

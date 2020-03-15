@@ -21,7 +21,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             // Default Outbound (at the end of the filters xml)
             int filterId = FindRuntimeFilterIdByFilterKey(@"{e2b0969d-ced5-4d33-a3c2-41b578a727f5}");
-            FilterResult result = NetshHelper.FindMatchingFilterInfo(filterId); 
+            FilterResult result = NetshHelper.FindMatchingFilterInfo(filterId);
             Assert.NotNull(result);
             Assert.False(result.HasErrors);
             Log($"name ={result.Name}, description={result.Description}");
@@ -29,6 +29,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             Assert.True(result.Description != null);
             Assert.Equal(FiltersContextEnum.FILTERS, result.FoundIn);
         }
+
+        //TODO: Commented out by @wokhan since test result depends on OS language and will fail on non-english ones
+        /*
         [Fact]
         public void TestFindMatchingFilterInfo2Boot1()
         {
@@ -40,7 +43,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             Log($"name={result.Name}, description={result.Description}");
             Assert.Equal("Boot Time Filter", result.Name, true);
             Assert.True(result.Description != null);
-        }
+        }*/
+
+        //TODO: Commented out by @wokhan since test result depends on OS language and will fail on non-english ones
+        /*
         [Fact]
         public void TestFindMatchingFilterInfo2Boot2()
         {
@@ -53,6 +59,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             Assert.Equal("Boot Time Filter", result.Name, true);
             Assert.True(result.Description != null);
         }
+        */
 
         public void TestFindMatchingFilterInfo2Boot3()
         {
@@ -66,6 +73,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             Assert.True(result.Description != null);
             Assert.Equal(result.FoundIn, FiltersContextEnum.WFPSTATE);
         }
+
+        //TODO: Commented out by @wokhan since test result depends on OS language and will fail on non-english ones
+        /*
         [Fact]
         public void TestFindMatchingFilterInfo3()
         {
@@ -78,12 +88,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             Assert.Equal("Boot Time Filter", result.Name, true);
             Assert.True(result.Description != null);
         }
+        */
+
         //[Fact] filterKey can change
         public void TestFindMatchingFilterInfo4()
         {
             // Port scanning prevention filter (wfpstate filter)
             int filterId = FindRuntimeFilterIdByFilterKey(@"{a3dfb1bd-bea6-4b91-b103-e64a545e8e78}");
-            FilterResult result = NetshHelper.FindMatchingFilterInfo(filterId); 
+            FilterResult result = NetshHelper.FindMatchingFilterInfo(filterId);
             Assert.NotNull(result);
             Assert.False(result.HasErrors);
             Log($"name={result.Name}, description={result.Description}");
@@ -93,7 +105,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         [Fact]
         public void TestGetMatchingFilterInfo_notfound()
         {
-            FilterResult result = NetshHelper.FindMatchingFilterInfo(0); 
+            FilterResult result = NetshHelper.FindMatchingFilterInfo(0);
             Assert.NotNull(result);
             Assert.True(result.HasErrors);
         }

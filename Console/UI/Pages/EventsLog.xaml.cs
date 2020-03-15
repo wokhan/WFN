@@ -147,6 +147,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void EventsLog_Unloaded(object sender, RoutedEventArgs e)
         {
+            securityLog.EntryWritten -= SecurityLog_EntryWritten;
             securityLog?.Dispose();
         }
 

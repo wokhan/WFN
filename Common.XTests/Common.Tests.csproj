@@ -59,6 +59,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Wokhan.Core">
+      <HintPath>..\TempSharedLib\Wokhan.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <!-- <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" /> -->
 </Project>
