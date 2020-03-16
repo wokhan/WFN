@@ -22,58 +22,60 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         /// <returns></returns>
         private static BitmapSource GetIconFromPath(string path = "", bool defaultIfNotFound = false)
         {
-            //TODO: check for thread concurrency issues
             BitmapSource bitmap;
-            if (!procIconLst.TryGetValue(path, out bitmap))
-            {
-                Icon ic = null;
-                switch (path)
+            // need to lock before trying to get the value else we get duplicates because of concurrency
+            lock (procIconLstLocker) {
+                if (!procIconLst.TryGetValue(path, out bitmap))
                 {
-                    case "System":
-                        ic = SystemIcons.WinLogo;
-                        break;
-                    case "-":
-                        ic = SystemIcons.WinLogo;
-                        break;
-                    case "":
-                    case "?error": //FIXME: Use something else?
-                    case "Unknown":
-                        ic = SystemIcons.Error;
-                        break;
-
-                    default:
-                        // Using FileHelper.GetFriendlyPath(path) to cover paths like \device\harddiskvolume1\program files etc.
-                        string friendlyPath = FileHelper.GetFriendlyPath(path);
-                        if (!path.Contains("\\"))
-                        {
-                            LogHelper.Debug($"Skipped extract icon: '{friendlyPath}' because path has no directory info.");
+                    Icon ic = null;
+                    switch (path)
+                    {
+                        case "System":
+                            ic = SystemIcons.WinLogo;
                             break;
-                        }
-                        try
-                        {
-                            ic = Icon.ExtractAssociatedIcon(friendlyPath) ?? (defaultIfNotFound ? SystemIcons.Application : null);
-                        }
-                        catch (ArgumentException)
-                        {
-                            LogHelper.Debug("Unable to extract icon: " + friendlyPath + (!friendlyPath.Equals(path) ? " (" + path + ")" : ""));
-                            ic = SystemIcons.Question; //FIXME: Use some generic application icon?
-                        }
-                        catch (System.IO.FileNotFoundException) //Undocumented exception
-                        {
-                            LogHelper.Debug("Unable to extract icon: " + friendlyPath + (!friendlyPath.Equals(path) ? " (" + path + ")" : ""));
-                            ic = SystemIcons.Warning;
-                        }
-                        break;
-                }
+                        case "-":
+                            ic = SystemIcons.WinLogo;
+                            break;
+                        case "":
+                        case "?error": //FIXME: Use something else?
+                        case "Unknown":
+                            ic = SystemIcons.Error;
+                            break;
 
-                if (ic != null)
-                {
-                    //FIXME: Resize the icon to save some memory?
-                    bitmap = Imaging.CreateBitmapSourceFromHIcon(ic.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                    bitmap.Freeze();
-                    ic.Dispose();
-                    lock (procIconLstLocker)
+                        default:
+                            // Using FileHelper.GetFriendlyPath(path) to cover paths like \device\harddiskvolume1\program files etc.
+                            string friendlyPath = FileHelper.GetFriendlyPath(path);
+                            if (!path.Contains(@"\", StringComparison.Ordinal))
+                            {
+                                LogHelper.Debug($"Skipped extract icon: '{friendlyPath}' because path has no directory info.");
+                                ic = SystemIcons.Application;
+                                break;
+                            }
+                            try
+                            {
+                                ic = Icon.ExtractAssociatedIcon(friendlyPath) ?? (defaultIfNotFound ? SystemIcons.Application : null);
+                            }
+                            catch (ArgumentException)
+                            {
+                                LogHelper.Debug("Unable to extract icon: " + friendlyPath + (!friendlyPath.Equals(path) ? " (" + path + ")" : ""));
+                                ic = SystemIcons.Question; //FIXME: Use some generic application icon?
+                            }
+                            catch (System.IO.FileNotFoundException) //Undocumented exception
+                            {
+                                LogHelper.Debug("Unable to extract icon: " + friendlyPath + (!friendlyPath.Equals(path) ? " (" + path + ")" : ""));
+                                ic = SystemIcons.Warning;
+                            }
+                            break;
+                    }
+
+                    if (ic != null)
+                    {
+                        //FIXME: Resize the icon to save some memory?
+                        bitmap = Imaging.CreateBitmapSourceFromHIcon(ic.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                        bitmap.Freeze();
+                        ic.Dispose();
                         procIconLst.TryAdd(path, bitmap);
+                    }
                 }
             }
             return bitmap;
