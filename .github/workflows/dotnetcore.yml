@@ -4,9 +4,7 @@ on: push
 
 jobs:
   build:
-
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
@@ -15,13 +13,10 @@ jobs:
         dotnet-version: 3.1.101
     - name: Build (all)
       run: dotnet build --configuration Release
-    - name: Publish
-      run: dotnet publish
+    - name: Publish win-x64
+      run: dotnet publish 
     - name: Zip published files
-      uses: TheDoctor0/zip-release@v0.2.1
-      with:
-        filename: publish.zip
-        path: ./bin/publish
+      run: zip -r ./bin/netcoreapp3.1/publish.zip ./bin/netcoreapp3.1/publish
     - name: Deploy nightly
       uses: WebFreak001/deploy-nightly@v1.0.1
       env:
@@ -29,7 +24,7 @@ jobs:
       with:
         upload_url: https://uploads.github.com/repos/wokhansoft/WFN/releases/9924091/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
         release_id: 9924091 # same as above (id can just be taken out the upload_url, it's used to find old releases)
-        asset_path: publish.zip # path to archive to upload
+        asset_path: ./bin/netcoreapp3.1/publish.zip # path to archive to upload
         asset_name: wfn-nightly-notest-$$.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
         asset_content_type: application/zip # required by GitHub API
         max_releases: 7 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
