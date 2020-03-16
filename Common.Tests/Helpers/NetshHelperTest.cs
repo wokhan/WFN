@@ -1,22 +1,27 @@
 ﻿using System;
-using Wokhan.WindowsFirewallNotifier.Console.Tests.xunitbase;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+using Wokhan.WindowsFirewallNotifier.Console.Tests.NUnit;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     /// 
-    /// Test NetShHelper to retrieve filterId information. Note that filterId and even filterKey is generated at runtime and therefore may change 
+    /// Test NetShHelper to retrieve filterId information. 
+    /// 
+    /// Note that filterId and even filterKey is generated at runtime and therefore may change 
     /// after a reboot etc.
     /// 
-    public class NetshHelperTest : XunitTestBase
+    /// FIXME: Since filter names and even keys and ids can change they are not reliable. Either create test rules on the fly or get some random rules
+    /// from the netsh output.
+    /// 
+    [FixmeCategory]
+    public class NetshHelperTest : NUnitTestBase
     {
-        public NetshHelperTest(ITestOutputHelper output) : base(output, captureInTestOutput: true)
+        public NetshHelperTest()
         {
             Assert.True(UacHelper.CheckProcessElevated(), "Only admin can run this test - restart as admin");
         }
 
-        //[Fact]
+        [Test, ManualTestCategory]
         public void TestFindMatchingFilterInfo()
         {
             // Default Outbound (at the end of the filters xml)
@@ -24,15 +29,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             FilterResult result = NetshHelper.FindMatchingFilterInfo(filterId);
             Assert.NotNull(result);
             Assert.False(result.HasErrors);
-            Log($"name ={result.Name}, description={result.Description}");
-            Assert.Equal("Default Outbound", result.Name, true);
+            WriteDebugOutput($"name ={result.Name}, description={result.Description}");
+            Assert.AreEqual("Default Outbound", result.Name);
             Assert.True(result.Description != null);
-            Assert.Equal(FiltersContextEnum.FILTERS, result.FoundIn);
+            Assert.AreEqual(FiltersContextEnum.FILTERS, result.FoundIn);
         }
 
         //TODO: Commented out by @wokhan since test result depends on OS language and will fail on non-english ones
         /*
-        [Fact]
+        [Test]
         public void TestFindMatchingFilterInfo2Boot1()
         {
             // Boot time filter v4
@@ -41,13 +46,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             Assert.NotNull(result);
             Assert.False(result.HasErrors);
             Log($"name={result.Name}, description={result.Description}");
-            Assert.Equal("Boot Time Filter", result.Name, true);
+            Assert.AreEqual("Boot Time Filter", result.Name, true);
             Assert.True(result.Description != null);
         }*/
 
         //TODO: Commented out by @wokhan since test result depends on OS language and will fail on non-english ones
         /*
-        [Fact]
+        [Test]
         public void TestFindMatchingFilterInfo2Boot2()
         {
             // Boot time filter v6
@@ -56,11 +61,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             Assert.NotNull(result);
             Assert.False(result.HasErrors);
             Log($"name={result.Name}, description={result.Description}");
-            Assert.Equal("Boot Time Filter", result.Name, true);
+            Assert.AreEqual("Boot Time Filter", result.Name, true);
             Assert.True(result.Description != null);
         }
         */
 
+        [Test, ManualTestCategory]
         public void TestFindMatchingFilterInfo2Boot3()
         {
             // Boot time filter FWPM_LAYER_INBOUND_ICMP_ERROR_V4 (wfpstate only filter)
@@ -68,15 +74,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             FilterResult result = NetshHelper.FindMatchingFilterInfo(filterId);
             Assert.NotNull(result);
             Assert.False(result.HasErrors);
-            Log($"name={result.Name}, description={result.Description}");
-            Assert.Equal("Boot Time Filter", result.Name, true);
+            WriteDebugOutput($"name={result.Name}, description={result.Description}");
+            Assert.AreEqual("Boot Time Filter", result.Name);
             Assert.True(result.Description != null);
-            Assert.Equal(result.FoundIn, FiltersContextEnum.WFPSTATE);
+            Assert.AreEqual(result.FoundIn, FiltersContextEnum.WFPSTATE);
         }
 
         //TODO: Commented out by @wokhan since test result depends on OS language and will fail on non-english ones
         /*
-        [Fact]
+        [Test]
         public void TestFindMatchingFilterInfo3()
         {
             // Boot time filter
@@ -85,12 +91,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             Assert.False(result.HasErrors);
             Assert.NotNull(result);
             Log($"name={result.Name}, description={result.Description}");
-            Assert.Equal("Boot Time Filter", result.Name, true);
+            Assert.AreEqual("Boot Time Filter", result.Name, true);
             Assert.True(result.Description != null);
         }
         */
 
-        //[Fact] filterKey can change
+        //[Test, ManualTestCategory] filterKey can change
         public void TestFindMatchingFilterInfo4()
         {
             // Port scanning prevention filter (wfpstate filter)
@@ -98,11 +104,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             FilterResult result = NetshHelper.FindMatchingFilterInfo(filterId);
             Assert.NotNull(result);
             Assert.False(result.HasErrors);
-            Log($"name={result.Name}, description={result.Description}");
-            Assert.Equal("Port Scanning Prevention Filter", result.Name, true);
+            WriteDebugOutput($"name={result.Name}, description={result.Description}");
+            Assert.AreEqual("Port Scanning Prevention Filter", result.Name);
             Assert.True(result.Description != null);
         }
-        [Fact]
+        [Test, ManualTestCategory]
         public void TestGetMatchingFilterInfo_notfound()
         {
             FilterResult result = NetshHelper.FindMatchingFilterInfo(0);
@@ -116,7 +122,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             Assert.NotNull(result);
             Assert.False(result.HasErrors);
             Assert.True(result.FilterId > 0);
-            Assert.NotEqual(FiltersContextEnum.NONE, result.FoundIn);
+            Assert.AreNotEqual(FiltersContextEnum.NONE, result.FoundIn);
 
             return result.FilterId;
         }

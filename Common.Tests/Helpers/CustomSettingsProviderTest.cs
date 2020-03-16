@@ -1,20 +1,30 @@
 ﻿using System;
 using System.IO;
-using Xunit;
+using NUnit.Framework;
+using Wokhan.WindowsFirewallNotifier.Console.Tests.NUnit;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
-    public class CustomSettingsProviderTest
+    [TestFixture]
+    public class CustomSettingsProviderTest : NUnitTestBase
     {
+        [SetUp]
+        public override void SetUp()
+        {
+            base.SetUp();
+
+            // test if the path to the global config file exists
+            Assert.True(File.Exists("WFN.config"));
+            // loads the settings
+            Assert.NotNull(Settings.Default);
+        }
         ///
         /// Tests whether global settings are properly initialized from this test project (path names to config files e.g. WFN.config)
         /// If not, check the Probject properties > Build > Output path
         /// 
-        [Fact]
+        [Test, IntegrationTestCategory]
         public void TestInit()
         {
-            Assert.NotNull(Settings.Default);
-
             // is the path to the global config file WFN.config correct?
             Assert.True(File.Exists(CustomSettingsProvider.SharedConfigurationPath));
 
