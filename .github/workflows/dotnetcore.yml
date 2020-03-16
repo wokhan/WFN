@@ -13,10 +13,10 @@ jobs:
         dotnet-version: 3.1.101
     - name: Build (all)
       run: dotnet build --configuration Release
-    - name: Publish win-x64
+    - name: Publish
       run: dotnet publish 
     - name: Zip published files
-      run: zip -r ./bin/netcoreapp3.1/package ./bin/netcoreapp3.1/publish
+      run: compress-archive -path ./bin/netcoreapp3.1/publish -destinationpath ./bin/netcoreapp3.1/package.zip
     - name: Deploy nightly
       uses: WebFreak001/deploy-nightly@v1.0.1
       env:
