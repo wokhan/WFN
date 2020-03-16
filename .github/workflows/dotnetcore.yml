@@ -13,7 +13,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
-    - name: Build with dotnet
+    - name: Build (all)
       run: dotnet build --configuration Release
-    - name: Test with dotnet
-      run: dotnet test --project Console.Tests/Console.Tests.csproj
+    - name: Tests (console)
+      run: dotnet test Console.Tests/Console.Tests.csproj
+    - name: Tests (common)
+      run: dotnet test Common.Tests/Common.Tests.csproj
