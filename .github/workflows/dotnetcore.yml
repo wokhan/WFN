@@ -16,7 +16,7 @@ jobs:
     - name: Publish
       run: dotnet publish 
     - name: Zip published files
-      run: compress-archive -path ./bin/netcoreapp3.1/publish -destinationpath ./bin/netcoreapp3.1/package.zip
+      run: compress-archive -path $GITHUB_WORKSPACE/bin/netcoreapp3.1/publish -destinationpath $GITHUB_WORKSPACE/bin/netcoreapp3.1/package.zip
     - name: Deploy nightly
       uses: WebFreak001/deploy-nightly@v1.0.1
       env:
