@@ -15,7 +15,21 @@ jobs:
         dotnet-version: 3.1.101
     - name: Build (all)
       run: dotnet build --configuration Release
-    - name: Tests (console)
-      run: dotnet test Console.Tests/Console.Tests.csproj
     - name: Tests (common)
       run: dotnet test Common.Tests/Common.Tests.csproj
+    - name: Publish
+      run: dotnet publish
+    - uses: montudor/action-zip@v0.1.0
+      with:
+        args: zip -qq -r ./bin/publish.zip ./bin/publish
+    - name: Deploy nightly
+      uses: WebFreak001/deploy-nightly@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
+      with:
+        upload_url: https://uploads.github.com/repos/wokhansoft/WFN/releases/9924091/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
+        release_id: 9924091 # same as above (id can just be taken out the upload_url, it's used to find old releases)
+        asset_path: ./bin/publish/publish.zip # path to archive to upload
+        asset_name: wfn-nightly-$$.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
+        asset_content_type: application/zip # required by GitHub API
+        max_releases: 7 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
