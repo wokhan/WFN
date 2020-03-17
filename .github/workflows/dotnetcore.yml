@@ -2,7 +2,7 @@ name: .NET Core
 
 on: 
   push:
-    branches: none # to disable temporarily
+    branches: master
   #schedule: # to be enabled to have real nightlies
     #- cron: 0 0 * * *
 
@@ -14,11 +14,11 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.101
-    - name: Build (all)
-      run: dotnet build --configuration Release
-    - name: Publish
+        dotnet-version: 3.1.2
+    - name: Build and publish
       run: dotnet publish 
+    - name: Rename config file
+      run: mv ./bin/netcoreapp3.1/publish/Wokhan.WindowsFirewallNotifier.Common.dll.config ./bin/netcoreapp3.1/publish/WFN.config
     - name: Zip published files
       run: compress-archive -path ./bin/netcoreapp3.1/publish -destinationpath ./bin/netcoreapp3.1/package.zip
     - name: Deploy nightly

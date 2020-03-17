@@ -16,6 +16,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Tests", "Common.Tests\Common.Tests.csproj", "{999EE8FD-93FF-44F0-AC66-4DE6AF6303D2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{1DBB954C-E229-4D28-9A3C-F606D91CFF4B}"
+	ProjectSection(SolutionItems) = preProject
+		CONTRIBUTING.md = CONTRIBUTING.md
+		README.md = README.md
+		ROADMAP.md = ROADMAP.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github-actions", "github-actions", "{573DABCD-1C81-465A-AD08-41F109761D74}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\dotnetcore.yml = .github\workflows\dotnetcore.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "legal", "legal", "{28683BDB-380A-4B87-AC28-142192543EEB}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +94,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1DBB954C-E229-4D28-9A3C-F606D91CFF4B} = {8868B2A5-29B2-4774-B32D-913A242232BC}
+		{573DABCD-1C81-465A-AD08-41F109761D74} = {8868B2A5-29B2-4774-B32D-913A242232BC}
+		{28683BDB-380A-4B87-AC28-142192543EEB} = {8868B2A5-29B2-4774-B32D-913A242232BC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4976ADC2-261C-4FE4-A0B2-4EDF7615FE4F}

@@ -8,6 +8,7 @@
     <Copyright>2011-2020 Wokhan (https://github.com/wokhansoft/WFN)</Copyright>
     <Authors>Wokhan Solutions</Authors>
     <OutputPath>..\bin</OutputPath>
+    <IsPublishable>false</IsPublishable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG</DefineConstants>
