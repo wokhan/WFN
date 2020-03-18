@@ -7,7 +7,7 @@ on:
     #- cron: 0 0 * * *
 
 jobs:
-  build:
+  publish-nightly:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
@@ -16,11 +16,11 @@ jobs:
       with:
         dotnet-version: 3.1.200
     - name: Build and publish
-      run: dotnet publish 
+      run: dotnet publish -c Release
     - name: Rename config file
       run: mv ./bin/netcoreapp3.1/publish/Wokhan.WindowsFirewallNotifier.Common.dll.config ./bin/netcoreapp3.1/publish/WFN.config
     - name: Zip published files
-      run: compress-archive -path ./bin/netcoreapp3.1/publish -destinationpath ./bin/netcoreapp3.1/package.zip
+      run: compress-archive -path ./bin/netcoreapp3.1/publish/* -destinationpath ./bin/netcoreapp3.1/wfn.zip
     - name: Deploy nightly
       uses: WebFreak001/deploy-nightly@v1.0.1
       env:
@@ -28,7 +28,57 @@ jobs:
       with:
         upload_url: https://uploads.github.com/repos/wokhansoft/WFN/releases/24573510/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
         release_id: 24573510 # same as above (id can just be taken out the upload_url, it's used to find old releases)
-        asset_path: ./bin/netcoreapp3.1/package.zip # path to archive to upload
+        asset_path: ./bin/netcoreapp3.1/wfn.zip # path to archive to upload
         asset_name: wfn-nightly-no-test-$$.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
+        asset_content_type: application/zip # required by GitHub API
+        #max_releases: 7 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
+  publish-nightly-x64:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.200
+    - name: Build and publish
+      run: dotnet publish -r win-x64 -c Release --self-contained true
+    - name: Rename config file
+      run: mv ./bin/netcoreapp3.1/win-x64/publish/Wokhan.WindowsFirewallNotifier.Common.dll.config ./bin/netcoreapp3.1/win-x64/publish/WFN.config
+    - name: Zip published files
+      run: compress-archive -path ./bin/netcoreapp3.1/win-x64/publish/* -destinationpath ./bin/netcoreapp3.1/wfn-x64.zip
+    - name: Deploy nightly
+      uses: WebFreak001/deploy-nightly@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
+      with:
+        upload_url: https://uploads.github.com/repos/wokhansoft/WFN/releases/24573510/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
+        release_id: 24573510 # same as above (id can just be taken out the upload_url, it's used to find old releases)
+        asset_path: ./bin/netcoreapp3.1/wfn-x64.zip # path to archive to upload
+        asset_name: wfn-x64-full-nightly-no-test-$$.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
+        asset_content_type: application/zip # required by GitHub API
+        #max_releases: 7 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
+  publish-nightly-x86:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.200
+    - name: Build and publish
+      run: dotnet publish -r win-x86 -c Release --self-contained true
+    - name: Rename config file
+      run: mv ./bin/netcoreapp3.1/win-x86/publish/Wokhan.WindowsFirewallNotifier.Common.dll.config ./bin/netcoreapp3.1/win-x86/publish/WFN.config
+    - name: Zip published files
+      run: compress-archive -path ./bin/netcoreapp3.1/win-x86/publish -destinationpath ./bin/netcoreapp3.1/wfn-x86.zip
+    - name: Deploy nightly
+      uses: WebFreak001/deploy-nightly@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
+      with:
+        upload_url: https://uploads.github.com/repos/wokhansoft/WFN/releases/24573510/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
+        release_id: 24573510 # same as above (id can just be taken out the upload_url, it's used to find old releases)
+        asset_path: ./bin/netcoreapp3.1/wfn-x86.zip # path to archive to upload
+        asset_name: wfn-x86-full-nightly-no-test-$$.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
         asset_content_type: application/zip # required by GitHub API
         #max_releases: 7 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
