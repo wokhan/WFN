@@ -284,5 +284,29 @@ namespace Wokhan.WindowsFirewallNotifier.Common {
                 this["ActivityWindow_Orientation"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool StartNotifierAfterLogin {
+            get {
+                return ((bool)(this["StartNotifierAfterLogin"]));
+            }
+            set {
+                this["StartNotifierAfterLogin"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool StartNotifierMinimized {
+            get {
+                return ((bool)(this["StartNotifierMinimized"]));
+            }
+            set {
+                this["StartNotifierMinimized"] = value;
+            }
+        }
     }
 }
