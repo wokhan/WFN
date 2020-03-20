@@ -47,69 +47,15 @@
             <Label Content="Notifier settings" Background="{DynamicResource AccentColorBrush}" FontWeight="Bold" />
             <StackPanel Margin="10">
                 <TextBlock Margin="0,0,0,10" TextWrapping="Wrap" Text="The following options only apply if you chose 'Block and prompt' for the outgoing connections in the Firewall settings page, as they target the WFN notification window." />
-                <!--<Border BorderThickness="0" Background="#FFFF7B7B">
-                    <Border.Style>
-                        <Style TargetType="Border" BasedOn="{StaticResource InfoPanel}">
-                            <Setter Property="Visibility" Value="Visible" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsAdmin}" Value="True">
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Border.Style>
-                    <WrapPanel>
-                        <Label Content="This feature is only enabled for administrators." />
-                        <Button BorderBrush="LightGray" BorderThickness="1" x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
-                            <Grid>
-                                <Path Height="16" HorizontalAlignment="Left" Stretch="Uniform" Fill="#FF5353F7" Data="{StaticResource Image_Shield}" />
-                                <Label Margin="15,0,0,0" Content="restart as admin" />
-                            </Grid>
-                        </Button>
-                    </WrapPanel>
-                </Border>
-                <StackPanel Margin="0,10,0,0"  IsEnabled="{Binding IsAdmin}">
-                    <TextBlock TextWrapping="Wrap" TextAlignment="Justify" Text="By default, Windows allows all and every outgoing connections without asking for the user's consent, which obviously induces a security risk. Enabling the outgoing connections filter implies that some security settings will be strengthened (those settings can be restored to their default values when disabling WFN)." />
-                    <GroupBox Padding="20,10" Margin="10" BorderThickness="0">
-                        <GroupBox.Header>
-                            <RadioButton HorizontalAlignment="Stretch" FontWeight="Bold" IsChecked="{Binding IsInstalled, Mode=OneTime}" GroupName="rbEnable" x:Name="rbEnable" Content="Enable the notifications" />
-                        </GroupBox.Header>
-                        <StackPanel IsEnabled="{Binding IsChecked,ElementName=rbEnable}">
-                            <WrapPanel Margin="0,0,0,10">
-                                <Label Content="Enable for: " />
-                                <ComboBox IsEditable="False" SelectedIndex="{Binding EnableFor, Source={x:Static settings:Settings.Default}}">
-                                    <ComboBoxItem Content="the current user" />
-                                    <ComboBoxItem Content="everyone" />
-                                </ComboBox>
-                            </WrapPanel>
-                            <CheckBox Content="Use an animated notification" Margin="0,0,0,10" IsChecked="{Binding UseAnimation, Source={x:Static settings:Settings.Default}}" />
-                            <Button Content="Test" x:Name="btnTestNotif" Click="btnTestNotif_Click" />
-                            <CheckBox Content="Create a blocking rule instead of using an exceptions list" Margin="0,0,0,5" IsChecked="{Binding UseBlockRules, Source={x:Static settings:Settings.Default}}" />
-                            <TextBlock Margin="30,0,0,10" Text="This option allows the blocked applications to stay blocked even if you disable WFN notifications, by creating a blocking rule in the Windows embedded firewall." TextWrapping="Wrap" />
-                            <CheckBox Content="Enable services detection" IsChecked="{Binding EnableServiceDetection, Source={x:Static settings:Settings.Default}}" />
-                        </StackPanel>
-                    </GroupBox>
-                    <GroupBox Padding="20,10" Margin="10,0,10,10" BorderThickness="0">
-                        <GroupBox.Header>
-                            <RadioButton FontWeight="Bold" IsChecked="{Binding IsInstalled,Mode=OneTime,Converter={StaticResource booleanNegator}}" GroupName="rbEnable" x:Name="rbDisable" VerticalContentAlignment="Top" Content="Do not enable the notifications" />
-                        </GroupBox.Header>
-                        <StackPanel IsEnabled="{Binding IsChecked,ElementName=rbDisable}">
-                            <TextBlock Text="You will still be able to use Windows Firewall Notifier console, but will not get any notification and will not allow outgoing connections filtering.
-Please note that you will be able to do it later through the Options panel." TextAlignment="Justify" TextWrapping="Wrap" Margin="0,0,0,10"/>
-                            <CheckBox x:Name="chkReallowOut" Content="Reallow unknown outgoing connections (default)" />
-                            <TextBlock TextWrapping="Wrap" Text="Note: All blocking rules you created either manually or using this application will still be active." Margin="30,0,0,10" />
-                            <CheckBox x:Name="chkDisableLog" Content="Disable the Windows firewall outgoing connections log (default)" />
-                        </StackPanel>
-                    </GroupBox>
-                </StackPanel-->
                 <StackPanel Orientation = "Horizontal">
                     <ToggleButton Style="{StaticResource ToggleSwitch}" Padding="5,0" Content="Use an animated notification" Margin="0,0,22,10.2" IsChecked="{Binding UseAnimation, Source={x:Static settings:Settings.Default}}" />
-                    <Button Style="{StaticResource RoundedButton}" Background="LightBlue" Margin="171,0,169,10.2" Padding="4"  HorizontalAlignment="Center" Content="Click here to test" x:Name="btnTestNotif" Click="btnTestNotif_Click" />
+                    <Button Style="{StaticResource RoundedButton}" Padding="0" x:Name="btnTestNotif" Click="btnTestNotif_Click" HorizontalAlignment="Right" Margin="0,0,0,0" BorderBrush="{DynamicResource AccentColorBrush}" FontWeight="Bold" FontStyle="Normal" Background="#00000000" >
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Height="20" Margin="5,0,0,0"/>
+                            <Label Content="Start Notifier now" Padding="0" Margin="5" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
-                <!--<StackPanel Orientation = "Vertical">
-                    <ToggleButton Style="{StaticResource ToggleSwitch}" Padding="5,0" Content="Create a blocking rule instead of using an exceptions list for the blocked outgoing connections*" ToolTip="Default: True" Margin="0,0,0,5" IsChecked="{Binding UseBlockRules, Source={x:Static settings:Settings.Default}}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
-                    <TextBlock Margin="30,0,0,10" Text="This option allows the blocked applications to stay blocked even if you disable WFN notifications, by creating a blocking rule in the Windows embedded firewall." TextWrapping="Wrap" IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}" />
-                </StackPanel>-->
                 <ToggleButton Style="{StaticResource ToggleSwitch}" Padding="5,0" Content="Enable services detection*" ToolTip="Additionally tries to detect the service making a connection in the notifier." IsChecked="{Binding EnableServiceDetection, Source={x:Static settings:Settings.Default}}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
             </StackPanel>
             <Label Content="Miscellaneous options" Background="{DynamicResource AccentColorBrush}" FontWeight="Bold" />
@@ -124,42 +70,42 @@ Please note that you will be able to do it later through the Options panel." Tex
 
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Accent color: " />
-                    <ComboBox IsEditable="False" MinWidth="100" ItemsSource="{Binding Colors}" SelectedValuePath="Value" SelectedValue="{Binding AccentColor}" Height="20">
+                    <ComboBox IsEditable="False" MinWidth="100" ItemsSource="{Binding Colors}" SelectedValuePath="Value" SelectedValue="{Binding AccentColor}" Height="20" Background="#00000000" BorderBrush="Coral" Width="207" Foreground="Black">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <WrapPanel>
-                                    <Rectangle Width="10" Height="10" Fill="{Binding Value}" />
-                                    <Label Content="{Binding Key}" />
+                                    <Rectangle Width="30" Height="10" Fill="{Binding Value}" Stroke="Black" />
+                                    <Label Content="{Binding Key}" Foreground="Black" Background="Transparent" />
                                 </WrapPanel>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                     <Label Content="Console Width" Margin="20,0,0,0"/>
-                    <TextBox Text="{Binding ConsoleSizeWidth, Source={x:Static settings:Settings.Default}}"  ToolTip="Needs a restart to take effect." IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Width="50" Height="20" />
-                    <Label Content="Height"/>
-                    <TextBox Text="{Binding ConsoleSizeHeight, Source={x:Static settings:Settings.Default}}" ToolTip="Needs a restart to take effect." IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Width="50" Height="20" />
+                    <TextBox Text="{Binding ConsoleSizeWidth, Source={x:Static settings:Settings.Default}}"  ToolTip="Needs a restart to take effect." IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Width="50" Height="20" Margin="5,0,0,0" BorderBrush="{DynamicResource AccentColorBrush}" />
+                    <Label Content="Height" Margin="3,0,0,0"/>
+                    <TextBox Text="{Binding ConsoleSizeHeight, Source={x:Static settings:Settings.Default}}" ToolTip="Needs a restart to take effect." IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Width="50" Height="20" BorderBrush="{DynamicResource AccentColorBrush}" />
                 </StackPanel>
             </StackPanel>
             <Expander VerticalAlignment="Bottom" Header="Display setting file location" IsExpanded="False" Padding="0,5,0,0" Margin="10,0,0,0">
                 <StackPanel>
-                <TextBlock Margin="0,0,0,10" Text="The following setting files are used (in order of priority - click to open)" />
-                <Grid Margin="10,0,0,10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0">1. User local:</Label>
-                    <TextBlock Grid.Row="0" Grid.Column="1" x:Name="txtUserLocalConfigurationPath" MouseDown="txtUserLocalConfigurationPath_MouseDown" Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding UserLocalConfigurationPath}"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
-                    <Label Grid.Row="1" Grid.Column="0">2. User roaming:</Label>
-                    <TextBlock Grid.Row="1" Grid.Column="1" x:Name="txtUserConfigurationPath" MouseDown="txtUserConfigurationPath_MouseDown" Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding UserConfigurationPath}"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
-                    <Label Grid.Row="2" Grid.Column="0">3. Application default:</Label>
-                    <TextBlock Grid.Row="2" Grid.Column="1" x:Name="txtSharedConfigurationPath" MouseDown="txtSharedConfigurationPath_MouseDown" Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding SharedConfigurationPath}"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
-                </Grid>
+                    <TextBlock Margin="0,0,0,10" Text="The following setting files are used (in order of priority - click to open)" />
+                    <Grid Margin="10,0,0,10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0">1. User local:</Label>
+                        <TextBlock Grid.Row="0" Grid.Column="1" x:Name="txtUserLocalConfigurationPath" MouseDown="txtUserLocalConfigurationPath_MouseDown" Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding UserLocalConfigurationPath}"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
+                        <Label Grid.Row="1" Grid.Column="0">2. User roaming:</Label>
+                        <TextBlock Grid.Row="1" Grid.Column="1" x:Name="txtUserConfigurationPath" MouseDown="txtUserConfigurationPath_MouseDown" Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding UserConfigurationPath}"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
+                        <Label Grid.Row="2" Grid.Column="0">3. Application default:</Label>
+                        <TextBlock Grid.Row="2" Grid.Column="1" x:Name="txtSharedConfigurationPath" MouseDown="txtSharedConfigurationPath_MouseDown" Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding SharedConfigurationPath}"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
+                    </Grid>
                 </StackPanel>
             </Expander>
         </StackPanel>

@@ -41,7 +41,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             Settings.Default.FirstRun = true;   // reset the flag to log os info again once
             Settings.Default.Save();
-            InstallHelper.SetAuditPolConnection(enableSuccess: Settings.Default.AuditPolEnableSuccessEvent, enableFailure:true);
+            InstallHelper.SetAuditPolConnection(enableSuccess: Settings.Default.AuditPolEnableSuccessEvent, enableFailure:true);  // always turn this on for now so that security log and notifier works
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -56,6 +56,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void btnRestartAdmin_Click(object sender, RoutedEventArgs e)
         {
+            // TODO: @wokhan to be removed for power users?
             ((App)Application.Current).RestartAsAdmin();
         }
 
@@ -69,7 +70,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             Settings.Default.Reset();
             Settings.Default.FirstRun = true;
             Settings.Default.EnableVerboseLogging = false;
-            //Settings.Default.AlwaysRunAs = true;
         }
 
         private void txtUserLocalConfigurationPath_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
