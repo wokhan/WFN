@@ -58,7 +58,7 @@
             </Grid>
         </Border>
         <Grid>
-            <DataGrid EnableRowVirtualization="True" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" ItemsSource="{Binding connectionsView}" AutoGenerateColumns="False" HeadersVisibility="Column" HorizontalAlignment="Stretch">
+            <DataGrid EnableRowVirtualization="True" VirtualizingPanel.IsVirtualizingWhenGrouping="True" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" ItemsSource="{Binding connectionsView}" AutoGenerateColumns="False" HeadersVisibility="Column" HorizontalAlignment="Stretch">
                 <DataGrid.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.ContainerStyle>
