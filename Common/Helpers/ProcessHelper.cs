@@ -846,13 +846,22 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             Restore = 9, ShowDefault = 10, ForceMinimized = 11
         };
 
-        /**
-         * Finds the process by name and sets the main window to the foreground.
-         */
-        public static void RestoreProcessWindowState(string processName)
+        /// <summary>
+        /// WFN process names.
+        /// </summary>
+        public enum WFNProcessEnum
         {
-            // get the process
-            Process bProcess = Process.GetProcessesByName(processName).FirstOrDefault();
+            WFN, Notifier
+        }
+
+        /// <summary>
+        /// Finds the process by name and sets the main window to the foreground.
+        /// Note: Process name is the cli executable excluding ".exe" e.g. "WFN" instead of "WFN.exe". 
+        /// </summary>
+        /// <param name="processName">Known process from enum</param>
+        public static void StartOrRestoreToForeground(WFNProcessEnum processName)
+        {
+            Process bProcess = Process.GetProcessesByName(processName.ToString()).FirstOrDefault();
 
             // check if the process is running
             if (bProcess != null)
@@ -869,8 +878,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
             else
             {
-                // the process is not running, so start it
-                Process.Start(processName);
+                Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{processName}.exe"));
             }
         }
 
@@ -882,7 +890,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             try
             {
-                LogHelper.Debug($"Starting shell executable: {executable}, args: {args}"); 
+                LogHelper.Debug($"Starting shell executable: {executable}, args: {args}");
                 Process.Start(new ProcessStartInfo(executable, args) { UseShellExecute = true });
             }
             catch (Exception ex)
