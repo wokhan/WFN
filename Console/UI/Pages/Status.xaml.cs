@@ -57,7 +57,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
             status.Save();
 
-            bool functionDelegate(Func<bool> boolFunction, string okMsg, string errorMsg)
+            bool checkResult(Func<bool> boolFunction, string okMsg, string errorMsg)
             {
                 try
                 {
@@ -74,42 +74,55 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 }
             }
 
-            if (!isInstalled &&
-                ((status.PrivateIsEnabled && status.PrivateIsOutBlockedNotif)
-                || (status.PublicIsEnabled && status.PublicIsOutBlockedNotif)
-                || (status.DomainIsEnabled && status.DomainIsOutBlockedNotif)))
+            if (!isInstalled)
             {
-                if (!InstallHelper.EnableProgram(functionDelegate))
+                if (!InstallHelper.Install(checkResult))
                 {
                     return;
                 }
             }
             else if (isInstalled)
             {
-                InstallHelper.UninstallCheck(!isEnabled(status), !isOutBlockNotifierEnabled(status), functionDelegate);
+                if (!InstallHelper.InstallCheck(checkResult))
+                {
+                    return;
+                }
             }
 
             init();
         }
 
+        // TODO: remove?
         private static bool isEnabled(FirewallHelper.FirewallStatusWrapper status)
         {
             return status.PrivateIsEnabled || status.DomainIsEnabled || status.PublicIsEnabled;
         }
 
-        private static bool isOutBlockNotifierEnabled(FirewallHelper.FirewallStatusWrapper status)
+
+        // TODO: remove?
+        private static bool isBlockAndPromptEnabledInProfile(FirewallHelper.FirewallStatusWrapper status)
+        {
+            return ((status.PrivateIsEnabled && status.PrivateIsOutBlockedNotif)
+                       || (status.PublicIsEnabled && status.PublicIsOutBlockedNotif)
+                       || (status.DomainIsEnabled && status.DomainIsOutBlockedNotif));
+        }
+
+        // TODO: remove?
+        private static bool IsBlockAndPromptEnabled(FirewallHelper.FirewallStatusWrapper status)
         {
             return status.PrivateIsOutBlockedNotif || status.PublicIsOutBlockedNotif || status.DomainIsOutBlockedNotif;
         }
 
         private void btnRevert_Click(object sender, RoutedEventArgs e)
         {
+            Settings.Default.IsInstalled = false;
+            Settings.Default.Save();
+
             init();
         }
 
         private void init()
         {
-            //isInstalled = InstallHelper.IsTaskInstalled();
             isInstalled = InstallHelper.IsInstalled();
 
             status = new FirewallHelper.FirewallStatusWrapper();
@@ -143,7 +156,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void btnTestNotif_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe"));
+            // TODO: Does not show if mimimized to tray
+            //ProcessHelper.StartOrRestoreToForeground(ProcessHelper.WFNProcessEnum.Notifier);  
+            Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{ProcessHelper.WFNProcessEnum.Notifier}.exe"));
         }
     }
 }

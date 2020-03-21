@@ -15,33 +15,33 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
 {
     public class InstallHelper
     {
+
+        internal const String NOTIFIER_TASK_NAME = "WindowsFirewallNotifierTask";
+
         /// <summary>
-        /// 
+        /// Check install after save.
         /// </summary>
-        public static bool UninstallCheck(bool disableAuditPolicy, bool removeNotifierTask, Func<Func<bool>, string, string, bool> funcDelegate)
+        public static bool InstallCheck(Func<Func<bool>, string, string, bool> checkResult)
         {
-            if (funcDelegate is null)
+            LogHelper.Debug(nameof(InstallCheck));
+            if (checkResult is null)
             {
-                throw new ArgumentNullException(nameof(funcDelegate));
-            }
-            LogHelper.Debug("UninstallCheck");
-
-            if (disableAuditPolicy)
-            {
-                if (!funcDelegate(
-                    () => SetAuditPolConnection(enableSuccess: false, enableFailure: true)
-                    , "Reset audit policy to failure only."
-                    , Resources.MSG_UNINST_DISABLE_LOG_ERR)) return false;
+                throw new ArgumentNullException(nameof(checkResult));
             }
 
-            if (removeNotifierTask)
+            if (!checkResult(() => SetAuditPolConnection(enableSuccess: Settings.Default.AuditPolEnableSuccessEvent, enableFailure: true)
+                , "Security log audit policy enabled."
+                , Resources.MSG_INST_ENABLE_LOG_ERR)) return false;
+
+            if (Settings.Default.StartNotifierAfterLogin)
             {
-                if (!funcDelegate(() => RemoveTask()
-                    , Resources.MSG_UNINST_OK
-                , Resources.MSG_UNINST_TASK_ERR)) return false;
+                if (!checkResult(() => CreateNotifierTask(), $"{Resources.MSG_INST_OK} Notitifer auto-start after login enabled.", Resources.MSG_INST_TASK_ERR)) return false;
+            }
+            else
+            {
+                if (!checkResult(() => RemoveNotifierTask(), $"{Resources.MSG_INST_OK} Notifier auto-start disabled.", Resources.MSG_UNINST_TASK_ERR)) return false;
             }
 
-            Settings.Default.IsInstalled = false;
             Settings.Default.Save();
 
             return true;
@@ -49,25 +49,25 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
 
 
         /// <summary>
-        /// 
+        /// Install and setup.
         /// </summary>
-        /// <param name="pass"></param>
+        /// <param name="checkResult"></param>
         /// <returns></returns>
-        public static bool EnableProgram([param: NotNull] Func<Func<bool>, string, string, bool> checkResult)
+        public static bool Install([param: NotNull] Func<Func<bool>, string, string, bool> checkResult)
         {
             if (checkResult is null)
             {
                 throw new ArgumentNullException(nameof(checkResult));
             }
             LogHelper.Debug("EnableProgram");
-            if (IsTaskInstalled())
+            if (IsNotifierTaskInstalled())
             {
-                RemoveTask();  // will be re-created below
+                RemoveNotifierTask();  // will be re-created below
             }
 
             if (Settings.Default.StartNotifierAfterLogin)
             {
-                if (!checkResult(() => createTask(), Resources.MSG_INST_OK, Resources.MSG_INST_TASK_ERR)) return false;
+                if (!checkResult(() => CreateNotifierTask(), "Notifier will start after next windows login", Resources.MSG_INST_TASK_ERR)) return false;
             }
 
             if (!checkResult(() => (ProcessHelper.getProcessFeedback(
@@ -157,12 +157,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
 
 
         /// <summary>
-        /// 
+        /// Create the notifier task.
         /// </summary>
         /// <returns></returns>
-        private static bool createTask()
+        public static bool CreateNotifierTask()
         {
-            LogHelper.Debug("CreateTask for Notifier");
+            LogHelper.Debug("CreateNotifierTask");
             string tmpXML = Path.GetTempFileName();
             string newtask;
             using (var taskStr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Wokhan.WindowsFirewallNotifier.Console.Resources.TaskTemplate.xml")))
@@ -180,9 +180,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
 
             File.WriteAllText(tmpXML, newtask, Encoding.Unicode);
 
-            bool ret = ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", "/IT /Create /TN WindowsFirewallNotifierTask /XML \"" + tmpXML + "\"");
+            bool ret = ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", $"/IT /Create /TN {NOTIFIER_TASK_NAME} /XML \"" + tmpXML + "\"");
 
             File.Delete(tmpXML);
+
+            ret = RunNotifierTask();
 
             return ret;
         }
@@ -191,12 +193,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
         /// 
         /// </summary>
         /// <returns></returns>
-        private static bool RemoveTask()
+        private static bool RemoveNotifierTask()
         {
-            LogHelper.Debug("RemoveTask for Notifier");
-            if (IsTaskInstalled())
+            LogHelper.Debug("RemoveNotifierTask");
+            if (IsNotifierTaskInstalled())
             {
-                return ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", "/Delete /TN WindowsFirewallNotifierTask /F");
+                return ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", $"/Delete /TN {NOTIFIER_TASK_NAME} /F");
             }
             else
             {
@@ -205,16 +207,44 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
         }
 
         /// <summary>
-        /// Is the task installed.
+        /// Ends the notifier task (if installed and running)
         /// </summary>
         /// <returns></returns>
-        public static bool IsTaskInstalled()
+        public static bool EndNotifierTask()
         {
-            return ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", "/Query /TN WindowsFirewallNotifierTask");
+            LogHelper.Debug("EndNotifierTask");
+            return ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", $"/End /TN {NOTIFIER_TASK_NAME}");
         }
 
+        /// <summary>
+        /// Runs the notifier task immediately (if installed)
+        /// </summary>
+        /// <returns></returns>
+        public static bool RunNotifierTask()
+        {
+            LogHelper.Debug("RunNotifierTask");
+            return ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", $"/Run /I /TN {NOTIFIER_TASK_NAME}");
+        }
+
+
+        /// <summary>
+        /// Gets whether the notifier task is installed.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsNotifierTaskInstalled()
+        {
+            bool isInstalled = ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", $"/Query /TN {NOTIFIER_TASK_NAME}");
+            LogHelper.Debug($"IsNotifierTaskInstalled {isInstalled}");
+            return isInstalled;
+        }
+
+        /// <summary>
+        /// Gets the fllag whether the app was installed from settings.
+        /// </summary>
+        /// <returns></returns>
         public static bool IsInstalled()
         {
+            LogHelper.Debug($"IsInstalled: {Settings.Default.IsInstalled}");
             return Settings.Default.IsInstalled;
         }
 

@@ -172,7 +172,7 @@
             <TextBlock Margin="10,0" FontStyle="Italic" TextWrapping="Wrap" Text="{x:Static resx:Resources.Status_FooterRemark}" />
             <StackPanel Margin="10">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                    <ToggleButton  Style="{StaticResource ToggleSwitch}" Padding="3,0,3,0" Content="Start notifier after windows login" ToolTip="" IsChecked="{Binding StartNotifierAfterLogin, Source={x:Static settings:Settings.Default}}" Width="290" ScrollViewer.CanContentScroll="True" />
+                    <ToggleButton x:Name="tgStartNotifier" Style="{StaticResource ToggleSwitch}" Padding="3,0,3,0" Content="Start notifier after windows login" ToolTip="" IsChecked="{Binding StartNotifierAfterLogin, Source={x:Static settings:Settings.Default}}" Width="290" ScrollViewer.CanContentScroll="True" />
                     <Button Style="{StaticResource RoundedButton}" Padding="0" x:Name="btnTestNotif" Click="btnTestNotif_Click" HorizontalAlignment="Right" Margin="0,0,0,0" BorderBrush="{DynamicResource AccentColorBrush}" FontWeight="Bold" FontStyle="Normal" Background="#00000000" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Height="20" Margin="3,0,0,0"/>
