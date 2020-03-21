@@ -4,7 +4,11 @@ using System.Windows.Controls;
 using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers;
+using System.Diagnostics;
 using Messages = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
+using System.IO;
+using System;
+using System.Runtime.CompilerServices;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -53,16 +57,36 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
             status.Save();
 
+            bool functionDelegate(Func<bool> boolFunction, string okMsg, string errorMsg)
+            {
+                try
+                {
+                    bool success = boolFunction.Invoke();
+                    LastMessage = success ? okMsg : errorMsg;
+                    LogHelper.Debug($"{boolFunction.Method.Name}: {LastMessage}");
+                    return success;
+                }
+                catch (Exception ex)
+                {
+                    LogHelper.Error(ex.Message, ex);
+                    LastMessage = $"{errorMsg}: {ex.Message}";
+                    return false;
+                }
+            }
+
             if (!isInstalled &&
                 ((status.PrivateIsEnabled && status.PrivateIsOutBlockedNotif)
                 || (status.PublicIsEnabled && status.PublicIsOutBlockedNotif)
                 || (status.DomainIsEnabled && status.DomainIsOutBlockedNotif)))
             {
-                InstallHelper.EnableProgram(true, callback);
+                if (!InstallHelper.EnableProgram(functionDelegate))
+                {
+                    return;
+                }
             }
             else if (isInstalled)
             {
-                InstallHelper.UninstallCheck(!isEnabled(status), !isOutBlockNotifierEnabled(status), callback);
+                InstallHelper.UninstallCheck(!isEnabled(status), !isOutBlockNotifierEnabled(status), functionDelegate);
             }
 
             init();
@@ -85,6 +109,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void init()
         {
+            //isInstalled = InstallHelper.IsTaskInstalled();
             isInstalled = InstallHelper.IsInstalled();
 
             status = new FirewallHelper.FirewallStatusWrapper();
@@ -111,15 +136,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             messsageInfoPanel.DataContext = this;
         }
 
-        private void callback(bool isSuccess, string details)
-        {
-            LastMessage = details;
-        }
-
-
         private void btnRestartAdmin_Click(object sender, RoutedEventArgs e)
         {
             ((App)Application.Current).RestartAsAdmin();
+        }
+
+        private void btnTestNotif_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe"));
         }
     }
 }
