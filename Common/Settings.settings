@@ -68,5 +68,14 @@
     <Setting Name="ActivityWindow_Orientation" Type="System.Windows.Controls.Orientation" Scope="User">
       <Value Profile="(Default)">Horizontal</Value>
     </Setting>
+    <Setting Name="StartNotifierAfterLogin" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="StartNotifierMinimized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="IsInstalled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

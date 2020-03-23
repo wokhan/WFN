@@ -1024,9 +1024,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
-                //FIXME: Log the error?
+                LogHelper.Warning(ex.Message);
             }
 
             return false;
