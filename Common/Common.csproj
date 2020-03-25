@@ -6,13 +6,16 @@
     <RootNamespace>Wokhan.WindowsFirewallNotifier.Common</RootNamespace>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <NeutralLanguage>en-US</NeutralLanguage>
     <Description>Windows Firewall Notifier - Common Library</Description>
     <Product>Windows Firewall Notifier</Product>
     <Copyright>2011-2020 Wokhan (https://github.com/wokhansoft/WFN)</Copyright>
     <Authors>Wokhan Solutions</Authors>
     <OutputPath>..\bin\$(ConfigurationName)</OutputPath>
+    <Nullable>Enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Properties\Annotations.cs" />
     <Compile Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -46,14 +49,14 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Settings.Designer.cs">
+    <Compile Update="Config\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Update="Settings.settings">
+    <None Update="Config\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Media;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common;
-using Wokhan.WindowsFirewallNotifier.Common.Net.Dns;
 using System.ComponentModel;
+using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
+using Wokhan.WindowsFirewallNotifier.Common.Net.DNS;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {

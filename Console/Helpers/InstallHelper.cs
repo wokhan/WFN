@@ -2,18 +2,18 @@
 using System.IO;
 using System.Security.Principal;
 using System.Text;
-using System.Windows;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Properties;
 using System.Reflection;
 using System.ServiceProcess;
 using System.Linq;
-using Wokhan.WindowsFirewallNotifier.Common;
-using static Wokhan.WindowsFirewallNotifier.Common.Helpers.FirewallHelper.CustomRule;
+using static Wokhan.WindowsFirewallNotifier.Common.Net.WFP.CustomRule;
+using Wokhan.WindowsFirewallNotifier.Common.Config;
+using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
 {
-    public class InstallHelper
+    public static class InstallHelper
     {
         /// <summary>
         /// 
@@ -115,8 +115,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
                     rname = String.Format(Resources.RULE_NAME_FORMAT, "Windows Applications (auto)");
                     if (rules.All(r => r.Name != rname))
                     {
-                        FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(rname, Environment.SystemDirectory + "\\wwahost.exe", null, null, (string)null, (int)FirewallHelper.Protocols.ANY, null, null, null, FirewallHelper.GetGlobalProfile(), CustomRuleAction.A);
-                        ret = ret && newRule.Apply(false);
+                        CustomRule newRule = new CustomRule(rname, Environment.SystemDirectory + "\\wwahost.exe", null, null, (string)null, (int)Protocol.ANY, null, null, null, FirewallHelper.GetGlobalProfile(), CustomRuleAction.A);
+                        ret = ret && FirewallHelper.AddRule(newRule.GetPreparedRule(false));
                     }
                 }
 
@@ -124,31 +124,31 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
                 rname = String.Format(Resources.RULE_NAME_FORMAT, sc.DisplayName + " (auto)");
                 if (rules.All(r => r.Name != rname + " [R:80,443]"))
                 {
-                    FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(rname, Environment.SystemDirectory + "\\svchost.exe", null, null, "wuauserv", (int)FirewallHelper.Protocols.TCP, null, "80,443", null, FirewallHelper.GetGlobalProfile(), CustomRuleAction.A);
-                    ret = ret && newRule.Apply(false);
+                    CustomRule newRule = new CustomRule(rname, Environment.SystemDirectory + "\\svchost.exe", null, null, "wuauserv", (int)Protocol.TCP, null, "80,443", null, FirewallHelper.GetGlobalProfile(), CustomRuleAction.A);
+                    ret = ret && FirewallHelper.AddRule(newRule.GetPreparedRule(false));
                 }
 
                 sc.ServiceName = "bits";
                 rname = String.Format(Resources.RULE_NAME_FORMAT, sc.DisplayName + "(auto)");
                 if (rules.All(r => r.Name != rname + " [R:80,443]"))
                 {
-                    FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(rname, Environment.SystemDirectory + "\\svchost.exe", null, null, "bits", (int)FirewallHelper.Protocols.TCP, null, "80,443", null, FirewallHelper.GetGlobalProfile(), CustomRuleAction.A);
-                    ret = ret && newRule.Apply(false);
+                    CustomRule newRule = new CustomRule(rname, Environment.SystemDirectory + "\\svchost.exe", null, null, "bits", (int)Protocol.TCP, null, "80,443", null, FirewallHelper.GetGlobalProfile(), CustomRuleAction.A);
+                    ret = ret && FirewallHelper.AddRule(newRule.GetPreparedRule(false));
                 }
 
                 sc.ServiceName = "cryptsvc";
                 rname = String.Format(Resources.RULE_NAME_FORMAT, sc.DisplayName + "(auto)");
                 if (rules.All(r => r.Name != rname + " [R:80]"))
                 {
-                    FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(rname, Environment.SystemDirectory + "\\svchost.exe", null, null, "cryptsvc", (int)FirewallHelper.Protocols.TCP, null, "80", null, FirewallHelper.GetGlobalProfile(), CustomRuleAction.A);
-                    ret = ret && newRule.Apply(false);
+                    CustomRule newRule = new CustomRule(rname, Environment.SystemDirectory + "\\svchost.exe", null, null, "cryptsvc", (int)Protocol.TCP, null, "80", null, FirewallHelper.GetGlobalProfile(), CustomRuleAction.A);
+                    ret = ret && FirewallHelper.AddRule(newRule.GetPreparedRule(false));
                 }
 
                 //sc.ServiceName = "aelookupsvc";
                 //rname = String.Format(Resources.RULE_NAME_FORMAT, sc.DisplayName + "(auto)");
                 //if (rules.All(r => r.Name != rname + " [R:80]"))
                 //{
-                //    FirewallHelper.CustomRule newRule = new FirewallHelper.CustomRule(rname, Environment.SystemDirectory + "\\svchost.exe", null, null,"aelookupsvc", (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP, null, "80", null, FirewallHelper.GetGlobalProfile(), "A");
+                //    CustomRule newRule = new CustomRule(rname, Environment.SystemDirectory + "\\svchost.exe", null, null,"aelookupsvc", (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP, null, "80", null, FirewallHelper.GetGlobalProfile(), "A");
                 //    ret = ret && newRule.Apply(false);
                 //}
             }
@@ -163,7 +163,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
         /// <returns></returns>
         private static bool createTask(bool allUsers)
         {
-            string tmpXML = Path.GetTempFileName();
+            string tmpXML = System.IO.Path.GetTempFileName();
             string newtask;
             using (var taskStr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Wokhan.WindowsFirewallNotifier.Console.Resources.TaskTemplate.xml")))
             {
@@ -175,7 +175,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
                 //                        DateTime.Now.ToString("s"));
 
                 string principle = "<UserId><![CDATA[" + WindowsIdentity.GetCurrent().Name + "]]></UserId>";
-                string command = "\"" + Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe") + "\"";
+                string command = "\"" + System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe") + "\"";
                 string arguments = "-minimized"; // TODO: To be implemented
                 string dateTime = DateTime.Now.ToString("s");
                 newtask = String.Format(taskStr.ReadToEnd(),

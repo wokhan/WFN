@@ -2,9 +2,9 @@
 using System.Net;
 using System.Linq;
 using NUnit.Framework;
-using Wokhan.WindowsFirewallNotifier.Common.Net.Dns;
 using System.Threading.Tasks;
 using Wokhan.WindowsFirewallNotifier.Console.Tests.NUnit;
+using Wokhan.WindowsFirewallNotifier.Common.Net.DNS;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {

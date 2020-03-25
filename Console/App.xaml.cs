@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using Wokhan.WindowsFirewallNotifier.Common;
+using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Properties;
 
@@ -14,7 +14,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console
             this.DispatcherUnhandledException += Current_DispatcherUnhandledException;
 
             LogHelper.Debug("Starting Console: " + Environment.CommandLine);
-            CommonHelper.OverrideSettingsFile("WFN.config");
+            Settings.OverrideSettingsFile("WFN.config");
 
             if (Settings.Default.AlwaysRunAs && !UacHelper.CheckProcessElevated())
             {

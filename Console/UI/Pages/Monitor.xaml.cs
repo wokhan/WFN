@@ -10,8 +10,8 @@ using System.Windows.Media;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers;
+using Wokhan.WindowsFirewallNotifier.Common.Core.Resources;
+using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
 using Wokhan.WindowsFirewallNotifier.Console.UI.Controls;
 
@@ -66,7 +66,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
             chart.XMaxStartDelta = 60 * TimeSpan.TicksPerSecond;
             chart.XFuncConverter = (x) => new DateTime((long)x).ToString(DateTimeFormatInfo.CurrentInfo.LongTimePattern);
-            chart.YFuncConverter = (y) => CommonHelper.FormatBytes(y, "ps");
+            chart.YFuncConverter = (y) => ResourcesLoader.FormatBytes(y, "ps");
 
             this.Loaded += Monitor_Loaded;
             this.Unloaded += Monitor_Unloaded;
@@ -100,7 +100,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             var x = DateTime.Now.Ticks;
 
             var tcpc = IPHelper.GetAllConnections(true)
-                               .Where(co => co.State == IPHelper.MIB_TCP_STATE.ESTABLISHED && !co.IsLoopback && co.OwnerModule != null)
+                               .Where(co => co.State == ConnectionStatus.ESTABLISHED && !co.IsLoopback && co.OwnerModule != null)
                                //.AsParallel()
                                .Select(c => new MonitoredConnection(c))
                                .ToList();
@@ -152,8 +152,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                                  .Aggregate((ci, co) => new { In = ci.In + co.In, Out = ci.Out + co.Out });
 
                 existing.Count = grp.Count();
-                existing.LastIn = CommonHelper.FormatBytes(totalized.In, "ps");
-                existing.LastOut = CommonHelper.FormatBytes(totalized.Out, "ps");
+                existing.LastIn = ResourcesLoader.FormatBytes(totalized.In, "ps");
+                existing.LastOut = ResourcesLoader.FormatBytes(totalized.Out, "ps");
                 existing.SeriesOut.Points.Add(new Point(x, totalized.Out));
                 existing.SeriesIn.Points.Add(new Point(x, totalized.In));
                 

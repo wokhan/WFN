@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Net.NetworkInformation;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common.Core.Resources;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
@@ -24,8 +24,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 
         public NetworkInterface Information { get { return _interface; } }
 
-        public string FormattedBytesSent { get { return CommonHelper.FormatBytes(Statistics.BytesSent); } }
-        public string FormattedBytesReceived { get { return CommonHelper.FormatBytes(Statistics.BytesReceived); } }
+        public string FormattedBytesSent { get { return ResourcesLoader.FormatBytes(Statistics.BytesSent); } }
+        public string FormattedBytesReceived { get { return ResourcesLoader.FormatBytes(Statistics.BytesReceived); } }
 
 
         public IPInterfaceStatistics Statistics { get { return _interface.GetIPStatistics(); } }

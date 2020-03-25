@@ -2,8 +2,9 @@
 using System.Windows;
 using System.Windows.Controls;
 using Wokhan.WindowsFirewallNotifier.Common;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers;
+using static Wokhan.WindowsFirewallNotifier.Common.Net.WFP.FirewallHelper;
 using Messages = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
@@ -68,12 +69,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             init();
         }
 
-        private static bool isEnabled(FirewallHelper.FirewallStatusWrapper status)
+        private static bool isEnabled(FirewallStatusWrapper status)
         {
             return status.PrivateIsEnabled || status.DomainIsEnabled || status.PublicIsEnabled;
         }
 
-        private static bool isOutBlockNotifierEnabled(FirewallHelper.FirewallStatusWrapper status)
+        private static bool isOutBlockNotifierEnabled(FirewallStatusWrapper status)
         {
             return status.PrivateIsOutBlockedNotif || status.PublicIsOutBlockedNotif || status.DomainIsOutBlockedNotif;
         }

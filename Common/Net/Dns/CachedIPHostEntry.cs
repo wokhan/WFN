@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Net;
 
 /// <summary>
 /// DnsResolver resolves IP addesses to IPHostEntry records asynchronously and caches them in a dictionary.
 /// Author: harrwiss / Nov 2019
 /// </summary>
-namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
+namespace Wokhan.WindowsFirewallNotifier.Common.Net.DNS
 {
     /// <summary>
     /// An ip host entry for the dictionary.
@@ -23,7 +22,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
                 HostEntry = new IPHostEntry
                 {
                     HostName = "unknown",
-                    AddressList = ip != null ? new IPAddress[] { ip } : Array.Empty<IPAddress>()
+                    AddressList = ip != IPAddress.None ? new[] { ip } : Array.Empty<IPAddress>()
                 },
                 IsResolved = false,
                 HasErrors = true,
@@ -33,8 +32,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
 
         public static CachedIPHostEntry WrapHostEntry(IPHostEntry resolvedEntry)
         {
-            Contract.Requires(!(resolvedEntry is null));
-
             return new CachedIPHostEntry
             {
                 HostEntry = resolvedEntry,

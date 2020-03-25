@@ -12,9 +12,10 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Threading;
-
-using Wokhan.WindowsFirewallNotifier.Common;
+using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
+using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
@@ -24,7 +25,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// </summary>
     public partial class EventsLog : Page, INotifyPropertyChanged
     {
-        private readonly Dictionary<int, ProcessHelper.ServiceInfoResult> services = ProcessHelper.GetAllServicesByPidWMI();
+        private readonly Dictionary<int, ServiceInfoResult> services = ProcessHelper.GetAllServicesByPidWMI();
         private readonly ICollectionView dataView;
 
         private static readonly ToolTip toolTipInstance = new ToolTip
@@ -239,7 +240,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     targetPort = GetReplacementString(entry, 4);
                 }
 
-                var friendlyPath = GetReplacementString(entry, 1) == "-" ? "System" : FileHelper.GetFriendlyPath(GetReplacementString(entry, 1));
+                var friendlyPath = GetReplacementString(entry, 1) == "-" ? "System" : PathResolver.GetFriendlyPath(GetReplacementString(entry, 1));
                 var fileName = System.IO.Path.GetFileName(friendlyPath);
                 var protocol = int.Parse(GetReplacementString(entry, 7));
 

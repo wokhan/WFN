@@ -11,7 +11,7 @@ using Wokhan.WindowsFirewallNotifier.Common.Properties;
 using Messages = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
 using System.Diagnostics;
 using System.Windows.Media.Imaging;
-using Wokhan.WindowsFirewallNotifier.Common;
+using Wokhan.WindowsFirewallNotifier.Common.Config;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 {

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Media;
-using System.Threading.Tasks;
-using System.Windows.Threading;
 using System.Windows;
 using System.Runtime.InteropServices;
 

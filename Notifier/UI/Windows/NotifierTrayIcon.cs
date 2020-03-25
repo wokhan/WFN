@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.IO;
 using Wokhan.WindowsFirewallNotifier.Common;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Properties;
 using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
 using WinForms = System.Windows.Forms;
 using Messages = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources; // ns for message resources
 using System.Diagnostics;
+using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 {

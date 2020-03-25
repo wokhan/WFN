@@ -1,5 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
+using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Console.Tests.NUnit;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers

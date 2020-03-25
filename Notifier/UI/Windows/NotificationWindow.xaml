@@ -4,7 +4,7 @@
         xmlns:WFN="clr-namespace:Wokhan.WindowsFirewallNotifier.Common;assembly=Wokhan.WindowsFirewallNotifier.Common"
         xmlns:resx="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Properties;assembly=Wokhan.WindowsFirewallNotifier.Common"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-        xmlns:settings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common;assembly=Wokhan.WindowsFirewallNotifier.Common"
+        xmlns:settings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Config;assembly=Wokhan.WindowsFirewallNotifier.Common"
         xmlns:sampleApp="clr-namespace:Wokhan.WindowsFirewallNotifier.Notifier"
         Title="WFN - Notification" 
         AllowsTransparency="True"
@@ -33,7 +33,7 @@
         </Storyboard>
         <SolidColorBrush x:Key="AccentColorBrush" Color="LightBlue" />
         <SolidColorBrush x:Key="PressedColorBrush" Color="OrangeRed" />
-        <WFN:Settings x:Key="WFN" />
+        <settings:Settings x:Key="WFN" />
         <Style x:Key="SplitButtonGridStyle" TargetType="Grid">
             <Setter Property="VerticalAlignment" Value="Stretch" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
