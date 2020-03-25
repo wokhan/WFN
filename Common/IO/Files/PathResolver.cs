@@ -59,13 +59,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.IO.Files
                 return string.Empty;
             }
 
-            if (deviceNameMap == null)
+            if (deviceNameMap is null)
             {
                 InitDriveMapping();
             }
 
             var item = deviceNameMap.FirstOrDefault(d => p.StartsWith(d.Key, StringComparison.InvariantCultureIgnoreCase));
-            return item.Key == null ? Environment.ExpandEnvironmentVariables(p) : item.Value + p.Substring(item.Key.Length - 1);
+            return item.Key is null ? Environment.ExpandEnvironmentVariables(p) : item.Value + p.Substring(item.Key.Length - 1);
         }
 
         //FIXME: Clear the cache if there's some change with the drives!

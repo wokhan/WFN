@@ -46,7 +46,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.DNS
                             return true;
                         }
 
-                        NotifyCollectionChangedEventHandler add = (sender, args) =>
+                        void add(object sender, NotifyCollectionChangedEventArgs args)
                         {
                             if (args.Action == NotifyCollectionChangedAction.Replace)
                             {
@@ -54,7 +54,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.DNS
                                 if (entry.Key == ipa)
                                     callback?.Invoke(entry.Value);
                             }
-                        };
+                        }
                         CachedIPHostEntryDict.CollectionChanged += add;
                         CachedIPHostEntryDict.CollectionChanged += (s, e) => CachedIPHostEntryDict.CollectionChanged -= add;
                         return (bool?)null;

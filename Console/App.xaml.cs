@@ -16,7 +16,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console
             LogHelper.Debug("Starting Console: " + Environment.CommandLine);
             Settings.OverrideSettingsFile("WFN.config");
 
-            if (Settings.Default.AlwaysRunAs && !UacHelper.CheckProcessElevated())
+            if (Settings.Default.AlwaysRunAs && !UAC.CheckProcessElevated())
             {
                 RestartAsAdmin();
             }
@@ -37,7 +37,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console
         {
             get
             {
-                if (_isElevated == null) { _isElevated = UacHelper.CheckProcessElevated(); }
+                if (_isElevated is null) { _isElevated = UAC.CheckProcessElevated(); }
                 return _isElevated.Value;
             }
         }

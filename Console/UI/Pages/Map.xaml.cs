@@ -143,7 +143,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             var br = new SolidColorBrush(LineChart.ColorsDic[ic]);
 
             GeoConnection2 existingRoute = ConnectionsRoutes.SingleOrDefault(l => l.RemoteAddress.Equals(b.RemoteAddress));
-            if (existingRoute == null)
+            if (existingRoute is null)
             {
                 ConnectionsRoutes.Add(new GeoConnection2(b) { Brush = br });
             }

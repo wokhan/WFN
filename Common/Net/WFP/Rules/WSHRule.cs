@@ -5,7 +5,7 @@ using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Core.Resources;
 
-namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
+namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules
 {
     public class WSHRule : Rule
     {
@@ -21,35 +21,25 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             {
                 throw new Exception("Unknown rule versioning scheme: " + parts[0]);
             }
+
+            // TODO: When is it used?
             version = new Version(parts[0].Substring(1));
             parsed = parts.Skip(1).Select(s => s.Split('=')).ToLookup(s => s[0].ToLower(), s => s[1]);
         }
 
-        public override NET_FW_ACTION_ Action
-        {
-            get
-            {
+        public override NET_FW_ACTION_ Action =>
                 //@@@ "ByPass"
-                return parsed["action"].FirstOrDefault() == "Block" ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
-            }
-        }
+                parsed["action"].FirstOrDefault() == "Block" ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
 
         public override string ApplicationName => PathResolver.GetFriendlyPath(parsed["app"].FirstOrDefault());
 
-        public override string ApplicationShortName => System.IO.Path.GetFileName(ApplicationName);
+        public override string? ApplicationShortName => System.IO.Path.GetFileName(ApplicationName);
 
+        public override string? AppPkgId => parsed["apppkgid"].FirstOrDefault();
 
-        public override string AppPkgId => parsed["apppkgid"].FirstOrDefault();
+        public override string? Description => parsed["desc"].FirstOrDefault();
 
-        public override string Description => parsed["desc"].FirstOrDefault();
-
-        public override NET_FW_RULE_DIRECTION_ Direction
-        {
-            get
-            {
-                return parsed["dir"].FirstOrDefault() == "In" ? NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_IN : NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
-            }
-        }
+        public override NET_FW_RULE_DIRECTION_ Direction => parsed["dir"].FirstOrDefault() == "In" ? NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_IN : NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
 
         public override bool EdgeTraversal => true; //FIXME: !
 
@@ -59,61 +49,19 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
 
         public override string Grouping => ""; //FIXME: !
 
-        public override string IcmpTypesAndCodes
-        {
-            get
-            {
-                return ""; //FIXME: !
-            }
-        }
+        public override string IcmpTypesAndCodes => ""; //FIXME: !
 
-        public override object Interfaces
-        {
-            get
-            {
-                return null; //FIXME: !
-            }
-        }
+        public override object? Interfaces => null; //FIXME: !
 
-        public override string InterfaceTypes
-        {
-            get
-            {
-                return ""; //FIXME: !
-            }
-        }
+        public override string? InterfaceTypes => ""; //FIXME: !
 
-        public override string LocalAddresses
-        {
-            get
-            {
-                return string.Join(", ", parsed["la4"].Concat(parsed["la6"]).ToArray());
-            }
-        }
+        public override string? LocalAddresses => string.Join(", ", parsed["la4"].Concat(parsed["la6"]).ToArray());
 
-        public override string LocalPorts
-        {
-            get
-            {
-                return parsed["lport"].FirstOrDefault();
-            }
-        }
+        public override string LocalPorts => parsed["lport"].FirstOrDefault();
 
-        public override string LUOwn
-        {
-            get
-            {
-                return parsed["luown"].FirstOrDefault();
-            }
-        }
+        public override string LUOwn => parsed["luown"].FirstOrDefault();
 
-        public override string Name
-        {
-            get
-            {
-                return "WSH - " + ResourcesLoader.GetMSResourceString(parsed["name"].FirstOrDefault());
-            }
-        }
+        public override string Name => "WSH - " + ResourcesLoader.GetMSResourceString(parsed["name"].FirstOrDefault());
 
         public override int Profiles
         {
@@ -159,34 +107,16 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
                 }
                 else
                 {
-                    return (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY;
+                    return WFP.Protocol.ANY;
                 }
             }
         }
 
-        public override string RemoteAddresses
-        {
-            get
-            {
-                return string.Join(", ", parsed["ra4"].Concat(parsed["ra6"]).ToArray());
-            }
-        }
+        public override string RemoteAddresses => string.Join(", ", parsed["ra4"].Concat(parsed["ra6"]).ToArray());
 
-        public override string RemotePorts
-        {
-            get
-            {
-                return parsed["rport"].FirstOrDefault();
-            }
-        }
+        public override string RemotePorts => parsed["rport"].FirstOrDefault();
 
-        public override string ServiceName
-        {
-            get
-            {
-                return parsed["svc"].FirstOrDefault();
-            }
-        }
+        public override string? ServiceName => parsed["svc"].FirstOrDefault();
 
         //FIXME: v2.10?
         //public int EdgeTraversalOptions { get; set; }
@@ -247,9 +177,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             {
                 firewallRule = (INetFwRule)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule"));
             }
-#pragma warning restore CS8600,CS8604
+#pragma warning restore CS8600, CS8604
 
+#pragma warning disable CS8602
             firewallRule.Action = Action;
+#pragma warning restore CS8602
+
             firewallRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
             firewallRule.Enabled = true;
             firewallRule.Profiles = Profiles;
@@ -272,7 +205,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
 
             if (Protocol != -1)
             {
-                firewallRule.Protocol = (int)normalizeProtocol(Protocol);
+                firewallRule.Protocol = (int)NormalizeProtocol(Protocol);
             }
 
             if (!string.IsNullOrEmpty(LocalPorts))

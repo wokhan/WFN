@@ -123,7 +123,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             {
                 var existing = _groupedConnections.FirstOrDefault(s => s.Name == grp.Key);
 
-                if (existing == null)
+                if (existing is null)
                 {
                     ic = (ic + 1) % LineChart.ColorsDic.Count;
 

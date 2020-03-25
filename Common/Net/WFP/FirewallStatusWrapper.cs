@@ -16,7 +16,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
 
             public static Dictionary<bool, string> Actions { get { return _actions; } }
 
-            public enum Status
+            private enum Status
             {
                 DISABLED,
                 ENABLED_ALLOW,
@@ -419,9 +419,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
 
             public FirewallStatusWrapper()
             {
-                updateStatus(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE, ref privateInStatus, ref privateOutStatus);
-                updateStatus(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC, ref publicInStatus, ref publicOutStatus);
-                updateStatus(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN, ref domainInStatus, ref domainOutStatus);
+                UpdateStatus(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE, ref privateInStatus, ref privateOutStatus);
+                UpdateStatus(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC, ref publicInStatus, ref publicOutStatus);
+                UpdateStatus(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN, ref domainInStatus, ref domainOutStatus);
 
                 PrivateIsEnabled = privateInStatus != Status.DISABLED;
                 PrivateIsInBlocked = privateInStatus == Status.ENABLED_BLOCK;
@@ -442,7 +442,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
                 DomainIsOutAllowed = !DomainIsOutBlocked && !DomainIsOutBlockedNotif;
             }
 
-            private void updateStatus(NET_FW_PROFILE_TYPE2_ profile, ref Status stat, ref Status statOut)
+            private void UpdateStatus(NET_FW_PROFILE_TYPE2_ profile, ref Status stat, ref Status statOut)
             {
                 if (firewallPolicy.FirewallEnabled[profile])
                 {
@@ -491,7 +491,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
                 firewallPolicy.NotificationsDisabled[NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN] = !DomainIsInBlockedNotif;
             }
 
-            public event PropertyChangedEventHandler PropertyChanged;
+            public event PropertyChangedEventHandler? PropertyChanged;
 
             protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
             {

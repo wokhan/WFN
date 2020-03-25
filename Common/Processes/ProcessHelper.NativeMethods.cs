@@ -200,11 +200,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             [return: MarshalAs(UnmanagedType.Bool)]
             internal static extern bool CloseHandle(IntPtr hObject);
 
-            [System.Runtime.InteropServices.DllImport("user32.dll")]
-            [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
+            [DllImport("user32.dll")]
+            [return: MarshalAs(UnmanagedType.Bool)]
             internal static extern bool ShowWindow(IntPtr hWnd, ShowWindowEnum flags);
 
-            [System.Runtime.InteropServices.DllImport("user32.dll")]
+            [DllImport("user32.dll")]
             internal static extern int SetForegroundWindow(IntPtr hwnd);
 
             internal enum ShowWindowEnum

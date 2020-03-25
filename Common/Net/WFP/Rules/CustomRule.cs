@@ -3,7 +3,7 @@ using NetFwTypeLib;
 using System.ComponentModel;
 using System.Collections.Generic;
 
-namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
+namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules
 {
     public class CustomRule : Rule
     {
@@ -17,25 +17,25 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
 
         public override NET_FW_ACTION_ Action { get; }
         public override string ApplicationName { get; }
-        public override string ApplicationShortName { get; }
-        public override string AppPkgId { get; }
-        public override string Description { get; }
+        public override string? ApplicationShortName { get; }
+        public override string? AppPkgId { get; }
+        public override string? Description { get; }
         public override NET_FW_RULE_DIRECTION_ Direction { get; }
         public override bool EdgeTraversal { get; }
         public override int EdgeTraversalOptions { get; }
         public override bool Enabled { get; }
-        public override string Grouping { get; }
-        public override string IcmpTypesAndCodes { get; }
-        public override object Interfaces { get; }
-        public override string InterfaceTypes { get; }
-        public override string LocalAddresses { get; }
-        public override string LocalPorts { get; }
-        public override string LUOwn { get; }
+        public override string? Grouping { get; }
+        public override string? IcmpTypesAndCodes { get; }
+        public override object? Interfaces { get; }
+        public override string? InterfaceTypes { get; }
+        public override string? LocalAddresses { get; }
+        public override string? LocalPorts { get; }
+        public override string? LUOwn { get; }
         public override string Name { get; }
         public override int Profiles { get; }
         public override int Protocol { get; }
-        public override string RemoteAddresses { get; }
-        public override string RemotePorts { get; }
+        public override string? RemoteAddresses { get; }
+        public override string? RemotePorts { get; }
         public override string? ServiceName { get; }
 
         public override INetFwRule GetPreparedRule(bool isTemp)
@@ -55,7 +55,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             }
 #pragma warning restore CS8600
 #pragma warning restore CS8604
+
+#pragma warning disable CS8602 // Don't get why it considers firewallRule as potentially null while it's not a nullable (and it doesn't right after anymore...)
             firewallRule.Action = Action;
+#pragma warning restore CS8602 
             firewallRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
             firewallRule.Enabled = true;
             firewallRule.Profiles = Profiles;
@@ -78,7 +81,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
 
             if (Protocol != -1)
             {
-                firewallRule.Protocol = (int)normalizeProtocol(Protocol);
+                firewallRule.Protocol = (int)NormalizeProtocol(Protocol);
             }
 
             if (!string.IsNullOrEmpty(LocalPorts))
@@ -122,14 +125,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             //Chained to the constructor below!
         }
 
-        public CustomRule(string ruleName, string currentPath, string currentAppPkgId, string localUserOwner, string services, int protocol, string target
-            , string targetPort, string localport, int profiles, CustomRuleAction action)
+        public CustomRule(string ruleName, string currentPath, string? currentAppPkgId, string? localUserOwner, string? services, int protocol, string? target
+            , string? targetPort, string? localport, int profiles, CustomRuleAction action)
         {
             Name = ruleName;
             ApplicationName = currentPath;
             AppPkgId = currentAppPkgId;
             LUOwn = localUserOwner;
-            ServiceName = String.IsNullOrEmpty(services) ? null : services;
+            ServiceName = string.IsNullOrEmpty(services) ? null : services;
             Protocol = protocol;
             RemoteAddresses = target;
             RemotePorts = targetPort;

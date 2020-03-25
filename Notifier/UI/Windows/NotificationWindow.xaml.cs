@@ -17,6 +17,7 @@ using System.Drawing;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
+using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 {
@@ -236,7 +237,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             if (lstConnections.Items.Count > 0)
             {
-                if (lstConnections.SelectedItem == null)
+                if (lstConnections.SelectedItem is null)
                 {
                     lstConnections.SelectedIndex = 0;
                 }
@@ -250,7 +251,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             if (lstConnections.Items.Count > 0)
             {
-                if (lstConnections.SelectedItem == null)
+                if (lstConnections.SelectedItem is null)
                 {
                     lstConnections.SelectedIndex = 0;
                 }
@@ -272,7 +273,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             var activeConn = (CurrentConn)lstConnections.SelectedItem;
 
-            if (FirewallHelper.getProtocolAsString(activeConn.Protocol) == "Unknown") //FIXME: No string comparison, please!
+            if (Protocol.IsUnknown(activeConn.Protocol))
             {
                 OptionsView.IsProtocolChecked = false;
             }
@@ -284,9 +285,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             // By default one would usually make a rule on the target ip/port for outgoing connections
             OptionsView.IsLocalPortChecked = false;
-            OptionsView.IsTargetPortEnabled = FirewallHelper.IsIPProtocol(activeConn.Protocol);
-            OptionsView.IsTargetPortChecked = FirewallHelper.IsIPProtocol(activeConn.Protocol);
-            OptionsView.IsTargetIPChecked = FirewallHelper.IsIPProtocol(activeConn.Protocol);
+            OptionsView.IsTargetPortEnabled = Protocol.IsIPProtocol(activeConn.Protocol);
+            OptionsView.IsTargetPortChecked = Protocol.IsIPProtocol(activeConn.Protocol);
+            OptionsView.IsTargetIPChecked = Protocol.IsIPProtocol(activeConn.Protocol);
 
             if (!String.IsNullOrEmpty(activeConn.CurrentService))
             {
@@ -436,7 +437,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void btnSkipProgram_Click(object sender, RoutedEventArgs e)
         {
-            if (lstConnections.SelectedItem == null)
+            if (lstConnections.SelectedItem is null)
             {
                 return;
             }
@@ -500,16 +501,16 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void createRule(bool doAllow, bool isTemp)
         {
-            bool success = false;
-            var activeConn = ((CurrentConn)lstConnections.SelectedItem);
-            if (activeConn == null)
+            bool success;
+            var activeConn = (CurrentConn)lstConnections.SelectedItem;
+            if (activeConn is null)
             {
                 return;
             }
 
             if ((!OptionsView.IsProtocolChecked) && (OptionsView.IsLocalPortChecked || OptionsView.IsTargetPortChecked))
             {
-                MessageBox.Show(Common.Properties.Resources.MSG_RULE_PROTOCOL_NEEDED, Common.Properties.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Messages.MSG_RULE_PROTOCOL_NEEDED, Messages.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -585,11 +586,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 success = FirewallHelper.AddRule(newRule.GetPreparedRule(isTemp)); // does not use RuleManager
                 if (success && isTemp)
                 {
-                    CreateTempRuleNotifyIcon(newRule, CustomRule.CustomRuleAction.B);
+                    CreateTempRuleNotifyIcon(newRule);
                 }
                 if (!success)
                 {
-                    MessageBox.Show(Common.Properties.Resources.MSG_RULE_FAILED, Common.Properties.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(Messages.MSG_RULE_FAILED, Common.Properties.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else
@@ -615,7 +616,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         private bool createAllowRule(CurrentConn activeConn, string[] services, bool isTemp)
         {
             int Profiles = OptionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
-            string ruleName = (isTemp) ? Common.Properties.Resources.RULE_TEMP_PREFIX + activeConn.RuleName : activeConn.RuleName;
+            string ruleName = isTemp ? Messages.RULE_TEMP_PREFIX + activeConn.RuleName : activeConn.RuleName;
             CustomRule newRule = new CustomRule(ruleName, activeConn.CurrentPath, OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null
                 , activeConn.CurrentLocalUserOwner, services, OptionsView.IsProtocolChecked ? activeConn.Protocol : -1, OptionsView.IsTargetIPChecked ? activeConn.Target : null
                 , OptionsView.IsTargetPortChecked ? activeConn.TargetPort : null, OptionsView.IsLocalPortChecked ? activeConn.LocalPort : null, Profiles
@@ -625,7 +626,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             if (success && isTemp)
             {
-                CreateTempRuleNotifyIcon(newRule, CustomRule.CustomRuleAction.A);
+                CreateTempRuleNotifyIcon(newRule);
             }
 
             return success;
@@ -633,13 +634,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private static WinForms::NotifyIcon tempNotifyIcon_ = null;
         private List<CustomRule> tempRules_ = new List<CustomRule>();
-        private void CreateTempRuleNotifyIcon(CustomRule newRule, CustomRule.CustomRuleAction ruleAction)
+        private void CreateTempRuleNotifyIcon(CustomRule newRule)
         {
             if (!tempRules_.Contains(newRule))
             {
                 tempRules_.Add(newRule);
             }
-            if (tempNotifyIcon_ == null)
+            if (tempNotifyIcon_ is null)
             {
                 void iconClick(object sender, EventArgs e)
                 {

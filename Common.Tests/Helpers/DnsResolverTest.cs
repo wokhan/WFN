@@ -11,7 +11,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
     public class DnsResolverTest : NUnitTestBase
     {
-       //[Test, ManualTestCategory]
         public void TestDnsResolverResolveIpAddresses()
         {
             // Hostname -> IP lookup: https://whatismyipaddress.com/hostname-ip

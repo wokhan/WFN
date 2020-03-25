@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
-    public static partial class UacHelper
+    public static partial class UAC
     {
         protected static class NativeMethods
         {

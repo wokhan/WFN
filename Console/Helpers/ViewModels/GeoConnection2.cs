@@ -27,7 +27,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             get
             {
-                if (_currentCoordinates == null)
+                if (_currentCoordinates is null)
                 {
                     IPAddress address = IPHelper.GetPublicIpAddress();
                     if (address == IPAddress.None)
@@ -45,7 +45,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             get
             {
-                if (_coordinates == null)
+                if (_coordinates is null)
                 {
                     _coordinates = IPToLocation(this.RemoteAddress);
                 }
@@ -95,7 +95,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             get
             {
-                if (_fullRoute == null && !computePending)
+                if (_fullRoute is null && !computePending)
                 {
                     computePending = true;
                     ComputeRoute();
@@ -133,7 +133,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             return await Task.Run(() =>
                 {
-                    if (_databaseReader == null)
+                    if (_databaseReader is null)
                     {
                         _databaseReader = InitDatabaseReader(_DB_PATH);
                     }

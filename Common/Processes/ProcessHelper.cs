@@ -32,17 +32,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         }
         public static string[] GetProcessOwnerWMI(int owningPid, ref Dictionary<int, string[]> previousCache)
         {
-            if (previousCache == null)
+            if (previousCache is null)
             {
-                using (var searcher = new ManagementObjectSearcher("SELECT ProcessId, Name, ExecutablePath, CommandLine FROM Win32_Process"))
-                {
-                    using (var results = searcher.Get())
-                    {
-                        previousCache = results.Cast<ManagementObject>()
-                                               .ToDictionary(r => (int)(uint)r["ProcessId"],
-                                                             r => new[] { (string)r["Name"], (string)r["ExecutablePath"], (string)r["CommandLine"] });
-                    }
-                }
+                using var searcher = new ManagementObjectSearcher("SELECT ProcessId, Name, ExecutablePath, CommandLine FROM Win32_Process");
+                using var results = searcher.Get();
+                previousCache = results.Cast<ManagementObject>().ToDictionary(r => (int)(uint)r["ProcessId"], r => new[] { (string)r["Name"], (string)r["ExecutablePath"], (string)r["CommandLine"] });
             }
 
             return previousCache[owningPid];
@@ -144,7 +138,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             if (ret != null && !String.IsNullOrEmpty(ret.ModuleName))
             {
                 // Returns the owner only if it's indeed a service.
-                string ServiceDesc = getServiceDesc(ret.ModuleName);
+                string ServiceDesc = GetServiceDesc(ret.ModuleName);
 
                 if (String.IsNullOrEmpty(ServiceDesc))
                 {
@@ -156,7 +150,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 else
                 {
                     svc = new[] { ret.ModuleName };
-                    svcdsc = new[] { getServiceDesc(ret.ModuleName) };
+                    svcdsc = new[] { GetServiceDesc(ret.ModuleName) };
                     unsure = false;
                     LogHelper.Debug("Identified service as: " + String.Join(",", svcdsc));
                 }
@@ -179,7 +173,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 if (p != null)
                 {
                     var thread = p.Threads.Cast<ProcessThread>().SingleOrDefault(t => t.Id == threadid);
-                    if (thread == null)
+                    if (thread is null)
                     {
                         LogHelper.Debug("The thread " + threadid + " has not been found for PID " + pid);
                     }
@@ -187,7 +181,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     {
                         var thaddr = thread.StartAddress.ToInt64();
                         var module = p.Modules.Cast<ProcessModule>().FirstOrDefault(m => thaddr >= (m.BaseAddress.ToInt64() + m.ModuleMemorySize));
-                        if (module == null)
+                        if (module is null)
                         {
                             LogHelper.Debug("The thread has been found, but no module matches.");
                         }
@@ -195,7 +189,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                         {
                             LogHelper.Debug("The thread has been found for module " + module.ModuleName);
 
-                            string ServiceDesc = getServiceDesc(module.ModuleName);
+                            string ServiceDesc = GetServiceDesc(module.ModuleName);
 
                             if (String.IsNullOrEmpty(ServiceDesc))
                             {
@@ -234,7 +228,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             if (svcs.Count() == 1)
             {
                 svc = svcs.ToArray();
-                svcdsc = svcs.Select(s => getServiceDesc(s)).ToArray();
+                svcdsc = svcs.Select(s => GetServiceDesc(s)).ToArray();
                 unsure = true;
                 LogHelper.Debug("Identified service as: " + String.Join(",", svcdsc));
                 return;
@@ -246,9 +240,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             // Retrieves corresponding existing rules
             LogHelper.Info("Trying to retrieve service name through rule information.");
             int profile = FirewallHelper.GetCurrentProfile();
-            var cRules = FirewallHelper.GetMatchingRules(path, getAppPkgId(pid), protocol, target, remoteport.ToString(), localport.ToString(), svc, getLocalUserOwner(pid), false, false)
+            var cRules = FirewallHelper.GetMatchingRules(path, GetAppPkgId(pid), protocol, target, remoteport.ToString(), localport.ToString(), svc, GetLocalUserOwner(pid), false, false)
                                        .Select(r => r.ServiceName)
                                        .Distinct()
+                                       .Cast<string>()
                                        .ToList();
 
             // Trying to guess the corresponding service if not found with the previous method and if not already filtered
@@ -260,7 +255,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             if (svcs.Any())
             {
                 svc = svcs.ToArray();
-                svcdsc = svcs.Select(s => getServiceDesc(s)).ToArray();
+                svcdsc = svcs.Select(s => GetServiceDesc(s)).ToArray();
                 unsure = true;
                 LogHelper.Debug("Identified service as: " + String.Join(",", svcdsc) + " (unsure)");
             }
@@ -284,18 +279,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             Dictionary<int, ServiceInfoResult> dict = new Dictionary<int, ServiceInfoResult>();
             using (var searcher = new ManagementObjectSearcher("SELECT ProcessId, Name, DisplayName, PathName FROM Win32_Service WHERE ProcessId != 0"))
             {
-                using (var results = searcher.Get())
+                using var results = searcher.Get();
+                foreach (var r in results)
                 {
-                    foreach (var r in results)
+                    //Console.WriteLine($"{r["processId"]} {r["Name"]}");
+                    int pid = (int)(uint)r["ProcessId"];
+                    if (pid > 0 && !dict.ContainsKey(pid))
                     {
-                        //Console.WriteLine($"{r["processId"]} {r["Name"]}");
-                        int pid = (int)(uint)r["ProcessId"];
-                        if (pid > 0 && !dict.ContainsKey(pid))
-                        {
-                            dict.Add(pid, new ServiceInfoResult(pid, (string)r["Name"], (string)r["DisplayName"], (string)r["PathName"]));
-                        }
+                        dict.Add(pid, new ServiceInfoResult(pid, (string)r["Name"], (string)r["DisplayName"], (string)r["PathName"]));
                     }
-
                 }
             }
             return dict;
@@ -306,34 +298,29 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         /// </summary>
         /// <param name="service"></param>
         /// <returns></returns>
-        private static string getServiceDesc(string service)
+        private static string GetServiceDesc(string service)
         {
             string ret;
             try
             {
-                using (ServiceController sc = new ServiceController(service))
+                using (var sc = new ServiceController(service))
                 {
                     ret = sc.DisplayName;
                 }
 
                 return ret;
             }
-            catch (ArgumentException)
-            {
-                LogHelper.Debug("Couldn't get description for service: " + service);
-                return String.Empty;
-            }
             //There's an undocumented feature/bug where instead of ArgumentException, an InvalidOperationException is thrown.
-            catch (InvalidOperationException) //FIXME: Add undocumented System. ?
+            catch (Exception e) when (e is ArgumentException || e is  InvalidOperationException)
             {
                 LogHelper.Debug("Couldn't get description for service: " + service);
                 return String.Empty;
             }
         }
 
-        public static string getAppPkgId(int pid)
+        public static string GetAppPkgId(int pid)
         {
-            if (Environment.OSVersion.Version <= new System.Version(6, 2))
+            if (Environment.OSVersion.Version <= new Version(6, 2))
             {
                 //Not Windows 8 or higher, there are no Apps
                 return String.Empty;
@@ -396,7 +383,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
         }
 
-        public static string getLocalUserOwner(int pid)
+        public static string GetLocalUserOwner(int pid)
         {
             //Based on: https://bytes.com/topic/c-sharp/answers/225065-how-call-win32-native-api-gettokeninformation-using-c
             IntPtr hProcess = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.QueryInformation, false, (uint)pid);
@@ -457,23 +444,18 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
         }
 
-        public static bool getProcessFeedback(string cmd, string args)
-        {
-            return getProcessFeedback(cmd, args, false, false);
-        }
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="p"></param>
         /// <param name="p_2"></param>
         /// <returns></returns>
-        public static bool getProcessFeedback(string cmd, string args, bool runas, bool dontwait)
+        public static bool GetProcessFeedback(string cmd, string args, bool runas = false, bool dontwait = false)
         {
             try
             {
-                ProcessStartInfo psiTaskTest = new ProcessStartInfo(cmd, args);
-                psiTaskTest.CreateNoWindow = true;
+                ProcessStartInfo psiTaskTest = new ProcessStartInfo(cmd, args) { CreateNoWindow = true };
+
                 if (runas)
                 {
                     psiTaskTest.Verb = "runas";
@@ -501,7 +483,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                     procTaskTest.WaitForExit();
                 }
 
-                return (procTaskTest.ExitCode == 0);
+                return procTaskTest.ExitCode == 0;
             }
             catch
             {
@@ -517,7 +499,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         public static Dictionary<string, string> ParseParameters(IList<string> args)
         {
             Dictionary<string, string>? ret = null;
-            String key = "";
+            String key = String.Empty;
             try
             {
                 ret = new Dictionary<string, string>(args.Count / 2);
@@ -540,14 +522,12 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         /// </summary>
         /// <param name="processId"></param>
         /// <returns>command-line or null</returns>
-        public static string? getCommandLineFromProcessWMI(int processId)
+        public static string? GetCommandLineFromProcessWMI(int processId)
         {
             try
             {
-                using (ManagementObjectSearcher clSearcher = new ManagementObjectSearcher($"SELECT CommandLine FROM Win32_Process WHERE ProcessId = {processId}"))
-                {
-                    return String.Join("", clSearcher.Get().Cast<ManagementObject>().Select(mObj => (string)mObj["CommandLine"]));
-                }
+                using ManagementObjectSearcher clSearcher = new ManagementObjectSearcher($"SELECT CommandLine FROM Win32_Process WHERE ProcessId = {processId}");
+                return String.Join(String.Empty, clSearcher.Get().Cast<ManagementObject>().Select(mObj => (string)mObj["CommandLine"]));
             }
             catch (Exception e)
             {
@@ -569,14 +549,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         /// <para>key=@arg[x] for args without key</para>
         /// <para>[-argname|/aname]</para>
         /// </returns>
-        public static Dictionary<string, string> ParseCommandLineArgs(string cmdLine)
+        public static Dictionary<string, string?> ParseCommandLineArgs(string cmdLine)
         {
             // https://stackoverflow.com/questions/298830/split-string-containing-command-line-parameters-into-string-in-c-sharp
             // Fiddle link (regex): https://dotnetfiddle.net/PU7kXD
 
             string regEx = @"\G(""((""""|[^""])+)""|(\S+)) *";
             MatchCollection matches = Regex.Matches(cmdLine, regEx);
-            List<String> args = matches.Cast<Match>().Select(m => Regex.Replace(m.Groups[2].Success ? m.Groups[2].Value : m.Groups[4].Value, @"""""", @"""")).ToList();
+            List<string> args = matches.Cast<Match>().Select(m => Regex.Replace(m.Groups[2].Success ? m.Groups[2].Value : m.Groups[4].Value, @"""""", @"""")).ToList();
             return ParseCommandLineArgsToDict(args);
         }
 

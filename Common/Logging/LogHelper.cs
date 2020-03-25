@@ -17,7 +17,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         private const string LOG4NET_CONFIG_FILE = "WFN.config.log4net";
 
-        private static readonly bool IsAdmin = UacHelper.CheckProcessElevated();
+        private static readonly bool IsAdmin = UAC.CheckProcessElevated();
         public static readonly string CurrentLogsPath = AppDomain.CurrentDomain.BaseDirectory ?? String.Empty;
 
         enum LogLevel
@@ -28,7 +28,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         static LogHelper()
         {
             var assembly = Assembly.GetCallingAssembly().GetName();
-            string appVersion = assembly.Version.ToString();
+            string appVersion = assembly.Version?.ToString() ?? String.Empty;
             
             // log4net - look for a configuration file in the installation dir
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
@@ -52,7 +52,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
 #if DEBUG
 
-        public static bool isDebugEnabled()
+        public static bool IsDebugEnabled()
         {
             return true;
         }

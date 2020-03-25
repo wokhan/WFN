@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.DummyData
 {
@@ -7,50 +6,50 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.DummyData
     {
         public class IPInterfaceStatistics
         {
-            public long BytesReceived { get { return 10000; } }
-            public long BytesSent { get { return 10000; } }
-            public long IncomingPacketsDiscarded { get { return 10000; } }
-            public long IncomingPacketsWithErrors { get { return 10000; } }
-            public long IncomingUnknownProtocolPackets { get { return 10000; } }
-            public long NonUnicastPacketsReceived { get { return 10000; } }
-            public long NonUnicastPacketsSent { get { return 10000; } }
-            public long OutgoingPacketsDiscarded { get { return 10000; } }
-            public long OutgoingPacketsWithErrors { get { return 10000; } }
-            public long OutputQueueLength { get { return 10000; } }
-            public long UnicastPacketsReceived { get { return 10000; } }
-            public long UnicastPacketsSent { get { return 10000; } }
+            public long BytesReceived => 10000;
+            public long BytesSent => 10000;
+            public long IncomingPacketsDiscarded => 10000;
+            public long IncomingPacketsWithErrors => 10000;
+            public long IncomingUnknownProtocolPackets => 10000;
+            public long NonUnicastPacketsReceived => 10000;
+            public long NonUnicastPacketsSent => 10000;
+            public long OutgoingPacketsDiscarded => 10000;
+            public long OutgoingPacketsWithErrors => 10000;
+            public long OutputQueueLength => 10000;
+            public long UnicastPacketsReceived => 10000;
+            public long UnicastPacketsSent => 10000;
         }
 
         public class IPInterfaceProperties
         {
-            public List<string> AnycastAddresses { get { return new List<string> { "12345" }; } }
-            public List<string> DhcpServerAddresses { get { return new List<string> { "12345" }; } }
-            public List<string> DnsAddresses { get { return new List<string> { "12345" }; } }
-            public string DnsSuffix { get { return ""; } }
-            public List<string> GatewayAddresses { get { return new List<string> { "12345" }; } }
-            public bool IsDnsEnabled { get { return true; } }
-            public bool IsDynamicDnsEnabled { get { return false;  } }
-            public List<string> MulticastAddresses { get { return new List<string> { "12345" }; } }
-            public List<string> UnicastAddresses { get { return new List<string> { "12345" }; } }
-            public List<string> WinsServersAddresses { get { return new List<string> { "12345" }; } }
+            public List<string> AnycastAddresses => new List<string> { "12345" };
+            public List<string> DhcpServerAddresses => new List<string> { "12345" };
+            public List<string> DnsAddresses => new List<string> { "12345" };
+            public string DnsSuffix => "";
+            public List<string> GatewayAddresses => new List<string> { "12345" };
+            public bool IsDnsEnabled => true;
+            public bool IsDynamicDnsEnabled => false;
+            public List<string> MulticastAddresses => new List<string> { "12345" };
+            public List<string> UnicastAddresses => new List<string> { "12345" };
+            public List<string> WinsServersAddresses => new List<string> { "12345" };
         }
 
         public class NetworkInterface
         {
-            public string Description { get { return "Test interface"; } }
-            public string Id { get { return "ID"; } }
-            public bool IsReceiveOnly { get { return false; } }
-            public string Name { get { return "Name"; } }
-            public string NetworkInterfaceType { get { return "Fake interface"; } }
-            public string OperationalStatus { get { return "Online"; } }
-            public long Speed { get { return 1000000; } }
+            public string Description => "Test interface";
+            public string Id => "ID";
+            public bool IsReceiveOnly => false;
+            public string Name => "Name";
+            public string NetworkInterfaceType => "Fake interface";
+            public string OperationalStatus => "Online";
+            public long Speed => 1000000;
         }
 
-        public NetworkInterface Information { get { return new NetworkInterface(); } }
+        public NetworkInterface Information => new NetworkInterface();
 
-        public IPInterfaceStatistics Statistics { get { return new IPInterfaceStatistics(); } }
+        public IPInterfaceStatistics Statistics => new IPInterfaceStatistics();
 
-        public IPInterfaceProperties Properties { get { return new IPInterfaceProperties(); } }
+        public IPInterfaceProperties Properties => new IPInterfaceProperties();
 
         public AdapterDummy()
         {

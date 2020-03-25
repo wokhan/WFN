@@ -27,7 +27,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP.UDP6
         public uint OwningPid => _owningPid;
         public string LocalAddress => IPHelper.GetRealAddress(_localAddress);
         public int LocalPort => IPHelper.GetRealPort(_localPort);
-        public Owner OwnerModule => UDP6Helper.GetOwningModuleUDP6(this);
+        public Owner? OwnerModule => UDP6Helper.GetOwningModuleUDP6(this);
         public string Protocol => "UDP";
         public string RemoteAddress => string.Empty;
         public int RemotePort => -1;

@@ -72,43 +72,42 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 {
                     try
                     {
-                        using (EventLog securityLog = new EventLog("security"))
+                        using var securityLog = new EventLog("security");
+                        List<EventLogEntry> newEntryList = new List<EventLogEntry>();
+                        int entryIndex = securityLog.Entries.Count - 1;
+                        DateTime newestEntryTimeWritten = securityLog.Entries[entryIndex].TimeWritten;
+                        for (int i = entryIndex; i >= 0; i--)
                         {
-                            List<EventLogEntry> newEntryList = new List<EventLogEntry>();
-                            int entryIndex = securityLog.Entries.Count - 1;
-                            DateTime newestEntryTimeWritten = securityLog.Entries[entryIndex].TimeWritten;
-                            for (int i = entryIndex; i >= 0; i--)
+                            CheckCancelTaskRequestedAndThrow(cancellationToken);
+                            EventLogEntry entry = securityLog.Entries[i];
+                            bool isNewEntry = entry.TimeWritten > lastLogEntryTimeStamp;
+                            if (isNewEntry)
                             {
-                                CheckCancelTaskRequestedAndThrow(cancellationToken);
-                                EventLogEntry entry = securityLog.Entries[i];
-                                bool isNewEntry = entry.TimeWritten > lastLogEntryTimeStamp;
-                                if (isNewEntry)
+                                if (IsEventInstanceIdAccepted(entry.InstanceId))
                                 {
-                                    if (IsEventInstanceIdAccepted(entry.InstanceId))
-                                    {
-                                        WPFUtils.DispatchUI(() => App.GetActivityWindow().ShowActivity(ActivityWindow.ActivityEnum.Blocked));
-                                        newEntryList.Insert(0, entry);
-                                    } else
-                                    {
-                                        WPFUtils.DispatchUI(() => App.GetActivityWindow().ShowActivity(ActivityWindow.ActivityEnum.Allowed));
-                                    }
+                                    WPFUtils.DispatchUI(() => App.GetActivityWindow().ShowActivity(ActivityWindow.ActivityEnum.Blocked));
+                                    newEntryList.Insert(0, entry);
                                 }
                                 else
                                 {
-                                    break;
+                                    WPFUtils.DispatchUI(() => App.GetActivityWindow().ShowActivity(ActivityWindow.ActivityEnum.Allowed));
                                 }
                             }
-                            lastLogEntryTimeStamp = newestEntryTimeWritten;
-
-                            foreach (EventLogEntry entry in newEntryList)
+                            else
                             {
-                                CheckCancelTaskRequestedAndThrow(cancellationToken);
-                                Application.Current.Dispatcher.Invoke(() =>
-                                {
+                                break;
+                            }
+                        }
+                        lastLogEntryTimeStamp = newestEntryTimeWritten;
+
+                        foreach (EventLogEntry entry in newEntryList)
+                        {
+                            CheckCancelTaskRequestedAndThrow(cancellationToken);
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
                                     // dispatch to ui thread
                                     _application.HandleEventLogNotification(entry);
-                                });
-                            }
+                            });
                         }
                     }
                     catch (ArgumentException e)

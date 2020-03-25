@@ -16,7 +16,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Core.Resources
                 }
 
             }
-            return src;
+            return src ?? String.Empty;
 
         }
 

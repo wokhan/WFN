@@ -77,10 +77,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
 
             public Series()
             {
-                Points.CollectionChanged += _points_CollectionChanged;
+                Points.CollectionChanged += Points_CollectionChanged;
             }
 
-            private void _points_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+            private void Points_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             {
                 PointsCollectionChanged?.Invoke(sender, e);
 

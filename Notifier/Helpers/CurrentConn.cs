@@ -28,7 +28,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
         {
             get
             {
-                if (_icon == null)
+                if (_icon is null)
                 {
                     UpdateIcon();
                 }
@@ -67,7 +67,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
         public string TargetPortUrl => string.Format(Settings.Default.TargetPortUrl, TargetPort); // eg: $"https://www.speedguide.net/port.php?port={TargetPort}"
 
         public int Protocol { get; set; }
-        public string ProtocolAsString { get { return FirewallHelper.getProtocolAsString(Protocol); } }
+        public string ProtocolAsString { get { return Common.Net.WFP.Protocol.GetProtocolAsString(Protocol); } }
 
         private string _resolvedHost = null;
         public string ResolvedHost

@@ -19,7 +19,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
     {
         public NetshHelperTest()
         {
-            Assert.True(UacHelper.CheckProcessElevated(), "Only admin can run this test - restart as admin");
+            Assert.True(UAC.CheckProcessElevated(), "Only admin can run this test - restart as admin");
         }
 
         [Test, ManualTestCategory]

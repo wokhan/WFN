@@ -4,10 +4,8 @@ using System.Linq;
 using Microsoft.Win32;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
-using Wokhan.WindowsFirewallNotifier.Common.Properties;
-using System.Diagnostics.CodeAnalysis;
+using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
 {
@@ -28,9 +26,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
 
         //private const uint LOAD_LIBRARY_AS_DATAFILE = 0&00000002;
 
-#pragma warning disable CS8601 // Ignore possible null value.
+#pragma warning disable CS8600,CS8601,CS8604 // Ignore possible null value.
         private static INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
-#pragma warning restore CS8601 
+#pragma warning restore CS8600,CS8601,CS8604
 
         public static bool AddRule(INetFwRule rule)
         {
@@ -83,11 +81,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             return (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL;
         }
 
-        public static string getType(int type)
-        {
-            return Enum.GetName(typeof(NET_FW_PROFILE_TYPE2_), type);
-        }
-
         public static bool IsEventAccepted(EventLogEntry entry)
         {
             var instanceId = entry.InstanceId;
@@ -104,7 +97,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
                 || instanceId == 5156;
         }
 
-        public static string getEventInstanceIdAsString(long eventId)
+        public static string GetEventInstanceIdAsString(long eventId)
         {
             // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
             var reason = "Block: {0} ";
@@ -131,49 +124,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             }
         }
 
-        public static string getProtocolAsString(int protocol)
-        {
-            //These are the IANA protocol numbers.
-            // Source: https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
-            // TODO: Add all the others and use an array?
-            switch (protocol)
-            {
-                case 1:
-                    return "ICMP";
-
-                case 2:
-                    return "IGMP"; //Used by OpenVPN, for example.
-
-                case (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP: //6
-                    return "TCP";
-
-                case (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_UDP: //17
-                    return "UDP";
-
-                case 40:
-                    return "IL"; // IL Transport protocol
-
-                case 42:
-                    return "SDRP"; // Source Demand Routing Protocol
-
-                case 47:
-                    return "GRE"; //Used by PPTP, for example.
-
-                case 58:
-                    return "ICMPv6";
-
-                case 136:
-                    return "UDPLite";
-
-                case 36:
-                    return "XTP";
-
-                default:
-                    LogHelper.Warning("Unknown protocol type: " + protocol.ToString());
-                    return protocol >= 0 ? protocol.ToString() : "Unknown";
-            }
-        }
-
+        
 
         public static bool CheckFirewallEnabled()
         {
@@ -247,7 +198,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
 
         public static Rule[] GetRules(bool AlsoGetInactive = false)
         {
-            if (wshRulesCache == null)
+            if (wshRulesCache is null)
             {
                 var keyStatic = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\RestrictedServices\Static\System");
                 var keyConfig = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\RestrictedServices\Configurable\System");
@@ -293,16 +244,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             return firewallPolicy.CurrentProfileTypes;
         }
 
-        public static bool IsIPProtocol(int protocol)
-        {
-            //Used to check whether this protocol supports ports.
-            return protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP || protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_UDP;
-        }
-
         public static IEnumerable<Rule> GetMatchingRules(string path, string appPkgId, int protocol, string target, string targetPort, string localPort, IEnumerable<string> svc, string localUserOwner, bool blockOnly, bool outgoingOnly = true)
         {
             var currentProfile = GetCurrentProfile(); //This call is relatively slow, and calling it many times causes a startup delay. Let's cache it!
-            IEnumerable<Rule> ret = GetRules().Where(r => RuleMatches(r, path, svc, protocol, localPort, target, targetPort, appPkgId, localUserOwner, currentProfile));
+            IEnumerable<Rule> ret = GetRules().Where(r => r.Matches(path, svc, protocol, localPort, target, targetPort, appPkgId, localUserOwner, currentProfile));
             if (blockOnly)
             {
                 ret = ret.Where(r => r.Action == NET_FW_ACTION_.NET_FW_ACTION_BLOCK);
@@ -323,39 +268,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             return ret;
         }
 
-        private static bool RuleMatches(Rule r, string path, IEnumerable<string> svc, int protocol, string localport, string target, string remoteport, string appPkgId, string LocalUserOwner, int currentProfile)
-        {
-            //Note: This outputs *really* a lot, so use the if-statement to filter!
-            /*if (!String.IsNullOrEmpty(r.ApplicationName) && r.ApplicationName.Contains("winword.exe"))
-            {
-                LogHelper.Debug(r.Enabled.ToString());
-                LogHelper.Debug(r.Profiles.ToString() + " <--> " + currentProfile.ToString() + "   " + (((r.Profiles & currentProfile) != 0) || ((r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0)).ToString());
-                LogHelper.Debug(r.ApplicationName + " <--> " + path + "   " + ((String.IsNullOrEmpty(r.ApplicationName) || StringComparer.CurrentCultureIgnoreCase.Compare(r.ApplicationName, path) == 0)).ToString());
-                LogHelper.Debug(r.ServiceName + " <--> " + String.Join(",", svc) + "   " + ((String.IsNullOrEmpty(r.ServiceName) || (svc.Any() && (r.ServiceName == "*")) || svc.Contains(r.ServiceName, StringComparer.CurrentCultureIgnoreCase))).ToString());
-                LogHelper.Debug(r.Protocol.ToString() + " <--> " + protocol.ToString() + "   " + (r.Protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY || r.Protocol == protocol).ToString());
-                LogHelper.Debug(r.RemoteAddresses + " <--> " + target + "   " + CheckRuleAddresses(r.RemoteAddresses, target).ToString());
-                LogHelper.Debug(r.RemotePorts + " <--> " + remoteport + "   " + CheckRulePorts(r.RemotePorts, remoteport).ToString());
-                LogHelper.Debug(r.LocalPorts + " <--> " + localport + "   " + CheckRulePorts(r.LocalPorts, localport).ToString());
-                LogHelper.Debug(r.AppPkgId + " <--> " + appPkgId + "   " + (String.IsNullOrEmpty(r.AppPkgId) || (r.AppPkgId == appPkgId)).ToString());
-                LogHelper.Debug(r.LUOwn + " <--> " + LocalUserOwner + "   " + (String.IsNullOrEmpty(r.LUOwn) || (r.LUOwn == LocalUserOwner)).ToString());
-            }*/
-            return r.Enabled
-                     && ((r.Profiles & currentProfile) != 0 || (r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0)
-                     && (string.IsNullOrEmpty(r.ApplicationName) || StringComparer.CurrentCultureIgnoreCase.Compare(r.ApplicationName, path) == 0)
-                     && (string.IsNullOrEmpty(r.ServiceName) || svc.Any() && r.ServiceName == "*" || svc.Contains(r.ServiceName, StringComparer.CurrentCultureIgnoreCase))
-                     && (r.Protocol == (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY || r.Protocol == protocol)
-                     && CheckRuleAddresses(r.RemoteAddresses, target)
-                     && CheckRulePorts(r.RemotePorts, remoteport)
-                     && CheckRulePorts(r.LocalPorts, localport)
-                     //&& r.EdgeTraversal == //@
-                     //&& r.Interfaces == //@
-                     //&& r.LocalAddresses //@
-                     && (string.IsNullOrEmpty(r.AppPkgId) || r.AppPkgId == appPkgId)
-                     && (string.IsNullOrEmpty(r.LUOwn) || r.LUOwn == LocalUserOwner)
-                     ;
-        }
-
-
+        
         /*class SimpleEventRuleCompare : IEqualityComparer<Rule>
         {
             public bool Equals(Rule x, Rule y)
@@ -381,14 +294,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
         /// <returns></returns>
         public static IEnumerable<Rule> GetMatchingRulesForEvent(int pid, string path, string target, string targetPort, bool blockOnly = true, bool outgoingOnly = false)
         {
-            var appPkgId = pid > 0 ? ProcessHelper.getAppPkgId(pid) : string.Empty;
+            var appPkgId = pid > 0 ? ProcessHelper.GetAppPkgId(pid) : string.Empty;
             var currentProfile = GetCurrentProfile();
             var svcName = "*";
             path = path ?? "";
             if (pid > 0 && path.EndsWith("svchost.exe", StringComparison.OrdinalIgnoreCase))
             {
                 // get the scvName associated with svchost.exe
-                var cLine = ProcessHelper.getCommandLineFromProcessWMI(pid);
+                var cLine = ProcessHelper.GetCommandLineFromProcessWMI(pid);
                 if (cLine != null)
                 {
                     svcName = cLine.Split(new string[] { " -s " }, StringSplitOptions.None).Last().Split(' ').First();
@@ -399,7 +312,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             LogHelper.Debug($"\nGetMatchingRulesForEvent: path={exeName}, svcName={svcName}, pid={pid}, target={target} targetPort={targetPort}, blockOnly={blockOnly}, outgoingOnly={outgoingOnly}");
 
             //IEnumerable<Rule> ret = GetRules(AlsoGetInactive: false).Distinct(new SimpleEventRuleCompare()).Where(r => r.Enabled && RuleMatchesEvent(r, currentProfile, appPkgId, svcName, path, target, targetPort));
-            IEnumerable<Rule> ret = GetRules(AlsoGetInactive: false).Where(r => RuleMatchesEvent(r, currentProfile, appPkgId, svcName, path, target, targetPort));
+            IEnumerable<Rule> ret = GetRules(AlsoGetInactive: false).Where(r => r.MatchesEvent(currentProfile, appPkgId, svcName, path, target, targetPort));
 
             if (blockOnly)
             {
@@ -411,96 +324,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             }
 
             return ret;
-        }
-
-        public static bool RuleMatchesEvent(Rule r, int currentProfile, string appPkgId, string svcName, string path, string target = "*", string remoteport = "*")
-        {
-            var friendlyPath = string.IsNullOrWhiteSpace(path) ? path : PathResolver.GetFriendlyPath(path);
-            var ruleFriendlyPath = string.IsNullOrWhiteSpace(r.ApplicationName) ? r.ApplicationName : PathResolver.GetFriendlyPath(r.ApplicationName);
-            var ret = r.Enabled
-                       && ((r.Profiles & currentProfile) != 0 || (r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0)
-                       && (string.IsNullOrEmpty(ruleFriendlyPath) || ruleFriendlyPath.Equals(friendlyPath, StringComparison.OrdinalIgnoreCase))
-                       && CheckRuleAddresses(r.RemoteAddresses, target)
-                       && CheckRulePorts(r.RemotePorts, remoteport)
-                       && (string.IsNullOrEmpty(r.AppPkgId) || r.AppPkgId == appPkgId)
-                       && (string.IsNullOrEmpty(r.ServiceName) || svcName.Any() && r.ServiceName == "*" || svcName.Equals(r.ServiceName, StringComparison.OrdinalIgnoreCase))
-                       ;
-            if (ret && LogHelper.isDebugEnabled())
-            {
-                LogHelper.Debug("Found enabled " + r.ActionStr + " " + r.DirectionStr + " Rule '" + r.Name + "'");
-                LogHelper.Debug("\t" + r.Profiles.ToString() + " <--> " + currentProfile.ToString() + " : " + ((r.Profiles & currentProfile) != 0 || (r.Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0).ToString());
-                LogHelper.Debug("\t" + ruleFriendlyPath + " <--> " + friendlyPath + " : " + (string.IsNullOrEmpty(ruleFriendlyPath) || ruleFriendlyPath.Equals(friendlyPath, StringComparison.OrdinalIgnoreCase)).ToString());
-                LogHelper.Debug("\t" + r.RemoteAddresses + " <--> " + target + " : " + CheckRuleAddresses(r.RemoteAddresses, target).ToString());
-                LogHelper.Debug("\t" + r.RemotePorts + " <--> " + remoteport + " : " + CheckRulePorts(r.RemotePorts, remoteport).ToString());
-                LogHelper.Debug("\t" + r.AppPkgId + " <--> " + appPkgId + "  : " + (string.IsNullOrEmpty(r.AppPkgId) || r.AppPkgId == appPkgId).ToString());
-                LogHelper.Debug("\t" + r.ServiceName + " <--> " + svcName + " : " + (string.IsNullOrEmpty(r.ServiceName) || svcName.Equals(r.ServiceName, StringComparison.OrdinalIgnoreCase)).ToString());
-            }
-            return ret;
-        }
-
-        private static bool CheckRuleAddresses(string ruleAddresses, string checkedAddress)
-        {
-            if (string.IsNullOrEmpty(ruleAddresses) || ruleAddresses == "*")
-            {
-                return true;
-            }
-            if (!checkedAddress.Contains('/'))
-            {
-                checkedAddress += "/255.255.255.255";
-            }
-            foreach (var token in ruleAddresses.Split(','))
-            {
-                //FIXME: Handle:
-                //FIXME: See: https://technet.microsoft.com/en-us/aa365366
-                //FW_ADDRESS_KEYWORD:
-                //"Defaultgateway"
-                //"DHCP"
-                //"DNS"
-                //"WINS"
-                //"LocalSubnet"
-                if (token == checkedAddress)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private static bool CheckRulePorts(string rulePorts, string checkedPort)
-        {
-            if (string.IsNullOrEmpty(rulePorts) || rulePorts == "*")
-            {
-                return true;
-            }
-            foreach (var token in rulePorts.Split(','))
-            {
-                if (token == checkedPort)
-                {
-                    return true;
-                }
-                //FIXME: Handle:
-                //FIXME: See: https://msdn.microsoft.com/en-us/library/ff719847.aspx
-                //FW_PORT_KEYWORD:
-                //RPC
-                //RPC-EPMap
-                //Teredo
-                //IPHTTPSOut
-                //IPHTTPSIn
-                //Ply2Disc
-                //FIXME: And: https://msdn.microsoft.com/en-us/library/cc231498.aspx
-                //mDNS
-                //CORTANA_OUT ?
-                int checkedPortInt;
-                if (checkedPort.Contains('-') && int.TryParse(checkedPort, out checkedPortInt))
-                {
-                    var portRange = checkedPort.Split(new char[] { '-' }, 1);
-                    if (int.Parse(portRange[0]) >= checkedPortInt && checkedPortInt >= int.Parse(portRange[1]))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
         }
 
         public static string GetCurrentProfileAsText()

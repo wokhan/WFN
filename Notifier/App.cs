@@ -13,6 +13,7 @@ using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Net.DNS;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
+using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
 using Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows;
 using WinForms = System.Windows.Forms;
@@ -22,7 +23,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
     /// <summary>
     /// Notifier2 main program
     /// </summary>
-    public class App : Application, IDisposable
+    public sealed class App : Application, IDisposable
     {
         private static App APP_INSTANCE;
         private static NotificationWindow notifierWindow;
@@ -52,23 +53,21 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 }
                 string[] args = Environment.GetCommandLineArgs();
                 // Ensures that notifier is only started once.
-                using (Mutex mtex = new Mutex(true, "MTX_NotificationWindowInstance", out bool instanceCountOne))
+                using var mtex = new Mutex(true, "MTX_NotificationWindowInstance", out bool instanceCountOne);
+                if (instanceCountOne)
                 {
-                    if (instanceCountOne)
-                    {
-                        // TODO: maybe not required - remove?
-                        WinForms::Application.EnableVisualStyles();
-                        WinForms::Application.SetCompatibleTextRenderingDefault(false);
+                    // TODO: maybe not required - remove?
+                    WinForms::Application.EnableVisualStyles();
+                    WinForms::Application.SetCompatibleTextRenderingDefault(false);
 
-                        APP_INSTANCE = new App();
-                        APP_INSTANCE.Run();
-                        mtex.ReleaseMutex();
-                    }
-                    else
-                    {
-                        MessageBox.Show("A notifier instance is already running");
-                        APP_INSTANCE.ShowNotifierWindow();  // FIXME: show it - seems not to work as it should
-                    }
+                    APP_INSTANCE = new App();
+                    APP_INSTANCE.Run();
+                    mtex.ReleaseMutex();
+                }
+                else
+                {
+                    MessageBox.Show("A notifier instance is already running");
+                    APP_INSTANCE.ShowNotifierWindow();  // FIXME: show it - seems not to work as it should
                 }
             }
             catch (Exception e)
@@ -132,11 +131,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 WindowsPrincipal principal = new WindowsPrincipal(user);
                 isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
             }
-            catch (UnauthorizedAccessException ex)
-            {
-                isAdmin = false;
-            }
-            catch (Exception ex)
+            catch
             {
                 isAdmin = false;
             }
@@ -154,7 +149,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             try
             {
                 int pid = int.Parse(GetReplacementString(entry, 0));
-                int threadId = 0;
                 Direction direction = GetReplacementString(entry, 2) == @"%%14593" ? Direction.Out : Direction.In;
                 int protocol = int.Parse(GetReplacementString(entry, 7));
                 string targetIp = GetReplacementString(entry, 5);
@@ -168,7 +162,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 string serviceName = AsyncTaskRunner.GetServicName(pid);
 
                 LogHelper.Info($"Handle {direction.ToString().ToUpper(CultureInfo.InvariantCulture)}-going connection for '{fileName}', service: {serviceName} ...");
-                if (!AddItem(pid, threadId, friendlyPath, targetIp, protocol: protocol, targetPort, sourcePort))
+                if (!AddItem(pid, friendlyPath, targetIp, protocol: protocol, targetPort: targetPort, localPort: sourcePort))
                 {
                     //This connection is blocked by a specific rule. No action necessary.
                     LogHelper.Info($"{direction}-going connection for '{fileName}' is blocked by a rule - ignored.");
@@ -206,7 +200,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             // FIXME: Remove - only use global block rules.
             try
             {
-                if (!Settings.Default.UseBlockRules && exclusions == null) //@wokhan: WHY NOT~Settings.Default.UseBlockRules ??
+                if (!Settings.Default.UseBlockRules && exclusions is null) //@wokhan: WHY NOT~Settings.Default.UseBlockRules ??
                 {
                     string exclusionsPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exclusions.set");
                     if (File.Exists(exclusionsPath))
@@ -225,14 +219,14 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         /// Add item to internal query list (asking user whether to allow this connection request), if there is no block rule available.
         /// </summary>
         /// <param name="pid"></param>
-        /// <param name="threadid"></param>
         /// <param name="path"></param>
         /// <param name="target"></param>
         /// <param name="protocol"></param>
         /// <param name="targetPort"></param>
         /// <param name="localPort"></param>
+        /// 
         /// <returns>false if item is blocked and was thus not added to internal query list</returns>
-        internal bool AddItem(int pid, int threadid, string path, string target, int protocol, int targetPort, int localPort)
+        internal bool AddItem(int pid, string path, string target, int protocol, int targetPort, int localPort)
         {
             try
             {
@@ -324,7 +318,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     }
 
                     // Check whether this connection is blocked by a rule.
-                    var blockingRules = FirewallHelper.GetMatchingRules(path, ProcessHelper.getAppPkgId(pid), protocol, target, targetPort.ToString(), localPort.ToString(), unsure ? svc : svc.Take(1), ProcessHelper.getLocalUserOwner(pid), blockOnly:true, outgoingOnly:true);
+                    var blockingRules = FirewallHelper.GetMatchingRules(path, ProcessHelper.GetAppPkgId(pid), protocol, target, targetPort.ToString(), localPort.ToString(), unsure ? svc : svc.Take(1), ProcessHelper.GetLocalUserOwner(pid), blockOnly:true, outgoingOnly:true);
                     if (blockingRules.Any())
                     {
                         LogHelper.Info("Connection matches a block-rule!");
@@ -351,8 +345,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     var conn = new CurrentConn
                     {
                         Description = description,
-                        CurrentAppPkgId = ProcessHelper.getAppPkgId(pid),
-                        CurrentLocalUserOwner = ProcessHelper.getLocalUserOwner(pid),
+                        CurrentAppPkgId = ProcessHelper.GetAppPkgId(pid),
+                        CurrentLocalUserOwner = ProcessHelper.GetLocalUserOwner(pid),
                         ProductName = fileinfo != null ? fileinfo.ProductName : String.Empty,
                         Company = fileinfo != null ? fileinfo.CompanyName : String.Empty,
                         CurrentPath = path,
@@ -394,11 +388,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         }
 
         
-        private static async void ResolveHostForConnection(CurrentConn conn)
+        private static void ResolveHostForConnection(CurrentConn conn)
         {
             try
             {
-                DnsResolver.ResolveIpAddress(conn.Target, entry => conn.ResolvedHost = conn.Target != entry.HostEntry.HostName ? entry.HostEntry.HostName : "..."); 
+                _ = DnsResolver.ResolveIpAddress(conn.Target, entry => conn.ResolvedHost = conn.Target != entry.HostEntry.HostName ? entry.HostEntry.HostName : "..."); 
             }
             catch (Exception e) 
             {
@@ -408,10 +402,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
         public void Dispose()
         {
-            if (asyncTaskRunner != null)
-            {
-                asyncTaskRunner.Dispose();
-            }
+            asyncTaskRunner?.Dispose();
         }
     }
 }

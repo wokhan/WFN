@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Text;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+﻿using System.Diagnostics;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Processes
 {

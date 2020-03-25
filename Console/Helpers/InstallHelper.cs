@@ -7,9 +7,10 @@ using Wokhan.WindowsFirewallNotifier.Common.Properties;
 using System.Reflection;
 using System.ServiceProcess;
 using System.Linq;
-using static Wokhan.WindowsFirewallNotifier.Common.Net.WFP.CustomRule;
+using static Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules.CustomRule;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
+using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
 {
@@ -56,7 +57,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
                 RemoveTask();  // will be re-created below
             }
 
-            if (ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\reg.exe", @"ADD HKLM\SYSTEM\CurrentControlSet\Control\Lsa /v SCENoApplyLegacyAuditPolicy /t REG_DWORD /d 1 /f")
+            if (ProcessHelper.GetProcessFeedback(Environment.SystemDirectory + "\\reg.exe", @"ADD HKLM\SYSTEM\CurrentControlSet\Control\Lsa /v SCENoApplyLegacyAuditPolicy /t REG_DWORD /d 1 /f")
                 && SetAuditPolConnection(enableSuccess: Settings.Default.AuditPolEnableSuccessEvent, enableFailure: true)
                 )
             {
@@ -64,7 +65,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
                 {
                     if (CreateDefaultRules())
                     {
-                        if (createTask(allUsers))
+                        if (CreateTask(allUsers))
                         {
                             callback(true, Resources.MSG_INST_OK);
                         }
@@ -99,7 +100,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
         {
             string successOption = enableSuccess ? "/success:enable" : "/success:disable";
             string failureOption = enableFailure ? "/failure:enable" : "/failure:disable";
-            return ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\auditpol.exe", "/set /subcategory:{0CCE9226-69AE-11D9-BED3-505054503030} " + successOption + " " + failureOption);
+            return ProcessHelper.GetProcessFeedback(Environment.SystemDirectory + "\\auditpol.exe", "/set /subcategory:{0CCE9226-69AE-11D9-BED3-505054503030} " + successOption + " " + failureOption);
         }
         private static bool CreateDefaultRules()
         {
@@ -115,7 +116,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
                     rname = String.Format(Resources.RULE_NAME_FORMAT, "Windows Applications (auto)");
                     if (rules.All(r => r.Name != rname))
                     {
-                        CustomRule newRule = new CustomRule(rname, Environment.SystemDirectory + "\\wwahost.exe", null, null, (string)null, (int)Protocol.ANY, null, null, null, FirewallHelper.GetGlobalProfile(), CustomRuleAction.A);
+                        CustomRule newRule = new CustomRule(rname, Environment.SystemDirectory + "\\wwahost.exe", null, null, (string)null, Protocol.ANY, null, null, null, FirewallHelper.GetGlobalProfile(), CustomRuleAction.A);
                         ret = ret && FirewallHelper.AddRule(newRule.GetPreparedRule(false));
                     }
                 }
@@ -124,7 +125,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
                 rname = String.Format(Resources.RULE_NAME_FORMAT, sc.DisplayName + " (auto)");
                 if (rules.All(r => r.Name != rname + " [R:80,443]"))
                 {
-                    CustomRule newRule = new CustomRule(rname, Environment.SystemDirectory + "\\svchost.exe", null, null, "wuauserv", (int)Protocol.TCP, null, "80,443", null, FirewallHelper.GetGlobalProfile(), CustomRuleAction.A);
+                    CustomRule newRule = new CustomRule(rname, Environment.SystemDirectory + "\\svchost.exe", null, null, "wuauserv", Protocol.TCP, null, "80,443", null, FirewallHelper.GetGlobalProfile(), CustomRuleAction.A);
                     ret = ret && FirewallHelper.AddRule(newRule.GetPreparedRule(false));
                 }
 
@@ -132,7 +133,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
                 rname = String.Format(Resources.RULE_NAME_FORMAT, sc.DisplayName + "(auto)");
                 if (rules.All(r => r.Name != rname + " [R:80,443]"))
                 {
-                    CustomRule newRule = new CustomRule(rname, Environment.SystemDirectory + "\\svchost.exe", null, null, "bits", (int)Protocol.TCP, null, "80,443", null, FirewallHelper.GetGlobalProfile(), CustomRuleAction.A);
+                    CustomRule newRule = new CustomRule(rname, Environment.SystemDirectory + "\\svchost.exe", null, null, "bits", Protocol.TCP, null, "80,443", null, FirewallHelper.GetGlobalProfile(), CustomRuleAction.A);
                     ret = ret && FirewallHelper.AddRule(newRule.GetPreparedRule(false));
                 }
 
@@ -140,7 +141,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
                 rname = String.Format(Resources.RULE_NAME_FORMAT, sc.DisplayName + "(auto)");
                 if (rules.All(r => r.Name != rname + " [R:80]"))
                 {
-                    CustomRule newRule = new CustomRule(rname, Environment.SystemDirectory + "\\svchost.exe", null, null, "cryptsvc", (int)Protocol.TCP, null, "80", null, FirewallHelper.GetGlobalProfile(), CustomRuleAction.A);
+                    CustomRule newRule = new CustomRule(rname, Environment.SystemDirectory + "\\svchost.exe", null, null, "cryptsvc", Protocol.TCP, null, "80", null, FirewallHelper.GetGlobalProfile(), CustomRuleAction.A);
                     ret = ret && FirewallHelper.AddRule(newRule.GetPreparedRule(false));
                 }
 
@@ -161,13 +162,16 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
         /// 
         /// </summary>
         /// <returns></returns>
-        private static bool createTask(bool allUsers)
+        private static bool CreateTask(bool allUsers)
         {
-            string tmpXML = System.IO.Path.GetTempFileName();
+            string tmpXML = Path.GetTempFileName();
             string newtask;
             using (var taskStr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Wokhan.WindowsFirewallNotifier.Console.Resources.TaskTemplate.xml")))
             {
                 // TODO: Unclear why SYSTEM was required in case of all users - however task scheduler does not properly start notifier with this
+                
+                // TODO: !!!! (@wokhan): I used SYSTEM because it has to be able to trigger the notification for whatever user is actually connected. Adding only the current user won't work for others and can be really annoying (connection would be block, the notification will be triggered for another user (maybe connected but not on the active session)).
+
                 //newtask = String.Format(taskStr.ReadToEnd(),
                 //                        allUsers ? "<UserId>NT AUTHORITY\\SYSTEM</UserId>"//"<GroupId>S-1-5-32-545</GroupId>" 
                 //                                 : "<UserId><![CDATA[" + WindowsIdentity.GetCurrent().Name + "]]></UserId>",
@@ -175,7 +179,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
                 //                        DateTime.Now.ToString("s"));
 
                 string principle = "<UserId><![CDATA[" + WindowsIdentity.GetCurrent().Name + "]]></UserId>";
-                string command = "\"" + System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe") + "\"";
+                string command = "\"" + Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe") + "\"";
                 string arguments = "-minimized"; // TODO: To be implemented
                 string dateTime = DateTime.Now.ToString("s");
                 newtask = String.Format(taskStr.ReadToEnd(),
@@ -187,7 +191,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
 
             File.WriteAllText(tmpXML, newtask, Encoding.Unicode);
 
-            bool ret = ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", "/IT /Create /TN WindowsFirewallNotifierTask /XML \"" + tmpXML + "\"");
+            bool ret = ProcessHelper.GetProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", "/IT /Create /TN WindowsFirewallNotifierTask /XML \"" + tmpXML + "\"");
 
             File.Delete(tmpXML);
 
@@ -200,7 +204,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
         /// <returns></returns>
         private static bool RemoveTask()
         {
-            return ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", "/Delete /TN WindowsFirewallNotifierTask /F");
+            return ProcessHelper.GetProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", "/Delete /TN WindowsFirewallNotifierTask /F");
         }
 
         /// <summary>
@@ -209,7 +213,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
         /// <returns></returns>
         public static bool IsInstalled()
         {
-            return ProcessHelper.getProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", "/Query /TN WindowsFirewallNotifierTask");
+            return ProcessHelper.GetProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", "/Query /TN WindowsFirewallNotifierTask");
         }
 
     }

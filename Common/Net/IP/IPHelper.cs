@@ -122,17 +122,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP
 
         public static int GetMaxUserPort()
         {
-            using (RegistryKey maxUserPortKey = Registry.LocalMachine.OpenSubKey(MAX_USER_PORT_REGISTRY_KEY, false))
+            using var maxUserPortKey = Registry.LocalMachine.OpenSubKey(MAX_USER_PORT_REGISTRY_KEY, false);
+            var maxUserPortValue = maxUserPortKey.GetValue(MAX_USER_PORT_REGISTRY_VALUE);
+            if (maxUserPortValue is null)
             {
-                var maxUserPortValue = maxUserPortKey.GetValue(MAX_USER_PORT_REGISTRY_VALUE);
-                if (maxUserPortValue == null)
-                {
-                    //Default from Windows Vista and up
-                    return 49152;
-                }
-
-                return Convert.ToInt32(maxUserPortValue);
+                //Default from Windows Vista and up
+                return 49152;
             }
+
+            return Convert.ToInt32(maxUserPortValue);
         }
 
         /// <summary>

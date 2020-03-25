@@ -44,7 +44,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
                 Path = "Unresolved"; //FIXME: Use something else?
             }
 
-            if (ownerMod.OwnerModule == null)
+            if (ownerMod.OwnerModule is null)
             {
                 if (PID == 0)
                 {
@@ -102,7 +102,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             get
             {
-                if (_icon == null) UpdateIcon();
+                if (_icon is null) UpdateIcon();
                 return _icon;
             }
             private set => this.SetValue(ref _icon, value, NotifyPropertyChanged);
@@ -168,7 +168,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             get
             {
-                if (_localHostName == null)
+                if (_localHostName is null)
                     DnsResolver.ResolveIpAddress(_localAddress, entry => LocalHostName = entry.DisplayText);
                 return _localHostName;
             }
@@ -195,7 +195,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             get
             {
-                if (_remoteHostName == null)
+                if (_remoteHostName is null)
                     DnsResolver.ResolveIpAddress(_remoteAddress, entry => RemoteHostName = entry.DisplayText);
                 return _remoteHostName;
             }

@@ -7,6 +7,7 @@ using NUnit.Framework;
 using Wokhan.WindowsFirewallNotifier.Console.Tests.NUnit;
 using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
+using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -34,7 +35,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             int cntMatch = 0;
             foreach (Rule rule in ret)
             {
-                bool matches = FirewallHelper.RuleMatchesEvent(rule, currentProfile: PROF_ALL, appPkgId: null, svcName: "*", path: exePath, target: "*", remoteport: "*");
+                bool matches = rule.MatchesEvent(currentProfile: PROF_ALL, appPkgId: null, svcName: "*", path: exePath, target: "*", remoteport: "*");
                 if (matches)
                 {
                     string ruleFriendlyPath = String.IsNullOrWhiteSpace(rule.ApplicationName) ? rule.ApplicationName : PathResolver.GetFriendlyPath(rule.ApplicationName);

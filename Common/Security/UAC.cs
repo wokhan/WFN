@@ -12,7 +12,7 @@ using System.Security.Principal;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
-    public static partial class UacHelper
+    public static partial class UAC
     {
         public static bool CheckUAC()
         {
