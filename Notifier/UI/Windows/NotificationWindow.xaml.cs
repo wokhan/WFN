@@ -14,10 +14,10 @@ using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
 using WinForms = System.Windows.Forms;
 using Messages = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
 using System.Drawing;
-using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
+using Wokhan.WindowsFirewallNotifier.Common.Config;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Windows;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
@@ -14,7 +15,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console
             this.DispatcherUnhandledException += Current_DispatcherUnhandledException;
 
             LogHelper.Debug("Starting Console: " + Environment.CommandLine);
-            Settings.OverrideSettingsFile("WFN.config");
 
             if (Settings.Default.AlwaysRunAs && !UAC.CheckProcessElevated())
             {
@@ -32,15 +32,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console
             MessageBox.Show(((Exception)e.ExceptionObject).Message, Common.Properties.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        private bool? _isElevated = null;
-        public bool IsElevated
-        {
-            get
-            {
-                if (_isElevated is null) { _isElevated = UAC.CheckProcessElevated(); }
-                return _isElevated.Value;
-            }
-        }
+        public bool IsElevated { get; } = UAC.CheckProcessElevated(); 
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
@@ -57,6 +49,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console
             {
                 Resources["ConsoleSizeWidth"] = 900d;
             }
+
             if (Settings.Default.ConsoleSizeHeight > 600)
             {
                 Resources["ConsoleSizeHeight"] = Convert.ToDouble(Settings.Default.ConsoleSizeHeight);

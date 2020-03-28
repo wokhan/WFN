@@ -49,13 +49,12 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <Compile Update="Config\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <None Update="Config\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -66,8 +65,10 @@
   </ItemGroup>
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <PostBuildEvent>del WFN.config
-ren "Wokhan.WindowsFirewallNotifier.Common.dll.config" WFN.config</PostBuildEvent>
+    <PostBuildEvent>
+      del WFN.config
+      ren "Wokhan.WindowsFirewallNotifier.Common.dll.config" WFN.config
+    </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG</DefineConstants>

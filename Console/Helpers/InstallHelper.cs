@@ -8,9 +8,9 @@ using System.Reflection;
 using System.ServiceProcess;
 using System.Linq;
 using static Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules.CustomRule;
-using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
+using Wokhan.WindowsFirewallNotifier.Common.Config;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
 {

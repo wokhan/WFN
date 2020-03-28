@@ -81,7 +81,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         public App() : base()
         {
             this.ShutdownMode = ShutdownMode.OnMainWindowClose;
-            Settings.OverrideSettingsFile("WFN.config");
 
             LogHelper.Debug("Initializing exclusions...");
             initExclusions();

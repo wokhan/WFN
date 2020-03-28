@@ -1,18 +1,34 @@
-﻿using System.Configuration;
-//using System.IO;
-//using System.Xml;
-//using System.Xml.Serialization;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+﻿using System;
+using System.Configuration;
+using System.Linq;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Config
 {
-    [SettingsProvider(typeof(CustomSettingsProvider))]
-    public sealed partial class Settings
+    // Doesn't work anymore :-/ (see comment below on OnSettingsLoaded)
+    //[SettingsProvider(typeof(CustomSettingsProvider))]
+    public sealed partial class Settings : ApplicationSettingsBase
     {
+        private SettingsProvider provider;
         public Settings() : base()
         {
+            provider = new CustomSettingsProvider();
+            
+            Providers.Clear();
+            Providers.Add(provider);
 
         }
+
+        // This is awesomely awful. But it fixes an issue with .Net Core 3.1 not taking the right config file 
+        // (at least with latest modifications), while I could swear it was working last week without this... Anyway...
+        protected override void OnSettingsLoaded(object sender, SettingsLoadedEventArgs e)
+        {
+            base.OnSettingsLoaded(sender, e);
+
+            PropertyValues.Cast<SettingsPropertyValue>().ToList().ForEach(p => p.Property.Provider = provider);
+        }
+
+        public override SettingsProviderCollection Providers => base.Providers;
+
         public bool EnableServiceDetection
         {
             get { return (bool)this[nameof(EnableServiceDetectionGlobal)]; }
@@ -25,9 +41,5 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Config
             set { this[nameof(UseBlockRulesGlobal)] = value; }
         }
 
-        public static void OverrideSettingsFile(string fileName)
-        {
-            //AppDomain.CurrentDomain.SetupInformation.ConfigurationFile = fileName;
-        }
     }
 }

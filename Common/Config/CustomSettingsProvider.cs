@@ -5,24 +5,24 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Security.Principal;
+using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
-namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
+namespace Wokhan.WindowsFirewallNotifier.Common.Config
 {
     public class CustomSettingsProvider : SettingsProvider/*, IApplicationSettingsProvider*/
     {
         //Note: .NET framework has no easy way to get the types right, so our cache will be filled with strings.
         private Dictionary<string, object> _valuesCache = new Dictionary<string, object>();
 
-        private const string SETTINGS_KEY = "Wokhan.WindowsFirewallNotifier.Common.Settings";
+        private const string SETTINGS_KEY = "Wokhan.WindowsFirewallNotifier.Common.Config.Settings";
         private const string APP_SETTINGS = "applicationSettings";
         private const string USER_SETTINGS = "userSettings";
 
-        public static readonly string SharedConfigurationPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? String.Empty, "WFN.config");
-        public static readonly string UserConfigurationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Wokhan Solutions", "WFN", "user.config");
-        private static readonly string userLocalConfigurationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN", "user.config");
+        public static string SharedConfigurationPath { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? string.Empty, "WFN.config");
+        public static string UserConfigurationPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Wokhan Solutions", "WFN", "user.config");
+        public static string UserLocalConfigurationPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN", "user.config");
 
-        public static string UserLocalConfigurationPath => userLocalConfigurationPath;
-
+        public override string Name => "CustomSettingsProvider";
         public override string ApplicationName { get => "WFN"; set { } }
 
         public override SettingsPropertyValueCollection GetPropertyValues(SettingsContext context, SettingsPropertyCollection collection)
@@ -120,28 +120,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             return property.Attributes
                            .Cast<DictionaryEntry>()
-                           .Any(d => (d.Value is SettingsManageabilityAttribute attribute) && (attribute.Manageability == SettingsManageability.Roaming));
+                           .Any(d => d.Value is SettingsManageabilityAttribute attribute && attribute.Manageability == SettingsManageability.Roaming);
         }
-
-        /*public override void Initialize(string name, NameValueCollection values)
-        {
-            base.Initialize(name ?? "CustomSettingsProvider", values);
-        }*/
-
-        /*public override SettingsPropertyValue GetPreviousVersion(SettingsContext context, SettingsProperty property)
-        {
-            return base.GetPreviousVersion(context, property);
-        }
-
-        public new void Reset(SettingsContext context)
-        {
-            base.Reset(context);
-        }
-
-        public new void Upgrade(SettingsContext context, SettingsPropertyCollection properties)
-        {
-            base.Upgrade(context, properties);
-        }*/
 
         public override void SetPropertyValues(SettingsContext context, SettingsPropertyValueCollection collection)
         {
@@ -151,7 +131,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 return;
             }
 
-            ExeConfigurationFileMap configMap = new ExeConfigurationFileMap();
+            var configMap = new ExeConfigurationFileMap();
             configMap.ExeConfigFilename = SharedConfigurationPath;
             configMap.LocalUserConfigFilename = UserLocalConfigurationPath;
             configMap.RoamingUserConfigFilename = UserConfigurationPath;
@@ -189,7 +169,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             {
                 throw new ApplicationException("Configuration settings are corrupt!");
             }
-            bool ismod = false;
+            var ismod = false;
             foreach (var s in sets.Where(x => HasChanged(x)))
             {
                 ismod = true;
@@ -221,12 +201,18 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         private bool HasChanged(SettingsPropertyValue x)
         {
-            return !_valuesCache[x.Name].Equals(x.PropertyValue?.ToString());
+            return !_valuesCache.TryGetValue(x.Name, out var prev) && (prev?.Equals(x.PropertyValue?.ToString()) ?? true);
         }
 
         private static void OverwriteSetting(ClientSettingsSection section, string settingName, string newValue)
         {
-            var val = section.Settings.Get(settingName).Value;
+            var setting = section.Settings.Get(settingName);
+            if (setting is null)
+            {
+                LogHelper.Debug("Setting is not part of the current section. Skipping.");
+                return;
+            }
+            var val = setting.Value;
             val.ValueXml.FirstChild.Value = newValue;
 
             // Forces the setting to be marked as updated as it's done in the ValueXml setter.
