@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -39,7 +40,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private EventLog securityLog;
 
         public ObservableCollection<LogEntryViewModel> LogEntries { get; } = new ObservableCollection<LogEntryViewModel>();
-        public List<LogEntryViewModel> TempEntries { get; } = new List<LogEntryViewModel>();
+        //public List<LogEntryViewModel> TempEntries { get; } = new List<LogEntryViewModel>();
 
         private int _scanProgress;
         public int ScanProgress
@@ -83,12 +84,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     _isTrackingEnabled = value;
                     if (_isTrackingEnabled)
                     {
-                        TargetCollectionNewEntries = LogEntries;
-                        TempEntries.ForEach(entry => LogEntries.Add(entry));
-                        TempEntries.Clear();
-                    } else
+                        //TargetCollectionNewEntries = LogEntries;
+                        //TempEntries.ForEach(entry => Dispatcher.Invoke(() => LogEntries.Add(entry)));
+                        //TempEntries.Clear();
+
+                    }
+                    else
                     {
-                        TargetCollectionNewEntries = TempEntries;
+                        //TargetCollectionNewEntries = TempEntries;
                     }
                 }
             }
@@ -103,14 +106,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 {
                     Settings.Default.FilterTcpOnlyEvents = value;
                     Settings.Default.Save();
-                    SetTCPFilter();
                 }
             }
         }
 
-
         private bool RefreshFilterData = true;
-        private ICollection<LogEntryViewModel> TargetCollectionNewEntries;
+        //private ICollection<LogEntryViewModel> TargetCollectionNewEntries;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -126,38 +127,66 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             dataView = CollectionViewSource.GetDefaultView(gridLog.ItemsSource);
             dataView.SortDescriptions.Add(new SortDescription(nameof(LogEntryViewModel.Timestamp), ListSortDirection.Descending));
 
+
             SetTCPFilter();
+            SetTextfilter();
 
-            TargetCollectionNewEntries = LogEntries;
+            cbxIsTCPOnlyEnabled.Click += (sender, e) => dataView.Refresh();  // TODO: required?
 
-            if (((App)Application.Current).IsElevated)
-            {
-                Loaded += EventsLog_Loaded;
-                Unloaded += EventsLog_Unloaded;
-            }
+            //TargetCollectionNewEntries = LogEntries;
+
+            Loaded += EventsLog_Loaded;
+            Unloaded += EventsLog_Unloaded;
+            btnAutoRefreshToggle.Checked += EventsLog_Loaded;
+            btnAutoRefreshToggle.Unchecked += EventsLog_Unloaded;
         }
 
         private void SetTCPFilter()
         {
-            dataView.Filter -= TCPFilter;
-            if (IsTCPOnlyEnabled)
+            // FIXME:
+            dataView.Filter += o =>
             {
-                dataView.Filter += TCPFilter;
-            }
+                LogEntryViewModel le = (LogEntryViewModel)o;
+                bool result = cbxIsTCPOnlyEnabled.IsChecked.GetValueOrDefault() ? le.Protocol == "TCP" : true;
+                //LogHelper.Debug($"dataView.canFilter={dataView?.CanFilter} proto={le.Protocol} result={result}");
+                return result;
+            };
         }
+
+        private void SetTextfilter()
+        {
+            Predicate<object> pred = (o) =>
+            {
+                if (txtFilter.Text is null || txtFilter.Text.Length < 2)
+                {
+                    return true;
+                }
+                LogEntryViewModel le = o as LogEntryViewModel;
+                bool match = le.FileName is null ? false : le.FileName.Contains(txtFilter.Text, StringComparison.OrdinalIgnoreCase)
+                || le.TargetHostName is null ? false : le.TargetHostName.Contains(txtFilter.Text, StringComparison.OrdinalIgnoreCase);
+                return match;
+            };
+            dataView.Filter += pred;
+        }
+
 
         private void EventsLog_Unloaded(object sender, RoutedEventArgs e)
         {
+            securityLog.EnableRaisingEvents = false;
             securityLog.EntryWritten -= SecurityLog_EntryWritten;
+            securityLog?.Dispose();
+            e.Handled = true;
         }
 
         private void EventsLog_Loaded(object sender, RoutedEventArgs e)
         {
+            Task.Run(() => InitEventLog(value => ScanProgress = value));
             try
             {
                 securityLog = new EventLog("security");
                 securityLog.EntryWritten += SecurityLog_EntryWritten;
                 securityLog.EnableRaisingEvents = true;
+                e.Handled = true;
             }
             catch (Exception exc)
             {
@@ -165,7 +194,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 throw;
             }
 
-            Task.Run(() => InitEventLog(value => ScanProgress = value));
         }
 
         private void SecurityLog_EntryWritten(object sender, EntryWrittenEventArgs e)
@@ -175,41 +203,73 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 return;
             }
 
-            LogEntryViewModel entry = EntryViewFromLogEntry(e.Entry);
-            if (entry != null)
-            {
-                Dispatcher.Invoke(() =>
+            if (e.Entry.Index > SecurityLogIndexMax) {
+                LogEntryViewModel entry = EntryViewFromLogEntry(e.Entry);
+                SecurityLogIndexMax = e.Entry.Index;
+                if (entry != null)
                 {
-                    if (!TargetCollectionNewEntries.Contains(entry, EntryComparer.Instance))
+                    Dispatcher.Invoke(() =>
                     {
-                        TargetCollectionNewEntries.Add(entry);
-                    }
-                });
+                        //if (!TargetCollectionNewEntries.Contains(entry, EntryComparer.Instance))
+                        //{
+                        //    TargetCollectionNewEntries.Add(entry);
+                        //}
+                        LogHelper.Debug($"SecurityLog event: {e.Entry.Index}");
+                        Dispatcher.Invoke(() => { LogEntries.Add(entry); ScanProgress = LogEntries.Count; });
+                    });
+                }
+            } 
+            if (ScanProgressMax < LogEntries.Count)
+            {
+                LogEntries.RemoveAt(0);
+                Dispatcher.Invoke(() => { ScanProgressMax = securityLog.Entries.Count; });
             }
         }
 
-        private static bool TCPFilter(object le) => ((LogEntryViewModel)le).Protocol == "TCP";
+        int SecurityLogIndexMax { get; set; }
 
+        /*
+         * Initializes the LogEntries list to show the most recent events
+         */
         private void InitEventLog(Action<int> progressCallback)
         {
             try
             {
-                Dispatcher.Invoke(() => LogEntries.Clear());
+                LogHelper.Debug($"InitEventLog ...");
+                //Dispatcher.Invoke(() => LogEntries.Clear());
 
-                ScanProgressMax = securityLog.Entries.Count;
+                Dispatcher.Invoke(() => { ScanProgressMax = securityLog.Entries.Count; });
+                SecurityLogIndexMax = securityLog.Entries.Count - 1;
 
-                // Have to use a Enumerable.Range to enumerate the entries starting from the last one, since calling Reverse on the initial collection will first enumerate all entries
-                var entries = Enumerable.Range(0, ScanProgressMax)
-                                        .Select(i => { progressCallback?.Invoke(i + 1); return securityLog.Entries[ScanProgressMax - i - 1]; })
-                                        .Where(FirewallHelper.IsEventAccepted)
-                                        .Select(EntryViewFromLogEntry)
-                                        .Where(entry => entry != null)
-                                        .Select(entry => { Dispatcher.Invoke(() => { LogEntries.Add(entry); }); return entry; })
-                                        .ToList();
+                //Enumerable.Range(0, ScanProgressMax)
+                //        .Select(i => { return securityLog.Entries[ScanProgressMax - ++i]; })
+                //        .Where(FirewallHelper.IsEventAccepted)
+                //        .Select(entry => EntryViewFromLogEntry(entry))
+                //        .Where(entryView => entryView != null)
+                //        .Select(entryView => { Dispatcher.Invoke(() => { LogEntries.Add(entryView); progressCallback?.Invoke(LogEntries.Count); }); return entryView; })
+                //        .ToList();
+
+                for (int i=SecurityLogIndexMax; i >= 0; i--)
+                {
+                    EventLogEntry entry = securityLog.Entries[i];
+                    LogEntryViewModel entryView;
+                    if (FirewallHelper.IsEventAccepted(entry))
+                    {
+                        entryView = EntryViewFromLogEntry(entry);
+                        if (entryView != null)
+                        {
+                            Dispatcher.Invoke(() => { LogEntries.Add(entryView); progressCallback?.Invoke(LogEntries.Count); });
+                        }
+                    }
+                }
+
+                LogHelper.Debug($"InitEventLog - Logentries.count={LogEntries.Count}");
+
             }
-            catch (ObjectDisposedException)
+            catch (ObjectDisposedException ede)
             {
                 // Could use a cancellation token instead, but chances are that dispose will occur before the token is actually checked. Going for the ugly way then.
+                LogHelper.Error($"{ede.Message}", ede);
             }
             catch (Exception exc)
             {
@@ -222,6 +282,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             try
             {
+                //LogHelper.Debug($"Create EntryViewModel entry...");
                 var pid = int.Parse(GetReplacementString(entry, 0));
                 var direction = GetReplacementString(entry, 2) == @"%%14593" ? "Out" : "In";
                 string targetIp;
