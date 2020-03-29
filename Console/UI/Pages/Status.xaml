@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Pages" 
+      xmlns:settings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common;assembly=Wokhan.WindowsFirewallNotifier.Common"
       xmlns:resx="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Properties;assembly=Wokhan.WindowsFirewallNotifier.Common" 
       x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.Status" 
       mc:Ignorable="d" 
@@ -26,7 +27,7 @@
                 <Button x:Name="btnSave" Click="btnSave_Click" IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}">
                     <Grid>
                         <Path HorizontalAlignment="Left" Height="14" Stretch="Uniform" Fill="#FF6C6CD4" Data="{StaticResource Image_Shield}" />
-                        <Label Margin="20,0,0,0" Content="Apply" />
+                        <Label Margin="20,0,0,0" Content="Apply" VerticalAlignment="Bottom" />
                     </Grid>
                 </Button>
                 <Button x:Name="btnRevert" Click="btnRevert_Click">
@@ -168,7 +169,19 @@
                     <RadioButton GroupName="rdbOutAll" Padding="0,10,0,0" IsChecked="{Binding AllIsOutBlockedNotif}" Content="Block and prompt*" />
                 </StackPanel>
             </Grid>
-            <TextBlock Margin="10" FontStyle="Italic" TextWrapping="Wrap" Text="{x:Static resx:Resources.Status_FooterRemark}" />
+            <TextBlock Margin="10,0" FontStyle="Italic" TextWrapping="Wrap" Text="{x:Static resx:Resources.Status_FooterRemark}" />
+            <StackPanel Margin="10">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <ToggleButton x:Name="tgStartNotifier" Style="{StaticResource ToggleSwitch}" Padding="3,0,3,0" Content="Start notifier after windows login" ToolTip="" IsChecked="{Binding StartNotifierAfterLogin, Source={x:Static settings:Settings.Default}}" Width="290" ScrollViewer.CanContentScroll="True" />
+                    <Button Style="{StaticResource RoundedButton}" Padding="0" x:Name="btnTestNotif" Click="btnTestNotif_Click" HorizontalAlignment="Right" Margin="0,0,0,0" BorderBrush="{DynamicResource AccentColorBrush}" FontWeight="Bold" FontStyle="Normal" Background="#00000000" >
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Height="20" Margin="3,0,0,0"/>
+                            <Label Content="Start Notifier now" Padding="0" Margin="5" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10" Padding="5,0" Content="Start notifier minimized" ToolTip="" IsChecked="{Binding StartNotifierMinimized, Source={x:Static settings:Settings.Default}}" />
+            </StackPanel>
         </StackPanel>
     </DockPanel>
 </Page>

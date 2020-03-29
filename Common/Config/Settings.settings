@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Wokhan.WindowsFirewallNotifier.Common.Config" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Wokhan.WindowsFirewallNotifier.Common" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="EnableServiceDetectionGlobal" Type="System.Boolean" Scope="Application">
@@ -67,6 +67,15 @@
     </Setting>
     <Setting Name="ActivityWindow_Orientation" Type="System.Windows.Controls.Orientation" Scope="User">
       <Value Profile="(Default)">Horizontal</Value>
+    </Setting>
+    <Setting Name="StartNotifierAfterLogin" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="StartNotifierMinimized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="IsInstalled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

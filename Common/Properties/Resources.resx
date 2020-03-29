@@ -309,7 +309,7 @@ This application has NOT been totally disabled.</value>
     <value>Note: if you don't know what a profile is all about, the private one usually refers to your home network, while the public one is for public places (restaurant, hotels...). A domain profile is usually for workplaces.</value>
   </data>
   <data name="Status_FooterRemark" xml:space="preserve">
-    <value>* The outgoing notifications are handled by WFN and cannot be applied to a specific profile. Selecting 'Block and prompt' for at least one profile will enable notifications for all of them. It also means that you'll need to disable them for all profiles at once if you wish to.</value>
+    <value>* WFN is notified everytime an outgoing connection is blocked by the windows firewall. Notifications are shown in Notifier or alternatively in the security log menu. The recommended setting is "Block and prompt" for all profiles.</value>
   </data>
   <data name="Status_WindowsFirewallGlobalStatus" xml:space="preserve">
     <value>Windows firewall global status</value>
@@ -350,5 +350,9 @@ This application has NOT been totally disabled.</value>
   <data name="GeoConnection2_CannotRetrieveConnectionLocationForPublicIp" xml:space="preserve">
     <value>Cannot retrieve connection location for public ip - connection may be blocked by the firewall. 
 You may need to create a rule for WFN in the Notifier to unblock it.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Notifier" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\notifier.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

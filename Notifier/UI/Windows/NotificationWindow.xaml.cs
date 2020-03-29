@@ -406,13 +406,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         public void ShowConsole()
         {
-            if (Process.GetProcessesByName(WFN_PROCESS_NAME).Length == 0)
+            if (Process.GetProcessesByName(ProcessHelper.WFNProcessEnum.WFN.ToString()).Length == 0)
             {
                 Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, WFN_EXE));
             }
             else
             {
-                ProcessHelper.RestoreProcessWindowState(WFN_PROCESS_NAME);
+                ProcessHelper.StartOrRestoreToForeground(ProcessHelper.WFNProcessEnum.WFN);
             }
         }
 
