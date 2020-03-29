@@ -61,7 +61,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             [CallerFilePath] string? filePath = null,
             [CallerLineNumber] int lineNumber = -1)
 #else
-        public static bool isDebugEnabled()
+        public static bool IsDebugEnabled()
         {
             return false;
         }

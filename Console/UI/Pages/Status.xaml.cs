@@ -1,17 +1,14 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using Wokhan.WindowsFirewallNotifier.Common;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 using System.Diagnostics;
-using Messages = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
 using System.IO;
 using System;
-using System.Runtime.CompilerServices;
-using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
+using static Wokhan.WindowsFirewallNotifier.Common.Net.WFP.FirewallHelper;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
