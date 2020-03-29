@@ -18,6 +18,7 @@ using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
+using Wokhan.WindowsFirewallNotifier.Common.Processes;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 {
@@ -30,9 +31,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
     */
     public partial class NotificationWindow : System.Windows.Window, INotifyPropertyChanged
     {
-        private const string WFN_PROCESS_NAME = "WFN"; // TODO: move to settings?
-        private const string WFN_EXE = "WFN.exe";
-
         private bool isDetailsExpanded;
 
         private readonly NotifierTrayIcon notifierTrayIcon;
@@ -406,13 +404,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         public void ShowConsole()
         {
-            if (Process.GetProcessesByName(ProcessHelper.WFNProcessEnum.WFN.ToString()).Length == 0)
+            if (Process.GetProcessesByName(ProcessNames.WFN.ProcessName).Length == 0)
             {
-                Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, WFN_EXE));
+                Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ProcessNames.WFN.FileName));
             }
             else
             {
-                ProcessHelper.StartOrRestoreToForeground(ProcessHelper.WFNProcessEnum.WFN);
+                ProcessHelper.StartOrRestoreToForeground(ProcessNames.WFN);
             }
         }
 

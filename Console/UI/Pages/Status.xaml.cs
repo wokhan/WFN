@@ -9,6 +9,9 @@ using Messages = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
 using System.IO;
 using System;
 using System.Runtime.CompilerServices;
+using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
+using Wokhan.WindowsFirewallNotifier.Common.Config;
+using Wokhan.WindowsFirewallNotifier.Common.Processes;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -157,8 +160,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private void btnTestNotif_Click(object sender, RoutedEventArgs e)
         {
             // TODO: Does not show if mimimized to tray
-            //ProcessHelper.StartOrRestoreToForeground(ProcessHelper.WFNProcessEnum.Notifier);  
-            Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{ProcessHelper.WFNProcessEnum.Notifier}.exe"));
+            //ProcessHelper.StartOrRestoreToForeground(ProcessNames.Notifier);  
+            Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ProcessNames.Notifier.FileName));
         }
     }
 }

@@ -13,6 +13,7 @@ using System.Windows;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using System.IO;
+using Wokhan.WindowsFirewallNotifier.Common.Processes;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
@@ -311,7 +312,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 return ret;
             }
             //There's an undocumented feature/bug where instead of ArgumentException, an InvalidOperationException is thrown.
-            catch (Exception e) when (e is ArgumentException || e is  InvalidOperationException)
+            catch (Exception e) when (e is ArgumentException || e is InvalidOperationException)
             {
                 LogHelper.Debug("Couldn't get description for service: " + service);
                 return String.Empty;
@@ -601,14 +602,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             return dict;
         }
 
-        /**
-         * Finds the process by name and sets the main window to the foreground.
-         */
-        public static void RestoreProcessWindowState(string processName)
+        /// <summary>
+        /// Finds the process by name and sets the main window to the foreground.
+        /// Note: Process name is the cli executable excluding ".exe" e.g. "WFN" instead of "WFN.exe". 
+        /// </summary>
+        /// <param name="processName">Known process from enum</param>
+        public static void StartOrRestoreToForeground(ProcessNames processName)
         {
-            // get the process
-            Process bProcess = Process.GetProcessesByName(processName).FirstOrDefault();
-
+            // TODO: check NullPointerRef
+            Process bProcess = Process.GetProcessesByName(processName.ProcessName).FirstOrDefault();
             // check if the process is running
             if (bProcess != null)
             {
@@ -624,8 +626,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             }
             else
             {
-                // the process is not running, so start it
-                Process.Start(processName);
+                _ = Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, processName.FileName));
             }
         }
 
