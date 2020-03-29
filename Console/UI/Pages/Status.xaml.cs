@@ -20,7 +20,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// </summary>
     public partial class Status : Page, INotifyPropertyChanged
     {
-        FirewallHelper.FirewallStatusWrapper status = new FirewallHelper.FirewallStatusWrapper();
+        FirewallStatusWrapper status = new FirewallStatusWrapper();
 
         bool isInstalled = false;
 
@@ -96,14 +96,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         }
 
         // TODO: remove?
-        private static bool isEnabled(FirewallHelper.FirewallStatusWrapper status)
+        private static bool isEnabled(FirewallStatusWrapper status)
         {
             return status.PrivateIsEnabled || status.DomainIsEnabled || status.PublicIsEnabled;
         }
 
 
         // TODO: remove?
-        private static bool isBlockAndPromptEnabledInProfile(FirewallHelper.FirewallStatusWrapper status)
+        private static bool isBlockAndPromptEnabledInProfile(FirewallStatusWrapper status)
         {
             return ((status.PrivateIsEnabled && status.PrivateIsOutBlockedNotif)
                        || (status.PublicIsEnabled && status.PublicIsOutBlockedNotif)
@@ -111,7 +111,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         }
 
         // TODO: remove?
-        private static bool IsBlockAndPromptEnabled(FirewallHelper.FirewallStatusWrapper status)
+        private static bool IsBlockAndPromptEnabled(FirewallStatusWrapper status)
         {
             return status.PrivateIsOutBlockedNotif || status.PublicIsOutBlockedNotif || status.DomainIsOutBlockedNotif;
         }
@@ -128,7 +128,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             isInstalled = InstallHelper.IsInstalled();
 
-            status = new FirewallHelper.FirewallStatusWrapper();
+            status = new FirewallStatusWrapper();
 
             if (status.PrivateIsOutBlocked && isInstalled)
             {

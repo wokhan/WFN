@@ -116,7 +116,7 @@
                 <Label Grid.Column="3" HorizontalContentAlignment="Center" FontWeight="Bold" Content="Domain" />
                 <Label Grid.Column="4" HorizontalContentAlignment="Center" FontWeight="Bold" Content="All" />
                 <!-- -->
-                <Label Grid.Row="1" Grid.ColumnSpan="4" FontWeight="Bold" Content="{x:Static resx:Resources.Status_WindowsFirewallGlobalStatus}" Background="{DynamicResource AccentColorBrush}" />
+                <Label Grid.Row="1" Grid.ColumnSpan="5" FontWeight="Bold" Content="{x:Static resx:Resources.Status_WindowsFirewallGlobalStatus}" Background="{DynamicResource AccentColorBrush}" />
                 <!-- -->
                 <ToggleButton Padding="5" Grid.Row="2" Grid.Column="1" IsChecked="{Binding PrivateIsEnabled}" />
                 <ToggleButton Grid.Row="2" Grid.Column="2" IsChecked="{Binding PublicIsEnabled}" />
@@ -124,7 +124,7 @@
                 <ToggleButton Grid.Row="2" Grid.Column="4" IsChecked="{Binding AllIsEnabled}" />
 
                 <!-- -->
-                <Label Grid.Row="4" FontWeight="Bold" Grid.ColumnSpan="4" Content="{x:Static resx:Resources.Status_DefaultActionsWhenNoFilteringRuleMatches}" Background="{DynamicResource AccentColorBrush}" />
+                <Label Grid.Row="4" FontWeight="Bold" Grid.ColumnSpan="5" Content="{x:Static resx:Resources.Status_DefaultActionsWhenNoFilteringRuleMatches}" Background="{DynamicResource AccentColorBrush}" />
                 <!-- -->
                 <Label Grid.Row="5" Content="Inbound" FontWeight="Bold" />
                 <StackPanel Grid.Row="5" Grid.Column="1" IsEnabled="{Binding PrivateIsEnabled}">
