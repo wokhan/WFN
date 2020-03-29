@@ -6,6 +6,7 @@
     <AssemblyName>WFN</AssemblyName>
     <RootNamespace>Wokhan.WindowsFirewallNotifier.Console</RootNamespace>
     <StartupObject>Wokhan.WindowsFirewallNotifier.Console.App</StartupObject>
+    <NeutralLanguage>en-US</NeutralLanguage>
     <ApplicationIcon>Resources\Images\WFN.ico</ApplicationIcon>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
     <ApplicationRevision>0</ApplicationRevision>
@@ -94,6 +95,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Interop.NetFwTypeLib">
+      <HintPath>..\Interop\Interop.NetFwTypeLib.dll</HintPath>
+    </Reference>
     <Reference Include="Wokhan.Core">
       <HintPath>..\TempSharedLib\Wokhan.Core.dll</HintPath>
     </Reference>

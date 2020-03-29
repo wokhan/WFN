@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Wokhan.Collections;
@@ -12,7 +10,7 @@ using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 /// DnsResolver resolves IP addesses to IPHostEntry records asynchronously and caches them in a dictionary.
 /// Author: harrwiss / Nov 2019
 /// </summary>
-namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
+namespace Wokhan.WindowsFirewallNotifier.Common.Net.DNS
 {
 
     /// <summary>
@@ -26,7 +24,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
         public static readonly ObservableDictionary<IPAddress, CachedIPHostEntry> CachedIPHostEntryDict = new ObservableDictionary<IPAddress, CachedIPHostEntry>();
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
-        public static async Task<bool?> ResolveIpAddress(string ip, Action<CachedIPHostEntry> callback = null)
+        public static async Task<bool?> ResolveIpAddress(string ip, Action<CachedIPHostEntry>? callback = null)
         {
             return await Task.Run(() =>
             {
@@ -36,7 +34,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
                     return false;
                 }
 
-                IPAddress ipa = null;
+                IPAddress ipa = IPAddress.None;
                 try
                 {
                     ipa = IPAddress.Parse(ip);
@@ -48,7 +46,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
                             return true;
                         }
 
-                        NotifyCollectionChangedEventHandler add = (sender, args) =>
+                        void add(object sender, NotifyCollectionChangedEventArgs args)
                         {
                             if (args.Action == NotifyCollectionChangedAction.Replace)
                             {
@@ -56,7 +54,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
                                 if (entry.Key == ipa)
                                     callback?.Invoke(entry.Value);
                             }
-                        };
+                        }
                         CachedIPHostEntryDict.CollectionChanged += add;
                         CachedIPHostEntryDict.CollectionChanged += (s, e) => CachedIPHostEntryDict.CollectionChanged -= add;
                         return (bool?)null;
@@ -76,7 +74,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
                 catch (Exception e)
                 {
                     LogHelper.Debug($"Unable to resolve {ip}, message was {e.Message}");
-                    
+
                     var ret = CachedIPHostEntry.CreateErrorEntry(ipa, e);
                     PutEntry(ipa, ret);
                     callback?.Invoke(ret);

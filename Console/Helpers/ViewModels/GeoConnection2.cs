@@ -1,5 +1,4 @@
-﻿using Wokhan.WindowsFirewallNotifier.Common.Helpers;
-using Microsoft.Maps.MapControl.WPF;
+﻿using Microsoft.Maps.MapControl.WPF;
 using System.Linq;
 using System.IO;
 using System;
@@ -9,6 +8,7 @@ using System.Threading.Tasks;
 using MaxMind.GeoIP2;
 using MaxMind.GeoIP2.Responses;
 using Resources = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
+using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
@@ -27,10 +27,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             get
             {
-                if (_currentCoordinates == null)
+                if (_currentCoordinates is null)
                 {
                     IPAddress address = IPHelper.GetPublicIpAddress();
-                    if (address == null)
+                    if (address == IPAddress.None)
                     {
                         throw new Exception(Resources.GeoConnection2_CannotRetrieveConnectionLocationForPublicIp);
                     }
@@ -45,7 +45,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             get
             {
-                if (_coordinates == null)
+                if (_coordinates is null)
                 {
                     _coordinates = IPToLocation(this.RemoteAddress);
                 }
@@ -77,7 +77,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             }
             return new Location();
         }
-        public GeoConnection2(IPHelper.I_OWNER_MODULE ownerMod) : base(ownerMod)
+        public GeoConnection2(IConnectionOwnerInfo ownerMod) : base(ownerMod)
         {
         }
 
@@ -95,7 +95,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             get
             {
-                if (_fullRoute == null && !computePending)
+                if (_fullRoute is null && !computePending)
                 {
                     computePending = true;
                     ComputeRoute();
@@ -133,7 +133,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             return await Task.Run(() =>
                 {
-                    if (_databaseReader == null)
+                    if (_databaseReader is null)
                     {
                         _databaseReader = InitDatabaseReader(_DB_PATH);
                     }

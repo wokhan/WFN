@@ -1,24 +1,17 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows;
-using System.Windows.Media;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers;
+﻿using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
     public class MonitoredConnection : Connection
     {
-        private IPHelper.I_OWNER_MODULE rawConnection;
+        private IConnectionOwnerInfo rawConnection;
 
         public string Name { get; set; }
 
         //private TCPHelper.TCP_ESTATS_BANDWIDTH_RW_v0 prevState;
         private object rawrow;
 
-        public MonitoredConnection(IPHelper.I_OWNER_MODULE row) : base(row)
+        public MonitoredConnection(IConnectionOwnerInfo row) : base(row)
         {
             this.rawConnection = row;
             EnableStats();
@@ -28,14 +21,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             try
             {
-                if (this.rawConnection is TCPHelper.MIB_TCPROW_OWNER_MODULE)
+                if (this.rawConnection is MIB_TCPROW_OWNER_MODULE)
                 {
-                    rawrow = ((TCPHelper.MIB_TCPROW_OWNER_MODULE)this.rawConnection).ToTCPRow();
+                    rawrow = ((MIB_TCPROW_OWNER_MODULE)this.rawConnection).ToTCPRow();
                     TCPHelper.EnsureStatsAreEnabled((TCPHelper.MIB_TCPROW)rawrow);
                 }
                 else
                 {
-                    rawrow = ((TCP6Helper.MIB_TCP6ROW_OWNER_MODULE)this.rawConnection).ToTCPRow();
+                    rawrow = ((MIB_TCP6ROW_OWNER_MODULE)this.rawConnection).ToTCPRow();
                     TCP6Helper.EnsureStatsAreEnabled((TCP6Helper.MIB_TCP6ROW)rawrow);
                 }
             }

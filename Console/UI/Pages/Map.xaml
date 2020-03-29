@@ -166,7 +166,7 @@
                                                             <Style TargetType="Image">
                                                                 <Style.Triggers>
                                                                     <DataTrigger Binding="{Binding IsChecked,ElementName=btnGrpOwner}" Value="True">
-                                                                        <Setter Property="Source" Value="{Binding Items[0].Icon,Mode=OneTime}" />
+                                                                        <Setter Property="Source" Value="{Binding Items[0].Icon}" />
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>

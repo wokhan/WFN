@@ -12,9 +12,10 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Threading;
-
-using Wokhan.WindowsFirewallNotifier.Common;
+using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
+using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
@@ -22,9 +23,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// <summary>
     /// Interaction logic for EventLog.xaml
     /// </summary>
-    public partial class EventsLog : Page, INotifyPropertyChanged
+    public sealed partial class EventsLog : Page, INotifyPropertyChanged, IDisposable
     {
-        private readonly Dictionary<int, ProcessHelper.ServiceInfoResult> services = ProcessHelper.GetAllServicesByPidWMI();
+        private readonly Dictionary<int, ServiceInfoResult> services = ProcessHelper.GetAllServicesByPidWMI();
         private readonly ICollectionView dataView;
 
         private static readonly ToolTip toolTipInstance = new ToolTip
@@ -148,7 +149,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private void EventsLog_Unloaded(object sender, RoutedEventArgs e)
         {
             securityLog.EntryWritten -= SecurityLog_EntryWritten;
-            securityLog?.Dispose();
         }
 
         private void EventsLog_Loaded(object sender, RoutedEventArgs e)
@@ -239,7 +239,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     targetPort = GetReplacementString(entry, 4);
                 }
 
-                var friendlyPath = GetReplacementString(entry, 1) == "-" ? "System" : FileHelper.GetFriendlyPath(GetReplacementString(entry, 1));
+                var friendlyPath = GetReplacementString(entry, 1) == "-" ? "System" : PathResolver.GetFriendlyPath(GetReplacementString(entry, 1));
                 var fileName = System.IO.Path.GetFileName(friendlyPath);
                 var protocol = int.Parse(GetReplacementString(entry, 7));
 
@@ -257,10 +257,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     FileName = fileName,
                     TargetIP = targetIp,
                     TargetPort = targetPort,
-                    Protocol = FirewallHelper.getProtocolAsString(protocol),
+                    Protocol = Protocol.GetProtocolAsString(protocol),
                     Direction = direction,
                     FilterId = GetReplacementString(entry, 8),
-                    Reason = FirewallHelper.getEventInstanceIdAsString(entry.InstanceId),
+                    Reason = FirewallHelper.GetEventInstanceIdAsString(entry.InstanceId),
                     Reason_Info = entry.Message
                 };
 
@@ -282,7 +282,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private void btnLocate_Click(object sender, RoutedEventArgs e)
         {
             var selectedLog = (LogEntryViewModel)gridLog.SelectedItem;
-            if (selectedLog == null)
+            if (selectedLog is null)
             {
                 //@
                 return;
@@ -303,7 +303,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private void GridLog_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //System.Console.WriteLine($"Grid SelectionChanged: {sender}, {e.Source}, {e.Handled}, {e.OriginalSource}, {e}");
-            if (gridLog.SelectedItem == null)
+            if (gridLog.SelectedItem is null)
             {
                 btnLocate.IsEnabled = false;
             }
@@ -443,6 +443,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             public bool Equals([AllowNull] LogEntryViewModel x, [AllowNull] LogEntryViewModel y) => x.Id == y.Id;
 
             public int GetHashCode([DisallowNull] LogEntryViewModel obj) => obj.Id;
+        }
+
+        public void Dispose()
+        {
+            securityLog?.Dispose();
         }
     }
 }

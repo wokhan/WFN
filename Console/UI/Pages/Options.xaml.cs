@@ -6,11 +6,11 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Wokhan.WindowsFirewallNotifier.Common;
 using System.Linq;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using System.Windows.Threading;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common.Config;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -51,7 +51,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void btnTestNotif_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe"));
+            Process.Start(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe"));
         }
 
         private void btnRestartAdmin_Click(object sender, RoutedEventArgs e)

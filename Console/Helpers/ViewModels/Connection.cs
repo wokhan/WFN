@@ -2,9 +2,11 @@
 using System.Windows.Media.Imaging;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using System.Collections.Generic;
-using Wokhan.WindowsFirewallNotifier.Common.Net.Dns;
 using Wokhan.Core.ComponentModel;
 using Wokhan.ComponentModel.Extensions;
+using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
+using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
+using Wokhan.WindowsFirewallNotifier.Common.Net.DNS;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
@@ -16,7 +18,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         /// </summary>
         public static Dictionary<int, string[]> LocalOwnerWMICache = null;
 
-        public Connection(IPHelper.I_OWNER_MODULE ownerMod)
+        public Connection(IConnectionOwnerInfo ownerMod)
         {
             PID = ownerMod.OwningPid;
             IsNew = true;
@@ -27,7 +29,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             this._remoteAddress = ownerMod.RemoteAddress;
             this._remotePort = (ownerMod.RemotePort == -1 ? String.Empty : ownerMod.RemotePort.ToString());
             this.LastSeen = DateTime.Now;
-            this._state = Enum.GetName(typeof(IPHelper.MIB_TCP_STATE), ownerMod.State);
+            this._state = Enum.GetName(typeof(ConnectionStatus), ownerMod.State);
 
             try
             {
@@ -42,7 +44,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
                 Path = "Unresolved"; //FIXME: Use something else?
             }
 
-            if (ownerMod.OwnerModule == null)
+            if (ownerMod.OwnerModule is null)
             {
                 if (PID == 0)
                 {
@@ -100,7 +102,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             get
             {
-                if (_icon == null) UpdateIcon();
+                if (_icon is null) UpdateIcon();
                 return _icon;
             }
             private set => this.SetValue(ref _icon, value, NotifyPropertyChanged);
@@ -116,7 +118,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         public string Path { get; private set; }
         //public IEnumerable<FirewallHelper.Rule> FirewallRule { get { return FirewallHelper.GetMatchingRules(Path, Protocol, RemoteAddress, RemotePort, LocalPort, (Owner != ProcName ? new[] { Owner } : null), false).ToList(); } }
 
-        internal void UpdateValues(IPHelper.I_OWNER_MODULE b)
+        internal void UpdateValues(IConnectionOwnerInfo b)
         {
             //lvi.LocalAddress = b.LocalAddress;
             //lvi.Protocol = b.Protocol;
@@ -131,7 +133,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
                 this.RemotePort = newPort;
             }
 
-            var newState = Enum.GetName(typeof(IPHelper.MIB_TCP_STATE), b.State);
+            var newState = Enum.GetName(typeof(ConnectionStatus), b.State);
             if (this.State != newState)
             {
                 this.State = newState;
@@ -166,7 +168,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             get
             {
-                if (_localHostName == null)
+                if (_localHostName is null)
                     DnsResolver.ResolveIpAddress(_localAddress, entry => LocalHostName = entry.DisplayText);
                 return _localHostName;
             }
@@ -193,7 +195,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             get
             {
-                if (_remoteHostName == null)
+                if (_remoteHostName is null)
                     DnsResolver.ResolveIpAddress(_remoteAddress, entry => RemoteHostName = entry.DisplayText);
                 return _remoteHostName;
             }

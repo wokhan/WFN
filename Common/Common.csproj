@@ -6,17 +6,17 @@
     <RootNamespace>Wokhan.WindowsFirewallNotifier.Common</RootNamespace>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <NeutralLanguage>en-US</NeutralLanguage>
     <Description>Windows Firewall Notifier - Common Library</Description>
     <Product>Windows Firewall Notifier</Product>
     <Copyright>2011-2020 Wokhan (https://github.com/wokhansoft/WFN)</Copyright>
     <Authors>Wokhan Solutions</Authors>
     <OutputPath>..\bin\$(ConfigurationName)</OutputPath>
+    <Nullable>Enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Properties\Annotations.cs" />
     <Compile Remove="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Resources\Notifier.ico" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.8" />
@@ -47,19 +47,15 @@
     <Resource Include="Resources\Shield.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\Notifier.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Settings.Designer.cs">
+    <None Include="app.config" />
+    <Compile Update="Config\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Settings.settings">
+    <None Update="Config\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
@@ -69,14 +65,12 @@
   </ItemGroup>
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <PostBuildEvent>del WFN.config
-ren "Wokhan.WindowsFirewallNotifier.Common.dll.config" WFN.config</PostBuildEvent>
-    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <PostBuildEvent>
+      del WFN.config
+      ren "Wokhan.WindowsFirewallNotifier.Common.dll.config" WFN.config
+    </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
 </Project>

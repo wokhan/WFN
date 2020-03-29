@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
+using WFPRules = Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -22,7 +23,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             filterRules();
         }
 
-        private List<FirewallHelper.Rule> allRules;
+        private List<WFPRules::Rule> allRules;
 
         private string _filter = String.Empty;
         public string Filter
@@ -67,7 +68,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             LogHelper.Debug("Filtering rules...");
             try
             {
-                Predicate<FirewallHelper.Rule> pred = null;
+                Predicate<WFPRules::Rule> pred = null;
                 switch (TypeFilter)
                 {
                     case TypeFilterEnum.ACTIVE:
@@ -96,7 +97,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 System.ComponentModel.SortDescription oldSorting = gridRules.Items.SortDescriptions.FirstOrDefault();
                 String oldSortingPropertyName = oldSorting.PropertyName ?? gridRules.Columns.FirstOrDefault().Header.ToString();
                 System.ComponentModel.ListSortDirection oldSortingDirection = oldSorting.Direction;
-                gridRules.ItemsSource = (pred == null ? allRules : allRules.Where(r => pred.GetInvocationList().All(p => ((Predicate<FirewallHelper.Rule>)p)(r)))).ToList();
+                gridRules.ItemsSource = (pred is null ? allRules : allRules.Where(r => pred.GetInvocationList().All(p => ((Predicate<WFPRules::Rule>)p)(r)))).ToList();
                 gridRules.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription(oldSortingPropertyName, oldSortingDirection));
                 foreach (var column in gridRules.Columns)
                 {
@@ -117,7 +118,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private static readonly string oldRulePrefix = Common.Properties.Resources.RULE_NAME_FILTER_PREFIX2;
         private static readonly string rulePrefixAlt2 = Common.Properties.Resources.RULE_NAME_FILTER_PREFIX3;
         private static readonly string tempRulePrefix = Common.Properties.Resources.RULE_TEMP_PREFIX;
-        private bool WFNRulesPredicate(FirewallHelper.Rule r)
+        private bool WFNRulesPredicate(WFPRules::Rule r)
         {
             return r.Name.StartsWith(rulePrefix, StringComparison.Ordinal) 
                 || r.Name.StartsWith(oldRulePrefix, StringComparison.Ordinal) 
@@ -125,17 +126,17 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 || r.Name.StartsWith(tempRulePrefix, StringComparison.Ordinal);
         }
 
-        private bool WSHRulesPredicate(FirewallHelper.Rule r)
+        private bool WSHRulesPredicate(WFPRules::Rule r)
         {
             return r.Name.StartsWith(Common.Properties.Resources.RULE_WSH_PREFIX, StringComparison.Ordinal);
         }
 
-        private bool activeRulesPredicate(FirewallHelper.Rule r)
+        private bool activeRulesPredicate(WFPRules::Rule r)
         {
             return r.Enabled;
         }
 
-        private bool filteredRulesPredicate(FirewallHelper.Rule r)
+        private bool filteredRulesPredicate(WFPRules::Rule r)
         {
             return (r.Name.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) > -1 || (r.ApplicationName != null && r.ApplicationName.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) > -1));
         }
@@ -143,13 +144,13 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private void btnRemoveRule_Click(object sender, RoutedEventArgs e)
         {
             System.Collections.IList selectedRules = gridRules.SelectedItems;
-            if (selectedRules == null || selectedRules.Count == 0)
+            if (selectedRules is null || selectedRules.Count == 0)
             {
                 return;
             }
             if (MessageBox.Show(Common.Properties.Resources.MSG_RULE_DELETE, Common.Properties.Resources.MSG_DLG_TITLE, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                foreach (FirewallHelper.Rule selectedRule in selectedRules)
+                foreach (WFPRules::Rule selectedRule in selectedRules)
                 {
 
                    if (!FirewallHelper.RemoveRule(selectedRule.Name))
@@ -165,8 +166,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void btnLocate_Click(object sender, RoutedEventArgs e)
         {
-            var selectedRule = (FirewallHelper.Rule)gridRules.SelectedItem;
-            if (selectedRule == null)
+            var selectedRule = (WFPRules::Rule)gridRules.SelectedItem;
+            if (selectedRule is null)
             {
                 //@
                 return;

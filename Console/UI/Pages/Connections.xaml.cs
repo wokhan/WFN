@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Threading;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
@@ -108,7 +108,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             running = false;
         }
 
-        private void AddOrUpdateConnection(IPHelper.I_OWNER_MODULE b)
+        private void AddOrUpdateConnection(IConnectionOwnerInfo b)
         {
             Connection lvi = lstConnections.SingleOrDefault(l => l.PID == b.OwningPid && l.Protocol == b.Protocol && l.LocalPort == b.LocalPort.ToString());
 

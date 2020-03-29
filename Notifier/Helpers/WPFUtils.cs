@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Media;
-using System.Threading.Tasks;
-using System.Windows.Threading;
 using System.Windows;
 using System.Runtime.InteropServices;
 
@@ -30,7 +27,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
          */
         public static SolidColorBrush LightenBrush(Brush brush, byte amount)
         {
-            if (brush == null)
+            if (brush is null)
             {
                 throw new ArgumentException(@"Brush parameter may not be null");
             }

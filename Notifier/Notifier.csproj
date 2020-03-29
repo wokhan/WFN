@@ -7,6 +7,7 @@
     <AssemblyName>Notifier</AssemblyName>
     <RootNamespace>Wokhan.WindowsFirewallNotifier.Notifier</RootNamespace>
     <StartupObject>Wokhan.WindowsFirewallNotifier.Notifier.App</StartupObject>
+    <NeutralLanguage>en-US</NeutralLanguage>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>

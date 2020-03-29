@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
 using Wokhan.WindowsFirewallNotifier.Console.UI.Controls;
@@ -53,14 +53,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private DispatcherTimer timer = new DispatcherTimer() { IsEnabled = true };
 
-        private ObservableCollection<MapGroupedView> _connections = new ObservableCollection<MapGroupedView>();
-        public ObservableCollection<MapGroupedView> Connections { get { return _connections; } }
+        public ObservableCollection<MapGroupedView> Connections { get; } = new ObservableCollection<MapGroupedView>();
 
-        private ListCollectionView _connectionsView;
-        public ListCollectionView ConnectionsView { get { return _connectionsView; } }
-
-        private ObservableCollection<GeoConnection2> _connectionsRoutes = new ObservableCollection<GeoConnection2>();
-        public ObservableCollection<GeoConnection2> ConnectionsRoutes { get { return _connectionsRoutes; } }
+        public ListCollectionView ConnectionsView { get; }
+        public ObservableCollection<GeoConnection2> ConnectionsRoutes { get; } = new ObservableCollection<GeoConnection2>();
 
         private int _interval = 1;
 
@@ -68,10 +64,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         protected void NotifyPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
 
@@ -83,9 +76,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         public Map()
         {
-            _connectionsView = (ListCollectionView)CollectionViewSource.GetDefaultView(_connectionsRoutes);
-            _connectionsView.IsLiveGrouping = true;
-            _connectionsView.GroupDescriptions.Add(new PropertyGroupDescription("Owner"));
+            ConnectionsView = (ListCollectionView)CollectionViewSource.GetDefaultView(ConnectionsRoutes);
+            ConnectionsView.IsLiveGrouping = true;
+            ConnectionsView.GroupDescriptions.Add(new PropertyGroupDescription("Owner"));
             
             InitializeComponent();
 
@@ -107,7 +100,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 MessageBox.Show("The IP database cannot be found. The Map feature is disabled.", "Missing database");
                 return;
             }
-            var ok = await GeoConnection2.InitCache();
+            var ok = await GeoConnection2.InitCache().ConfigureAwait(true);
 
             initialPoint.SetValue(MapLayer.PositionProperty, CurrentCoordinates);
 
@@ -120,7 +113,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         void timer_Tick(object sender, EventArgs e)
         {
             foreach (var c in IPHelper.GetAllConnections(true)
-                                      .Where(co => co.State == IPHelper.MIB_TCP_STATE.ESTABLISHED && !co.IsLoopback && co.OwnerModule != null))
+                                      .Where(co => co.State == ConnectionStatus.ESTABLISHED && !co.IsLoopback && co.OwnerModule != null))
             {
                 AddOrUpdateConnection(c);
             }
@@ -144,28 +137,28 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }*/
         }
 
-        private void AddOrUpdateConnection(IPHelper.I_OWNER_MODULE b)
+        private void AddOrUpdateConnection(IConnectionOwnerInfo b)
         {
-            var ic = _connectionsRoutes.Count % LineChart.ColorsDic.Count;
+            var ic = ConnectionsRoutes.Count % LineChart.ColorsDic.Count;
             var br = new SolidColorBrush(LineChart.ColorsDic[ic]);
 
-            GeoConnection2 existingRoute = _connectionsRoutes.SingleOrDefault(l => l.RemoteAddress.Equals(b.RemoteAddress));
-            if (existingRoute == null)
+            GeoConnection2 existingRoute = ConnectionsRoutes.SingleOrDefault(l => l.RemoteAddress.Equals(b.RemoteAddress));
+            if (existingRoute is null)
             {
-                _connectionsRoutes.Add(new GeoConnection2(b) { Brush = br });
+                ConnectionsRoutes.Add(new GeoConnection2(b) { Brush = br });
             }
         }
 
         private void btnGrpOwner_Checked(object sender, RoutedEventArgs e)
         {
-            _connectionsView.GroupDescriptions.Clear();
-            _connectionsView.GroupDescriptions.Add(new PropertyGroupDescription("Owner"));
+            ConnectionsView.GroupDescriptions.Clear();
+            ConnectionsView.GroupDescriptions.Add(new PropertyGroupDescription("Owner"));
         }
 
         private void btnGrpIP_Checked(object sender, RoutedEventArgs e)
         {
-            _connectionsView.GroupDescriptions.Clear();
-            _connectionsView.GroupDescriptions.Add(new PropertyGroupDescription("RemoteAddress"));
+            ConnectionsView.GroupDescriptions.Clear();
+            ConnectionsView.GroupDescriptions.Add(new PropertyGroupDescription("RemoteAddress"));
         }
 
         private void btnRestartAdmin_Click(object sender, RoutedEventArgs e)

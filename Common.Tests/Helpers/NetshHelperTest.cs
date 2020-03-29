@@ -1,5 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
+using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Console.Tests.NUnit;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
@@ -18,7 +19,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
     {
         public NetshHelperTest()
         {
-            Assert.True(UacHelper.CheckProcessElevated(), "Only admin can run this test - restart as admin");
+            Assert.True(UAC.CheckProcessElevated(), "Only admin can run this test - restart as admin");
         }
 
         [Test, ManualTestCategory]

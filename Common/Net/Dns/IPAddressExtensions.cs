@@ -6,7 +6,7 @@ using System.Net.Sockets;
 /// DnsResolver resolves IP addesses to IPHostEntry records asynchronously and caches them in a dictionary.
 /// Author: harrwiss / Nov 2019
 /// </summary>
-namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
+namespace Wokhan.WindowsFirewallNotifier.Common.Net.DNS
 {
     public static class IPAddressExtensions
     {
@@ -23,7 +23,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.Dns
         // see How to write Extension Methods: https://www.tutorialsteacher.com/csharp/csharp-extension-method
         {
             var favoredFamily = favorIpV6 ? AddressFamily.InterNetworkV6 : AddressFamily.InterNetwork;
-            var addrs = System.Net.Dns.GetHostAddresses(hostNameOrAddress);
+            var addrs = Dns.GetHostAddresses(hostNameOrAddress);
             return addrs.FirstOrDefault(addr => addr.AddressFamily == favoredFamily)
                    ??
                    addrs.FirstOrDefault();

@@ -61,10 +61,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
 
             public Func<IEnumerable<Point>, PointCollection> PointTransformer;
 
-            private ObservableCollection<Point> _points = new ObservableCollection<Point>();
-            public ObservableCollection<Point> Points { get { return _points; } }
+            public ObservableCollection<Point> Points { get; } = new ObservableCollection<Point>();
 
-            public PointCollection PointsCollection { get { return PointTransformer(_points); } }
+            public PointCollection PointsCollection => PointTransformer(Points);
 
             public event NotifyCollectionChangedEventHandler PointsCollectionChanged;
 
@@ -73,29 +72,23 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
             public event PropertyChangedEventHandler PropertyChanged;
             private void NotifyPropertyChanged(string caller)
             {
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs(caller));
-                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(caller));
             }
 
             public Series()
             {
-                _points.CollectionChanged += _points_CollectionChanged;
+                Points.CollectionChanged += Points_CollectionChanged;
             }
 
-            private void _points_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+            private void Points_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             {
-                if (PointsCollectionChanged != null)
-                {
-                    PointsCollectionChanged(sender, e);
-                }
+                PointsCollectionChanged?.Invoke(sender, e);
 
                 NotifyPropertyChanged(nameof(PointsCollection));
             }
         }
 
-        public enum AxeTypes
+        public enum AxeType
         {
             DateTime,
             Timestamp,
@@ -103,7 +96,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
             Other
         }
 
-        public AxeTypes XAxeType { get; set; }
+        public AxeType XAxeType { get; set; }
 
         public string XAxeLabelFormat { get; set; }
 
@@ -134,33 +127,23 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
             set { _numberToKeep = value; }
         }
 
-        private int _xTicksFrequency = 10;
-        public int XTicksFrequency
-        {
-            get { return _xTicksFrequency; }
-            set { _xTicksFrequency = value; }
-        }
-
-        private int _yTicksFrequency = 10;
-        public int YTicksFrequency
-        {
-            get { return _yTicksFrequency; }
-            set { _yTicksFrequency = value; }
-        }
+        public int XTicksFrequency { get; set; } = 10;
+        public int YTicksFrequency { get; set; } = 10;
+        
         //public Func<long, long> XRoundingFormula { get; set; }
         //public Func<long, long> YRoundingFormula { get; set; }
 
         //public bool AllowScrolling { get; set; }
 
         private List<double> _xs = new List<double>();
-        public object Xs { get { return _xs.Select(x => new { RealValue = XFuncConverter(x), ScaledValue = (x - (_xs.Count > 1 ? _xs[0] : 0) + XTranslate) * XScaleFactor }); } }
+        public object Xs => _xs.Select(x => new { RealValue = XFuncConverter(x), ScaledValue = (x - (_xs.Count > 1 ? _xs[0] : 0) + XTranslate) * XScaleFactor });
 
         private List<double> _ys = new List<double>();
-        public object Ys { get { return _ys.Select(y => new { RealValue = YFuncConverter(y), ScaledValue = (y - (_ys.Count > 1 ? _ys[0] : 0)) * YScaleFactor }); } }
+        public object Ys => _ys.Select(y => new { RealValue = YFuncConverter(y), ScaledValue = (y - (_ys.Count > 1 ? _ys[0] : 0)) * YScaleFactor });
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public static List<Color> ColorsDic = typeof(Colors).GetProperties().Select(m => m.GetValue(null)).Cast<Color>().Where(c => c.A > 200 && c.R < 150 && c.G < 150 && c.B < 150).ToList();
+        public static List<Color> ColorsDic { get; } = typeof(Colors).GetProperties().Select(m => m.GetValue(null)).Cast<Color>().Where(c => c.A > 200 && c.R < 150 && c.G < 150 && c.B < 150).ToList();
 
         public LineChart()
         {
@@ -244,10 +227,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
 
         private void NotifyPropertyChanged(string caller)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(caller));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(caller));
         }
 
         private void line_MouseEnter(object sender, MouseEventArgs e)

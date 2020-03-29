@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.IO;
-using Wokhan.WindowsFirewallNotifier.Common;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
-using Wokhan.WindowsFirewallNotifier.Common.Properties;
-using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
 using WinForms = System.Windows.Forms;
 using Messages = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources; // ns for message resources
 using System.Diagnostics;
+using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 {
@@ -19,13 +13,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
      * Notifier tray icon shown when minimizing the Notifier Window.
      * @Author: harrwiss
      */
-    public class NotifierTrayIcon
+    public sealed class NotifierTrayIcon : IDisposable
     {
         private readonly System.Windows.Forms.NotifyIcon trayIcon;
-        private readonly System.ComponentModel.IContainer components;
+        private readonly IContainer components;
 
         private bool activityTipShown = false;
-
         private readonly NotificationWindow notifierWindow;
 
         public static NotifierTrayIcon Init(NotificationWindow window)
@@ -61,34 +54,31 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             };
 
         }
+        void MenuShow_Click(object Sender, EventArgs e)
+        {
+            notifierWindow.RestoreWindowState();
+        }
+
+        void MenuClose_Click(object Sender, EventArgs e)
+        {
+            // Dispose and close the window which exits the app
+            notifierWindow.Close();
+            Environment.Exit(0);
+        }
+
+        void MenuConsole_Click(object Sender, EventArgs e)
+        {
+            Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "WFN.exe"));
+        }
+
+        void MenuShowActivity_Click(object Sender, EventArgs e)
+        {
+            App.GetActivityWindow().Show();
+        }
 
         private WinForms::ContextMenuStrip InitMenu()
         {
-            WinForms::ContextMenuStrip contextMenu = new WinForms::ContextMenuStrip();
-            void MenuShow_Click(object Sender, EventArgs e)
-            {
-                notifierWindow.RestoreWindowState();
-            }
-
-            void MenuClose_Click(object Sender, EventArgs e)
-            {
-                // Dispose and close the window which exits the app
-                notifierWindow.Close();
-                contextMenu.Dispose();
-                trayIcon.Dispose();
-                Environment.Exit(0);
-            }
-
-            void MenuConsole_Click(object Sender, EventArgs e)
-            {
-                Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "WFN.exe"));
-            }
-
-            void MenuShowActivity_Click(object Sender, EventArgs e)
-            {
-                App.GetActivityWindow().Show();
-            }
-
+            var contextMenu = new WinForms::ContextMenuStrip();
             contextMenu.Items.Add(Messages.NotifierTrayIcon_ShowNotifier, null, MenuShow_Click);
             contextMenu.Items.Add(Messages.NotifierTrayIcon_OpenConsole, null, MenuConsole_Click);
             contextMenu.Items.Add(Messages.NotifierTrayIcon_ShowActivityWindow, null, MenuShowActivity_Click);
@@ -98,7 +88,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void TrayIcon_Click(object Sender, EventArgs e)
         {
-            if (WinForms::MouseButtons.Left.Equals(((WinForms::MouseEventArgs)e).Button)) {
+            if (WinForms::MouseButtons.Left.Equals(((WinForms::MouseEventArgs)e).Button))
+            {
                 if (notifierWindow.WindowState == WindowState.Minimized)
                 {
                     notifierWindow.RestoreWindowState();
@@ -123,6 +114,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         public void ShowActivity()
         {
             string tooltipText = Messages.NotifierTrayIcon_ShowActivity_Notifier;
+
+            // TODO: @harrwiss, why using a local method here also?
             void ShowBalloonTip()
             {
                 if (!activityTipShown)
@@ -135,6 +128,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 }
             }
 
+            // TODO: @harrwiss, tooltipText is a constant, so it's size is already known.
             if (tooltipText.Length > 64)
             {
                 // limited to 64 chars in Win10
@@ -149,8 +143,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         public void Dispose()
         {
-            if (components != null)
-                components.Dispose();
+            trayIcon?.Dispose();
+            components?.Dispose();
         }
     }
 

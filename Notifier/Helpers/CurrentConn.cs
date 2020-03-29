@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Net;
 using System.Windows.Media;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common.Config;
+using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
+using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
 {
@@ -28,7 +28,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
         {
             get
             {
-                if (_icon == null)
+                if (_icon is null)
                 {
                     UpdateIcon();
                 }
@@ -46,7 +46,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
 
         private async void UpdateIcon()
         {
-            Icon = await IconHelper.GetIconAsync(CurrentPath, true);
+            Icon = await IconHelper.GetIconAsync(CurrentPath).ConfigureAwait(false);
         }
 
         public string CurrentPath { get; set; }
@@ -61,13 +61,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
         public string Target { get; set; }
         //public string TargetInfoUrl => $"http://whois.domaintools.com/{Target}";  // uses captcha validation :(
         //public string TargetInfoUrl => $"https://bgpview.io/ip/{Target}";
-        public string TargetInfoUrl => string.Format(Common.Settings.Default.TargetInfoUrl, Target);  // eg: $"https://bgpview.io/ip/{Target}"
+        public string TargetInfoUrl => string.Format(Settings.Default.TargetInfoUrl, Target);  // eg: $"https://bgpview.io/ip/{Target}"
         public string TargetPort { get; set; }
         //public string TargetPortUrl => $"https://www.speedguide.net/port.php?port={TargetPort}";
-        public string TargetPortUrl => string.Format(Common.Settings.Default.TargetPortUrl, TargetPort); // eg: $"https://www.speedguide.net/port.php?port={TargetPort}"
+        public string TargetPortUrl => string.Format(Settings.Default.TargetPortUrl, TargetPort); // eg: $"https://www.speedguide.net/port.php?port={TargetPort}"
 
         public int Protocol { get; set; }
-        public string ProtocolAsString { get { return FirewallHelper.getProtocolAsString(Protocol); } }
+        public string ProtocolAsString { get { return Common.Net.WFP.Protocol.GetProtocolAsString(Protocol); } }
 
         private string _resolvedHost = null;
         public string ResolvedHost

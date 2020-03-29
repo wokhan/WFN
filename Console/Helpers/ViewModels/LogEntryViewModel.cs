@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Media;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common;
-using Wokhan.WindowsFirewallNotifier.Common.Net.Dns;
 using System.ComponentModel;
+using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
+using Wokhan.WindowsFirewallNotifier.Common.Net.DNS;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
@@ -20,7 +20,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             get
             {
-                if (_icon == null) UpdateIcon();
+                if (_icon is null) UpdateIcon();
                 return _icon;
             }
             set
@@ -48,7 +48,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         {
             get
             {
-                if (_targetHostName == null)
+                if (_targetHostName is null)
                     DnsResolver.ResolveIpAddress(TargetIP, entry => TargetHostName = entry.DisplayText);
                 return _targetHostName;
             }
