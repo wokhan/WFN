@@ -24,15 +24,17 @@
                 <WrapPanel>
                     <ToggleButton x:Name="btnAutoRefreshToggle" IsChecked="{Binding IsTrackingEnabled}" ToolTip="Toggle auto-refresh - turned off if a row is selected">
                         <Grid>
-                            <Path HorizontalAlignment="Left" Height="16" Stretch="Uniform" Fill="Green">
+                            <Path HorizontalAlignment="Left" Height="16" Stretch="Uniform">
                                 <Path.Style>
                                     <Style TargetType="Path">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsTrackingEnabled}" Value="True">
                                                 <Setter Property="Data" Value="{StaticResource Image_Stop}" />
+                                                <Setter Property="Fill" Value="Red" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding IsTrackingEnabled}" Value="False">
                                                 <Setter Property="Data" Value="{StaticResource Image_Start}" />
+                                                <Setter Property="Fill" Value="Green" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>

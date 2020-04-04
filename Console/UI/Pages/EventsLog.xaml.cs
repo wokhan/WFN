@@ -80,17 +80,18 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             get => _isTrackingEnabled;
             set
             {
-                if (_isTrackingEnabled != value)
+                _isTrackingEnabled = value;
+                if (_isTrackingEnabled)
                 {
-                    _isTrackingEnabled = value;
-                    if (_isTrackingEnabled)
-                    {
-                        StartHandlingSecurityLogEvents();
-                    } else
-                    {
-                        PauseHandlingSecurityLogEvents();
-                    }
+                    StartHandlingSecurityLogEvents();
                 }
+                else
+                {
+                    PauseHandlingSecurityLogEvents();
+                }
+
+                // Notify xaml data trigger
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsTrackingEnabled)));  
             }
         }
 
@@ -221,14 +222,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 {
                     lock (EntriesLock)
                     {
-                        if (i > securityLog.Entries.Count-1) { continue; }
+                        if (i > securityLog.Entries.Count - 1) { continue; }
                         EventLogEntry entry = securityLog.Entries[i];
                         if (FirewallHelper.IsEventAccepted(entry))
                         {
                             LogEntryViewModel entryView = EntryViewFromLogEntry(entry);
                             if (entryView != null)
                             {
-                                Dispatcher.Invoke(() => { LogEntries.Insert(0,entryView); progressCallback?.Invoke(LogEntries.Count); });
+                                Dispatcher.Invoke(() => { LogEntries.Insert(0, entryView); progressCallback?.Invoke(LogEntries.Count); });
                             }
                         }
                     }
