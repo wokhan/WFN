@@ -68,14 +68,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         public static void Debug(string msg)
 #endif
         {
+
+#if DEBUG
+            WriteLog(LogLevel.DEBUG, msg, memberName, filePath, lineNumber);
+#else
             if (Settings.Default?.EnableVerboseLogging ?? false)
             {
-#if DEBUG
-                WriteLog(LogLevel.DEBUG, msg, memberName, filePath, lineNumber);
-#else
                 WriteLog(LogLevel.DEBUG, msg);
+            } 
 #endif
-            }
         }
 
 #if DEBUG
