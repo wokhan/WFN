@@ -28,20 +28,24 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             set { Application.Current.Resources["AccentColorBrush"] = value; Settings.Default.AccentColor = value; }
         }
 
-        public string SharedConfigurationPath { get; set; } = CustomSettingsProvider.SharedConfigurationPath;
-        public string UserConfigurationPath { get; set; } = CustomSettingsProvider.UserConfigurationPath;
-        public string UserLocalConfigurationPath { get; set; } = CustomSettingsProvider.UserLocalConfigurationPath;
+        public string ExeConfigurationPath { get; set; } = formatFileMissing(CustomSettingsProvider.ExeConfigurationPath);
+        public string RoamingConfigurationPath { get; set; } = formatFileMissing(CustomSettingsProvider.RoamingConfigurationPath);
+        public string UserLocalConfigurationPath { get; set; } = formatFileMissing(CustomSettingsProvider.UserLocalConfigurationPath);
 
         public Options()
         {
             InitializeComponent();
         }
 
+        private static string formatFileMissing(string path)
+        {
+            return (System.IO.File.Exists(path)) ? path : String.Concat("not found: ", path, "");
+        }
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
             Settings.Default.FirstRun = true;   // reset the flag to log os info again once
             Settings.Default.Save();
-            InstallHelper.SetAuditPolConnection(enableSuccess: Settings.Default.AuditPolEnableSuccessEvent, enableFailure:true);  // always turn this on for now so that security log and notifier works
+            InstallHelper.SetAuditPolConnection(enableSuccess: Settings.Default.AuditPolEnableSuccessEvent, enableFailure: true);  // always turn this on for now so that security log and notifier works
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -74,17 +78,17 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void txtUserLocalConfigurationPath_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            ProcessHelper.StartShellExecutable("explorer.exe", UserLocalConfigurationPath, true);
+            if (File.Exists(UserLocalConfigurationPath)) { ProcessHelper.StartShellExecutable("explorer.exe", UserLocalConfigurationPath, true); }
         }
 
         private void txtUserConfigurationPath_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            ProcessHelper.StartShellExecutable("explorer.exe", UserConfigurationPath, true);
+            if (File.Exists(RoamingConfigurationPath)) { ProcessHelper.StartShellExecutable("explorer.exe", RoamingConfigurationPath, true); }
         }
 
         private void txtSharedConfigurationPath_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            ProcessHelper.StartShellExecutable("explorer.exe", SharedConfigurationPath, true);
+            if (File.Exists(ExeConfigurationPath)) { ProcessHelper.StartShellExecutable("explorer.exe", ExeConfigurationPath, true); }
         }
     }
 }
