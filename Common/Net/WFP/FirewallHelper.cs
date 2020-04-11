@@ -61,13 +61,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             try
             {
                 firewallPolicy.Rules.Remove(ruleName);
-
+                LogHelper.Debug($"Remove rule: {ruleName} - success.");
                 return true;
             }
-            catch (UnauthorizedAccessException)
+            catch (UnauthorizedAccessException uae)
             {
                 //Don't have enough permissions
-                ;
+                LogHelper.Warning($"{uae.Message}");
             }
             catch (Exception e)
             {
