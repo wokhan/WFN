@@ -91,7 +91,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 }
 
                 // Notify xaml data trigger
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsTrackingEnabled)));  
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsTrackingEnabled)));
             }
         }
 
@@ -194,10 +194,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     LogEntryViewModel entry = EntryViewFromLogEntry(e.Entry);
                     if (entry != null)
                     {
-                        Dispatcher.Invoke(() =>
-                        {
-                            Dispatcher.Invoke(() => { LogEntries.Add(entry); ScanProgress = LogEntries.Count; });
-                        });
+                        Dispatcher.Invoke(() => { LogEntries.Add(entry); ScanProgress = LogEntries.Count; });
                     }
                 }
                 if (ScanProgressMax < LogEntries.Count)
