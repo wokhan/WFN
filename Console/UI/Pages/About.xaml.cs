@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Reflection;
-using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Navigation;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
@@ -20,10 +20,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             InitializeComponent();
         }
 
-        private void btnDonate_Click(object sender, RoutedEventArgs e)
+        private void OpenExernalLink(object sender, RequestNavigateEventArgs e)
         {
-            string url = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=wokhan%40online%2efr&lc=US&item_name=Khan%20%28Windows%20Firewall%20Notifier%29&item_number=WOK%2dWFN&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted";
-            ProcessHelper.StartShellExecutable(url, null, true);
+            var src = sender as Hyperlink;
+            ProcessHelper.StartShellExecutable(e.Uri.ToString(), null, true);
+            e.Handled = true;
         }
     }
 }
