@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Reflection;
 using System.Windows;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
@@ -20,6 +21,21 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
             if (previousUri != null)
             {
                 mainFrame.Navigate(previousUri);
+            }
+        }
+
+        /// <summary>
+        /// The title displayed in the window incl. version information from assembly.
+        /// </summary>
+        /// <remarks>
+        /// The version after the major/minor number is incremented by an expression in the <![CDATA[<Vesion>,<FileVersion>]]> e.g: 2.1.*.* - see Console.csproj file
+        /// </remarks>
+        public static string MainWindowTitle
+        {
+            get
+            {
+                AssemblyName ai = Assembly.GetExecutingAssembly().GetName();
+                return $"{ai.Name} BETA - Version: {ai.Version} {ai.ProcessorArchitecture} {ai.CultureName}";
             }
         }
 

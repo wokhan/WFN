@@ -24,21 +24,23 @@
                 <WrapPanel>
                     <ToggleButton x:Name="btnAutoRefreshToggle" IsChecked="{Binding IsTrackingEnabled}" ToolTip="Toggle auto-refresh - turned off if a row is selected">
                         <Grid>
-                            <Path HorizontalAlignment="Left" Height="16" Stretch="Uniform" Fill="Green">
+                            <Path HorizontalAlignment="Left" Height="16" Stretch="Uniform">
                                 <Path.Style>
                                     <Style TargetType="Path">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsTrackingEnabled}" Value="True">
                                                 <Setter Property="Data" Value="{StaticResource Image_Stop}" />
+                                                <Setter Property="Fill" Value="Red" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding IsTrackingEnabled}" Value="False">
                                                 <Setter Property="Data" Value="{StaticResource Image_Start}" />
+                                                <Setter Property="Fill" Value="Green" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </Path.Style>
                             </Path>
-                            <Label Margin="20,0,0,0" Content="Auto-refresh" />
+                            <Label Margin="20,0,0,0" Content="Auto-refresh" VerticalAlignment="Bottom" />
                         </Grid>
                     </ToggleButton>
                     <Button x:Name="btnLocate" Click="btnLocate_Click" IsEnabled="false" ToolTip="Locate the selected item">
@@ -53,13 +55,17 @@
                             <TextBlock Margin="20,0,0,0" Text="Events log viewer" />
                         </Grid>
                     </Button>
-                    <TextBlock VerticalAlignment="Center" Text="{Binding LogEntries.Count, StringFormat='{}{0} item(s)', FallbackValue='No item found'}" />
+                    <!--<TextBlock VerticalAlignment="Center" Text="{Binding LogEntries.Count, StringFormat='{}{0} item(s)', FallbackValue='No item found'}" />-->
                 </WrapPanel>
-                <WrapPanel HorizontalAlignment="Right">
+                <WrapPanel HorizontalAlignment="Right" Margin="3,0,3,0">
+                    <Label Content="Filter"/>
+                    <Grid Width="149" Margin="3,0,3,0">
+                        <TextBox x:Name="txtFilter" Text="{Binding FilterText,  UpdateSourceTrigger=PropertyChanged}" Background="White" Padding="3,0,3,0" Height="20" ToolTip="Filter to be applied for App, Service or Remote IP"/>
+                    </Grid>
                     <CheckBox x:Name="cbxIsTCPOnlyEnabled" Content="TCP only" IsChecked="{Binding IsTCPOnlyEnabled}" ToolTip="Only show TCP Protocol events" VerticalContentAlignment="Center" Padding="10,0" />
-                    <Grid Width="150" Margin="5">
-                        <ProgressBar Value="{Binding ScanProgress}" Maximum="{Binding ScanProgressMax}" />
-                        <TextBlock HorizontalAlignment="Center">
+                    <Grid Width="105">
+                        <ProgressBar Value="{Binding ScanProgress}" Maximum="{Binding ScanProgressMax}" Height="20" />
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Run Text="{Binding ScanProgress, FallbackValue='-'}" />
                                  /
                             <Run Text="{Binding ScanProgressMax, FallbackValue='-'}" />
@@ -72,17 +78,21 @@
             </Grid>
         </Border>
         <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
-            <DataGrid BorderThickness="0" x:Name="gridLog" EnableRowVirtualization="True" AlternatingRowBackground="Gainsboro" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column" SelectionChanged="GridLog_SelectionChanged" DataGridCell.Selected="GridLog_CellSelected" GotFocus="GridLog_GotFocus" GridLinesVisibility="None">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="151*"/>
+                <ColumnDefinition Width="6*"/>
+                <ColumnDefinition Width="43*"/>
+            </Grid.ColumnDefinitions>
+            <DataGrid BorderThickness="0" x:Name="gridLog" EnableRowVirtualization="True" AlternatingRowBackground="Gainsboro" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column" SelectionChanged="GridLog_SelectionChanged" DataGridCell.Selected="GridLog_CellSelected" GotFocus="GridLog_GotFocus" GridLinesVisibility="None" Grid.ColumnSpan="3">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp,Mode=OneTime}" Width="Auto"/>
                     <DataGridTextColumn Header="PID" Binding="{Binding Pid,Mode=OneTime}" Width="Auto"/>
-                    <!-- <DataGridTextColumn Header="App"  Binding="{Binding FileName}" Width="0.3*"/> -->
-                    <DataGridTemplateColumn Header="App" SortMemberPath="FileName,Mode=OneTime" Width="0.2*" >
+                    <DataGridTemplateColumn Header="App" SortMemberPath="FileName" Width="0.2*" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
                                     <Image Source="{Binding Icon}" Width="16" HorizontalAlignment="Left" />
-                                    <Label Content="{Binding FileName,Mode=OneTime}" Margin="20,0,0,0" ToolTip="{Binding FriendlyPath}"/>
+                                    <Label Content="{Binding FileName}" Margin="20,0,0,0" ToolTip="{Binding FriendlyPath}"/>
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -115,7 +125,7 @@
                     </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
-            <Border Style="{StaticResource InfoBlock}">
+            <Border Style="{StaticResource InfoBlock}" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="6,5,0,5" Grid.Column="1">
                 <TextBlock >This page displays a list of the latest connections, updated in real-time.<LineBreak/>
                     Click on a cell in the Action column to view details from the eventlog including the name of the filter rule which triggered the event.
                 </TextBlock>
