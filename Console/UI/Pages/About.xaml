@@ -10,7 +10,7 @@
       Title="About" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto">
     <StackPanel>
         <WrapPanel Margin="0,10">
-            <Border HorizontalAlignment="Left" Margin="10,0" Padding="2" Background="White" BorderBrush="Gray" BorderThickness="1">
+            <Border HorizontalAlignment="Left" Margin="10,0" Padding="2" VerticalAlignment="Center" Background="White" BorderBrush="Gray" BorderThickness="1">
                 <Image Source="/WFN;component/Resources/Images/WFN.ico" Height="60" HorizontalAlignment="Left" />
             </Border>
             <StackPanel VerticalAlignment="Center">
@@ -18,7 +18,14 @@
                             <Run Text="{Binding ProductName,Mode=OneTime,FallbackValue='WFN'}" />
                             <Run Text="{Binding Version,Mode=OneTime,FallbackValue='X.X.X.X'}" />
                 </TextBlock>
-                <TextBlock Margin="0,5" Text="Developed by Jérôme Saliba (Khan) (https://github.com/wokhansoft/WFN)&#13;&#10;with help from DanielPharos." />
+                <TextBlock Margin="0,5">
+                    <Run Text="Developed by" />
+                    <Hyperlink RequestNavigate="OpenExernalLink" NavigateUri="https://github.com/wokhansoft/WFN/graphs/contributors">the WFN contributors</Hyperlink>
+                    <LineBreak />
+                    <Run Text="Created by Jérôme Saliba (Khan / @wokhan)" />
+                    <LineBreak />
+                    <Run Text="Maintained by Daniel Pharos (@atlashackert), @harrwiss, @wokhan" />
+                </TextBlock>
             </StackPanel>
         </WrapPanel>
         <Label Content="Description" Background="{DynamicResource AccentColorBrush}" FontWeight="Bold" />
@@ -37,15 +44,10 @@
  You should have received a copy of the GNU General Public License
  along with this program. If not, see http://www.gnu.org/licenses/.</TextBlock>
         <Label Content="Donations" Background="{DynamicResource AccentColorBrush}" FontWeight="Bold" />
-        <StackPanel Margin="10">
-            <TextBlock TextAlignment="Justify" TextWrapping="Wrap" Text="WFN is free and will always be. However, if you enjoy using it, you can consider donating using the button below (it will open a PayPal page in your default web browser). Thanks!" />
-            <Button Style="{StaticResource RoundedButton}" Background="LightBlue" Margin="10" Name="btnDonate" Click="btnDonate_Click" HorizontalAlignment="Center">
-                <Grid>
-                    <Path HorizontalAlignment="Left" Height="20" Stretch="Uniform" Fill="Blue" Data="F1 M 60.1667,29.2917C 60.1667,36.7245 53.7867,45.9167 45.9167,45.9167L 33.8894,45.9167L 30.875,60.1667L 19.7917,60.1667L 20.3778,57.3958L 28.8958,57.3958L 31.9103,43.1458L 43.9375,43.1458C 51.8076,43.1458 58.1875,33.9536 58.1875,26.5208C 58.1875,24.9629 57.9072,23.606 57.3917,22.4342C 59.1358,24.0552 60.1667,26.3039 60.1667,29.2917 Z M 23.75,14.25L 41.1667,14.25L 42.75,14.25L 42.75,14.2902C 49.8749,14.66 55.4167,19 55.4167,24.5417C 55.4167,33.25 49.0367,41.1667 41.1667,41.1667L 29.5352,41.1667L 26.5208,55.4167L 15.0417,55.4167L 23.75,14.25 Z M 44.7292,26.9167C 44.5447,24.7031 43.3967,23.5626 41.5809,22.9583L 33.387,22.9584L 31.0425,34.0417L 37.2032,34.0417C 41.8973,32.6131 44.7292,29.5115 44.7292,26.9167 Z "/>
-                    <Label Margin="20,0,0,0" Content="Donate with PayPal" />
-                </Grid>
-            </Button>
-        </StackPanel>
+        <TextBlock Margin="10"  TextAlignment="Justify" TextWrapping="Wrap">
+            <Run Text="WFN is free and will always be. However, if you enjoy using it, you can consider donating using the Sponsor button on" />
+            <Hyperlink RequestNavigate="OpenExernalLink" NavigateUri="https://github.com/wokhan/wfn">GitHub</Hyperlink><Run Text=". Thanks!" />
+        </TextBlock>
         <Label Content="External libraries and components" Background="{DynamicResource AccentColorBrush}" FontWeight="Bold" />
         <StackPanel Margin="10">
             <TextBlock TextAlignment="Justify" TextWrapping="Wrap" Text="WFN uses XAML icons from http://modernuiicons.com and http://materialdesignicons.com." />
