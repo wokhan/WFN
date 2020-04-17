@@ -192,11 +192,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
 
             //TODO: implement detection for apps in fullscreen
-            //if (WindowHelper.isSomeoneFullscreen())
+            /*if (WindowHelper.isSomeoneFullscreen())
             {
                 ShowActivated = false;
                 Topmost = false;
-            }
+            }*/
         }
 
         private void NotificationWindow_Loaded(object sender, RoutedEventArgs e)
