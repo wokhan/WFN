@@ -29,7 +29,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             var assembly = Assembly.GetCallingAssembly().GetName();
             string appVersion = assembly.Version?.ToString() ?? String.Empty;
-            
+
             // log4net - look for a configuration file in the installation dir
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.ConfigureAndWatch(logRepository, new FileInfo(LOG4NET_CONFIG_FILE));
@@ -39,9 +39,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             WriteLog(LogLevel.INFO, $"Process elevated: {IsAdmin}");
             if (Settings.Default?.FirstRun ?? true)
             {
-
                 // maybe not required anymore since notifier is not triggered by eventlog anymore
-
                 if (Settings.Default != null)
                 {
                     Settings.Default.FirstRun = false;
@@ -72,10 +70,19 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 #if DEBUG
             WriteLog(LogLevel.DEBUG, msg, memberName, filePath, lineNumber);
 #else
-            if (Settings.Default?.EnableVerboseLogging ?? false)
+            try
             {
-                WriteLog(LogLevel.DEBUG, msg);
-            } 
+                if (Settings.Default?.EnableVerboseLogging ?? false)
+                {
+                    WriteLog(LogLevel.DEBUG, msg);
+                }
+            }
+            catch (Exception ex)
+            {
+                // may throw if settings not yet inited
+                LOGGER.Warn(ex.Message);
+                LOGGER.Debug(msg);
+            }
 #endif
         }
 
@@ -91,7 +98,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 #if DEBUG
             WriteLog(LogLevel.INFO, msg, memberName, filePath, lineNumber);
 #else
-                WriteLog(LogLevel.INFO, msg);
+            WriteLog(LogLevel.INFO, msg);
 #endif
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -25,6 +26,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
     /// </summary>
     public sealed class App : Application, IDisposable
     {
+        // Use log4net directly in case LogHelper throws exceptions during startup
+        private readonly static ILog LOGGER = LogManager.GetLogger(typeof(App));
+
         private static App APP_INSTANCE;
         private static NotificationWindow notifierWindow;
         private static ActivityWindow activityWindow;
@@ -36,6 +40,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
         private readonly AsyncTaskRunner asyncTaskRunner;
 
+
         /// <summary>
         /// Main entrypoint of the application.
         /// </summary>
@@ -44,10 +49,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         {
             try
             {
-                LogHelper.Info("Checking access rights...");
+                LOGGER.Info("Checking access rights...");
                 if (!IsUserAdministrator())
                 {
-                    LogHelper.Error("User must have admin rights to access to run Notifier.", null);
+                    LOGGER.Error("User must have admin rights to access to run Notifier.", null);
                     MessageBox.Show($"User must have admin rights to run Notifier\nNotifier will exit now!", "Security check", MessageBoxButton.OK, MessageBoxImage.Error);
                     Environment.Exit(1);
                 }
@@ -66,13 +71,15 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 }
                 else
                 {
+                    LOGGER.Warn("A notififer instance is already running - showing it.");
                     MessageBox.Show("A notifier instance is already running");
                     APP_INSTANCE.ShowNotifierWindow();  // FIXME: show it - seems not to work as it should
                 }
             }
             catch (Exception e)
             {
-                LogHelper.Error(e.Message, e);
+                // use log4net directly in case LogHelper throws an exception itself during startup
+                LOGGER.Error(e.Message, e);  
                 Environment.Exit(1);
             }
             Environment.Exit(0);
