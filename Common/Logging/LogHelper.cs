@@ -37,14 +37,21 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             // better to have this info always in the log
             WriteLog(LogLevel.INFO, String.Format("OS: {0} ({1} bit) / .Net CLR: {2} / Path: {3} / Version: {4} ({5} bit)", Environment.OSVersion, Environment.Is64BitOperatingSystem ? 64 : 32, Environment.Version, AppDomain.CurrentDomain.BaseDirectory, appVersion, Environment.Is64BitProcess ? 64 : 32));
             WriteLog(LogLevel.INFO, $"Process elevated: {IsAdmin}");
-            if (Settings.Default?.FirstRun ?? true)
+            try
             {
-                // maybe not required anymore since notifier is not triggered by eventlog anymore
-                if (Settings.Default != null)
+                if (Settings.Default?.FirstRun ?? true)
                 {
-                    Settings.Default.FirstRun = false;
-                    Settings.Default.Save();
+                    // maybe not required anymore since notifier is not triggered by eventlog anymore
+                    if (Settings.Default != null)
+                    {
+                        Settings.Default.FirstRun = false;
+                        Settings.Default.Save();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                LOGGER.Warn(ex.Message);
             }
         }
 

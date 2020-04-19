@@ -89,10 +89,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         {
             this.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
-            LogHelper.Debug("Initializing exclusions...");
+            LOGGER.Info("Initializing exclusions...");
             initExclusions();
 
-            LogHelper.Debug("Init notification window...");
+            LOGGER.Info("Init notification window...");
             notifierWindow = new NotificationWindow
             {
                 WindowState = WindowState.Normal
