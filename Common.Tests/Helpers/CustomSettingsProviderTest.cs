@@ -27,7 +27,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         public void TestInit()
         {
             // is the path to the global config file WFN.config correct?
-            Assert.True(File.Exists(CustomSettingsProvider.ExeConfigurationPath));
+            Assert.True(File.Exists(CustomSettingsProvider.SharedConfigurationPath));
 
             // Reset to default
             Settings.Default.Reset();

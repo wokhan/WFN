@@ -1,34 +1,33 @@
 ﻿using System;
 using System.Configuration;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Config
 {
-    /// <summary>
-    /// Uses now the default LocalFileSettingsProvider to handle settings.
-    /// </summary>
-    /// <remarks>
-    ///   Name of the global settings file must conform to "WFN.dll.config" to be found (provider expects this)
-    ///   Roaming settings: Open Settings Designer > select a setting then open the Properties window > Roaming true/false
-    ///   All settings have now Roaming=false
-    /// </remarks>
-
-    [SettingsProvider(typeof(CustomSettingsProvider))]
+    // Doesn't work anymore :-/ (see comment below on OnSettingsLoaded)
+    //[SettingsProvider(typeof(CustomSettingsProvider))]
     public sealed partial class Settings : ApplicationSettingsBase
     {
-
+        private SettingsProvider provider;
         public Settings() : base()
         {
+            provider = new CustomSettingsProvider();
+            
+            Providers.Clear();
+            Providers.Add(provider);
 
         }
-        public override SettingsProviderCollection Providers => base.Providers;
 
-        public void SaveAppSettings()
+        // This is awesomely awful. But it fixes an issue with .Net Core 3.1 not taking the right config file 
+        // (at least with latest modifications), while I could swear it was working last week without this... Anyway...
+        protected override void OnSettingsLoaded(object sender, SettingsLoadedEventArgs e)
         {
-            CustomSettingsProvider.SaveAppSettingsFile();
+            base.OnSettingsLoaded(sender, e);
+
+            PropertyValues.Cast<SettingsPropertyValue>().ToList().ForEach(p => p.Property.Provider = provider);
         }
+
+        public override SettingsProviderCollection Providers => base.Providers;
 
         public bool EnableServiceDetection
         {
