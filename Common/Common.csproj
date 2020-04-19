@@ -65,8 +65,8 @@
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <PostBuildEvent>
-      del WFN.dll.config
-      ren "Wokhan.WindowsFirewallNotifier.Common.dll.config" WFN.dll.config
+      del WFN.config
+      ren "Wokhan.WindowsFirewallNotifier.Common.dll.config" WFN.config
     </PostBuildEvent>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
   </PropertyGroup>
