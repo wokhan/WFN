@@ -16,7 +16,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules
         }
 
         public override NET_FW_ACTION_ Action { get; }
-        public override string ApplicationName { get; }
+        public override string? ApplicationName { get; }
         public override string? ApplicationShortName { get; }
         public override string? AppPkgId { get; }
         public override string? Description { get; }
@@ -64,7 +64,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules
             firewallRule.Profiles = Profiles;
             firewallRule.InterfaceTypes = "All";
             firewallRule.Name = Name;
-            firewallRule.ApplicationName = ApplicationName;
+            firewallRule.ApplicationName = ApplicationName;  // in fact application path
 
             if (!string.IsNullOrEmpty(AppPkgId))
             {
@@ -73,63 +73,42 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules
                 //This needs to be set as well
                 ((INetFwRule3)firewallRule).LocalUserOwner = LUOwn;
             }
-
+            if (Protocol != -1)
+            {
+                firewallRule.Protocol = (int)NormalizeProtocol(Protocol);
+            }
             if (!string.IsNullOrEmpty(ServiceName))
             {
                 firewallRule.serviceName = ServiceName;
             }
 
-            if (Protocol != -1)
-            {
-                firewallRule.Protocol = (int)NormalizeProtocol(Protocol);
-            }
-
             if (!string.IsNullOrEmpty(LocalPorts))
             {
                 firewallRule.LocalPorts = LocalPorts;
-
-                if (!isTemp)
-                {
-                    firewallRule.Name += " [L:" + LocalPorts + "]";
-                }
             }
 
             if (!string.IsNullOrEmpty(RemoteAddresses))
             {
                 firewallRule.RemoteAddresses = RemoteAddresses;
-
-                if (!isTemp)
-                {
-                    firewallRule.Name += " [T:" + RemoteAddresses + "]";
-                }
             }
-
             if (!string.IsNullOrEmpty(RemotePorts))
             {
                 firewallRule.RemotePorts = RemotePorts;
-
-                if (!isTemp)
-                {
-                    firewallRule.Name += " [R:" + RemotePorts + "]";
-                }
             }
-
             return firewallRule;
-
         }
 
-        public CustomRule(string ruleName, string currentPath, string currentAppPkgId, string localUserOwner, IEnumerable<string> services, int protocol, string target, string targetPort, string localport
+        public CustomRule(string ruleName, string? currentPath, string? currentAppPkgId, string? localUserOwner, IEnumerable<string>? services, int protocol, string? target, string? targetPort, string? localport
             , int profiles, CustomRuleAction action)
-            : this(ruleName, currentPath, currentAppPkgId, localUserOwner, string.Join(",", services), protocol, target, targetPort, localport, profiles, action)
+            : this(ruleName, currentPath, currentAppPkgId, localUserOwner, (services is null ? null : string.Join(",", services)), protocol, target, targetPort, localport, profiles, action)
         {
             //Chained to the constructor below!
         }
 
-        public CustomRule(string ruleName, string currentPath, string? currentAppPkgId, string? localUserOwner, string? services, int protocol, string? target
+        public CustomRule(string ruleName, string? currentPath, string? currentAppPkgId, string? localUserOwner, string? services, int protocol, string? target
             , string? targetPort, string? localport, int profiles, CustomRuleAction action)
         {
-            Name = ruleName;
-            ApplicationName = currentPath;
+            ApplicationName = string.IsNullOrWhiteSpace(currentPath) ? null : currentPath;
             AppPkgId = currentAppPkgId;
             LUOwn = localUserOwner;
             ServiceName = string.IsNullOrEmpty(services) ? null : services;
@@ -151,6 +130,30 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules
                 default:
                     throw new Exception("Unknown action type: " + action.ToString());
             }
+
+            Name = addAdditionalInfoToRuleName(ruleName);
+        }
+
+        private string addAdditionalInfoToRuleName(string ruleName)
+        {
+            if (string.IsNullOrWhiteSpace(ApplicationName))
+            {
+                ruleName += " [ANY_PATH] ";
+            }
+            if (!string.IsNullOrEmpty(LocalPorts))
+            {
+                ruleName += " [L:" + LocalPorts + "]";
+            }
+
+            if (!string.IsNullOrEmpty(RemoteAddresses))
+            {
+                ruleName += " [T:" + RemoteAddresses + "]";
+            }
+            if (!string.IsNullOrEmpty(RemotePorts))
+            {
+                 ruleName += " [R:" + RemotePorts + "]";
+            }
+            return ruleName;
         }
     }
 }

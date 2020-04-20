@@ -67,6 +67,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             public bool IsService { get; set; }
             public bool IsServiceMultiple { get; set; }
             public string SingleServiceName { get; set; }
+            public bool IsPathChecked { get; set; } = true;
         }
 
         public OptionsViewClass OptionsView { get; } = new OptionsViewClass();
@@ -577,7 +578,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             {
                 int Profiles = OptionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
                 string ruleName = (isTemp) ? Common.Properties.Resources.RULE_TEMP_PREFIX + activeConn.RuleName : activeConn.RuleName;
-                CustomRule newRule = new CustomRule(ruleName, activeConn.CurrentPath, OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null
+                CustomRule newRule = new CustomRule(ruleName, OptionsView.IsPathChecked ? activeConn.CurrentPath : null, OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null
                     , activeConn.CurrentLocalUserOwner, services, OptionsView.IsProtocolChecked ? activeConn.Protocol : -1, OptionsView.IsTargetIPChecked ? activeConn.Target : null
                     , OptionsView.IsTargetPortChecked ? activeConn.TargetPort : null, OptionsView.IsLocalPortChecked ? activeConn.LocalPort : null, Profiles
                     , CustomRule.CustomRuleAction.B);
@@ -615,7 +616,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             int Profiles = OptionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
             string ruleName = isTemp ? Messages.RULE_TEMP_PREFIX + activeConn.RuleName : activeConn.RuleName;
-            CustomRule newRule = new CustomRule(ruleName, activeConn.CurrentPath, OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null
+            CustomRule newRule = new CustomRule(ruleName, OptionsView.IsPathChecked ? activeConn.CurrentPath : null, OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null
                 , activeConn.CurrentLocalUserOwner, services, OptionsView.IsProtocolChecked ? activeConn.Protocol : -1, OptionsView.IsTargetIPChecked ? activeConn.Target : null
                 , OptionsView.IsTargetPortChecked ? activeConn.TargetPort : null, OptionsView.IsLocalPortChecked ? activeConn.LocalPort : null, Profiles
                 , CustomRule.CustomRuleAction.A);

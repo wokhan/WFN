@@ -25,7 +25,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules
         public abstract string? RemoteAddresses { get; }
         public abstract object? Interfaces { get; }
         public abstract string? InterfaceTypes { get; }
-        public abstract string ApplicationName { get; }
+        public abstract string? ApplicationName { get; }
         public abstract string? ApplicationShortName { get; }
         public abstract string? ServiceName { get; }
         public abstract NET_FW_ACTION_ Action { get; }

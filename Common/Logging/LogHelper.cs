@@ -29,7 +29,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         {
             var assembly = Assembly.GetCallingAssembly().GetName();
             string appVersion = assembly.Version?.ToString() ?? String.Empty;
-            
+
             // log4net - look for a configuration file in the installation dir
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.ConfigureAndWatch(logRepository, new FileInfo(LOG4NET_CONFIG_FILE));
@@ -37,17 +37,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             // better to have this info always in the log
             WriteLog(LogLevel.INFO, String.Format("OS: {0} ({1} bit) / .Net CLR: {2} / Path: {3} / Version: {4} ({5} bit)", Environment.OSVersion, Environment.Is64BitOperatingSystem ? 64 : 32, Environment.Version, AppDomain.CurrentDomain.BaseDirectory, appVersion, Environment.Is64BitProcess ? 64 : 32));
             WriteLog(LogLevel.INFO, $"Process elevated: {IsAdmin}");
-            if (Settings.Default?.FirstRun ?? true)
-            {
-
-                // maybe not required anymore since notifier is not triggered by eventlog anymore
-
-                if (Settings.Default != null)
-                {
-                    Settings.Default.FirstRun = false;
-                    Settings.Default.Save();
-                }
-            }
         }
 
 #if DEBUG
@@ -68,14 +57,24 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         public static void Debug(string msg)
 #endif
         {
-            if (Settings.Default?.EnableVerboseLogging ?? false)
-            {
+
 #if DEBUG
-                WriteLog(LogLevel.DEBUG, msg, memberName, filePath, lineNumber);
+            WriteLog(LogLevel.DEBUG, msg, memberName, filePath, lineNumber);
 #else
-                WriteLog(LogLevel.DEBUG, msg);
-#endif
+            try
+            {
+                if (Settings.Default?.EnableVerboseLogging ?? false)
+                {
+                    WriteLog(LogLevel.DEBUG, msg);
+                }
             }
+            catch (Exception ex)
+            {
+                // may throw if settings not yet inited
+                LOGGER.Warn(ex.Message);
+                LOGGER.Debug(msg);
+            }
+#endif
         }
 
 #if DEBUG
@@ -90,7 +89,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 #if DEBUG
             WriteLog(LogLevel.INFO, msg, memberName, filePath, lineNumber);
 #else
-                WriteLog(LogLevel.INFO, msg);
+            WriteLog(LogLevel.INFO, msg);
 #endif
         }
 

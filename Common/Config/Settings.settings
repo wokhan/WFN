@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Wokhan.WindowsFirewallNotifier.Common" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Wokhan.WindowsFirewallNotifier.Common.Config" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="EnableServiceDetectionGlobal" Type="System.Boolean" Scope="Application">
@@ -27,7 +27,7 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="AlwaysShowDetails" Roaming="true" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="MinimizeToTray" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
