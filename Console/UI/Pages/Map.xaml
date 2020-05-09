@@ -4,7 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:maps="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Pages"
+      xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Pages" 
+      xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
       mc:Ignorable="d" 
       d:DesignHeight="400" d:DesignWidth="600"
       DataContext="{Binding RelativeSource={RelativeSource Self}}"
@@ -15,7 +16,7 @@
                 <Label Content="Information provided here might be inaccurate for non-admin users." />
                 <Button x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
                     <Grid>
-                        <Path Height="16" HorizontalAlignment="Left" Stretch="Uniform" Fill="#FF5353F7" Data="{StaticResource Image_Shield}" />
+                        <ContentControl Height="16" HorizontalAlignment="Left" Content="{StaticResource Image_Shield}" />
                         <Label Margin="20,0,0,0" Padding="0" Content="Restart as admin" />
                     </Grid>
                 </Button>
@@ -24,49 +25,31 @@
         <Border Style="{StaticResource ToolBarPanel}">
             <Grid>
                 <WrapPanel HorizontalAlignment="Left">
-                    <ToggleButton IsChecked="{Binding IsTrackingEnabled}">
-                        <Grid>
-                            <Path HorizontalAlignment="Left" Width="10" Stretch="Uniform" Fill="Green">
-                                <Path.Style>
-                                    <Style TargetType="Path">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsTrackingEnabled, FallbackValue=True}" Value="True">
-                                                <Setter Property="Data" Value="{StaticResource Image_Stop}" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsTrackingEnabled}" Value="False">
-                                                <Setter Property="Data" Value="{StaticResource Image_Start}" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Path.Style>
-                            </Path>
-                            <TextBlock Margin="15,0,0,0" Text="Auto-refresh" />
-                        </Grid>
-                    </ToggleButton>
-                    <ToggleButton IsChecked="{Binding IsFullRouteDisplayed}">
-                        <Grid>
-                            <Path HorizontalAlignment="Left" Height="14" Stretch="Uniform" Fill="#FF6C6CD4" Data="{StaticResource Image_FullRoute}" />
-                            <TextBlock Margin="20,0,0,0" Text="Full routes" />
-                        </Grid>
-                    </ToggleButton>
-                    <ToggleButton IsChecked="{Binding IsAerial}">
-                        <Grid>
-                            <Path HorizontalAlignment="Left" Height="14" Stretch="Uniform" Fill="Coral" Data="{StaticResource Image_MapAerial}" />
-                            <TextBlock Margin="20,0,0,0" Text="Aerial mode" />
-                        </Grid>
-                    </ToggleButton>
+                    <controls:ToolBarToggleButton Text="Auto-refresh" IsChecked="{Binding IsTrackingEnabled}" ImageBrush="Green" Image="{StaticResource Image_Start}">
+                        <Control.Resources>
+                            <Style TargetType="Path">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsTrackingEnabled, FallbackValue=True}" Value="True">
+                                        <Setter Property="Data" Value="{StaticResource Image_Stop}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Control.Resources>
+                    </controls:ToolBarToggleButton>
+                    <controls:ToolBarToggleButton Text="Full routes" IsChecked="{Binding IsFullRouteDisplayed}" ImageBrush="#FF6C6CD4" Image="{StaticResource Image_FullRoute}" />
+                    <controls:ToolBarToggleButton Text="Aerial mode" IsChecked="{Binding IsAerial}" ImageBrush="Coral" Image="{StaticResource Image_MapAerial}" />
                     <TextBlock VerticalAlignment="Center" Text="{Binding Connections.Count, StringFormat='Active connection(s): {0}', FallbackValue='No active connection'}" />
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Right">
                     <Border BorderBrush="White" Background="White" BorderThickness="0" CornerRadius="8" Padding="5,2" Margin="0,0,5,0">
                         <WrapPanel>
-                            <Path Fill="#FFA2A2FF" Data="{StaticResource Image_UpdateRate}"/>
+                            <ContentControl Content="{StaticResource Image_UpdateRate}"/>
                             <Label Margin="4,0" Content="Update rate:" />
                             <ComboBox IsEditable="False" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
                         </WrapPanel>
                     </Border>
                     <ToggleButton x:Name="btnHelp">
-                        <Path Fill="Chocolate" Data="{StaticResource Image_Help}"/>
+                        <ContentControl Content="{StaticResource Image_Help}"/>
                     </ToggleButton>
                 </WrapPanel>
             </Grid>

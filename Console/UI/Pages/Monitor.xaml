@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:LineChart="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
+      xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
       mc:Ignorable="d" 
       DataContext="{Binding RelativeSource={RelativeSource Self}}" 
       d:DesignHeight="400" d:DesignWidth="700" 
@@ -15,7 +15,7 @@
                 <Label Content="Information provided here might be inaccurate for non-admin users." />
                 <Button x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
                     <Grid>
-                        <Path Height="16" HorizontalAlignment="Left" Stretch="Uniform" Fill="#FF5353F7" Data="{StaticResource Image_Shield}" />
+                        <ContentControl Height="16" HorizontalAlignment="Left" Content="{StaticResource Image_Shield}" />
                         <Label Margin="20,0,0,0" Padding="0" Content="restart as admin" />
                     </Grid>
                 </Button>
@@ -24,43 +24,30 @@
         <Border Style="{StaticResource ToolBarPanel}">
             <Grid>
                 <WrapPanel HorizontalAlignment="Left">
-                    <ToggleButton IsChecked="{Binding IsTrackingEnabled}">
-                        <Grid>
-                            <Path HorizontalAlignment="Left" Width="10" Stretch="Uniform" Fill="Green">
-                                <Path.Style>
-                                    <Style TargetType="Path">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsTrackingEnabled, FallbackValue=True}" Value="True">
-                                                <Setter Property="Data" Value="{StaticResource Image_Stop}" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsTrackingEnabled}" Value="False">
-                                                <Setter Property="Data" Value="{StaticResource Image_Start}" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Path.Style>
-                            </Path>
-                            <TextBlock Margin="15,0,0,0" Text="Tracking" />
-                        </Grid>
-                    </ToggleButton>
-                    <ToggleButton IsChecked="{Binding IsSingleMode}">
-                        <Grid>
-                            <Path Fill="Blue" Data="{StaticResource Image_SingleMode}" />
-                            <TextBlock Margin="20,0,0,0" Text="Single-item mode" />
-                        </Grid>
-                    </ToggleButton>
+                    <controls:ToolBarToggleButton Text="Tracking" IsChecked="{Binding IsTrackingEnabled}" ImageBrush="Green" Image="{StaticResource Image_Start}">
+                        <Control.Resources>
+                            <Style TargetType="Path">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsTrackingEnabled, FallbackValue=True}" Value="True">
+                                        <Setter Property="Data" Value="{StaticResource Image_Stop}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Control.Resources>
+                    </controls:ToolBarToggleButton>
+                    <controls:ToolBarToggleButton Text="Single-item mode" IsChecked="{Binding IsSingleMode}" ImageBrush="Blue" Image="{StaticResource Image_SingleMode}" />
                     <TextBlock VerticalAlignment="Center" Text="{Binding Series.Count, StringFormat='Active connection(s): {0}', FallbackValue='No active connection'}" />
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Right">
                     <Border BorderBrush="White" Background="White" BorderThickness="0" CornerRadius="8" Padding="5,2" Margin="0,0,5,0">
                         <WrapPanel>
-                            <Path Fill="#FFA2A2FF" Data="{StaticResource Image_UpdateRate}"/>
+                            <ContentControl Content="{StaticResource Image_UpdateRate}"/>
                             <Label Margin="4,0" Content="Update rate:" />
                             <ComboBox IsEditable="False" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
                         </WrapPanel>
                     </Border>
                     <ToggleButton x:Name="btnHelp">
-                        <Path Fill="Chocolate" Data="{StaticResource Image_Help}"/>
+                        <ContentControl Content="{StaticResource Image_Help}"/>
                     </ToggleButton>
                 </WrapPanel>
             </Grid>
@@ -107,7 +94,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
                 <GridSplitter Grid.Row="1" Height="2" Background="{DynamicResource AccentColorBrush}" HorizontalAlignment="Stretch" />
-                <LineChart:LineChart Grid.Row="2" x:Name="chart" XAxeType="DateTime" DataSeries="{Binding Series, ElementName=MonitorPage}" />
+                <controls:LineChart Grid.Row="2" x:Name="chart" XAxeType="DateTime" DataSeries="{Binding Series, ElementName=MonitorPage}" />
             </Grid>
             <Border Style="{StaticResource InfoBlock}">
                 <TextBlock>This screen displays all active connections on this computer, updated every second (by default).

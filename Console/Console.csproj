@@ -95,8 +95,9 @@
     <Reference Include="Wokhan.Core">
       <HintPath>..\TempSharedLib\Wokhan.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Wokhan.WPF">
-      <HintPath>..\TempSharedLib\Wokhan.WPF.dll</HintPath>
+    <Reference Include="Wokhan.UI">
+      <HintPath>..\TempSharedLib\Wokhan.UI.dll</HintPath>
+      <Private></Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
