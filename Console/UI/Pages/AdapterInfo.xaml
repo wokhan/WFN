@@ -8,7 +8,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="600"
       Title="AdapterInfo"
-      xmlns:dummydata="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.Helpers.DummyData"
+      xmlns:dummydata="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.Helpers.DummyData" xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
       DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Page.Resources>
         <Converters:SecondsToDateTimeConverter x:Key="secondsConverter" />
@@ -17,36 +17,26 @@
         <Border Style="{StaticResource ToolBarPanel}">
             <Grid>
                 <WrapPanel HorizontalAlignment="Left">
-                    <ToggleButton IsChecked="{Binding IsTrackingEnabled}">
-                        <Grid>
-                            <Path HorizontalAlignment="Left" Width="10" Stretch="Uniform" Fill="Green">
-                                <Path.Style>
-                                    <Style TargetType="Path">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsTrackingEnabled, FallbackValue=True}" Value="True">
-                                                <Setter Property="Data" Value="{StaticResource Image_Stop}" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsTrackingEnabled}" Value="False">
-                                                <Setter Property="Data" Value="{StaticResource Image_Start}" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Path.Style>
-                            </Path>
-                            <Label Margin="15,0,0,0" Content="Auto-refresh" />
-                        </Grid>
-                    </ToggleButton>
+                    <controls:ToolBarToggleButton Text="Auto-refresh" IsChecked="{Binding IsTrackingEnabled}" ImageBrush="Green" Image="{StaticResource Image_Start}">
+                        <Style TargetType="controls:ToolBarToggleButton">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsTrackingEnabled, FallbackValue=True}" Value="True">
+                                    <Setter Property="Image" Value="{StaticResource Image_Stop}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </controls:ToolBarToggleButton>
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Right">
-                    <Border BorderBrush="White" Background="White" BorderThickness="0" CornerRadius="8" Padding="5,2" Margin="0,0,5,0">
+                    <Border BorderBrush="White" Background="White" VerticalAlignment="Center" BorderThickness="0" CornerRadius="4" Padding="5,2" Margin="0,0,5,0">
                         <WrapPanel>
-                            <Path Fill="#FFA2A2FF" Data="{StaticResource Image_UpdateRate}"/>
+                            <ContentControl Content="{StaticResource Image_UpdateRate}"/>
                             <Label Margin="4,0" Content="Update rate:" />
                             <ComboBox IsEditable="False" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
                         </WrapPanel>
                     </Border>
                     <ToggleButton x:Name="btnHelp">
-                        <Path Fill="Chocolate" Data="{StaticResource Image_Help}"/>
+                        <ContentControl Content="{StaticResource Image_Help}"/>
                     </ToggleButton>
                 </WrapPanel>
             </Grid>
@@ -64,25 +54,24 @@
                                             <ColumnDefinition Width="Auto" SharedSizeGroup="bandwidthUP" />
                                             <ColumnDefinition Width="Auto" SharedSizeGroup="bandwidthDOWN" />
                                         </Grid.ColumnDefinitions>
-                                        <Path HorizontalAlignment="Left" Height="16" Stretch="Uniform" Data="{StaticResource Image_Adapter}">
-                                            <Path.Style>
-                                                <Style TargetType="Path">
-                                                    <Setter Property="Fill" Value="Red" />
+                                        <ContentControl Content="{StaticResource Image_Adapter_Red}">
+                                            <ContentControl.Style>
+                                                <Style TargetType="ContentControl">
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding Information.OperationalStatus}" Value="Up">
-                                                            <Setter Property="Fill" Value="Green" />
+                                                            <Setter Property="Content" Value="{StaticResource Image_Adapter_Green}" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
-                                            </Path.Style>
-                                        </Path>
+                                            </ContentControl.Style>
+                                        </ContentControl>
                                         <TextBlock Margin="20,0,0,0" Text="{Binding Information.Name}" />
                                         <WrapPanel HorizontalAlignment="Left" Grid.Column="1" Margin="0,0,10,0">
-                                            <Path Margin="0,0,5,0" Height="16" Stretch="Uniform" Fill="Red" Data="{StaticResource Image_DataUp}"/>
+                                            <ContentControl Margin="0,0,5,0" Content="{StaticResource Image_DataUp}"/>
                                             <TextBlock Text="{Binding FormattedBytesSent}" Margin="0,0,10,0" />
                                         </WrapPanel>
                                         <WrapPanel HorizontalAlignment="Left" Grid.Column="2" Margin="0,0,40,0">
-                                            <Path Margin="0,0,5,0" Height="16" Stretch="Uniform" Fill="Green" Data="{StaticResource Image_DataDown}"/>
+                                            <ContentControl Margin="0,0,5,0" Content="{StaticResource Image_DataDown}"/>
                                             <TextBlock Text="{Binding FormattedBytesReceived}" />
                                         </WrapPanel>
                                     </Grid>

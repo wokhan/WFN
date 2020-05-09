@@ -5,8 +5,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Pages" 
       xmlns:settings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Config;assembly=Wokhan.WindowsFirewallNotifier.Common"
-      xmlns:resx="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Properties;assembly=Wokhan.WindowsFirewallNotifier.Common" 
-      x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.Status" 
+      xmlns:resx="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Properties;assembly=Wokhan.WindowsFirewallNotifier.Common" xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
+    x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.Status" 
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="600"
       Title="Status" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
@@ -16,7 +16,7 @@
                 <Label Content="Only an administrator can use this feature." />
                 <Button x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
                     <Grid>
-                        <Path Height="16" HorizontalAlignment="Left" Stretch="Uniform" Fill="#FF5353F7" Data="{StaticResource Image_Shield}" />
+                        <ContentControl Height="16" HorizontalAlignment="Left" Content="{StaticResource Image_Shield}" />
                         <Label Margin="20,0,0,0" Padding="0" Content="restart as admin" />
                     </Grid>
                 </Button>
@@ -24,18 +24,8 @@
         </Border>
         <Border Style="{StaticResource ToolBarPanel}">
             <WrapPanel HorizontalAlignment="Left">
-                <Button x:Name="btnSave" Click="btnSave_Click" IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}">
-                    <Grid>
-                        <Path HorizontalAlignment="Left" Height="14" Stretch="Uniform" Fill="#FF6C6CD4" Data="{StaticResource Image_Shield}" />
-                        <Label Margin="20,0,0,0" Content="Apply" VerticalAlignment="Bottom" />
-                    </Grid>
-                </Button>
-                <Button x:Name="btnRevert" Click="btnRevert_Click">
-                    <Grid>
-                        <Path HorizontalAlignment="Left" Height="14" Stretch="Uniform" Fill="Red" Data="{StaticResource Image_Refresh}" />
-                        <Label Margin="20,0,0,0" Content="Reload" />
-                    </Grid>
-                </Button>
+                <controls:ToolBarButton Text="Apply" x:Name="btnSave" Click="btnSave_Click" IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}" ImageBrush="#FF6C6CD4" Image="{StaticResource Image_Shield}" />
+                <controls:ToolBarButton Text="Reload" x:Name="btnRevert" Click="btnRevert_Click" ImageBrush="Red" Image="{StaticResource Image_Refresh}" />
             </WrapPanel>
         </Border>
         <Border x:Name="messsageInfoPanel" Padding="10" DockPanel.Dock="Top">
