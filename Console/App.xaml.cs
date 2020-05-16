@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Configuration;
 using System.Windows;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
-using Wokhan.WindowsFirewallNotifier.Common.Properties;
 
 namespace Wokhan.WindowsFirewallNotifier.Console
 {

@@ -1,33 +1,62 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
+using System.ComponentModel;
 using System.Configuration;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Windows;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Config
 {
-    // Doesn't work anymore :-/ (see comment below on OnSettingsLoaded)
-    //[SettingsProvider(typeof(CustomSettingsProvider))]
     public sealed partial class Settings : ApplicationSettingsBase
     {
-        private SettingsProvider provider;
-        public Settings() : base()
+        private static IConfigurationRoot configuration;
+        private static string applicationConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? string.Empty, "settings.json");
+        private static string userConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Wokhan Solutions", "WFN", "settings.json");
+
+        public static event EventHandler<PropertyChangedEventArgs>? StaticPropertyChanged;
+
+        public string ConfigurationPath => IsPortable ? applicationConfigPath : userConfigPath;
+
+        public Settings() //: base()
         {
-            provider = new CustomSettingsProvider();
-            
             Providers.Clear();
-            Providers.Add(provider);
-
+            PropertyChanged += Settings_PropertyChanged;
         }
 
-        // This is awesomely awful. But it fixes an issue with .Net Core 3.1 not taking the right config file 
-        // (at least with latest modifications), while I could swear it was working last week without this... Anyway...
-        protected override void OnSettingsLoaded(object sender, SettingsLoadedEventArgs e)
+        private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            base.OnSettingsLoaded(sender, e);
+            switch (e.PropertyName)
+            {
+                case nameof(IsPortable):
+                    NotifyPropertyChanged(nameof(ConfigurationPath));
+                    break;
 
-            PropertyValues.Cast<SettingsPropertyValue>().ToList().ForEach(p => p.Property.Provider = provider);
+                case nameof(AccentColor):
+                    Application.Current.Resources["AccentColorBrush"] = AccentColor;
+                    break;
+
+                default:
+                    break;
+            }
         }
 
-        public override SettingsProviderCollection Providers => base.Providers;
+        static Settings()
+        {
+            configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+                                                      // Read only application-level configuration
+                                                      .AddJsonFile(applicationConfigPath, true, true)
+                                                      // User overrides (if any, for current user)
+                                                      .AddJsonFile(userConfigPath, true, true)
+                                                      .Build();
+
+            // Overrides "defaultInstance" member of the generated partial Settings class (to keep the designer)
+            defaultInstance = configuration.Get<Settings>();
+        }
+
 
         public bool EnableServiceDetection
         {
@@ -41,5 +70,33 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Config
             set { this[nameof(UseBlockRulesGlobal)] = value; }
         }
 
+        public override void Save()
+        {
+            var userSettings = typeof(Settings).GetProperties()
+                                               .Where(property => property.GetCustomAttribute<UserScopedSettingAttribute>() != null)
+                                               .ToDictionary(property => property.Name, property => property.GetValue(this));
+
+            if (this.IsPortable)
+            {
+                File.Delete(userConfigPath);
+            }
+            else
+            {
+                File.Delete(applicationConfigPath);
+            }
+
+            File.WriteAllText(ConfigurationPath, JsonSerializer.Serialize(userSettings, new JsonSerializerOptions() { IgnoreReadOnlyProperties = true, WriteIndented = true }));
+        }
+
+        public new void Reload()
+        {
+            defaultInstance = configuration.Get<Settings>();
+            StaticPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Default)));
+        }
+
+        private void NotifyPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            OnPropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

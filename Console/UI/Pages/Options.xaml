@@ -6,8 +6,9 @@
       xmlns:settings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Config;assembly=Wokhan.WindowsFirewallNotifier.Common"
       xmlns:helpers="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Helpers;assembly=Wokhan.WindowsFirewallNotifier.Common"
       mc:Ignorable="d" 
+      x:Name="me"
       d:DesignHeight="600" d:DesignWidth="600"
-      Title="Settings" DataContext="{Binding RelativeSource={RelativeSource Self}}" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+      Title="Settings" DataContext="{Binding Path=(settings:Settings.Default)}" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
     <DockPanel>
         <Border Background="#FFFF7B7B" Style="{StaticResource NonAdminPanel}">
             <WrapPanel>
@@ -25,7 +26,7 @@
                 <Button x:Name="btnSave" Click="btnOK_Click">
                     <Grid>
                         <Path HorizontalAlignment="Left" Height="14" Stretch="Uniform" Fill="#FF6C6CD4" Data="{StaticResource Image_Shield}" />
-                        <TextBlock Margin="20,0,0,0" Text="Apply" />
+                        <TextBlock Margin="20,0,0,0" Text="Save" />
                     </Grid>
                 </Button>
                 <Button x:Name="btnRevert" Click="btnCancel_Click">
@@ -37,17 +38,18 @@
                 <Button x:Name="btnResetDefault" Click="btnResetDefault_Click">
                     <Grid>
                         <Path HorizontalAlignment="Left" Height="14" Stretch="Uniform" Fill="Red" Data="{StaticResource Image_Refresh}" />
-                        <TextBlock Margin="20,0,0,0" Text="Reset" />
+                        <TextBlock Margin="20,0,0,0" Text="Reset to defaults" />
                     </Grid>
                 </Button>
             </WrapPanel>
         </Border>
-        <StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
             <Label Content="Notifier settings" Background="{DynamicResource AccentColorBrush}" FontWeight="Bold" />
             <StackPanel Margin="10">
                 <TextBlock Margin="0,0,0,10" TextWrapping="Wrap" Text="The following options only apply if you chose 'Block and prompt' for the outgoing connections in the Firewall settings page, as they target the WFN notification window." />
                 <StackPanel Orientation = "Horizontal">
-                    <ToggleButton Style="{StaticResource ToggleSwitch}" Padding="5,0" Content="Use an animated notification" Margin="0,0,22,10.2" IsChecked="{Binding UseAnimation, Source={x:Static settings:Settings.Default}}" />
+                    <ToggleButton Style="{StaticResource ToggleSwitch}" Padding="5,0" Content="Use an animated notification" Margin="0,0,22,10.2" IsChecked="{Binding UseAnimation,Mode=TwoWay}" />
                     <Button Style="{StaticResource RoundedButton}" Padding="0" x:Name="btnTestNotif" Click="btnTestNotif_Click" HorizontalAlignment="Right" Margin="0,0,0,0" BorderBrush="{DynamicResource AccentColorBrush}" FontWeight="Bold" FontStyle="Normal" Background="#00000000" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Height="20" Margin="5,0,0,0"/>
@@ -55,58 +57,46 @@
                         </StackPanel>
                     </Button>
                 </StackPanel>
-                <ToggleButton Style="{StaticResource ToggleSwitch}" Padding="5,0" Content="Enable services detection*" ToolTip="Additionally tries to detect the service making a connection in the notifier." IsChecked="{Binding EnableServiceDetection, Source={x:Static settings:Settings.Default}}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
+                <ToggleButton Style="{StaticResource ToggleSwitch}" Padding="5,0" Content="Enable services detection*" ToolTip="Additionally tries to detect the service making a connection in the notifier." IsChecked="{Binding EnableServiceDetection,Mode=TwoWay}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
             </StackPanel>
             <Label Content="Miscellaneous options" Background="{DynamicResource AccentColorBrush}" FontWeight="Bold" />
             <StackPanel Margin="10">
                 <!-- TODO: not working  <ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10"  Padding="5,0" Content="Minimize the console to the system tray instead of the taskbar." IsChecked="{Binding MinimizeToTray, Source={x:Static settings:Settings.Default}}" /> -->
-                <ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10" Padding="5,0" Content="Enable verbose logging (for debugging purpose only, may use a lot more disk space)" IsChecked="{Binding EnableVerboseLogging, Source={x:Static settings:Settings.Default}}" />
+                <ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10" Padding="5,0" Content="Enable verbose logging (for debugging purpose only, may use a lot more disk space)" IsChecked="{Binding EnableVerboseLogging, Mode=TwoWay}" />
                 <TextBlock Margin="30,0,0,10" Text="Note: the log files can either be in the WFN installation directory or the current user's appdata folder." />
                 <TextBlock Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding Mode=OneTime, Source={x:Static helpers:LogHelper.CurrentLogsPath}, StringFormat=Path for the current user: \{0\}}" Tag="{Binding Mode=OneTime, Source={x:Static helpers:LogHelper.CurrentLogsPath}}" x:Name="txtCurrentLogPath" MouseDown="txtCurrentLogPath_MouseDown" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
                 <!--<ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10" Padding="5,0" Content="Always run as admin*" ToolTip="Options marked with * need admin rights to change" IsChecked="{Binding AlwaysRunAs, Source={x:Static settings:Settings.Default}}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />-->
-                <ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10" Padding="5,0" Content="Enable DNS host name resolver in Security log (experimental)*" ToolTip="Enables host name resolver in Security Log" IsChecked="{Binding EnableDnsResolver, Source={x:Static settings:Settings.Default}}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
-                <ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10" Padding="5,0" Content="Enable successful connection events*" ToolTip="Enables logging of successful connection events in Security Log" IsChecked="{Binding AuditPolEnableSuccessEvent, Source={x:Static settings:Settings.Default}}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
-
+                <ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10" Padding="5,0" Content="Enable DNS host name resolver in Security log (experimental)*" ToolTip="Enables host name resolver in Security Log" IsChecked="{Binding EnableDnsResolver,Mode=TwoWay}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
+                <ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10" Padding="5,0" Content="Enable successful connection events*" ToolTip="Enables logging of successful connection events in Security Log" IsChecked="{Binding AuditPolEnableSuccessEvent, Mode=TwoWay}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
+            </StackPanel>
+            <Label Content="Appearance" Background="{DynamicResource AccentColorBrush}" FontWeight="Bold" />
+            <StackPanel Margin="10">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Accent color: " />
-                    <ComboBox IsEditable="False" MinWidth="100" ItemsSource="{Binding Colors}" SelectedValuePath="Value" SelectedValue="{Binding AccentColor}" Height="20" Background="#00000000" BorderBrush="Coral" Width="207" Foreground="Black">
+                    <ComboBox IsEditable="False" MinWidth="100" ItemsSource="{Binding Colors,ElementName=me,Mode=OneTime}" SelectedValuePath="Value" SelectedValue="{Binding AccentColor,Mode=TwoWay}" Height="20" Background="#00000000" BorderBrush="Coral" Width="207" Foreground="Black">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <WrapPanel>
-                                    <Rectangle Width="30" Height="10" Fill="{Binding Value}" Stroke="Black" />
-                                    <Label Content="{Binding Key}" Foreground="Black" Background="Transparent" />
+                                    <Rectangle Width="30" Height="10" Fill="{Binding Value,Mode=OneTime}" Stroke="Black" />
+                                    <Label Content="{Binding Key,Mode=OneTime}" Foreground="Black" Background="Transparent" />
                                 </WrapPanel>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                     <Label Content="Console Width" Margin="20,0,0,0"/>
-                    <TextBox Text="{Binding ConsoleSizeWidth, Source={x:Static settings:Settings.Default}}"  ToolTip="Needs a restart to take effect." IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Width="50" Height="20" Margin="5,0,0,0" BorderBrush="{DynamicResource AccentColorBrush}" />
+                    <TextBox Text="{Binding ConsoleSizeWidth, Mode=TwoWay}"  ToolTip="Needs a restart to take effect." IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Width="50" Height="20" Margin="5,0,0,0" BorderBrush="{DynamicResource AccentColorBrush}" />
                     <Label Content="Height" Margin="3,0,0,0"/>
-                    <TextBox Text="{Binding ConsoleSizeHeight, Source={x:Static settings:Settings.Default}}" ToolTip="Needs a restart to take effect." IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Width="50" Height="20" BorderBrush="{DynamicResource AccentColorBrush}" />
+                    <TextBox Text="{Binding ConsoleSizeHeight, Mode=TwoWay}" ToolTip="Needs a restart to take effect." IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Width="50" Height="20" BorderBrush="{DynamicResource AccentColorBrush}" />
                 </StackPanel>
             </StackPanel>
-            <Expander VerticalAlignment="Bottom" Header="Display setting file location" IsExpanded="False" Padding="0,5,0,0" Margin="10,0,0,0">
-                <StackPanel>
-                    <TextBlock Margin="0,0,0,10" Text="The following setting files are used (in order of priority - click to open)" />
-                    <Grid Margin="10,0,0,10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0">1. User local:</Label>
-                        <TextBlock Grid.Row="0" Grid.Column="1" x:Name="txtUserLocalConfigurationPath" MouseDown="txtUserLocalConfigurationPath_MouseDown" Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding UserLocalConfigurationPath}"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
-                        <Label Grid.Row="1" Grid.Column="0">2. User roaming:</Label>
-                        <TextBlock Grid.Row="1" Grid.Column="1" x:Name="txtUserConfigurationPath" MouseDown="txtUserConfigurationPath_MouseDown" Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding UserConfigurationPath}"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
-                        <Label Grid.Row="2" Grid.Column="0">3. Application default:</Label>
-                        <TextBlock Grid.Row="2" Grid.Column="1" x:Name="txtSharedConfigurationPath" MouseDown="txtSharedConfigurationPath_MouseDown" Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding SharedConfigurationPath}"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
-                    </Grid>
-                </StackPanel>
-            </Expander>
+            <Label Content="Portable mode" Background="{DynamicResource AccentColorBrush}" FontWeight="Bold" />
+            <StackPanel Margin="10">
+                <Label Content="When portable mode is enabled, all users on this computer will share the same configuration, stored in the current application folder." />
+                <ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10" Padding="5,0" Content="Enable" IsChecked="{Binding IsPortable,Mode=TwoWay}" />
+                <Label Content="Settings file location (click to open in explorer)" />
+                <TextBlock MouseDown="txtUserConfigurationPath_MouseDown" Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding ConfigurationPath,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
+            </StackPanel>
         </StackPanel>
+        </ScrollViewer>
     </DockPanel>
 </Page>
