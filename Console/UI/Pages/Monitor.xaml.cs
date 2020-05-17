@@ -189,10 +189,5 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 GroupedConnections.Remove(g);
             }
         }
-
-        private void btnRestartAdmin_Click(object sender, RoutedEventArgs e)
-        {
-            ((App)Application.Current).RestartAsAdmin();
-        }
     }
 }

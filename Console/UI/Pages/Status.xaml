@@ -11,17 +11,7 @@
       d:DesignHeight="600" d:DesignWidth="600"
       Title="Status" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
     <DockPanel>
-        <Border Background="#FFFF7B7B" Style="{StaticResource NonAdminPanel}">
-            <WrapPanel>
-                <Label Content="Only an administrator can use this feature." />
-                <Button x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
-                    <Grid>
-                        <ContentControl Height="16" HorizontalAlignment="Left" Content="{StaticResource Image_Shield}" />
-                        <Label Margin="20,0,0,0" Padding="0" Content="restart as admin" />
-                    </Grid>
-                </Button>
-            </WrapPanel>
-        </Border>
+        <controls:AdminPanel Caption="Only an administrator can use this feature." />
         <Border Style="{StaticResource ToolBarPanel}">
             <WrapPanel HorizontalAlignment="Left">
                 <controls:ToolBarButton Text="Apply" x:Name="btnSave" Click="btnSave_Click" IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}" ImageBrush="#FF6C6CD4" Image="{StaticResource Image_Shield}" />

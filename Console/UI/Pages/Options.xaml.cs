@@ -41,12 +41,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             Process.Start(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe"));
         }
 
-        private void btnRestartAdmin_Click(object sender, RoutedEventArgs e)
-        {
-            // TODO: @wokhan to be removed for power users?
-            ((App)Application.Current).RestartAsAdmin();
-        }
-
         private void txtCurrentLogPath_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             ProcessHelper.StartShellExecutable("explorer.exe", LogHelper.CurrentLogsPath, true);

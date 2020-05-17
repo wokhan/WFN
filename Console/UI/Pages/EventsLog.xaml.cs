@@ -327,11 +327,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             ProcessHelper.StartShellExecutable("eventvwr.msc", null, true);
         }
 
-        private void btnRestartAdmin_Click(object sender, RoutedEventArgs e)
-        {
-            ((App)Application.Current).RestartAsAdmin();
-        }
-
         private void GridLog_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //System.Console.WriteLine($"Grid SelectionChanged: {sender}, {e.Source}, {e.Handled}, {e.OriginalSource}, {e}");

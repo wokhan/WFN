@@ -149,11 +149,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             messsageInfoPanel.DataContext = this;
         }
 
-        private void btnRestartAdmin_Click(object sender, RoutedEventArgs e)
-        {
-            ((App)Application.Current).RestartAsAdmin();
-        }
-
         private void btnTestNotif_Click(object sender, RoutedEventArgs e)
         {
             // TODO: Does not show if mimimized to tray

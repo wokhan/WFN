@@ -4,23 +4,13 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:settings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Config;assembly=Wokhan.WindowsFirewallNotifier.Common"
-      xmlns:helpers="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Helpers;assembly=Wokhan.WindowsFirewallNotifier.Common"
+      xmlns:helpers="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Helpers;assembly=Wokhan.WindowsFirewallNotifier.Common" xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
       mc:Ignorable="d" 
       x:Name="me"
       d:DesignHeight="600" d:DesignWidth="600"
       Title="Settings" DataContext="{Binding Path=(settings:Settings.Default)}" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
     <DockPanel>
-        <Border Background="#FFFF7B7B" Style="{StaticResource NonAdminPanel}">
-            <WrapPanel>
-                <Label Content="*Those options can only be modified by an administrator." />
-                <Button x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
-                    <Grid>
-                        <Path Height="16" HorizontalAlignment="Left" Stretch="Uniform" Fill="#FF5353F7" Data="{StaticResource Image_Shield}" />
-                        <Label Margin="20,0,0,0" Padding="0" Content="restart as admin" />
-                    </Grid>
-                </Button>
-            </WrapPanel>
-        </Border>
+        <controls:AdminPanel Caption="*Those options can only be modified by an administrator." />
         <Border Style="{StaticResource ToolBarPanel}">
             <WrapPanel HorizontalAlignment="Left">
                 <Button x:Name="btnSave" Click="btnOK_Click">
