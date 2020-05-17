@@ -61,7 +61,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void txtUserConfigurationPath_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            ProcessHelper.StartShellExecutable("explorer.exe", $"/select \"{Settings.Default.ConfigurationPath}\"", true);
+            ProcessHelper.StartShellExecutable("explorer.exe", $"\"{Settings.Default.ConfigurationPath}\"", true);
         }
     }
 }
