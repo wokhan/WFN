@@ -54,7 +54,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Config
                                                       .Build();
 
             // Overrides "defaultInstance" member of the generated partial Settings class (to keep the designer)
-            defaultInstance = configuration.Get<Settings>();
+            defaultInstance ??= configuration.Get<Settings>();
         }
 
 
