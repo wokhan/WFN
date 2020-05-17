@@ -127,9 +127,5 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
         }
 
-        private void btnRestartAdmin_Click(object sender, RoutedEventArgs e)
-        {
-            ((App)Application.Current).RestartAsAdmin();
-        }
     }
 }

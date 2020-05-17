@@ -10,17 +10,7 @@
       x:Name="MonitorPage"
       Title="Monitor">
     <DockPanel>
-        <Border Background="#FFFF7B7B" Style="{StaticResource NonAdminPanel}">
-            <WrapPanel>
-                <Label Content="Information provided here might be inaccurate for non-admin users." />
-                <Button x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
-                    <Grid>
-                        <ContentControl Height="16" HorizontalAlignment="Left" Content="{StaticResource Image_Shield}" />
-                        <Label Margin="20,0,0,0" Padding="0" Content="restart as admin" />
-                    </Grid>
-                </Button>
-            </WrapPanel>
-        </Border>
+        <controls:AdminPanel Caption="Information provided here might be inaccurate for non-admin users." />
         <Border Style="{StaticResource ToolBarPanel}">
             <Grid>
                 <WrapPanel HorizontalAlignment="Left">
