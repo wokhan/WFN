@@ -1,11 +1,10 @@
 ﻿<Window xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows.NotificationWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:WFN="clr-namespace:Wokhan.WindowsFirewallNotifier.Common;assembly=Wokhan.WindowsFirewallNotifier.Common"
         xmlns:resx="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Properties;assembly=Wokhan.WindowsFirewallNotifier.Common"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         xmlns:settings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Config;assembly=Wokhan.WindowsFirewallNotifier.Common"
-        xmlns:sampleApp="clr-namespace:Wokhan.WindowsFirewallNotifier.Notifier"
+        xmlns:sampleApp="clr-namespace:Wokhan.WindowsFirewallNotifier.Notifier" xmlns:bindingconverters="clr-namespace:Wokhan.UI.BindingConverters;assembly=Wokhan.UI"
         Title="WFN - Notification" 
         AllowsTransparency="True"
         Background="Transparent"
@@ -18,7 +17,8 @@
         x:Name="NotifWindow"
         WindowStartupLocation="Manual"
         UseLayoutRounding="True"
-        BorderThickness="0"
+        BorderThickness="1"
+         BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
         ScrollViewer.CanContentScroll="False"
         DataContext="{Binding RelativeSource={RelativeSource Self}}" 
         Visibility="Visible" 
@@ -33,6 +33,10 @@
         </Storyboard>
         <SolidColorBrush x:Key="AccentColorBrush" Color="LightBlue" />
         <SolidColorBrush x:Key="PressedColorBrush" Color="OrangeRed" />
+        <bindingconverters:BooleanNegateConverter x:Key="booleanNegate" />
+        <bindingconverters:ValueToVisibilityConverter x:Key="valueToVisibility" />
+        <bindingconverters:ValueToVisibilityNegateConverter x:Key="valueToVisibilityNegate" />
+        <bindingconverters:ObjectToBoolConverter x:Key="objectToBoolean" />
         <settings:Settings x:Key="WFN" />
         <Style x:Key="SplitButtonGridStyle" TargetType="Grid">
             <Setter Property="VerticalAlignment" Value="Stretch" />
@@ -112,9 +116,10 @@
             </Style.Resources>
         </Style>
         <Style x:Key="RoundedButton" TargetType="Button">
+            <Setter Property="FontSize" Value="11" />
             <Setter Property="OverridesDefaultStyle" Value="True" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="HorizontalContentAlignment" Value="Right" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="Margin" Value="2" />
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
@@ -127,18 +132,9 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-        </Style>
-        <Style x:Key="BigRoundedButton" TargetType="Button" BasedOn="{StaticResource RoundedButton}">
-            <Setter Property="OverridesDefaultStyle" Value="True" />
-            <Setter Property="Background" Value="Transparent"/>
-            <!-- was WhiteSmoke -->
             <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="WhiteSmoke" />
-                    <!-- Value="{DynamicResource AccentColorBrush}" /> -->
-                </Trigger>
-                <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource PressedColorBrush}" />
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5" />
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -213,103 +209,34 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    <Grid>
-        <Grid x:Name="OverlayGrid" Margin="0" Panel.ZIndex="1000" Visibility="Collapsed" >
-            <Grid.Background>
-                <SolidColorBrush Color="WhiteSmoke" Opacity="1"/>
-            </Grid.Background>
-            <StackPanel Margin="10">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Background="Transparent" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" Style="{StaticResource RoundedButton}" Content="0" FontFamily="Marlett" FontSize="14" Width="28" Height="28" Click="btnMin_Click"/>
-                </StackPanel>
-                <Grid Width="Auto">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="4*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" TextWrapping="Wrap" Background="WhiteSmoke">
-                        Windows Firewall Notifier<LineBreak/>
-                        Currently there are no blocked connections to show.
-                    </TextBlock>
-                    <Button Grid.Column="1" Style="{StaticResource RoundedButton}" ToolTip="WFN console" HorizontalAlignment="Right" Background="{DynamicResource AccentColorBrush}" Padding="6" BorderThickness="0" Click="btnOptions_Click" Height="30" Width="30" >
-                        <Path Stretch="Uniform" Fill="White" Data="F1 M 54.8392,24.4749C 55.3507,24.2457 55.8111,24.1311 56.2202,24.1311C 56.6172,24.1311 56.966,24.2232 57.2668,24.4073C 57.5675,24.5915 57.8171,24.8339 58.0156,25.1347L 58.4575,26.1536L 58.6017,27.2737C 58.6017,29.6143 58.4667,31.8014 58.1966,33.8351C 57.9266,35.8688 57.5522,37.7644 57.0734,39.5218C 56.5947,41.2793 56.0289,42.8997 55.3763,44.383C 54.7236,45.8663 54.0167,47.232 53.2556,48.4801C 52.4946,49.7281 51.6925,50.8636 50.8496,51.8866C 50.0067,52.9095 49.1556,53.8302 48.2963,54.6486C 45.2682,57.5252 41.8351,59.6285 37.9969,60.9583C 34.1505,59.6285 30.7174,57.5252 27.6976,54.6486C 26.4086,53.421 25.1463,51.9633 23.9105,50.2754C 22.6748,48.5875 21.5751,46.6244 20.6114,44.3861C 19.6478,42.1478 18.8713,39.616 18.2821,36.7905C 17.6929,33.965 17.3982,30.7928 17.3982,27.2737L 17.5609,26.1413L 18.0397,25.1439C 18.2504,24.8493 18.5123,24.613 18.8253,24.435C 19.1383,24.257 19.4933,24.168 19.8902,24.168C 20.2871,24.168 20.7106,24.2703 21.1608,24.4749C 22.196,24.9495 23.1484,25.2851 24.0179,25.4815C 24.8875,25.6779 25.6925,25.7761 26.4332,25.7761C 27.4193,25.7761 28.3052,25.6298 29.0909,25.3372C 29.8765,25.0447 30.5987,24.6743 31.2575,24.2263L 33.0805,22.787L 34.7009,21.3476L 36.2906,20.2336C 36.8266,19.939 37.3954,19.7917 37.9969,19.7917C 38.6107,19.7917 39.1866,19.939 39.7247,20.2336L 41.3175,21.3476L 42.9471,22.787L 44.7701,24.2263C 45.4227,24.6743 46.1419,25.0447 46.9275,25.3372C 47.7132,25.6298 48.5991,25.7761 49.5852,25.7761C 50.3258,25.7761 51.1279,25.6779 51.9913,25.4815C 52.8546,25.2851 53.804,24.9495 54.8392,24.4749 Z" />
-                    </Button>
-                </Grid>
-            </StackPanel>
+    <DockPanel>
+        <Grid DockPanel.Dock="Top" Background="{DynamicResource AccentColorBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Image Grid.Column="0" Margin="8,0,0,0" Height="20" MinWidth="20" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Icon}" />
+            <TextBlock Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Padding="8,0" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" FontWeight="Bold" Text="{Binding Title}" />
+            <Button Grid.Column="2" Style="{StaticResource RoundedButton}" Background="{DynamicResource AccentColorBrush}" IsEnabled="{Binding NbConnectionsBefore,Converter={StaticResource objectToBoolean}}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="2" Width="28" Height="28" Click="btnPrev_Click">
+                <TextBlock Text="{Binding NbConnectionsBefore,FallbackValue='0',StringFormat='&lt;{0}'}" Visibility="{Binding NbConnectionsBefore,Converter={StaticResource valueToVisibility}}" />
+            </Button>
+            <Button Grid.Column="3" Style="{StaticResource RoundedButton}" Background="{DynamicResource AccentColorBrush}" IsEnabled="{Binding NbConnectionsAfter,Converter={StaticResource objectToBoolean}}"  Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="2" Width="28" Height="28" Click="btnNext_Click">
+                <TextBlock Text="{Binding NbConnectionsAfter,FallbackValue='0',StringFormat='\{0}&gt;'}" Visibility="{Binding NbConnectionsAfter,Converter={StaticResource valueToVisibility}}" />
+            </Button>
+            <Button Grid.Column="4" Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" Style="{StaticResource RoundedButton}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="2" Content="0" FontFamily="Marlett" FontSize="14" Width="28" Height="28" Click="btnMin_Click" />
         </Grid>
-        <Border x:Name="Main" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
-            <Grid x:Name="MainGrid" Visibility="Visible">
+        <Border x:Name="Main" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+            <Grid x:Name="MainGrid">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" MinHeight="32"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto" MaxHeight="80"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0" Background="{DynamicResource AccentColorBrush}" Margin="0,0,0,59.8" Grid.RowSpan="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" Margin="8,0,0,0" Height="16" MinWidth="16" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Icon}" />
-                    <TextBlock Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Padding="8,0" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" FontWeight="Bold" Text="{x:Static resx:Resources.FW_TITLE}" />
-                    <Button Grid.Column="2" Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="2" Width="28" Height="28" Click="btnPrev_Click">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource RoundedButton}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding NbConnectionsBefore}" Value="0">
-                                        <Setter Property="IsEnabled" Value="False" />
-                                        <Setter Property="Opacity" Value="0.5" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                        <TextBlock Text="{Binding NbConnectionsBefore,FallbackValue='0',StringFormat='&lt;{0}'}" FontSize="10">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding NbConnectionsBefore}" Value="0">
-                                            <Setter Property="Visibility" Value="Collapsed" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </Button>
-                    <Button Grid.Column="3" Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="2" Width="28" Height="28" Click="btnNext_Click">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource RoundedButton}">
-                                <Setter Property="IsEnabled" Value="True" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding NbConnectionsAfter}" Value="0">
-                                        <Setter Property="IsEnabled" Value="False" />
-                                        <Setter Property="Opacity" Value="0.5" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                        <TextBlock Text="{Binding NbConnectionsAfter,FallbackValue='0',StringFormat='\{0}&gt;'}" FontSize="10">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding NbConnectionsAfter}" Value="0">
-                                            <Setter Property="Visibility" Value="Collapsed" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </Button>
-                    <Button Grid.Column="4" Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" Style="{StaticResource RoundedButton}" BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="2" Content="0" FontFamily="Marlett" FontSize="14" Width="28" Height="28" Click="btnMin_Click" Margin="2,0" Padding="2,0"/>
-                </Grid>
-                <Grid Grid.Row="1" x:Name="gridConnections" SizeChanged="expand_SizeChanged" Background="Transparent" Margin="0,0.2,0,4.8" >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <ListView Grid.Row="0" Grid.Column="0" VirtualizingPanel.ScrollUnit="Item" SelectedIndex="0" SelectionMode="Single" x:Name="lstConnections" Background="Transparent" ItemsSource="{Binding Connections}" DataContext="{x:Static Application.Current}" d:DataContext="{d:DesignInstance Type=sampleApp:AppDataSample, IsDesignTimeCreatable=True}" MinHeight="41.6">
+                <Grid x:Name="gridConnections" SizeChanged="expand_SizeChanged" Background="Transparent" Margin="0,0.2,0,4.8" >
+                    <ListView VirtualizingPanel.ScrollUnit="Item" SelectedIndex="0" Visibility="{Binding HasItems,RelativeSource={RelativeSource Mode=self}}"  SelectionMode="Single" x:Name="lstConnections" Background="Transparent" ItemsSource="{Binding Connections}" DataContext="{x:Static Application.Current}" d:DataContext="{d:DesignInstance Type=sampleApp:AppDataSample, IsDesignTimeCreatable=True}" MinHeight="41.6">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="OverridesDefaultStyle" Value="True"/>
@@ -369,147 +296,150 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
+                    <TextBlock Margin="10" Visibility="{Binding HasItems,ElementName=lstConnections,Converter={StaticResource valueToVisibilityNegate}}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" Text="Currently there are no blocked connections to show." />
                 </Grid>
-                <StackPanel Grid.Row="2" Height="Auto" Margin="0,0,50,0">
-                    <UniformGrid Rows="1" Columns="4" Margin="0,0,0,0" Height="Auto">
-                        <Button x:Name="btnAllow" Click="btnAllow_Click" Style="{StaticResource BorderButton}" ToolTip="{x:Static resx:Resources.MSG_ALLOW}" Margin="3,0,0,3">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Height="18" Stretch="Uniform" Fill="#FF4AAA4A" Data="F1 M 32.222,33.4875L 39.1886,40.0582L 51.3802,26.1251L 54.7052,29.0542L 39.5845,47.5L 28.897,36.8125L 32.222,33.4875 Z M 24,27L 48.5,27L 45.5,30L 27,30L 27,49L 46,49L 46,42.5L 49,38.75L 49,52L 24,52L 24,27 Z" />
-                                <Label Content="{x:Static resx:Resources.FW_RULE_ALLOW}" VerticalContentAlignment="Center" />
-                            </StackPanel>
-                        </Button>
-                        <Button x:Name="btnIgnore" Click="btnIgnore_Click" Style="{StaticResource BorderButton}" ToolTip="{x:Static resx:Resources.MSG_BLOCK}" Margin="3,0,0,3">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Height="18" Stretch="Uniform" Fill="#FFDE6032" Data="F1 M 31.6667,19L 44.3333,19L 57,31.6667L 57,44.3333L 44.3333,57L 31.6667,57L 19,44.3333L 19,31.6667L 31.6667,19 Z M 26.4762,45.0454L 30.9546,49.5238L 38,42.4783L 45.0454,49.5238L 49.5237,45.0454L 42.4783,38L 49.5238,30.9546L 45.0454,26.4763L 38,33.5217L 30.9546,26.4762L 26.4762,30.9546L 33.5217,38L 26.4762,45.0454 Z"/>
-                                <Label Content="{x:Static resx:Resources.FW_RULE_BLOCK}" VerticalContentAlignment="Center" />
-                            </StackPanel>
-                        </Button>
-                        <Button x:Name="btnSkip" Style="{StaticResource BorderButton}" Click="btnSkip_Click" Margin="3,0,0,3">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Height="18" Stretch="Uniform" Data="M3,8 H5V16H3V8 M7,8 H9V16H7V8 M11,8H13V16H11V8 M15,19.25V4.75 L22.25,12 L15,19.25Z" Fill="#FF599CEC" />
-                                <Label Content="{x:Static resx:Resources.FW_RULE_SKIP}" VerticalContentAlignment="Center"  />
-                            </StackPanel>
-                        </Button>
-                        <CheckBox x:Name="tglSkip" Content="" Margin="5.4,0,4.6,0" Click="tglButtons_Click" VerticalContentAlignment="Top" VerticalAlignment="Center" />
-                    </UniformGrid>
-                    <UniformGrid Rows="1" Columns="4" Margin="0,0,0,0" Height="Auto" SizeChanged="expand_SizeChanged">
-                        <Button Grid.Row="0" Grid.Column="0" x:Name="btnAllowTemp" Visibility="Visible" Style="{StaticResource BorderButton}" Height="{Binding ActualHeight,ElementName=btnAllow}" Click="btnAllowTemp_Click">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Height="18" Stretch="Uniform" Fill="#FF4AAA4A" Data="F1 M 32.222,33.4875L 39.1886,40.0582L 51.3802,26.1251L 54.7052,29.0542L 39.5845,47.5L 28.897,36.8125L 32.222,33.4875 Z M 24,27L 48.5,27L 45.5,30L 27,30L 27,49L 46,49L 46,42.5L 49,38.75L 49,52L 24,52L 24,27 Z" />
-                                <Label Content="Allow temp" VerticalContentAlignment="Center" Padding="3,3,5,3" />
-                            </StackPanel>
-                        </Button>
-                        <Button Grid.Row="0" Grid.Column="1" x:Name="btnBlockTemp"  Visibility="Visible" Style="{StaticResource BorderButton}" Height="{Binding ActualHeight,ElementName=btnIgnore}"  Click="btnBlockTemp_Click" HorizontalContentAlignment="Left">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Height="18" Stretch="Uniform" Fill="#FFDE6032" Data="F1 M 31.6667,19L 44.3333,19L 57,31.6667L 57,44.3333L 44.3333,57L 31.6667,57L 19,44.3333L 19,31.6667L 31.6667,19 Z M 26.4762,45.0454L 30.9546,49.5238L 38,42.4783L 45.0454,49.5238L 49.5237,45.0454L 42.4783,38L 49.5238,30.9546L 45.0454,26.4763L 38,33.5217L 30.9546,26.4762L 26.4762,30.9546L 33.5217,38L 26.4762,45.0454 Z"/>
-                                <Label Content="Block temp" VerticalContentAlignment="Center" />
-                            </StackPanel>
-                        </Button>
-                        <Button Grid.Row="0" Grid.Column="2" x:Name="btnSkipProgram" Visibility="Visible" Style="{StaticResource BorderButton}" Height="{Binding ActualHeight,ElementName=btnSkip}"  Click="btnSkipProgram_Click" HorizontalContentAlignment="Left">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Height="18" Stretch="Uniform" Data="M3,8H5V16H3V8M7,8H9V16H7V8M11,8H13V16H11V8M15,19.25V4.75L22.25,12L15,19.25Z" Fill="#FF599CEC" />
-                                <Label Content="{x:Static resx:Resources.FW_RULE_SKIP_PROGRAM}"  VerticalContentAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Grid.Row="0" Grid.Column="3" x:Name="btnSkipAll" Visibility="Visible" Style="{StaticResource BorderButton}" Height="{Binding ActualHeight,ElementName=btnSkip}"  Click="btnSkipAll_Click" HorizontalContentAlignment="Left">
-                            <StackPanel Orientation="Horizontal">
-                                <Path Height="18" Stretch="Uniform" Data="M3,8H5V16H3V8M7,8H9V16H7V8M11,8H13V16H11V8M15,19.25V4.75L22.25,12L15,19.25Z" Fill="#FF599CEC" />
-                                <Label Content="{x:Static resx:Resources.FW_RULE_SKIP_ALL}" VerticalContentAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                    </UniformGrid>
-                </StackPanel>
-                <Button Grid.Row="2" Style="{StaticResource RoundedButton}" ToolTip="WFN console" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="6" Margin="0,3.2,3,0" Background="{DynamicResource AccentColorBrush}" BorderThickness="0" Click="btnOptions_Click" Height="30" Width="30" >
+                <Button Grid.Row="1" Style="{StaticResource RoundedButton}" ToolTip="WFN console" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="6" Margin="0,3.2,3,0" Background="{DynamicResource AccentColorBrush}" BorderThickness="0" Click="btnOptions_Click" Height="30" Width="30" >
                     <Path Stretch="Uniform" Fill="White" Data="F1 M 54.8392,24.4749C 55.3507,24.2457 55.8111,24.1311 56.2202,24.1311C 56.6172,24.1311 56.966,24.2232 57.2668,24.4073C 57.5675,24.5915 57.8171,24.8339 58.0156,25.1347L 58.4575,26.1536L 58.6017,27.2737C 58.6017,29.6143 58.4667,31.8014 58.1966,33.8351C 57.9266,35.8688 57.5522,37.7644 57.0734,39.5218C 56.5947,41.2793 56.0289,42.8997 55.3763,44.383C 54.7236,45.8663 54.0167,47.232 53.2556,48.4801C 52.4946,49.7281 51.6925,50.8636 50.8496,51.8866C 50.0067,52.9095 49.1556,53.8302 48.2963,54.6486C 45.2682,57.5252 41.8351,59.6285 37.9969,60.9583C 34.1505,59.6285 30.7174,57.5252 27.6976,54.6486C 26.4086,53.421 25.1463,51.9633 23.9105,50.2754C 22.6748,48.5875 21.5751,46.6244 20.6114,44.3861C 19.6478,42.1478 18.8713,39.616 18.2821,36.7905C 17.6929,33.965 17.3982,30.7928 17.3982,27.2737L 17.5609,26.1413L 18.0397,25.1439C 18.2504,24.8493 18.5123,24.613 18.8253,24.435C 19.1383,24.257 19.4933,24.168 19.8902,24.168C 20.2871,24.168 20.7106,24.2703 21.1608,24.4749C 22.196,24.9495 23.1484,25.2851 24.0179,25.4815C 24.8875,25.6779 25.6925,25.7761 26.4332,25.7761C 27.4193,25.7761 28.3052,25.6298 29.0909,25.3372C 29.8765,25.0447 30.5987,24.6743 31.2575,24.2263L 33.0805,22.787L 34.7009,21.3476L 36.2906,20.2336C 36.8266,19.939 37.3954,19.7917 37.9969,19.7917C 38.6107,19.7917 39.1866,19.939 39.7247,20.2336L 41.3175,21.3476L 42.9471,22.787L 44.7701,24.2263C 45.4227,24.6743 46.1419,25.0447 46.9275,25.3372C 47.7132,25.6298 48.5991,25.7761 49.5852,25.7761C 50.3258,25.7761 51.1279,25.6779 51.9913,25.4815C 52.8546,25.2851 53.804,24.9495 54.8392,24.4749 Z" />
                 </Button>
-                <Expander Grid.Row="4" Background="Transparent" Margin="0,0,0,0" SizeChanged="expand_SizeChanged" DockPanel.Dock="Bottom" x:Name="expand" IsExpanded="{Binding AlwaysShowDetails,Source={x:Static settings:Settings.Default}}">
-                    <Expander.Header>
-                        <TextBlock Text="{x:Static resx:Resources.FW_RULE_ADVANCED}"/>
-                    </Expander.Header>
-                    <ScrollViewer VerticalScrollBarVisibility="Visible" Height="110">
-                        <Grid DataContext="{Binding SelectedItem, ElementName=lstConnections}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <!--  <TextBlock Grid.Row="0" Grid.Column="0" Margin="3" FontWeight="Bold" Text="Connection" /> -->
-                            <CheckBox Grid.Row="0" Grid.Column="0" Margin="3" IsChecked="{Binding OptionsView.IsCurrentProfileChecked, ElementName=NotifWindow}" Content="{Binding CurrentProfile, ElementName=NotifWindow, FallbackValue='Unknown'}" ContentStringFormat="Profile: {0}" />
-                            <CheckBox Grid.Row="1" Grid.Column="0" Margin="3" IsChecked="{Binding OptionsView.IsProtocolChecked, ElementName=NotifWindow}" Content="{Binding ProtocolAsString,FallbackValue='Unknown'}" ContentStringFormat="Protocol: {0}" />
-                            <CheckBox Grid.Row="2" Grid.Column="0" Margin="3" IsChecked="{Binding OptionsView.IsLocalPortChecked, ElementName=NotifWindow}" ToolTipService.ShowOnDisabled="True">
-                                <TextBlock Text="{Binding LocalPort, FallbackValue='N/A', StringFormat='{x:Static resx:Resources.TXT_LOCAL_PORTS}'}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
-                                <CheckBox.ToolTip>
-                                    <StackPanel>
-                                        <TextBlock FontWeight="Bold" Text="{x:Static resx:Resources.TXT_LOCAL_PORTS_TOOLTIP}" />
-                                        <TextBlock Text="{Binding LocalPort}" />
-                                    </StackPanel>
-                                </CheckBox.ToolTip>
-                            </CheckBox>
-                            <CheckBox Grid.Row="2" Grid.Column="1" Margin="3" IsChecked="{Binding OptionsView.IsTargetPortChecked, ElementName=NotifWindow}" ToolTipService.ShowOnDisabled="True">
-                                <Hyperlink NavigateUri="{Binding TargetPortUrl}" RequestNavigate="hlk_Navigate">
-                                    <TextBlock Text="{Binding TargetPort, FallbackValue='N/A', StringFormat='{x:Static resx:Resources.TXT_REMOTE_PORTS}'}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
-                                </Hyperlink>
-                                <CheckBox.ToolTip>
-                                    <StackPanel>
-                                        <TextBlock FontWeight="Bold" Text="{x:Static resx:Resources.TXT_REMOTE_PORTS_TOOLTIP}" />
-                                        <TextBlock Text="{Binding TargetPort}" />
-                                    </StackPanel>
-                                </CheckBox.ToolTip>
-                            </CheckBox>
-                            <CheckBox Grid.Row="1" Grid.Column="1" Margin="3" IsChecked="{Binding OptionsView.IsTargetIPChecked, ElementName=NotifWindow}">
-                                <Hyperlink NavigateUri="{Binding TargetInfoUrl}" RequestNavigate="hlk_Navigate">
-                                    <TextBlock Text="{Binding Target, FallbackValue='N/A', StringFormat='Target IP: {0}'}" ToolTip="{Binding ResolvedHost}"/>
-                                </Hyperlink>
-                            </CheckBox>
-                            <TextBlock Grid.Row="3" Grid.ColumnSpan="2" Margin="3" FontWeight="Bold" Text="Application" />
-                            <CheckBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="3" IsChecked="{Binding OptionsView.IsPathChecked, ElementName=NotifWindow}">
-                                <Hyperlink TextDecorations="" NavigateUri="{Binding CurrentPath}" RequestNavigate="hlkPath_Navigate">
-                                    <TextBlock Text="{Binding CurrentPath, FallbackValue='N/A', StringFormat='Path: {0}'}" />
-                                </Hyperlink>
-                            </CheckBox>
-                            <CheckBox Grid.Row="0" Grid.Column="1" Margin="3" IsChecked="{Binding OptionsView.IsServiceRuleChecked, ElementName=NotifWindow}">
-                                <CheckBox.Style>
-                                    <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-                                        <Setter Property="Content" Value="{x:Static resx:Resources.SERVICES_NONE}" />
-                                        <Setter Property="IsEnabled" Value="{Binding OptionsView.IsService, ElementName=NotifWindow}" />
-                                        <Style.Triggers>
-                                            <MultiDataTrigger>
-                                                <MultiDataTrigger.Conditions>
-                                                    <Condition Binding="{Binding OptionsView.IsService, ElementName=NotifWindow}" Value="True"/>
-                                                    <Condition Binding="{Binding OptionsView.IsServiceMultiple, ElementName=NotifWindow}" Value="False"/>
-                                                </MultiDataTrigger.Conditions>
-                                                <Setter Property="Content" Value="{Binding OptionsView.SingleServiceName, ElementName=NotifWindow, FallbackValue='N/A'}"/>
-                                                <Setter Property="ContentStringFormat" Value="{x:Static resx:Resources.TXT_SERVICES}"/>
-                                            </MultiDataTrigger>
-                                            <MultiDataTrigger>
-                                                <MultiDataTrigger.Conditions>
-                                                    <Condition Binding="{Binding OptionsView.IsService, ElementName=NotifWindow}" Value="True"/>
-                                                    <Condition Binding="{Binding OptionsView.IsServiceMultiple, ElementName=NotifWindow}" Value="True"/>
-                                                </MultiDataTrigger.Conditions>
-                                                <Setter Property="Content" Value="{x:Static resx:Resources.SERVICES_MULTIPLE}" />
-                                                <Setter Property="Foreground" Value="Red" />
-                                            </MultiDataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </CheckBox.Style>
-                            </CheckBox>
-                            <CheckBox Grid.Row="8" Margin="3" IsEnabled="{Binding OptionsView.IsAppEnabled, ElementName=NotifWindow}" IsChecked="{Binding OptionsView.IsAppChecked, ElementName=NotifWindow}" Content="{Binding CurrentAppPkgId,FallbackValue='N/A'}" ContentStringFormat="App: {0}" />
-                            <!--FIXME: Really needs ellipses-->
-                        </Grid>
-                    </ScrollViewer>
-                </Expander>
+                <StackPanel Grid.Row="2" Visibility="{Binding HasItems,ElementName=lstConnections}">
+                    <StackPanel Height="Auto" Margin="0,0,50,0">
+                        <UniformGrid Rows="1" Columns="4" Margin="0,0,0,0" Height="Auto">
+                            <Button x:Name="btnAllow" Click="btnAllow_Click" Style="{StaticResource BorderButton}" ToolTip="{x:Static resx:Resources.MSG_ALLOW}" Margin="3,0,0,3">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Height="18" Stretch="Uniform" Fill="#FF4AAA4A" Data="F1 M 32.222,33.4875L 39.1886,40.0582L 51.3802,26.1251L 54.7052,29.0542L 39.5845,47.5L 28.897,36.8125L 32.222,33.4875 Z M 24,27L 48.5,27L 45.5,30L 27,30L 27,49L 46,49L 46,42.5L 49,38.75L 49,52L 24,52L 24,27 Z" />
+                                    <Label Content="{x:Static resx:Resources.FW_RULE_ALLOW}" VerticalContentAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                            <Button x:Name="btnIgnore" Click="btnIgnore_Click" Style="{StaticResource BorderButton}" ToolTip="{x:Static resx:Resources.MSG_BLOCK}" Margin="3,0,0,3">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Height="18" Stretch="Uniform" Fill="#FFDE6032" Data="F1 M 31.6667,19L 44.3333,19L 57,31.6667L 57,44.3333L 44.3333,57L 31.6667,57L 19,44.3333L 19,31.6667L 31.6667,19 Z M 26.4762,45.0454L 30.9546,49.5238L 38,42.4783L 45.0454,49.5238L 49.5237,45.0454L 42.4783,38L 49.5238,30.9546L 45.0454,26.4763L 38,33.5217L 30.9546,26.4762L 26.4762,30.9546L 33.5217,38L 26.4762,45.0454 Z"/>
+                                    <Label Content="{x:Static resx:Resources.FW_RULE_BLOCK}" VerticalContentAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                            <Button x:Name="btnSkip" Style="{StaticResource BorderButton}" Click="btnSkip_Click" Margin="3,0,0,3">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Height="18" Stretch="Uniform" Data="M3,8 H5V16H3V8 M7,8 H9V16H7V8 M11,8H13V16H11V8 M15,19.25V4.75 L22.25,12 L15,19.25Z" Fill="#FF599CEC" />
+                                    <Label Content="{x:Static resx:Resources.FW_RULE_SKIP}" VerticalContentAlignment="Center"  />
+                                </StackPanel>
+                            </Button>
+                            <CheckBox x:Name="tglSkip" Content="" Margin="5.4,0,4.6,0" Click="tglButtons_Click" VerticalContentAlignment="Top" VerticalAlignment="Center" />
+                        </UniformGrid>
+                        <UniformGrid Rows="1" Columns="4" Margin="0,0,0,0" Height="Auto" SizeChanged="expand_SizeChanged">
+                            <Button Grid.Row="0" Grid.Column="0" x:Name="btnAllowTemp" Visibility="Visible" Style="{StaticResource BorderButton}" Height="{Binding ActualHeight,ElementName=btnAllow}" Click="btnAllowTemp_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Height="18" Stretch="Uniform" Fill="#FF4AAA4A" Data="F1 M 32.222,33.4875L 39.1886,40.0582L 51.3802,26.1251L 54.7052,29.0542L 39.5845,47.5L 28.897,36.8125L 32.222,33.4875 Z M 24,27L 48.5,27L 45.5,30L 27,30L 27,49L 46,49L 46,42.5L 49,38.75L 49,52L 24,52L 24,27 Z" />
+                                    <Label Content="Allow temp" VerticalContentAlignment="Center" Padding="3,3,5,3" />
+                                </StackPanel>
+                            </Button>
+                            <Button Grid.Row="0" Grid.Column="1" x:Name="btnBlockTemp"  Visibility="Visible" Style="{StaticResource BorderButton}" Height="{Binding ActualHeight,ElementName=btnIgnore}"  Click="btnBlockTemp_Click" HorizontalContentAlignment="Left">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Height="18" Stretch="Uniform" Fill="#FFDE6032" Data="F1 M 31.6667,19L 44.3333,19L 57,31.6667L 57,44.3333L 44.3333,57L 31.6667,57L 19,44.3333L 19,31.6667L 31.6667,19 Z M 26.4762,45.0454L 30.9546,49.5238L 38,42.4783L 45.0454,49.5238L 49.5237,45.0454L 42.4783,38L 49.5238,30.9546L 45.0454,26.4763L 38,33.5217L 30.9546,26.4762L 26.4762,30.9546L 33.5217,38L 26.4762,45.0454 Z"/>
+                                    <Label Content="Block temp" VerticalContentAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                            <Button Grid.Row="0" Grid.Column="2" x:Name="btnSkipProgram" Visibility="Visible" Style="{StaticResource BorderButton}" Height="{Binding ActualHeight,ElementName=btnSkip}"  Click="btnSkipProgram_Click" HorizontalContentAlignment="Left">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Height="18" Stretch="Uniform" Data="M3,8H5V16H3V8M7,8H9V16H7V8M11,8H13V16H11V8M15,19.25V4.75L22.25,12L15,19.25Z" Fill="#FF599CEC" />
+                                    <Label Content="{x:Static resx:Resources.FW_RULE_SKIP_PROGRAM}"  VerticalContentAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Grid.Row="0" Grid.Column="3" x:Name="btnSkipAll" Visibility="Visible" Style="{StaticResource BorderButton}" Height="{Binding ActualHeight,ElementName=btnSkip}"  Click="btnSkipAll_Click" HorizontalContentAlignment="Left">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Height="18" Stretch="Uniform" Data="M3,8H5V16H3V8M7,8H9V16H7V8M11,8H13V16H11V8M15,19.25V4.75L22.25,12L15,19.25Z" Fill="#FF599CEC" />
+                                    <Label Content="{x:Static resx:Resources.FW_RULE_SKIP_ALL}" VerticalContentAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </UniformGrid>
+                    </StackPanel>
+                    <Expander Background="Transparent" Margin="0,0,0,0" SizeChanged="expand_SizeChanged" x:Name="expand" IsExpanded="{Binding AlwaysShowDetails,Source={x:Static settings:Settings.Default}}">
+                        <Expander.Header>
+                            <TextBlock Text="{x:Static resx:Resources.FW_RULE_ADVANCED}"/>
+                        </Expander.Header>
+                        <ScrollViewer VerticalScrollBarVisibility="Visible" Height="110">
+                            <Grid DataContext="{Binding SelectedItem, ElementName=lstConnections}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <!--  <TextBlock Grid.Row="0" Grid.Column="0" Margin="3" FontWeight="Bold" Text="Connection" /> -->
+                                <CheckBox Grid.Row="0" Grid.Column="0" Margin="3" IsChecked="{Binding OptionsView.IsCurrentProfileChecked, ElementName=NotifWindow}" Content="{Binding CurrentProfile, ElementName=NotifWindow, FallbackValue='Unknown'}" ContentStringFormat="Profile: {0}" />
+                                <CheckBox Grid.Row="1" Grid.Column="0" Margin="3" IsChecked="{Binding OptionsView.IsProtocolChecked, ElementName=NotifWindow}" Content="{Binding ProtocolAsString,FallbackValue='Unknown'}" ContentStringFormat="Protocol: {0}" />
+                                <CheckBox Grid.Row="2" Grid.Column="0" Margin="3" IsChecked="{Binding OptionsView.IsLocalPortChecked, ElementName=NotifWindow}" ToolTipService.ShowOnDisabled="True">
+                                    <TextBlock Text="{Binding LocalPort, FallbackValue='N/A', StringFormat='{x:Static resx:Resources.TXT_LOCAL_PORTS}'}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                                    <CheckBox.ToolTip>
+                                        <StackPanel>
+                                            <TextBlock FontWeight="Bold" Text="{x:Static resx:Resources.TXT_LOCAL_PORTS_TOOLTIP}" />
+                                            <TextBlock Text="{Binding LocalPort}" />
+                                        </StackPanel>
+                                    </CheckBox.ToolTip>
+                                </CheckBox>
+                                <CheckBox Grid.Row="2" Grid.Column="1" Margin="3" IsChecked="{Binding OptionsView.IsTargetPortChecked, ElementName=NotifWindow}" ToolTipService.ShowOnDisabled="True">
+                                    <Hyperlink NavigateUri="{Binding TargetPortUrl}" RequestNavigate="hlk_Navigate">
+                                        <TextBlock Text="{Binding TargetPort, FallbackValue='N/A', StringFormat='{x:Static resx:Resources.TXT_REMOTE_PORTS}'}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                                    </Hyperlink>
+                                    <CheckBox.ToolTip>
+                                        <StackPanel>
+                                            <TextBlock FontWeight="Bold" Text="{x:Static resx:Resources.TXT_REMOTE_PORTS_TOOLTIP}" />
+                                            <TextBlock Text="{Binding TargetPort}" />
+                                        </StackPanel>
+                                    </CheckBox.ToolTip>
+                                </CheckBox>
+                                <CheckBox Grid.Row="1" Grid.Column="1" Margin="3" IsChecked="{Binding OptionsView.IsTargetIPChecked, ElementName=NotifWindow}">
+                                    <Hyperlink NavigateUri="{Binding TargetInfoUrl}" RequestNavigate="hlk_Navigate">
+                                        <TextBlock Text="{Binding Target, FallbackValue='N/A', StringFormat='Target IP: {0}'}" ToolTip="{Binding ResolvedHost}"/>
+                                    </Hyperlink>
+                                </CheckBox>
+                                <TextBlock Grid.Row="3" Grid.ColumnSpan="2" Margin="3" FontWeight="Bold" Text="Application" />
+                                <CheckBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="3" IsChecked="{Binding OptionsView.IsPathChecked, ElementName=NotifWindow}">
+                                    <Hyperlink TextDecorations="" NavigateUri="{Binding CurrentPath}" RequestNavigate="hlkPath_Navigate">
+                                        <TextBlock Text="{Binding CurrentPath, FallbackValue='N/A', StringFormat='Path: {0}'}" />
+                                    </Hyperlink>
+                                </CheckBox>
+                                <CheckBox Grid.Row="0" Grid.Column="1" Margin="3" IsChecked="{Binding OptionsView.IsServiceRuleChecked, ElementName=NotifWindow}">
+                                    <CheckBox.Style>
+                                        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+                                            <Setter Property="Content" Value="{x:Static resx:Resources.SERVICES_NONE}" />
+                                            <Setter Property="IsEnabled" Value="{Binding OptionsView.IsService, ElementName=NotifWindow}" />
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding OptionsView.IsService, ElementName=NotifWindow}" Value="True"/>
+                                                        <Condition Binding="{Binding OptionsView.IsServiceMultiple, ElementName=NotifWindow}" Value="False"/>
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Content" Value="{Binding OptionsView.SingleServiceName, ElementName=NotifWindow, FallbackValue='N/A'}"/>
+                                                    <Setter Property="ContentStringFormat" Value="{x:Static resx:Resources.TXT_SERVICES}"/>
+                                                </MultiDataTrigger>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding OptionsView.IsService, ElementName=NotifWindow}" Value="True"/>
+                                                        <Condition Binding="{Binding OptionsView.IsServiceMultiple, ElementName=NotifWindow}" Value="True"/>
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Content" Value="{x:Static resx:Resources.SERVICES_MULTIPLE}" />
+                                                    <Setter Property="Foreground" Value="Red" />
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </CheckBox.Style>
+                                </CheckBox>
+                                <CheckBox Grid.Row="8" Margin="3" IsEnabled="{Binding OptionsView.IsAppEnabled, ElementName=NotifWindow}" IsChecked="{Binding OptionsView.IsAppChecked, ElementName=NotifWindow}" Content="{Binding CurrentAppPkgId,FallbackValue='N/A'}" ContentStringFormat="App: {0}" />
+                                <!--FIXME: Really needs ellipses-->
+                            </Grid>
+                        </ScrollViewer>
+                    </Expander>
+                </StackPanel>
             </Grid>
         </Border>
-    </Grid>
+    </DockPanel>
 </Window>
