@@ -17,8 +17,6 @@ jobs:
         dotnet-version: 3.1.200
     - name: Build and publish
       run: dotnet publish -c Release
-    - name: Rename config file
-      run: mv ./bin/netcoreapp3.1/publish/Wokhan.WindowsFirewallNotifier.Common.dll.config ./bin/netcoreapp3.1/publish/WFN.config
     - name: Zip published files
       run: compress-archive -path ./bin/netcoreapp3.1/publish/* -destinationpath ./bin/netcoreapp3.1/wfn.zip
     - name: Deploy nightly
@@ -42,8 +40,6 @@ jobs:
         dotnet-version: 3.1.200
     - name: Build and publish
       run: dotnet publish -r win-x64 -c Release --self-contained true
-    - name: Rename config file
-      run: mv ./bin/netcoreapp3.1/win-x64/publish/Wokhan.WindowsFirewallNotifier.Common.dll.config ./bin/netcoreapp3.1/win-x64/publish/WFN.config
     - name: Zip published files
       run: compress-archive -path ./bin/netcoreapp3.1/win-x64/publish/* -destinationpath ./bin/netcoreapp3.1/wfn-x64.zip
     - name: Deploy nightly
@@ -67,8 +63,6 @@ jobs:
         dotnet-version: 3.1.200
     - name: Build and publish
       run: dotnet publish -r win-x86 -c Release --self-contained true
-    - name: Rename config file
-      run: mv ./bin/netcoreapp3.1/win-x86/publish/Wokhan.WindowsFirewallNotifier.Common.dll.config ./bin/netcoreapp3.1/win-x86/publish/WFN.config
     - name: Zip published files
       run: compress-archive -path ./bin/netcoreapp3.1/win-x86/publish -destinationpath ./bin/netcoreapp3.1/wfn-x86.zip
     - name: Deploy nightly
