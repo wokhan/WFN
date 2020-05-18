@@ -1,17 +1,12 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
-using WinForms = System.Windows.Forms;
-using Wokhan.WindowsFirewallNotifier.Common.Properties;
 using Messages = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
-using System.Diagnostics;
 using System.Windows.Media.Imaging;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
+using System.Windows.Shapes;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 {
@@ -64,9 +59,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             ClickableIcon.ContextMenu = InitMenu();
             ClickableIcon.ToolTip = Messages.ActivityWindow_ClickableIcon_Tooltip;
 
-            notifierWindow.PropertyChanged += (sender, args) =>
+            notifierWindow.PropertyChanged += (s, e) =>
             {
-                if (args.PropertyName == nameof(notifierWindow.NbConnectionsAfter))
+                if (e.PropertyName == nameof(notifierWindow.NbConnectionsAfter))
                 {
                     RefreshClickableIcon();
                 }
@@ -77,7 +72,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             Point previousWindowPos = new Point(this.Left, this.Top);
             Point actualWindowsPos = previousWindowPos;
-            MouseLeftButtonUp += (object sender, MouseButtonEventArgs e) =>
+            MouseLeftButtonUp += (s, e) =>
             {
                 actualWindowsPos = new Point(this.Left, this.Top);
                 if (actualWindowsPos.Equals(previousWindowPos))
@@ -100,32 +95,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                     Settings.Default.Save();
                 }
             };
-            MouseLeftButtonDown += (object sender, MouseButtonEventArgs e) =>
-            {
-                DragMove();
-            };
+            MouseLeftButtonDown += (s, e) => DragMove();
         }
 
 
         private ContextMenu InitMenu()
         {
-            void MenuShow_Click(object Sender, RoutedEventArgs e)
-            {
-                notifierWindow.RestoreWindowState();
-            }
-            void MenuClose_Click(object Sender, EventArgs e)
-            {
-                notifierWindow.Close();
-                Close();
-            }
-            void MenuConsole_Click(object Sender, EventArgs e)
-            {
-                notifierWindow.ShowConsole();
-            }
-            void MenuHide_Click(object Sender, EventArgs e)
-            {
-                Hide();
-            }
             void addMenuItem(ContextMenu cm, string caption, RoutedEventHandler eh)
             {
                 MenuItem mi = new MenuItem
@@ -136,10 +111,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 cm.Items.Add(mi);
             }
             ContextMenu contextMenu = new ContextMenu();
-            addMenuItem(contextMenu, Messages.ActivityWindow_ShowNotifier, MenuShow_Click);
-            addMenuItem(contextMenu, Messages.ActivityWindow_OpenConsole, MenuConsole_Click);
-            addMenuItem(contextMenu, Messages.ActivityWindow_DiscardAndClose, MenuClose_Click);
-            addMenuItem(contextMenu, Messages.ActivityWindow_HideThisWindow, MenuHide_Click);
+            addMenuItem(contextMenu, Messages.ActivityWindow_ShowNotifier, (s, e) => notifierWindow.RestoreWindowState());
+            addMenuItem(contextMenu, Messages.ActivityWindow_OpenConsole, (s, e) => notifierWindow.ShowConsole());
+            addMenuItem(contextMenu, Messages.ActivityWindow_DiscardAndClose, (s, e) => { notifierWindow.Close(); Close(); });
+            addMenuItem(contextMenu, Messages.ActivityWindow_HideThisWindow, (s, e) => Hide());
 
             return contextMenu;
         }
@@ -148,24 +123,22 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             base.Show();
             // initial position needs to be calculated after Show()
-            void initWindowsPosition()
-            {
-                Point defaultPos = Settings.Default.ActivityWindow_Position;
-                if (defaultPos == new Point(0d, 0d) || defaultPos == null)
-                {
-                    defaultPos.X = SystemParameters.WorkArea.Width - this.ActualWidth;
-                    defaultPos.Y = SystemParameters.WorkArea.Height / 2;
-                    Settings.Default.ActivityWindow_Position = defaultPos;
-                    Settings.Default.Save();
-                }
-                Top = defaultPos.Y;
-                Left = defaultPos.X;
-            }
 
-            initWindowsPosition();
+            Point defaultPos = Settings.Default.ActivityWindow_Position;
+            if (defaultPos == new Point(0d, 0d) || defaultPos == null)
+            {
+                defaultPos.X = SystemParameters.WorkArea.Width - this.ActualWidth;
+                defaultPos.Y = SystemParameters.WorkArea.Height / 2;
+                Settings.Default.ActivityWindow_Position = defaultPos;
+            }
+            Top = defaultPos.Y;
+            Left = defaultPos.X;
+
             Topmost = true;
             ResetTopmostVisibility();
             Settings.Default.ActivityWindow_Shown = true;
+            Settings.Default.Save();
+
             Settings.Default.Save();
         }
 
@@ -178,14 +151,17 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void ToggleGreen()
         {
-            GreenLight.Background = (Brushes.DarkGreen.Equals(GreenLight.Background)) ? Brushes.LightGreen : Brushes.DarkGreen;
-        }
-        private void ToggleRed()
-        {
-            RedLight.Background = (Brushes.DarkRed.Equals(RedLight.Background)) ? Brushes.Red : Brushes.DarkRed;
+            var gradStop = ((RadialGradientBrush)GreenLight.Fill).GradientStops[0];
+            gradStop.Color = Colors.Green.Equals(gradStop.Color) ? Colors.LightGreen : Colors.Green;
         }
 
-        private async void ToggleLightsTask(Border control, int waitMillis)
+        private void ToggleRed()
+        {
+            var gradStop = ((RadialGradientBrush)RedLight.Fill).GradientStops[0];
+            gradStop.Color = Colors.Red.Equals(gradStop.Color) ? Colors.OrangeRed : Colors.Red;
+        }
+
+        private async void ToggleLightsTask(Ellipse control, int waitMillis)
         {
             void action()
             {

@@ -14,7 +14,6 @@ using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
 using WinForms = System.Windows.Forms;
 using Messages = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
 using System.Drawing;
-using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
@@ -35,23 +34,14 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private readonly NotifierTrayIcon notifierTrayIcon;
 
-        public double ExpectedTop
-        {
-            get { return SystemParameters.WorkArea.Height - this.ActualHeight; }
-        }
+        public double ExpectedTop => SystemParameters.WorkArea.Height - this.ActualHeight;
 
-        public double ExpectedLeft
-        {
-            get { return SystemParameters.WorkArea.Width - this.ActualWidth; }
-        }
+        public double ExpectedLeft => SystemParameters.WorkArea.Width - this.ActualWidth;
 
-        public double ExpectedWidth
-        {
-            get { return SystemParameters.WorkArea.Width - this.ExpectedLeft; }
-        }
+        public double ExpectedWidth => SystemParameters.WorkArea.Width - this.ExpectedLeft;
 
-        public int NbConnectionsAfter { get { return lstConnections != null && lstConnections.SelectedIndex >= 0 ? lstConnections.Items.Count - lstConnections.SelectedIndex - 1 : 0; } }
-        public int NbConnectionsBefore { get { return lstConnections != null && lstConnections.SelectedIndex >= 0 ? lstConnections.SelectedIndex : 0; } }
+        public int NbConnectionsAfter => lstConnections?.SelectedIndex >= 0 ? lstConnections.Items.Count - lstConnections.SelectedIndex - 1 : 0;
+        public int NbConnectionsBefore => lstConnections?.SelectedIndex >= 0 ? lstConnections.SelectedIndex : 0;
 
         public class OptionsViewClass
         {
@@ -102,54 +92,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             ((ObservableCollection<CurrentConn>)lstConnections.ItemsSource).CollectionChanged += NotificationWindow_CollectionChanged;
             lstConnections.SelectedIndex = 0;
 
-            PropertyChanged += (sender, args) =>
-            {
-                if (args.PropertyName == nameof(NbConnectionsAfter))
-                {
-                    CheckPendingConnections();
-                }
-            };
-
-            // Overlay handling and re-calculate ExpectedTop
-            Activated += (sender, args) => { CheckPendingConnections(); };
+            // Re-calculate ExpectedTop
             SizeChanged += (sender, args) => { Top = ExpectedTop; };
 
             NotifyPropertyChanged(nameof(NbConnectionsAfter));
             NotifyPropertyChanged(nameof(NbConnectionsBefore));
         }
-
-        private void CheckPendingConnections()
-        {
-            void showOverlay(bool shouldShow)
-            {
-                if (shouldShow && !OverlayGrid.IsVisible)
-                {
-                    OverlayGrid.Visibility = Visibility.Visible;
-                    MainGrid.Visibility = Visibility.Collapsed;
-                    logLocation($"showOverlay: {shouldShow}");
-                }
-                else if (!shouldShow && OverlayGrid.IsVisible)
-                {
-                    MainGrid.Visibility = Visibility.Visible;
-                    OverlayGrid.Visibility = Visibility.Collapsed;
-                    logLocation($"showOverlay: {shouldShow}");
-                }
-            }
-            if (NbConnectionsAfter > 0)
-            {
-                showOverlay(false);
-            }
-            else
-            {
-                showOverlay(true);
-            }
-        }
-
-        private void logLocation(string method)
-        {
-            System.Console.WriteLine($"{method} Top: {Top} ExpTop: {ExpectedTop} Height: {Height} ActualHeight: {ActualHeight}");
-        }
-
+       
         public new void Show()
         {
             System.Console.WriteLine($"Show Top: {Top} ExpTop: {ExpectedTop}");
@@ -250,6 +199,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             if (lstConnections.Items.Count > 0)
             {
+                Title = Messages.FW_TITLE;
                 if (lstConnections.SelectedItem is null)
                 {
                     lstConnections.SelectedIndex = 0;
@@ -258,6 +208,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
             else
             {
+                Title = Messages.FW_TITLE_NO_CONNECTION;
                 // HideWindowState();
             }
             //Console.WriteLine($"-> lstConnections.SelectedIndex={lstConnections.SelectedIndex}");

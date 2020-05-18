@@ -70,6 +70,9 @@
     <Reference Include="Interop.NetFwTypeLib">
       <HintPath>..\Interop\Interop.NetFwTypeLib.dll</HintPath>
     </Reference>
+    <Reference Include="Wokhan.UI">
+      <HintPath>..\TempSharedLib\Wokhan.UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   
   <!--<PropertyGroup>
