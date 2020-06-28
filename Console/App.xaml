@@ -68,42 +68,38 @@
                 </Setter>
             </Style>
             <Style x:Key="HelpButtonStyle" TargetType="Label">
-                <!--<Setter Property="HorizontalAlignment" Value="Right" />
-                <Setter Property="Margin" Value="30,5" />
-                <Setter Property="CornerRadius" Value="5" />
-                <Setter Property="BorderBrush" Value="LightGray" />
-                <Setter Property="BorderThickness" Value="1" />
-                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.InfoBrushKey}}" />
-                <Setter Property="Padding" Value="10" />
-                <Setter Property="Width" Value="160" />
-                <Setter Property="Visibility" Value="Collapsed" /-->
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsChecked}" Value="True">
-                        <Setter Property="ToolTip.IsOpen" Value="True" />
-                    </DataTrigger>
-                </Style.Triggers>
+                <Setter Property="ext:CustomAdorner.CornerRadius" Value="2,2,0,0" />
                 <Setter Property="Content" Value="{StaticResource Image_Help}" />
-                <Setter Property="Padding" Value="7" />
-                <!--Style.Resources>
-                    <Style TargetType="TextBlock">
-                        <Style.Setters>
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.InfoTextBrushKey}}" />
-                            <Setter Property="TextWrapping" Value="Wrap" />
-                            <Setter Property="TextAlignment" Value="Justify" />
-                        </Style.Setters>
+                <Setter Property="Padding" Value="5" />
+                <Setter Property="Margin" Value="2" />
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="WhiteSmoke" />
+                    </Trigger>
+                </Style.Triggers>
+                <Style.Resources>
+                    <Style TargetType="ToolTip">
+                        <Setter Property="ToolTipService.VerticalOffset" Value="-2" />
+                        <Setter Property="ToolTipService.HorizontalOffset" Value="0" />
+                        <Setter Property="ToolTipService.InitialShowDelay" Value="0" />
+                        <Setter Property="ToolTipService.ShowDuration" Value="20000" />
+                        <Setter Property="ToolTipService.Placement" Value="Bottom" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ToolTip">
+                                    <Grid MaxWidth="400">
+                                        <Border CornerRadius="5,0,5,5" BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                            <Border.Effect>
+                                                <DropShadowEffect Color="LightGray"/>
+                                            </Border.Effect>
+                                        </Border>
+                                        <TextBlock Text="{TemplateBinding Content}" TextWrapping="Wrap" Margin="10" />
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
                     </Style>
-                </Style.Resources-->
-            </Style>
-            <Style TargetType="ToolTip">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="ToolTip">
-                            <Border CornerRadius="5" Background="WhiteSmoke" BorderThickness="1" BorderBrush="LightGray">
-                                <Label Margin="5" Content="{Binding Content}" />
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
+                </Style.Resources>
             </Style>
 
             <Style x:Key="InfoPanel" TargetType="Border">
@@ -133,7 +129,7 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-           
+
             <Style TargetType="TextBox">
                 <Setter Property="ext:CustomAdorner.CornerRadius" Value="20" />
             </Style>

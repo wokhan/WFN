@@ -22,7 +22,7 @@
                 <StackPanel HorizontalAlignment="Right">
                     <TextBlock VerticalAlignment="Center" Text="{Binding Series.Count, StringFormat='Active connection(s): {0}', FallbackValue='No active connection'}" />
                     <ComboBox Style="{StaticResource AutoTrackRefresh}" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
-                    <Label Style="{StaticResource HelpButtonStyle}" ToolTip="This screen displays all active connections on this computer, updated every second (by default).\r\nClosed connections (in orange) will remain displayed a few seconds before disappearing." />
+                    <Label Style="{StaticResource HelpButtonStyle}" ToolTip="This screen displays all active connections on this computer, updated every second (by default).&#10;Closed connections (in orange) will remain displayed a few seconds before disappearing." />
                 </StackPanel>
             </Grid>
         </ContentControl>

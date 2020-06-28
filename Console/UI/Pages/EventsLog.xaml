@@ -31,7 +31,7 @@
                         </TextBlock>
                         <ProgressBar Value="{Binding ScanProgress}" BorderThickness="0" Maximum="{Binding ScanProgressMax}" Height="4" Width="105" />
                     </StackPanel>
-                    <Label Style="{StaticResource HelpButtonStyle}" ToolTip="This page displays a list of the latest connections, updated in real-time.\r\nClick on a cell in the Action column to view details from the eventlog including the name of the filter rule which triggered the event." />
+                    <Label Style="{StaticResource HelpButtonStyle}" ToolTip="This page displays a list of the latest connections, updated in real-time.&#10;Click on a cell in the Action column to view details from the eventlog including the name of the filter rule which triggered the event." />
                 </StackPanel>
             </Grid>
         </ContentControl>
