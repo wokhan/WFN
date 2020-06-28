@@ -25,8 +25,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         private readonly BitmapImage ICON_NORMAL = new BitmapImage(new Uri(@"/Notifier;component/Resources/TrayIcon22.ico", UriKind.Relative));
         private readonly BitmapImage ICON_BLOCKED = new BitmapImage(new Uri(@"/Notifier;component/Resources/TrayIcon21.ico", UriKind.Relative));
 
-        readonly Orientation WindowAlignment = Settings.Default.ActivityWindow_Orientation;
-
         public static ActivityWindow Init(NotificationWindow window)
         {
             ActivityWindow factory = new ActivityWindow(window);
@@ -39,18 +37,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             notifierWindow = window;
 
             InitializeComponent();
-
-            if (WindowAlignment.Equals(Orientation.Horizontal))
-            {
-                // switch orientation from vertical
-                double origWidth = this.Width;
-                this.Width = this.Height;
-                this.Height = origWidth;
-                ControlsContainer.Orientation = Orientation.Horizontal;
-                ControlsContainer.Height = this.Height;
-                ControlsContainer.Width = this.Width;
-            }
-
             InitWindowsMouseEvents();
 
             ShowInTaskbar = false;  // hide the icon in the taskbar
@@ -101,23 +87,36 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private ContextMenu InitMenu()
         {
-            void addMenuItem(ContextMenu cm, string caption, RoutedEventHandler eh)
-            {
-                MenuItem mi = new MenuItem
-                {
-                    Header = caption
-                };
-                mi.Click += eh;
-                cm.Items.Add(mi);
-            }
             ContextMenu contextMenu = new ContextMenu();
             addMenuItem(contextMenu, Messages.ActivityWindow_ShowNotifier, (s, e) => notifierWindow.RestoreWindowState());
             addMenuItem(contextMenu, Messages.ActivityWindow_OpenConsole, (s, e) => notifierWindow.ShowConsole());
             addMenuItem(contextMenu, Messages.ActivityWindow_DiscardAndClose, (s, e) => { notifierWindow.Close(); Close(); });
             addMenuItem(contextMenu, Messages.ActivityWindow_HideThisWindow, (s, e) => Hide());
+            addMenuItem(contextMenu, SetOrientationGetMessage(), (s, e) => ((MenuItem)s).Header = SetOrientationGetMessage(true));
 
             return contextMenu;
         }
+
+        private string SetOrientationGetMessage(bool toggle = false)
+        {
+            if (toggle)
+            {
+                Settings.Default.ActivityWindow_Orientation = (Settings.Default.ActivityWindow_Orientation == Orientation.Horizontal ? Orientation.Vertical : Orientation.Horizontal);
+            }
+
+            return (Settings.Default.ActivityWindow_Orientation == Orientation.Horizontal ? Messages.ActivityWindow_OrientationVertical : Messages.ActivityWindow_OrientationHorizontal);
+        }
+
+        private void addMenuItem(ContextMenu cm, string caption, RoutedEventHandler eh)
+        {
+            MenuItem mi = new MenuItem
+            {
+                Header = caption
+            };
+            mi.Click += eh;
+            cm.Items.Add(mi);
+        }
+
 
         public new void Show()
         {
@@ -137,7 +136,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             Topmost = true;
             ResetTopmostVisibility();
             Settings.Default.ActivityWindow_Shown = true;
-            Settings.Default.Save();
 
             Settings.Default.Save();
         }
@@ -152,13 +150,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         private void ToggleGreen()
         {
             var gradStop = ((RadialGradientBrush)GreenLight.Fill).GradientStops[0];
-            gradStop.Color = Colors.Green.Equals(gradStop.Color) ? Colors.LightGreen : Colors.Green;
+            gradStop.Color = Colors.Green.Equals(gradStop.Color) ? Colors.White : Colors.Green;
         }
 
         private void ToggleRed()
         {
             var gradStop = ((RadialGradientBrush)RedLight.Fill).GradientStops[0];
-            gradStop.Color = Colors.Red.Equals(gradStop.Color) ? Colors.OrangeRed : Colors.Red;
+            gradStop.Color = Colors.Red.Equals(gradStop.Color) ? Colors.White : Colors.Red;
         }
 
         private async void ToggleLightsTask(Ellipse control, int waitMillis)
@@ -197,12 +195,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                     ResetTopmostVisibility();
                 }
             }
-            else
+            else if (ClickableIcon.Source != ICON_NORMAL)
             {
-                if (ICON_NORMAL != ClickableIcon.Source)
-                {
-                    ClickableIcon.Source = ICON_NORMAL;
-                }
+                ClickableIcon.Source = ICON_NORMAL;
             }
         }
 

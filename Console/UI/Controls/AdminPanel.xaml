@@ -3,17 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
-             mc:Ignorable="d" d:DesignWidth="800">
-    <Border Background="#FFFF7B7B" Style="{StaticResource NonAdminPanel}">
-        <WrapPanel>
+             xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
+             mc:Ignorable="d" d:DesignWidth="800"
+             DockPanel.Dock="Top">
+    <ContentControl Style="{StaticResource NonAdminPanel}">
+        <Grid Background="#FFFF7B7B">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
             <Label Content="{Binding Caption,FallbackValue=Message}" />
-            <Button x:Name="btnRestartAdmin" Click="btnRestartAdmin_Click">
-                <Grid>
-                    <ContentControl Height="16" HorizontalAlignment="Left" Content="{StaticResource Image_Shield}" />
-                    <Label Margin="20,0,0,0" Padding="0" Content="restart as admin" />
-                </Grid>
-            </Button>
-        </WrapPanel>
-    </Border>
+            <Button Grid.Column="1" Click="btnRestartAdmin_Click" ext:CustomAdorner.Image="{StaticResource Image_Shield}" Content="Restart as admin" />
+        </Grid>
+    </ContentControl>
 </UserControl>

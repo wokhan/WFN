@@ -17,8 +17,13 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     {
         public Rules()
         {
-            InitializeComponent();
+            this.Loaded += Rules_Loaded;
 
+            InitializeComponent();
+        }
+
+        private void Rules_Loaded(object sender, RoutedEventArgs e)
+        {
             initRules();
             filterRules();
         }

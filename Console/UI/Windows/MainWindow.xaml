@@ -3,105 +3,115 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:controls="clr-namespace:Wokhan.UI.Controls;assembly=Wokhan.UI"
+        xmlns:uicontrols="clr-namespace:Wokhan.UI.Xaml.Controls;assembly=Wokhan.UI" 
+        xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
+        xmlns:pages="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Pages"
         Title="{Binding MainWindowTitle}"
         Height="{DynamicResource ConsoleSizeHeight}" 
         Width="{DynamicResource ConsoleSizeWidth}"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        DataContext="{Binding RelativeSource={x:Static RelativeSource.Self}}"
         mc:Ignorable="d" 
         d:DesignHeight="460"
-        d:DesignWidth="800"
+        d:DesignWidth="800" 
+        Background="WhiteSmoke"
         x:Name="me"
         Icon="/WFN;component/Resources/Images/WFN.ico" 
         ResizeMode="CanResizeWithGrip">
-    <DockPanel>
-        <controls:CustomWindowChrome DockPanel.Dock="Top" Caption="{Binding Title,FallbackValue='WFN vx.x.x.x'}" Icon="/WFN;component/Resources/Images/WFN.ico" Height="38" d:IsLocked="True">
-            <Button Click="btnSettings_Click" ToolTip="settings">
-                <Path Height="20" Stretch="Uniform" Fill="#FFF12EA1" Data="F1 M 38,23.5C 38.8643,23.5 39.7109,23.5756 40.5337,23.7206L 42.6275,18.5381L 48.1901,20.787L 46.0964,25.9692C 47.6473,27.0149 48.9851,28.3527 50.0308,29.9036L 55.213,27.8099L 57.4619,33.3725L 52.2794,35.4664C 52.4244,36.2891 52.5,37.1357 52.5,38C 52.5,38.8643 52.4244,39.7109 52.2794,40.5337L 57.4619,42.6275L 55.213,48.1901L 50.0308,46.0964C 49.0795,47.5073 47.8865,48.7418 46.5112,49.7405L 48.7844,54.8462L 43.3041,57.2891L 41.0307,52.1828C 40.0533,52.3906 39.0394,52.5 38,52.5C 37.1357,52.5 36.2891,52.4244 35.4664,52.2794L 33.3725,57.462L 27.8099,55.213L 29.9036,50.0309C 28.3527,48.9851 27.0149,47.6473 25.9691,46.0964L 20.787,48.1901L 18.538,42.6275L 23.7206,40.5336C 23.5756,39.7109 23.5,38.8643 23.5,38C 23.5,37.1357 23.5756,36.2891 23.7206,35.4664L 18.538,33.3725L 20.787,27.8099L 25.9691,29.9036C 26.9205,28.4927 28.1135,27.2582 29.4889,26.2594L 27.2157,21.1537L 32.6959,18.7109L 34.9694,23.8172C 35.9468,23.6094 36.9606,23.5 38,23.5 Z M 38,28C 32.4771,28 28,32.4772 28,38C 28,43.5229 32.4771,48 38,48C 43.5228,48 48,43.5229 48,38C 48,32.4772 43.5228,28 38,28 Z " />
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="/WFN;component/Resources/Backgrounds/Blue-Abstract.jpg" Opacity="0.1" />
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <uicontrols:CustomWindowChrome Height="38">
+            <Button Click="OpenOptions" ToolTip="settings">
+                <Button.Resources>
+                    <pages:Options x:Key="page" />
+                </Button.Resources>
+                <Path Height="18" Stretch="Uniform" Fill="#FFF12EA1" Data="F1 M 38,23.5C 38.8643,23.5 39.7109,23.5756 40.5337,23.7206L 42.6275,18.5381L 48.1901,20.787L 46.0964,25.9692C 47.6473,27.0149 48.9851,28.3527 50.0308,29.9036L 55.213,27.8099L 57.4619,33.3725L 52.2794,35.4664C 52.4244,36.2891 52.5,37.1357 52.5,38C 52.5,38.8643 52.4244,39.7109 52.2794,40.5337L 57.4619,42.6275L 55.213,48.1901L 50.0308,46.0964C 49.0795,47.5073 47.8865,48.7418 46.5112,49.7405L 48.7844,54.8462L 43.3041,57.2891L 41.0307,52.1828C 40.0533,52.3906 39.0394,52.5 38,52.5C 37.1357,52.5 36.2891,52.4244 35.4664,52.2794L 33.3725,57.462L 27.8099,55.213L 29.9036,50.0309C 28.3527,48.9851 27.0149,47.6473 25.9691,46.0964L 20.787,48.1901L 18.538,42.6275L 23.7206,40.5336C 23.5756,39.7109 23.5,38.8643 23.5,38C 23.5,37.1357 23.5756,36.2891 23.7206,35.4664L 18.538,33.3725L 20.787,27.8099L 25.9691,29.9036C 26.9205,28.4927 28.1135,27.2582 29.4889,26.2594L 27.2157,21.1537L 32.6959,18.7109L 34.9694,23.8172C 35.9468,23.6094 36.9606,23.5 38,23.5 Z M 38,28C 32.4771,28 28,32.4772 28,38C 28,43.5229 32.4771,48 38,48C 43.5228,48 48,43.5229 48,38C 48,32.4772 43.5228,28 38,28 Z " />
             </Button>
-            <Button Click="btnAbout_Click" ToolTip="about">
-                <Path Height="18" Stretch="Uniform" Fill="#FFF79E1D" Data="F1 M 31.6666,30.0834L 42.7499,30.0834L 42.7499,33.2501L 42.7499,52.2501L 45.9165,52.2501L 45.9165,57.0001L 31.6666,57.0001L 31.6666,52.2501L 34.8332,52.2501L 34.8332,34.8335L 31.6666,34.8335L 31.6666,30.0834 Z M 38.7917,19C 40.9778,19 42.75,20.7722 42.75,22.9583C 42.75,25.1445 40.9778,26.9167 38.7917,26.9167C 36.6055,26.9167 34.8333,25.1445 34.8333,22.9583C 34.8333,20.7722 36.6055,19 38.7917,19 Z "/>
+            <Button Click="OpenOptions" ToolTip="about">
+                <Button.Resources>
+                    <pages:About x:Key="page" />
+                </Button.Resources>
+                <Path Height="16" Stretch="Uniform" Fill="#FFF79E1D" Data="F1 M 31.6666,30.0834L 42.7499,30.0834L 42.7499,33.2501L 42.7499,52.2501L 45.9165,52.2501L 45.9165,57.0001L 31.6666,57.0001L 31.6666,52.2501L 34.8332,52.2501L 34.8332,34.8335L 31.6666,34.8335L 31.6666,30.0834 Z M 38.7917,19C 40.9778,19 42.75,20.7722 42.75,22.9583C 42.75,25.1445 40.9778,26.9167 38.7917,26.9167C 36.6055,26.9167 34.8333,25.1445 34.8333,22.9583C 34.8333,20.7722 36.6055,19 38.7917,19 Z "/>
             </Button>
-        </controls:CustomWindowChrome>
-        <Border Style="{StaticResource MenuPanel}">
-            <Grid x:Name="menuGrid">
-                <Border Style="{x:Null}" BorderBrush="LightGray" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderThickness="0,0,1,0">
-                    <Border.Effect>
-                        <DropShadowEffect Direction="180" ShadowDepth="1" />
-                    </Border.Effect>
-                </Border>
-                <Border x:Name="menuBar" Background="{DynamicResource AccentColorBrush}" Style="{x:Null}" Width="38" HorizontalAlignment="Left" />
-                <StackPanel>
-                    <Button x:Name="btnMenu" Click="btnMenu_Click">
-                        <Grid>
-                            <Border ToolTip="menu" Background="LightGray">
-                                <Path Stretch="Uniform" Width="18" Fill="{DynamicResource AccentColorBrush}" Data="F1 M 19,23L 27,23L 27,31L 19,31L 19,23 Z M 19,34L 27,34L 27,42L 19,42L 19,34 Z M 31,23L 57,23L 57,31L 31,31L 31,23 Z M 19,45L 27,45L 27,53L 19,53L 19,45 Z M 31,34L 57,34L 57,42L 31,42L 31,34 Z M 31,45L 57,45L 57,53L 31,53L 31,45 Z"/>
-                            </Border>
-                            <Label Content="menu" />
-                        </Grid>
-                    </Button>
-                    <Rectangle Height="3" Fill="LightGray"/>
-                    <Button x:Name="btnConnections" Click="btnConnections_Click">
-                        <Grid>
-                            <Border ToolTip="connections">
-                                <Path Stretch="Uniform" Fill="#FFB422A6" Data="F1 M 26.9167,14.25C 31.2889,14.25 34.8333,17.7944 34.8333,22.1667L 34.7416,23.3755L 43.6674,26.6242C 44.7314,25.8142 46.0596,25.3333 47.5,25.3333C 50.9978,25.3333 53.8333,28.1689 53.8333,31.6667C 53.8333,35.1645 50.9978,38 47.5,38C 46.9087,38 46.3364,37.919 45.7935,37.7675L 39.3497,42.6232C 39.5019,43.1672 39.5833,43.7408 39.5833,44.3333C 39.5833,45.1598 39.425,45.9492 39.1371,46.6731L 42.6954,49.7662C 43.6794,49.3273 44.7696,49.0833 45.9167,49.0833C 50.2889,49.0833 53.8333,52.6278 53.8333,57C 53.8333,61.3723 50.2889,64.9167 45.9167,64.9167C 41.5444,64.9167 38,61.3723 38,57C 38,55.5189 38.4067,54.1328 39.1146,52.9473L 35.8505,50.1099C 35.0571,50.4676 34.1768,50.6667 33.25,50.6667C 29.7522,50.6667 26.9167,47.8311 26.9167,44.3333C 26.9167,40.8355 29.7522,38 33.25,38C 34.4155,38 35.5075,38.3148 36.4455,38.8641L 41.9484,34.7173C 41.4501,33.8125 41.1667,32.7727 41.1667,31.6667L 41.2267,30.7907L 32.6194,27.6579C 31.1792,29.1531 29.1566,30.0833 26.9167,30.0833C 22.5444,30.0833 19,26.5389 19,22.1667C 19,17.7944 22.5444,14.25 26.9167,14.25 Z M 26.9167,17.4167C 24.2933,17.4167 22.1667,19.5433 22.1667,22.1667C 22.1667,24.7901 24.2933,26.9167 26.9167,26.9167C 29.54,26.9167 31.6667,24.7901 31.6667,22.1667C 31.6667,19.5433 29.54,17.4167 26.9167,17.4167 Z M 47.5,28.5C 45.7511,28.5 44.3333,29.9178 44.3333,31.6667C 44.3333,33.4156 45.7511,34.8334 47.5,34.8334C 49.2489,34.8334 50.6666,33.4156 50.6666,31.6667C 50.6666,29.9178 49.2489,28.5 47.5,28.5 Z M 45.9166,52.25C 43.2933,52.25 41.1666,54.3767 41.1666,57C 41.1666,59.6234 43.2933,61.75 45.9166,61.75C 48.54,61.75 50.6666,59.6234 50.6666,57C 50.6666,54.3767 48.54,52.25 45.9166,52.25 Z M 33.25,41.1667C 31.5011,41.1667 30.0833,42.5844 30.0833,44.3333C 30.0833,46.0822 31.5011,47.5 33.25,47.5C 34.9989,47.5 36.4166,46.0822 36.4166,44.3333C 36.4166,42.5844 34.9989,41.1667 33.25,41.1667 Z "/>
-                            </Border>
-                            <Label Content="connections" />
-                        </Grid>
-                    </Button>
-                    <Button x:Name="btnMap" Click="btnMap_Click">
-                        <Grid>
-                            <Border ToolTip="map">
-                                <Path Stretch="Uniform" Width="19" Fill="#FFDA9229" Data="F1 M 27.7083,23.75L 38.7917,26.9167L 48.2917,20.5833L 62,24L 62,51L 48.2917,47.5L 38.7917,53.8333L 27.7083,50.6667L 16,55.5L 16,28.5L 27.7083,23.75 Z M 27.7083,45.9167L 39.0416,48.8334L 48.5416,42.5L 58,45.25L 58,28L 48.2916,25.3334L 38.7916,31.9167L 27.7083,28.75L 20,31.75L 20,49L 27.7083,45.9167 Z M 27,41L 28,41L 28,44L 27,44L 27,41 Z M 27,36L 28,36L 28,39L 27,39L 27,36 Z M 27,31L 28,31L 28,34L 27,34L 27,31 Z M 38,44L 39,44L 39,47L 38,47L 38,44 Z M 38,39L 39,39L 39,42L 38,42L 38,39 Z M 38,34L 39,34L 39,37L 38,37L 38,34 Z M 48,38L 49,38L 49,41L 48,41L 48,38 Z M 48,33L 49,33L 49,36L 48,36L 48,33 Z M 48,28L 49,28L 49,31L 48,31L 48,28 Z "/>
-                            </Border>
-                            <Label Content="map" />
-                        </Grid>
-                    </Button>
-                    <Button x:Name="btnMonitor" Click="btnMonitor_Click">
-                        <Grid>
-                            <Border ToolTip="bandwidth">
-                                <Path Height="20" Stretch="Uniform" Fill="#FF289CC7" Data="F1 M 23.9999,54L 23.9999,29.25L 16,37.25L 16,26.75L 27.9999,14.75L 40,26.75L 40,37.25L 31.9999,29.25L 31.9999,54L 23.9999,54 Z M 52,22L 52,46.75L 60,38.75L 60,49.25L 48,61.25L 36,49.2499L 36,38.7499L 44,46.75L 44.0001,22L 52,22 Z "/>
-                            </Border>
-                            <Label Content="bandwidth" />
-                        </Grid>
-                    </Button>
-                    <Button x:Name="btnInfos" Click="btnInfos_Click">
-                        <Grid>
-                            <Border ToolTip="adapters">
-                                <Path Height="18" Stretch="Uniform" Fill="#FF41A854" Data="F1 M 25.7639,28.0031L 20.0866,22.3258C 19.4683,21.7075 19.4683,20.705 20.0866,20.0866C 20.705,19.4683 21.7075,19.4683 22.3258,20.0867L 28.0031,25.7639C 32.3443,22.5092 38.5302,22.856 42.4783,26.8042L 26.8041,42.4784C 22.856,38.5302 22.5092,32.3443 25.7639,28.0031 Z M 49.1958,33.5217C 53.144,37.4699 53.4908,43.6557 50.2361,47.9969L 55.9133,53.6742C 56.5317,54.2925 56.5317,55.295 55.9133,55.9134C 55.295,56.5317 54.2925,56.5317 53.6742,55.9134L 47.9969,50.2361C 43.6557,53.4908 37.4698,53.1441 33.5216,49.1959L 36.8804,45.8371L 34.0814,43.0381C 33.1539,42.1107 33.1539,40.6069 34.0814,39.6794C 35.0089,38.7519 36.5127,38.7519 37.4402,39.6794L 40.2392,42.4784L 42.4783,40.2392L 39.6794,37.4402C 38.7519,36.5127 38.7519,35.009 39.6794,34.0815C 40.6069,33.154 42.1106,33.154 43.0381,34.0815L 45.8371,36.8804L 49.1958,33.5217 Z"/>
-                            </Border>
-                            <Label Content="adapters" />
-                        </Grid>
-                    </Button>
-                    <Rectangle Height="3" Fill="LightGray"/>
-                    <Button x:Name="btnStatus" Click="btnStatus_Click">
-                        <Grid>
-                            <Border ToolTip="firewall status">
-                                <Path Height="18" Stretch="Uniform" Fill="#FFFF1E1E" Data="F1 M 54.8392,24.4749C 55.3507,24.2457 55.8111,24.1311 56.2202,24.1311C 56.6172,24.1311 56.966,24.2232 57.2668,24.4073C 57.5675,24.5915 57.8171,24.8339 58.0156,25.1347L 58.4575,26.1536L 58.6017,27.2737C 58.6017,29.6143 58.4667,31.8014 58.1966,33.8351C 57.9266,35.8688 57.5522,37.7644 57.0734,39.5218C 56.5947,41.2793 56.0289,42.8997 55.3763,44.383C 54.7236,45.8663 54.0167,47.232 53.2556,48.4801C 52.4946,49.7281 51.6925,50.8636 50.8496,51.8866C 50.0067,52.9095 49.1556,53.8302 48.2963,54.6486C 45.2682,57.5252 41.8351,59.6285 37.9969,60.9583C 34.1505,59.6285 30.7174,57.5252 27.6976,54.6486C 26.4086,53.421 25.1463,51.9633 23.9105,50.2754C 22.6748,48.5875 21.5751,46.6244 20.6114,44.3861C 19.6478,42.1478 18.8713,39.616 18.2821,36.7905C 17.6929,33.965 17.3982,30.7928 17.3982,27.2737L 17.5609,26.1413L 18.0397,25.1439C 18.2504,24.8493 18.5123,24.613 18.8253,24.435C 19.1383,24.257 19.4933,24.168 19.8902,24.168C 20.2871,24.168 20.7106,24.2703 21.1608,24.4749C 22.196,24.9495 23.1484,25.2851 24.0179,25.4815C 24.8875,25.6779 25.6925,25.7761 26.4332,25.7761C 27.4193,25.7761 28.3052,25.6298 29.0909,25.3372C 29.8765,25.0447 30.5987,24.6743 31.2575,24.2263L 33.0805,22.787L 34.7009,21.3476L 36.2906,20.2336C 36.8266,19.939 37.3954,19.7917 37.9969,19.7917C 38.6107,19.7917 39.1866,19.939 39.7247,20.2336L 41.3175,21.3476L 42.9471,22.787L 44.7701,24.2263C 45.4227,24.6743 46.1419,25.0447 46.9275,25.3372C 47.7132,25.6298 48.5991,25.7761 49.5852,25.7761C 50.3258,25.7761 51.1279,25.6779 51.9913,25.4815C 52.8546,25.2851 53.804,24.9495 54.8392,24.4749 Z"/>
-                            </Border>
-                            <Label Content="firewall settings" />
-                        </Grid>
-                    </Button>
-                    <Button x:Name="btnRules" Click="btnRules_Click">
-                        <Grid>
-                            <Border ToolTip="firewall rules">
-                                <Path Height="18" Stretch="Uniform" Fill="#FFD87D7D" Data="F1 M 34.8333,61.75L 34.8333,42.75L 19,20.5833L 57,20.5833L 41.1667,42.75L 41.1667,58.5833L 34.8333,61.75 Z "/>
-                            </Border>
-                            <Label Content="firewall rules" />
-                        </Grid>
-                    </Button>
-                    <Button x:Name="btnEventsLog" Click="btnEventsLog_Click">
-                        <Grid>
-                            <Border ToolTip="security log">
-                                <Path Height="18" Stretch="Uniform" Fill="#FF8F8FEE" Data="F1 M 22,19L 24,19L 24,57L 22,57L 22,19 Z M 26,57L 26,19.0001L 53.9999,19.0001L 53.9999,57L 26,57 Z M 30,24L 30,27L 50,27L 50,24L 30,24 Z M 30,32L 30,35L 33,35L 33,32L 30,32 Z M 36,32L 36,35L 49,35L 49,32L 36,32 Z M 30,40L 30,43L 33,43L 33,40L 30,40 Z M 36,40L 36,43L 48,43L 48,40L 36,40 Z M 30,48L 30,51L 33,51L 33,48L 30,48 Z M 36,48L 36,51L 50,51L 50,48L 36,48 Z "/>
-                            </Border>
-                            <Label Content="security log" />
-                        </Grid>
-                    </Button>
-                    <Rectangle Height="3" Fill="LightGray"/>
-                </StackPanel>
-            </Grid>
-        </Border>
-        <Frame x:Name="mainFrame" Source="../Pages/Connections.xaml" NavigationUIVisibility="Hidden" />
-    </DockPanel>
+        </uicontrols:CustomWindowChrome>
+        <Grid x:Name="mainGrid" Grid.Row="1" ClipToBounds="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="1" Background="White">
+                <Border.RenderTransform>
+                    <TransformGroup>
+                        <TranslateTransform X="{Binding ActualWidth,ElementName=widthIndicator}" />
+                    </TransformGroup>
+                </Border.RenderTransform>
+                <Border.Effect>
+                    <DropShadowEffect Direction="130" Color="LightGray" ShadowDepth="3" />
+                </Border.Effect>
+            </Border>
+            <TabControl x:Name="menuGrid" Grid.ColumnSpan="2" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0" TabStripPlacement="Left" Grid.IsSharedSizeScope="True">
+                <TabControl.Resources>
+                    <Style x:Key="Separator" TargetType="TabItem">
+                        <Setter Property="Height" Value="31" />
+                        <Setter Property="Template" Value="{x:Null}" />
+                        <Setter Property="Visibility" Value="Hidden" />
+                    </Style>
+                    <Style TargetType="uicontrols:DecoratedTabItem" BasedOn="{StaticResource {x:Type uicontrols:DecoratedTabItem}}">
+                        <Setter Property="FontSize" Value="13" />
+                        <Setter Property="Padding" Value="10" />
+                        <!--<Setter Property="ClipToBounds" Value="True" />-->
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="White" />
+                                <Setter Property="BackgroundEffect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Direction="-90" ShadowDepth="0" Color="LightGray" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="White" />
+                                <Setter Property="BackgroundEffect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Direction="-90" ShadowDepth="2" Color="LightGray" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                    <Style TargetType="Label">
+                        <Setter Property="Margin" Value="10,0" />
+                    </Style>
+                </TabControl.Resources>
+                <TabItem x:Name="widthIndicator" Style="{StaticResource Separator}" />
+                <uicontrols:DecoratedTabItem IsSelected="True" Header="connections" Image="{StaticResource Image_Menu_Connections}">
+                    <Frame Source="../Pages/Connections.xaml" />
+                </uicontrols:DecoratedTabItem>
+                <uicontrols:DecoratedTabItem Header="map" Image="{StaticResource Image_Menu_Map}">
+                    <Frame Source="../Pages/Map.xaml" />
+                </uicontrols:DecoratedTabItem>
+                <uicontrols:DecoratedTabItem Header="bandwidth" Image="{StaticResource Image_Menu_Monitor}">
+                    <Frame Source="../Pages/Monitor.xaml" />
+                </uicontrols:DecoratedTabItem>
+                <uicontrols:DecoratedTabItem Header="adapters" Image="{StaticResource Image_Menu_Adapters}">
+                    <Frame Source="../Pages/AdapterInfo.xaml" />
+                </uicontrols:DecoratedTabItem>
+                <TabItem Style="{StaticResource Separator}" />
+                <uicontrols:DecoratedTabItem Header="firewall settings" Image="{StaticResource Image_Menu_FirewallStatus}">
+                    <Frame Source="../Pages/Status.xaml" />
+                </uicontrols:DecoratedTabItem>
+                <uicontrols:DecoratedTabItem Header="firewall rules" Image="{StaticResource Image_Menu_FirewallRules}">
+                    <Frame Source="../Pages/Rules.xaml" />
+                </uicontrols:DecoratedTabItem>
+                <uicontrols:DecoratedTabItem Header="security log" Image="{StaticResource Image_Menu_EventsLog}">
+                    <Frame Source="../Pages/EventsLog.xaml" />
+                </uicontrols:DecoratedTabItem>
+            </TabControl>
+        </Grid>
+    </Grid>
 </Window>

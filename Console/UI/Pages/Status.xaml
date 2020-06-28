@@ -3,34 +3,24 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Pages" 
       xmlns:settings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Config;assembly=Wokhan.WindowsFirewallNotifier.Common"
-      xmlns:resx="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Properties;assembly=Wokhan.WindowsFirewallNotifier.Common" xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
-    x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.Status" 
+      xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
+      xmlns:resx="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Properties;assembly=Wokhan.WindowsFirewallNotifier.Common" 
+      xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls" 
+      x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.Status" 
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="600"
       Title="Status" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
     <DockPanel>
         <controls:AdminPanel Caption="Only an administrator can use this feature." />
-        <Border Style="{StaticResource ToolBarPanel}">
-            <WrapPanel HorizontalAlignment="Left">
-                <controls:ToolBarButton Text="Apply" x:Name="btnSave" Click="btnSave_Click" IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}" ImageBrush="#FF6C6CD4" Image="{StaticResource Image_Shield}" />
-                <controls:ToolBarButton Text="Reload" x:Name="btnRevert" Click="btnRevert_Click" ImageBrush="Red" Image="{StaticResource Image_Refresh}" />
-            </WrapPanel>
-        </Border>
-        <Border x:Name="messsageInfoPanel" Padding="10" DockPanel.Dock="Top">
-            <Border.Style>
-                <Style TargetType="{x:Type Border}" BasedOn="{StaticResource InfoPanel}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding LastMessage}" Value="{x:Null}">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-            <Grid>
-                <TextBlock Text="{Binding LastMessage}" />
-            </Grid>
+        <ContentControl Style="{StaticResource ToolBarPanel}">
+            <StackPanel HorizontalAlignment="Left">
+                <Button Content="Apply" x:Name="btnSave" Click="btnSave_Click" IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}" ext:CustomAdorner.Image="{StaticResource Image_Save}" />
+                <Button Content="Reload" x:Name="btnRevert" Click="btnRevert_Click" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" />
+            </StackPanel>
+        </ContentControl>
+        <Border x:Name="messsageInfoPanel" Padding="10" DockPanel.Dock="Top" Visibility="{Binding LastMessage,Converter={StaticResource valueToVisibility}}">
+            <TextBlock Text="{Binding LastMessage}" />
         </Border>
         <StackPanel x:Name="stackOptions">
             <TextBlock Margin="5" TextWrapping="Wrap" Text="{x:Static resx:Resources.Status_Heading1 }" />
@@ -43,15 +33,6 @@
                 <Grid.Style>
                     <Style>
                         <Style.Resources>
-                            <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource ToggleSwitch}">
-                                <Setter Property="Content" Value="Disabled" />
-                                <Setter Property="Padding" Value="10,5" />
-                                <Style.Triggers>
-                                    <Trigger Property="IsChecked" Value="True">
-                                        <Setter Property="Content" Value="Enabled" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
                             <Style TargetType="{x:Type StackPanel}">
                                 <Setter Property="Margin" Value="5" />
                             </Style>
@@ -98,10 +79,10 @@
                 <!-- -->
                 <Label Grid.Row="1" Grid.ColumnSpan="5" FontWeight="Bold" Content="{x:Static resx:Resources.Status_WindowsFirewallGlobalStatus}" Background="{DynamicResource AccentColorBrush}" />
                 <!-- -->
-                <ToggleButton Padding="5" Grid.Row="2" Grid.Column="1" IsChecked="{Binding PrivateIsEnabled}" />
-                <ToggleButton Grid.Row="2" Grid.Column="2" IsChecked="{Binding PublicIsEnabled}" />
-                <ToggleButton Grid.Row="2" Grid.Column="3" IsChecked="{Binding DomainIsEnabled}" />
-                <ToggleButton Grid.Row="2" Grid.Column="4" IsChecked="{Binding AllIsEnabled}" />
+                <CheckBox Padding="5" Grid.Row="2" Grid.Column="1" IsChecked="{Binding PrivateIsEnabled}" Content="{Binding PrivateIsEnabled}" />
+                <CheckBox Padding="5" Grid.Row="2" Grid.Column="2" IsChecked="{Binding PublicIsEnabled}" Content="{Binding PublicIsEnabled}" />
+                <CheckBox Padding="5" Grid.Row="2" Grid.Column="3" IsChecked="{Binding DomainIsEnabled}" Content="{Binding DomainIsEnabled}" />
+                <CheckBox Padding="5" Grid.Row="2" Grid.Column="4" IsChecked="{Binding AllIsEnabled}" Content="{Binding AllIsEnabled}" />
 
                 <!-- -->
                 <Label Grid.Row="4" FontWeight="Bold" Grid.ColumnSpan="5" Content="{x:Static resx:Resources.Status_DefaultActionsWhenNoFilteringRuleMatches}" Background="{DynamicResource AccentColorBrush}" />
@@ -151,16 +132,9 @@
             </Grid>
             <TextBlock Margin="10,0" FontStyle="Italic" TextWrapping="Wrap" Text="{x:Static resx:Resources.Status_FooterRemark}" />
             <StackPanel Margin="10">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                    <ToggleButton x:Name="tgStartNotifier" Style="{StaticResource ToggleSwitch}" Padding="3,0,3,0" Content="Start notifier after windows login" ToolTip="" IsChecked="{Binding StartNotifierAfterLogin, Source={x:Static settings:Settings.Default}}" Width="290" ScrollViewer.CanContentScroll="True" />
-                    <Button Style="{StaticResource RoundedButton}" Padding="0" x:Name="btnTestNotif" Click="btnTestNotif_Click" HorizontalAlignment="Right" Margin="0,0,0,0" BorderBrush="{DynamicResource AccentColorBrush}" FontWeight="Bold" FontStyle="Normal" Background="#00000000" >
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Height="20" Margin="3,0,0,0"/>
-                            <Label Content="Start Notifier now" Padding="0" Margin="5" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
-                <ToggleButton Style="{StaticResource ToggleSwitch}" Margin="0,0,0,10" Padding="5,0" Content="Start notifier minimized" ToolTip="" IsChecked="{Binding StartNotifierMinimized, Source={x:Static settings:Settings.Default}}" />
+                <CheckBox x:Name="tgStartNotifier" Content="Start notifier after windows login" IsChecked="{Binding StartNotifierAfterLogin, Source={x:Static settings:Settings.Default}}" />
+                <CheckBox Content="Start notifier minimized" IsChecked="{Binding StartNotifierMinimized, Source={x:Static settings:Settings.Default}}" />
+                <Button x:Name="btnTestNotif" Click="btnTestNotif_Click" HorizontalAlignment="Center" ext:CustomAdorner.Image="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Content="Start Notifier now" />
             </StackPanel>
         </StackPanel>
     </DockPanel>

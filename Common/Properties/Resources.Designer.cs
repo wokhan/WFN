@@ -97,6 +97,24 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Switch to horizontal orientation.
+        /// </summary>
+        public static string ActivityWindow_OrientationHorizontal {
+            get {
+                return ResourceManager.GetString("ActivityWindow_OrientationHorizontal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Switch to vertical orientation.
+        /// </summary>
+        public static string ActivityWindow_OrientationVertical {
+            get {
+                return ResourceManager.GetString("ActivityWindow_OrientationVertical", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Show Notifier.
         /// </summary>
         public static string ActivityWindow_ShowNotifier {
@@ -241,7 +259,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Windows Firewall has blocked an outgoing connection.
+        ///   Recherche une chaîne localisée semblable à {0} outgoing connection(s) blocked.
         /// </summary>
         public static string FW_TITLE {
             get {
@@ -250,7 +268,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Windows Firewall Notifier.
+        ///   Recherche une chaîne localisée semblable à No blocked connections detected..
         /// </summary>
         public static string FW_TITLE_NO_CONNECTION {
             get {

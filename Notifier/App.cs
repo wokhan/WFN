@@ -33,8 +33,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         private static NotificationWindow notifierWindow;
         private static ActivityWindow activityWindow;
 
-        private ObservableCollection<CurrentConn> _conns = new ObservableCollection<CurrentConn>();
-        public ObservableCollection<CurrentConn> Connections { get { return _conns; } }
+        public ObservableCollection<CurrentConn> Connections { get; } = new ObservableCollection<CurrentConn>();
 
         private string[] exclusions = null;
 
@@ -56,7 +55,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     MessageBox.Show($"User must have admin rights to run Notifier\nNotifier will exit now!", "Security check", MessageBoxButton.OK, MessageBoxImage.Error);
                     Environment.Exit(1);
                 }
-                string[] args = Environment.GetCommandLineArgs();
+
                 // Ensures that notifier is only started once.
                 using var mtex = new Mutex(true, "MTX_NotificationWindowInstance", out bool instanceCountOne);
                 if (instanceCountOne)
@@ -88,6 +87,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         public App() : base()
         {
             this.ShutdownMode = ShutdownMode.OnMainWindowClose;
+
+#if DEBUG
+            this.Connections.Add(AppDataSample.DemoConnection);
+#endif
 
             LOGGER.Info("Initializing exclusions...");
             initExclusions();

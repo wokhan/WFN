@@ -154,7 +154,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
 
         private void LineChart_Loaded(object sender, RoutedEventArgs e)
         {
-            DataSeries.CollectionChanged += DataSeries_CollectionChanged;
+            if (DataSeries != null)
+            {
+                DataSeries.CollectionChanged += DataSeries_CollectionChanged;
+            }
         }
 
         private void DataSeries_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

@@ -6,40 +6,39 @@ using Wokhan.WindowsFirewallNotifier.Common.Core.Resources;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
-    public class ExposedInterfaceView : INotifyPropertyChanged
+    public partial class ExposedInterfaceView : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void NotifyPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private NetworkInterface _interface;
+        public string MAC => String.Join(":", Information.GetPhysicalAddress().GetAddressBytes().Select(b => b.ToString("X2")));
 
-        public string MAC { get { return String.Join(":", _interface.GetPhysicalAddress().GetAddressBytes().Select(b => b.ToString("X2"))); } }
-
-        public NetworkInterface Information { get { return _interface; } }
-
-        public string FormattedBytesSent { get { return ResourcesLoader.FormatBytes(Statistics.BytesSent); } }
-        public string FormattedBytesReceived { get { return ResourcesLoader.FormatBytes(Statistics.BytesReceived); } }
+        public NetworkInterface Information { get; private set; }
+        public string FormattedBytesSent => ResourcesLoader.FormatBytes(Statistics.BytesSent);
+        public string FormattedBytesReceived => ResourcesLoader.FormatBytes(Statistics.BytesReceived);
 
 
-        public IPInterfaceStatistics Statistics { get { return _interface.GetIPStatistics(); } }
+        public IPInterfaceStatistics Statistics => Information.GetIPStatistics();
 
-        public IPInterfaceProperties Properties { get { return _interface.GetIPProperties(); } }
+        public IPInterfaceProperties Properties => Information.GetIPProperties();
 
         public ExposedInterfaceView(NetworkInterface inter)
         {
-            this._interface = inter;
+            this.Information = inter;
+        }
+
+        internal ExposedInterfaceView()
+        {
+
         }
 
         internal void UpdateInner(NetworkInterface inter)
         {
-            this._interface = inter;
+            this.Information = inter;
             NotifyPropertyChanged(nameof(Information));
             NotifyPropertyChanged(nameof(Statistics));
             NotifyPropertyChanged(nameof(Properties));

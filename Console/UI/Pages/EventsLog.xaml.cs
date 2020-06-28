@@ -128,6 +128,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         public EventsLog()
         {
+            Loaded += (s, e) => StartHandlingSecurityLogEvents();
+            Unloaded += (s, e) => StopHandlingSecurityLogEvents();
+
             eventsLogFilters = new EventsLogFilters(this);
 
             InitializeComponent();
@@ -139,9 +142,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
             dataView = CollectionViewSource.GetDefaultView(gridLog.ItemsSource);
             dataView.SortDescriptions.Add(new SortDescription(nameof(LogEntryViewModel.Timestamp), ListSortDirection.Descending));
-
-            Loaded += (s, e) => StartHandlingSecurityLogEvents();
-            Unloaded += (s, e) => StopHandlingSecurityLogEvents();
         }
 
         private void StartHandlingSecurityLogEvents()

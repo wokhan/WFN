@@ -2,8 +2,10 @@
 using System.ComponentModel;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
-using Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
 {
@@ -13,16 +15,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
     public partial class MainWindow
     {
         private const uint ERROR_PRIVILEGE_NOT_HELD = 1314;
-
-        private Uri previousUri = null;
-
-        public void GoBack()
-        {
-            if (previousUri != null)
-            {
-                mainFrame.Navigate(previousUri);
-            }
-        }
 
         /// <summary>
         /// The title displayed in the window incl. version information from assembly.
@@ -45,21 +37,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
-        }
-
-        private void btnConnections_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            mainFrame.Navigate(new Connections());
-        }
-
-        private void btnRules_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            mainFrame.Navigate(new Rules());
-        }
-
-        private void btnEventsLog_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            mainFrame.Navigate(new EventsLog());
         }
 
         void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
@@ -100,45 +77,36 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
             //this.ShowMessageAsync("Unexpected error", ((Exception)e.ExceptionObject).Message, MessageDialogStyle.Affirmative);
         }
 
-        private void btnSettings_Click(object sender, RoutedEventArgs e)
-        {
-            previousUri = mainFrame.CurrentSource;
-            mainFrame.Navigate(new Options());
-        }
-
-        private void btnMonitor_Click(object sender, RoutedEventArgs e)
-        {
-            mainFrame.Navigate(new Monitor());
-        }
-
         private void btnRestartAdmin_Click(object sender, RoutedEventArgs e)
         {
             ((App)Application.Current).RestartAsAdmin();
         }
 
-        private void btnInfos_Click(object sender, RoutedEventArgs e)
-        {
-            mainFrame.Navigate(new AdapterInfo());
-        }
-
-        private void btnAbout_Click(object sender, RoutedEventArgs e)
-        {
-            mainFrame.Navigate(new About());
-        }
-
-        private void btnMap_Click(object sender, RoutedEventArgs e)
-        {
-            mainFrame.Navigate(new Map());
-        }
-
-        private void btnStatus_Click(object sender, RoutedEventArgs e)
-        {
-            mainFrame.Navigate(new Status());
-        }
-
         private void btnMenu_Click(object sender, RoutedEventArgs e)
         {
-            menuGrid.Width = (menuGrid.Width != menuBar.Width ? menuBar.Width : Double.NaN);
+            menuGrid.Width = (menuGrid.Width != 38 ? 38 : Double.NaN);
+        }
+
+        private void OpenOptions(object sender, RoutedEventArgs e)
+        {
+            Page target = (Page)((FrameworkElement)sender).Resources["page"];
+            var win = new Window()
+            {
+                Content = target,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                MaxWidth = Math.Min(800, this.ActualWidth - 100),
+                MaxHeight = Math.Min(600, this.ActualHeight - 100),
+                WindowStyle = WindowStyle.None,
+                Owner = this,
+                ResizeMode = ResizeMode.NoResize,
+                BorderThickness = new Thickness(1),
+                AllowsTransparency = true,
+                Background = Brushes.Transparent,
+                ShowInTaskbar = false,
+                SizeToContent = SizeToContent.WidthAndHeight
+            };
+
+            win.ShowDialog();
         }
     }
 }

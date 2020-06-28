@@ -37,6 +37,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Backgrounds\Blue-Abstract.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
 	  <PackageReference Include="log4net" Version="2.0.8.0" />
     <PackageReference Include="MaxMind.Db" Version="2.6.1" />
     <PackageReference Include="MaxMind.GeoIP2" Version="3.1.0" />
@@ -54,6 +58,7 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Backgrounds\Blue-Abstract.jpg" />
     <Resource Include="Resources\Images\WFN Logo.png" />
     <Resource Include="Resources\Images\WFN.ico" />
     <Resource Include="Resources\Shield.ico" />
@@ -115,9 +120,17 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.fr.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup Label="DummyDataHelpers">
+    <Compile Update="**/*.Dummy.cs">
+      <DependentUpon>$([System.String]::Copy(%(Filename)).Replace(".Dummy",".cs"))</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

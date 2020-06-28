@@ -210,7 +210,7 @@ This application has NOT been totally disabled.</value>
     <value>WFN_version.txt</value>
   </data>
   <data name="FW_TITLE" xml:space="preserve">
-    <value>Windows Firewall has blocked an outgoing connection</value>
+    <value>{0} outgoing connection(s) blocked</value>
   </data>
   <data name="MSG_LOG_FAILED" xml:space="preserve">
     <value>Failed to write to log file. Please make sure the log file is not in use by another program.</value>
@@ -356,6 +356,12 @@ You may need to create a rule for WFN in the Notifier to unblock it.</value>
     <value>..\resources\notifier.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="FW_TITLE_NO_CONNECTION" xml:space="preserve">
-    <value>Windows Firewall Notifier</value>
+    <value>No blocked connections detected.</value>
+  </data>
+  <data name="ActivityWindow_OrientationHorizontal" xml:space="preserve">
+    <value>Switch to horizontal orientation</value>
+  </data>
+  <data name="ActivityWindow_OrientationVertical" xml:space="preserve">
+    <value>Switch to vertical orientation</value>
   </data>
 </root>
