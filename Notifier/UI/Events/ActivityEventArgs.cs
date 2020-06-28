@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Events

@@ -37,6 +37,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         public Status()
         {
             InitializeComponent();
+
+            this.Loaded += Status_Loaded;
+        }
+
+        private void Status_Loaded(object sender, RoutedEventArgs e)
+        {
             init();
         }
 

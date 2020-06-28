@@ -4,44 +4,28 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
+      xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
+      xmlns:dummydata="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels"
       mc:Ignorable="d" 
-      DataContext="{Binding RelativeSource={RelativeSource Self}}" 
+      DataContext="{Binding RelativeSource={x:Static RelativeSource.Self}}" 
       d:DesignHeight="400" d:DesignWidth="700" 
       x:Name="MonitorPage"
       Title="Monitor">
     <DockPanel>
         <controls:AdminPanel Caption="Information provided here might be inaccurate for non-admin users." />
-        <Border Style="{StaticResource ToolBarPanel}">
+        <ContentControl Style="{StaticResource ToolBarPanel}">
             <Grid>
-                <WrapPanel HorizontalAlignment="Left">
-                    <controls:ToolBarToggleButton Text="Tracking" IsChecked="{Binding IsTrackingEnabled}" ImageBrush="Green" Image="{StaticResource Image_Start}">
-                        <Control.Resources>
-                            <Style TargetType="Path">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsTrackingEnabled, FallbackValue=True}" Value="True">
-                                        <Setter Property="Data" Value="{StaticResource Image_Stop}" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Control.Resources>
-                    </controls:ToolBarToggleButton>
-                    <controls:ToolBarToggleButton Text="Single-item mode" IsChecked="{Binding IsSingleMode}" ImageBrush="Blue" Image="{StaticResource Image_SingleMode}" />
+                <StackPanel HorizontalAlignment="Left">
+                    <ToggleButton Content="Tracking" IsChecked="{Binding IsTrackingEnabled}" Style="{StaticResource AutoTrackButton}" />
+                    <ToggleButton Content="Single-item mode" IsChecked="{Binding IsSingleMode}" ext:CustomAdorner.Image="{StaticResource Image_SingleMode}" />
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Right">
                     <TextBlock VerticalAlignment="Center" Text="{Binding Series.Count, StringFormat='Active connection(s): {0}', FallbackValue='No active connection'}" />
-                </WrapPanel>
-                <WrapPanel HorizontalAlignment="Right">
-                    <Border BorderBrush="White" Background="White" BorderThickness="0" CornerRadius="8" Padding="5,2" Margin="0,0,5,0">
-                        <WrapPanel>
-                            <ContentControl Content="{StaticResource Image_UpdateRate}"/>
-                            <Label Margin="4,0" Content="Update rate:" />
-                            <ComboBox IsEditable="False" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
-                        </WrapPanel>
-                    </Border>
-                    <ToggleButton x:Name="btnHelp">
-                        <ContentControl Content="{StaticResource Image_Help}"/>
-                    </ToggleButton>
-                </WrapPanel>
+                    <ComboBox Style="{StaticResource AutoTrackRefresh}" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
+                    <Label Style="{StaticResource HelpButtonStyle}" ToolTip="This screen displays all active connections on this computer, updated every second (by default).\r\nClosed connections (in orange) will remain displayed a few seconds before disappearing." />
+                </StackPanel>
             </Grid>
-        </Border>
+        </ContentControl>
         <Grid>
             <Grid>
                 <Grid.RowDefinitions>
@@ -84,12 +68,8 @@
                     </DataGrid.Columns>
                 </DataGrid>
                 <GridSplitter Grid.Row="1" Height="2" Background="{DynamicResource AccentColorBrush}" HorizontalAlignment="Stretch" />
-                <controls:LineChart Grid.Row="2" x:Name="chart" XAxeType="DateTime" DataSeries="{Binding Series, ElementName=MonitorPage}" />
+                <controls:LineChart Grid.Row="2" x:Name="chart" XAxeType="DateTime" DataContext="{Binding Series}" d:DataContext="{d:DesignInstance Type=dummydata:MonitoredConnectionDummy,IsDesignTimeCreatable=True,CreateList=True}" DataSeries="{Binding}" />
             </Grid>
-            <Border Style="{StaticResource InfoBlock}">
-                <TextBlock>This screen displays all active connections on this computer, updated every second (by default).
-Closed connections (in orange) will remain displayed a few seconds before disappearing.</TextBlock>
-            </Border>
         </Grid>
     </DockPanel>
 </Page>

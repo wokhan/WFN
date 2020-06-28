@@ -2,43 +2,24 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
-      DataContext="{Binding RelativeSource={RelativeSource Self}}"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
+      DataContext="{Binding RelativeSource={x:Static RelativeSource.Self}}"
       mc:Ignorable="d" 
       d:DesignHeight="400" d:DesignWidth="800"
 	Title="Connections">
     <DockPanel>
         <controls:AdminPanel Caption="Information provided here might be inaccurate for non-admin users." />
-        <Border Style="{StaticResource ToolBarPanel}">
+        <ContentControl Style="{StaticResource ToolBarPanel}" Panel.ZIndex="0">
             <Grid>
-                <WrapPanel HorizontalAlignment="Left">
-                    <controls:ToolBarToggleButton Text="Auto-refresh" IsChecked="{Binding IsTrackingEnabled}" ImageBrush="Green" Image="{StaticResource Image_Start}">
-                        <Control.Resources>
-                            <Style TargetType="controls:ToolBarButton">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsTrackingEnabled, FallbackValue=True}" Value="True">
-                                        <Setter Property="Image" Value="{StaticResource Image_Stop}" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Control.Resources>
-                    </controls:ToolBarToggleButton>
+                <ToggleButton Content="Auto-refresh" IsChecked="{Binding IsTrackingEnabled}" Style="{StaticResource AutoTrackButton}" />
+                <StackPanel HorizontalAlignment="Right">
                     <TextBlock VerticalAlignment="Center" Text="{Binding connectionsView.Count, StringFormat='Active connection(s): {0}', FallbackValue='No active connection'}" />
-                </WrapPanel>
-                <WrapPanel HorizontalAlignment="Right">
-                    <Border BorderBrush="White" Background="White" BorderThickness="0" CornerRadius="8" Padding="5,2" Margin="0,0,5,0">
-                        <WrapPanel>
-                            <ContentControl Content="{StaticResource Image_UpdateRate}"/>
-                            <Label Margin="4,0" Content="Update rate:" />
-                            <ComboBox IsEditable="False" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
-                        </WrapPanel>
-                    </Border>
-                    <ToggleButton x:Name="btnHelp">
-                        <ContentControl Content="{StaticResource Image_Help}"/>
-                    </ToggleButton>
-                </WrapPanel>
+                    <ComboBox Style="{StaticResource AutoTrackRefresh}" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
+                    <Label Style="{StaticResource HelpButtonStyle}" ToolTip="This screen displays all active connections on this computer, updated every second (by default).\r\nClosed connections (in orange) will remain displayed a few seconds before disappearing." />
+                </StackPanel>
             </Grid>
-        </Border>
+        </ContentControl>
         <Grid>
             <DataGrid EnableRowVirtualization="True" VirtualizingPanel.IsVirtualizingWhenGrouping="True" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" ItemsSource="{Binding connectionsView}" AutoGenerateColumns="False" HeadersVisibility="Column" HorizontalAlignment="Stretch">
                 <DataGrid.GroupStyle>
@@ -124,12 +105,6 @@
                     <!--<DataGridTextColumn Header="FirewallRule" Binding="{Binding FirewallRule.Count, Mode=OneWay}" />-->
                 </DataGrid.Columns>
             </DataGrid>
-            <Border Style="{StaticResource InfoBlock}">
-                <TextBlock>
-            This screen displays all active connections on this computer, updated every second (by default).
-Closed connections (in orange) will remain displayed a few seconds before disappearing.
-                </TextBlock>
-            </Border>
         </Grid>
     </DockPanel>
 </Page>

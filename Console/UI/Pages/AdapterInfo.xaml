@@ -3,54 +3,37 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Pages"
       xmlns:Converters="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.Helpers.BindingConverters"
+      xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="600"
       Title="AdapterInfo"
-      xmlns:dummydata="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.Helpers.DummyData" xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
-      DataContext="{Binding RelativeSource={RelativeSource Self}}">
+      xmlns:dummydata="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels"
+      DataContext="{Binding RelativeSource={x:Static RelativeSource.Self}}">
     <Page.Resources>
         <Converters:SecondsToDateTimeConverter x:Key="secondsConverter" />
     </Page.Resources>
     <DockPanel>
-        <Border Style="{StaticResource ToolBarPanel}">
+        <ContentControl Style="{StaticResource ToolBarPanel}">
             <Grid>
-                <WrapPanel HorizontalAlignment="Left">
-                    <controls:ToolBarToggleButton Text="Auto-refresh" IsChecked="{Binding IsTrackingEnabled}" ImageBrush="Green" Image="{StaticResource Image_Start}">
-                        <Style TargetType="controls:ToolBarToggleButton">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsTrackingEnabled, FallbackValue=True}" Value="True">
-                                    <Setter Property="Image" Value="{StaticResource Image_Stop}" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </controls:ToolBarToggleButton>
-                </WrapPanel>
-                <WrapPanel HorizontalAlignment="Right">
-                    <Border BorderBrush="White" Background="White" VerticalAlignment="Center" BorderThickness="0" CornerRadius="4" Padding="5,2" Margin="0,0,5,0">
-                        <WrapPanel>
-                            <ContentControl Content="{StaticResource Image_UpdateRate}"/>
-                            <Label Margin="4,0" Content="Update rate:" />
-                            <ComboBox IsEditable="False" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
-                        </WrapPanel>
-                    </Border>
-                    <ToggleButton x:Name="btnHelp">
-                        <ContentControl Content="{StaticResource Image_Help}"/>
-                    </ToggleButton>
-                </WrapPanel>
+                <ToggleButton Content="Auto-refresh" IsChecked="{Binding IsTrackingEnabled}" Style="{StaticResource AutoTrackButton}" />
+                <StackPanel HorizontalAlignment="Right">
+                    <ComboBox Style="{StaticResource AutoTrackRefresh}" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
+                    <Label Style="{StaticResource HelpButtonStyle}" ToolTip="This page displays extended information about all adapters on this computer, including virtual devices or interfaces." />
+                </StackPanel>
             </Grid>
-        </Border>
+        </ContentControl>
         <Grid>
             <ScrollViewer>
-                <ItemsControl ItemsSource="{Binding}" DataContext="{Binding AllInterfaces}" d:DataContext="{d:DesignInstance Type=dummydata:AdapterDummy,IsDesignTimeCreatable=True,CreateList=True}">
+                <ItemsControl ItemsSource="{Binding}" DataContext="{Binding AllInterfaces}" d:DataContext="{d:DesignInstance Type=dummydata:ExposedInterfaceViewDummy,IsDesignTimeCreatable=True,CreateList=True}" Grid.IsSharedSizeScope="True">
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate DataType="ExposedInterfaceView">
                             <Expander>
                                 <Expander.Header>
-                                    <Grid Width="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Expander}}">
+                                    <Grid Width="{Binding ActualWidth,RelativeSource={RelativeSource AncestorType=Expander}}">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="Auto" SharedSizeGroup="status" />
+                                            <ColumnDefinition Width="*" SharedSizeGroup="name"/>
                                             <ColumnDefinition Width="Auto" SharedSizeGroup="bandwidthUP" />
                                             <ColumnDefinition Width="Auto" SharedSizeGroup="bandwidthDOWN" />
                                         </Grid.ColumnDefinitions>
@@ -65,15 +48,15 @@
                                                 </Style>
                                             </ContentControl.Style>
                                         </ContentControl>
-                                        <TextBlock Margin="20,0,0,0" Text="{Binding Information.Name}" />
-                                        <WrapPanel HorizontalAlignment="Left" Grid.Column="1" Margin="0,0,10,0">
+                                        <TextBlock Grid.Column="1" Margin="20,0,0,0" Text="{Binding Information.Name}" />
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="2" Margin="0,0,10,0">
                                             <ContentControl Margin="0,0,5,0" Content="{StaticResource Image_DataUp}"/>
                                             <TextBlock Text="{Binding FormattedBytesSent}" Margin="0,0,10,0" />
-                                        </WrapPanel>
-                                        <WrapPanel HorizontalAlignment="Left" Grid.Column="2" Margin="0,0,40,0">
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="3" Margin="0,0,40,0">
                                             <ContentControl Margin="0,0,5,0" Content="{StaticResource Image_DataDown}"/>
                                             <TextBlock Text="{Binding FormattedBytesReceived}" />
-                                        </WrapPanel>
+                                        </StackPanel>
                                     </Grid>
                                 </Expander.Header>
                                 <StackPanel>
@@ -170,9 +153,6 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-            <Border Style="{StaticResource InfoBlock}">
-                <TextBlock>The Adapter information page displays extended information about all adapters on this computer, including virtual devices or interfaces.</TextBlock>
-            </Border>
         </Grid>
     </DockPanel>
 </Page>

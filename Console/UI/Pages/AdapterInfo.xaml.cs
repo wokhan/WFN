@@ -32,7 +32,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         public List<double> Intervals { get { return new List<double> { 0.5, 1, 5, 10 }; } }
 
-        private DispatcherTimer timer = new DispatcherTimer() { IsEnabled = true };
+        private DispatcherTimer timer = new DispatcherTimer();
 
         private double _interval = 1;
         public double Interval
@@ -47,12 +47,18 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         
         public AdapterInfo()
         {
+            this.Loaded += AdapterInfo_Loaded;
+            this.Unloaded += AdapterInfo_Unloaded;
+
             InitializeComponent();
             
             timer.Tick += Timer_Tick;
             timer.Interval = TimeSpan.FromSeconds(Interval);
+        }
 
-            this.Unloaded += AdapterInfo_Unloaded;
+        private void AdapterInfo_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            timer.Start();
         }
 
         private void AdapterInfo_Unloaded(object sender, System.Windows.RoutedEventArgs e)

@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-             DataContext="{Binding RelativeSource={RelativeSource Self}}"
+             DataContext="{Binding RelativeSource={x:Static RelativeSource.Self}}"
              x:Name="Chart">
     <Grid>
         <DockPanel>

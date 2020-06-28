@@ -50,16 +50,17 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         public Monitor()
         {
+            this.Loaded += Monitor_Loaded;
+            this.Unloaded += Monitor_Unloaded;
+
             InitializeComponent();
-            timer.Interval = TimeSpan.FromSeconds(Interval);
-            timer.Tick += timer_Tick;
 
             chart.XMaxStartDelta = 60 * TimeSpan.TicksPerSecond;
             chart.XFuncConverter = (x) => new DateTime((long)x).ToString(DateTimeFormatInfo.CurrentInfo.LongTimePattern);
             chart.YFuncConverter = (y) => ResourcesLoader.FormatBytes(y, "ps");
 
-            this.Loaded += Monitor_Loaded;
-            this.Unloaded += Monitor_Unloaded;
+            timer.Interval = TimeSpan.FromSeconds(Interval);
+            timer.Tick += timer_Tick;
         }
 
         private void Monitor_Unloaded(object sender, RoutedEventArgs e)

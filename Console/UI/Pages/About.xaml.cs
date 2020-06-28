@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Windows;
 using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Navigation;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using System.ComponentModel;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -25,6 +27,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             var src = sender as Hyperlink;
             ProcessHelper.StartShellExecutable(e.Uri.ToString(), null, true);
             e.Handled = true;
+        }
+
+        private void Close(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Window.GetWindow(this).Close();
         }
     }
 }

@@ -41,6 +41,9 @@
     <Reference Include="Wokhan.Core">
       <HintPath>..\TempSharedLib\Wokhan.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Wokhan.UI">
+      <HintPath>..\TempSharedLib\Wokhan.UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Shield.ico">
@@ -62,7 +65,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <EmbeddedResource Update="Properties\Resources.fr.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
+      <Generator></Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

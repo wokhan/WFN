@@ -4,46 +4,28 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:maps="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Pages" 
       xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
+      xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
       mc:Ignorable="d" 
-      d:DesignHeight="400" d:DesignWidth="600"
-      DataContext="{Binding RelativeSource={RelativeSource Self}}"
+      d:DesignHeight="400" d:DesignWidth="700"
+      DataContext="{Binding RelativeSource={x:Static RelativeSource.Self}}"
       Title="Map">
     <DockPanel>
         <controls:AdminPanel Caption="Information provided here might be inaccurate for non-admin users." />
-        <Border Style="{StaticResource ToolBarPanel}">
+        <ContentControl Style="{StaticResource ToolBarPanel}">
             <Grid>
-                <WrapPanel HorizontalAlignment="Left">
-                    <controls:ToolBarToggleButton Text="Auto-refresh" IsChecked="{Binding IsTrackingEnabled}" ImageBrush="Green" Image="{StaticResource Image_Start}">
-                        <Control.Resources>
-                            <Style TargetType="Path">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsTrackingEnabled, FallbackValue=True}" Value="True">
-                                        <Setter Property="Data" Value="{StaticResource Image_Stop}" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Control.Resources>
-                    </controls:ToolBarToggleButton>
-                    <controls:ToolBarToggleButton Text="Full routes" IsChecked="{Binding IsFullRouteDisplayed}" ImageBrush="#FF6C6CD4" Image="{StaticResource Image_FullRoute}" />
-                    <controls:ToolBarToggleButton Text="Aerial mode" IsChecked="{Binding IsAerial}" ImageBrush="Coral" Image="{StaticResource Image_MapAerial}" />
+                <StackPanel HorizontalAlignment="Left">
+                    <ToggleButton Content="Auto-refresh" IsChecked="{Binding IsTrackingEnabled}" Style="{StaticResource AutoTrackButton}" />
+                    <ToggleButton Content="Full routes" IsChecked="{Binding IsFullRouteDisplayed}" ext:CustomAdorner.Image="{StaticResource Image_FullRoute}" />
+                    <ToggleButton Content="Aerial mode" IsChecked="{Binding IsAerial}" ext:CustomAdorner.Image="{StaticResource Image_MapAerial}" />
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Right">
                     <TextBlock VerticalAlignment="Center" Text="{Binding Connections.Count, StringFormat='Active connection(s): {0}', FallbackValue='No active connection'}" />
-                </WrapPanel>
-                <WrapPanel HorizontalAlignment="Right">
-                    <Border BorderBrush="White" Background="White" BorderThickness="0" CornerRadius="8" Padding="5,2" Margin="0,0,5,0">
-                        <WrapPanel>
-                            <ContentControl Content="{StaticResource Image_UpdateRate}"/>
-                            <Label Margin="4,0" Content="Update rate:" />
-                            <ComboBox IsEditable="False" Width="70" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
-                        </WrapPanel>
-                    </Border>
-                    <ToggleButton x:Name="btnHelp">
-                        <ContentControl Content="{StaticResource Image_Help}"/>
-                    </ToggleButton>
-                </WrapPanel>
+                    <ComboBox Style="{StaticResource AutoTrackRefresh}" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
+                    <Label Style="{StaticResource HelpButtonStyle}" ToolTip="This screen displays all active connections on this computer, updated every second (by default).\r\nClosed connections (in orange) will remain displayed a few seconds before disappearing." />
+                </StackPanel>
             </Grid>
-        </Border>
+        </ContentControl>
         <Grid>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -60,16 +42,15 @@
                                         <Style TargetType="maps:MapPolyline">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding IsFullRouteDisplayed, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}}" Value="True">
-                                                    <Setter Property="Locations" Value="{Binding FullRoute}" />
+                                                    <!--<Setter Property="Locations" Value="{Binding FullRoute}" />-->
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding IsFullRouteDisplayed, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}}" Value="False">
-                                                    <Setter Property="Locations" Value="{Binding RayCoordinates}" />
+                                                    <!--<Setter Property="Locations" Value="{Binding RayCoordinates}" />-->
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </maps:MapPolyline.Style>
                                 </maps:MapPolyline>
-
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </maps:MapItemsControl>
@@ -98,7 +79,6 @@
                                         </Style>
                                     </Ellipse.Style>
                                 </Ellipse>
-
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </maps:MapItemsControl>
@@ -111,12 +91,12 @@
                 </Border>
                 <GridSplitter Grid.Column="1" />
                 <DockPanel Grid.Column="2">
-                    <Border Style="{StaticResource ToolBarPanel}" Background="LightBlue">
-                        <UniformGrid Rows="1" Columns="2">
+                    <ContentControl Style="{StaticResource ToolBarPanel}" Background="LightBlue">
+                        <UniformGrid Columns="2" Margin="5,10">
                             <RadioButton GroupName="rdbGroupBy" Content="Group by owner" x:Name="btnGrpOwner" IsChecked="True" Checked="btnGrpOwner_Checked" />
                             <RadioButton GroupName="rdbGroupBy" Content="Group by IP" x:Name="btnGrpIP" Checked="btnGrpIP_Checked"/>
                         </UniformGrid>
-                    </Border>
+                    </ContentControl>
                     <ScrollViewer>
                         <ListView SelectionMode="Single" Width="220" BorderThickness="1,0,0,0" ItemsSource="{Binding ConnectionsView}">
                             <ListView.Resources>
@@ -206,7 +186,6 @@
                                                 </Style>
                                             </TextBlock.Style>
                                         </TextBlock>
-
                                     </WrapPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -214,12 +193,6 @@
                     </ScrollViewer>
                 </DockPanel>
             </Grid>
-            <Border Style="{StaticResource InfoBlock}">
-                <TextBlock>
-            This screen displays all active connections on this computer, updated every second (by default).
-Closed connections (in orange) will remain displayed a few seconds before disappearing.
-                </TextBlock>
-            </Border>
         </Grid>
     </DockPanel>
 </Page>

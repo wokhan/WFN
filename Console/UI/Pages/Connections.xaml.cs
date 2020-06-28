@@ -30,7 +30,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         public List<int> Intervals => new List<int> { 1, 5, 10 };
 
-        private DispatcherTimer timer = new DispatcherTimer() { IsEnabled = true };
+        private DispatcherTimer timer = new DispatcherTimer();
 
         public ObservableCollection<Connection> lstConnections { get; } = new ObservableCollection<Connection>();
 
@@ -47,6 +47,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         public Connections()
         {
+            this.Loaded += Connections_Loaded;
+            this.Unloaded += Connections_Unloaded;
+
             //TODO: Use BindingOperations.EnableCollectionSynchronization(lstConnections, locker); instead of Dispatcher invocations
 
             connectionsView = (ListCollectionView)CollectionViewSource.GetDefaultView(lstConnections);
@@ -57,9 +60,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
             timer.Interval = TimeSpan.FromSeconds(Interval);
             timer.Tick += timer_Tick;
-
-            this.Loaded += Connections_Loaded;
-            this.Unloaded += Connections_Unloaded;
         }
 
         private void Connections_Unloaded(object sender, RoutedEventArgs e)
@@ -69,7 +69,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         void Connections_Loaded(object sender, RoutedEventArgs e)
         {
-            timer_Tick(null, null);
+            timer.Start();
         }
 
         async void timer_Tick(object sender, EventArgs e)
