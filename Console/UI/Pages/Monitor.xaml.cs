@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -18,71 +20,33 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// <summary>
     /// Interaction logic for Monitor.xaml
     /// </summary>
-    public partial class Monitor : Page, INotifyPropertyChanged
+    public partial class Monitor : TimerBasedPage, INotifyPropertyChanged
     {
         private const double GroupTimeoutRemove = 1000.0; //milliseconds
 
-        public bool IsTrackingEnabled
-        {
-            get { return timer.IsEnabled; }
-            set { timer.IsEnabled = value; NotifyPropertyChanged(nameof(IsTrackingEnabled)); }
-        }
+        public override List<double> Intervals => new List<double> { 0.2, 0.5, 1, 5, 10 };
 
         private bool _isSingleMode;
         public bool IsSingleMode
         {
             get { return _isSingleMode; }
-            set { _isSingleMode = value; GroupedConnections.Clear(); NotifyPropertyChanged(nameof(IsSingleMode)); }
+            set { _isSingleMode = value; GroupedConnections.Clear(); NotifyPropertyChanged(); }
         }
 
-        public List<double> Intervals { get { return new List<double> { 0.2, 0.5, 1, 5, 10 }; } }
-
-        private DispatcherTimer timer = new DispatcherTimer() { IsEnabled = true };
-
-        private double _interval = 1;
-        public double Interval
-        {
-            get { return _interval; }
-            set { _interval = value; timer.Interval = TimeSpan.FromSeconds(value); }
-        }
+        public ObservableCollection<GroupedView> GroupedConnections { get; } = new ObservableCollection<GroupedView>();
 
         public ObservableCollection<LineChart.Series> Series { get; } = new ObservableCollection<LineChart.Series>();
 
-        public Monitor()
+        public Monitor() : base()
         {
-            this.Loaded += Monitor_Loaded;
-            this.Unloaded += Monitor_Unloaded;
-
             InitializeComponent();
 
             chart.XMaxStartDelta = 60 * TimeSpan.TicksPerSecond;
             chart.XFuncConverter = (x) => new DateTime((long)x).ToString(DateTimeFormatInfo.CurrentInfo.LongTimePattern);
             chart.YFuncConverter = (y) => ResourcesLoader.FormatBytes(y, "ps");
-
-            timer.Interval = TimeSpan.FromSeconds(Interval);
-            timer.Tick += timer_Tick;
         }
 
-        private void Monitor_Unloaded(object sender, RoutedEventArgs e)
-        {
-            timer.Stop();
-        }
-
-        private void NotifyPropertyChanged(string caller)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(caller));
-        }
-
-        void Monitor_Loaded(object sender, RoutedEventArgs e)
-        {
-            Dispatcher.InvokeAsync(() => timer_Tick(null, null));
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public ObservableCollection<GroupedView> GroupedConnections { get; } = new ObservableCollection<GroupedView>();
-
-        private void timer_Tick(object sender, EventArgs e)
+        protected override async Task OnTimerTick(object sender, EventArgs e)
         {
             var x = DateTime.Now.Ticks;
 

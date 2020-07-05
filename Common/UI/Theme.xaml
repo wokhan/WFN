@@ -40,7 +40,7 @@
     </Style>
 
     <Style TargetType="Button">
-        <Setter Property="ext:CustomAdorner.CornerRadius" Value="2" />
+        <Setter Property="ext:CustomAdorner.CornerRadius" Value="4" />
         <Setter Property="Background" Value="WhiteSmoke" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Padding" Value="10,5" />
@@ -56,7 +56,7 @@
     </Style>
 
     <Style TargetType="ToggleButton">
-        <Setter Property="ext:CustomAdorner.CornerRadius" Value="2" />
+        <Setter Property="ext:CustomAdorner.CornerRadius" Value="4" />
         <Setter Property="Background" Value="WhiteSmoke" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Padding" Value="10,5" />
@@ -76,7 +76,6 @@
 
     <Style TargetType="ComboBox">
         <Setter Property="ext:CustomAdorner.PreserveTemplate" Value="true" />
-        <Setter Property="ext:CustomAdorner.CornerRadius" Value="10" />
         <Setter Property="IsEditable" Value="False" />
         <Setter Property="Background" Value="WhiteSmoke" />
         <Setter Property="Template">
@@ -90,14 +89,14 @@
                                 </Style>
                             </ToggleButton.Style>
                         </ToggleButton>
-                        <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" StaysOpen="False" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide" Margin="0">
+                        <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" StaysOpen="False" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide" Placement="Bottom">
                             <Grid Background="{TemplateBinding Background}" MinWidth="{TemplateBinding FrameworkElement.ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}" Margin="4,0,4,4">
-                                <Border Background="{TemplateBinding Background}" CornerRadius="5">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="4">
                                     <Border.Effect>
                                         <DropShadowEffect Color="LightGray" ShadowDepth="2" />
                                     </Border.Effect>
                                 </Border>
-                                <Border CornerRadius="5">
+                                <Border CornerRadius="4">
                                     <ScrollViewer>
                                         <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
                                     </ScrollViewer>

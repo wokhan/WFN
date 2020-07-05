@@ -51,7 +51,7 @@
                     </TransformGroup>
                 </Border.RenderTransform>
                 <Border.Effect>
-                    <DropShadowEffect Direction="130" Color="LightGray" ShadowDepth="3" />
+                    <DropShadowEffect Direction="180" Color="LightGray" ShadowDepth="2" />
                 </Border.Effect>
             </Border>
             <TabControl x:Name="menuGrid" Grid.ColumnSpan="2" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0" TabStripPlacement="Left" Grid.IsSharedSizeScope="True">
@@ -61,56 +61,60 @@
                         <Setter Property="Template" Value="{x:Null}" />
                         <Setter Property="Visibility" Value="Hidden" />
                     </Style>
-                    <Style TargetType="uicontrols:DecoratedTabItem" BasedOn="{StaticResource {x:Type uicontrols:DecoratedTabItem}}">
+                    <Style TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
                         <Setter Property="FontSize" Value="13" />
-                        <Setter Property="Padding" Value="10" />
-                        <!--<Setter Property="ClipToBounds" Value="True" />-->
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="White" />
-                                <Setter Property="BackgroundEffect">
-                                    <Setter.Value>
-                                        <DropShadowEffect Direction="-90" ShadowDepth="0" Color="LightGray" />
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="White" />
-                                <Setter Property="BackgroundEffect">
-                                    <Setter.Value>
-                                        <DropShadowEffect Direction="-90" ShadowDepth="2" Color="LightGray" />
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                    <Style TargetType="Label">
-                        <Setter Property="Margin" Value="10,0" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type TabItem}">
+                                    <Grid ClipToBounds="True">
+                                        <Label x:Name="Label" Height="40" Margin="5,3,0,3" Padding="10,5,20,5" Content="{TemplateBinding Header}" ext:CustomAdorner.CornerRadius="5,0,0,5" ext:CustomAdorner.Image="{Binding Path=(ext:CustomAdorner.Image),RelativeSource={x:Static RelativeSource.TemplatedParent}}" />
+                                    </Grid>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Label" Property="Background" Value="White" />
+                                            <Setter TargetName="Label" Property="ext:CustomAdorner.BackgroundEffect">
+                                                <Setter.Value>
+                                                    <DropShadowEffect Direction="-90" ShadowDepth="0" Color="LightGray" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="Label" Property="Background" Value="White" />
+                                            <Setter TargetName="Label" Property="ext:CustomAdorner.BackgroundEffect">
+                                                <Setter.Value>
+                                                    <DropShadowEffect Direction="-90" ShadowDepth="2" Color="LightGray" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
                     </Style>
                 </TabControl.Resources>
                 <TabItem x:Name="widthIndicator" Style="{StaticResource Separator}" />
-                <uicontrols:DecoratedTabItem IsSelected="True" Header="connections" Image="{StaticResource Image_Menu_Connections}">
+                <TabItem ext:CustomAdorner.PreserveTemplate="True" IsSelected="True" Header="connections" ext:CustomAdorner.Image="{StaticResource Image_Menu_Connections}">
                     <Frame Source="../Pages/Connections.xaml" />
-                </uicontrols:DecoratedTabItem>
-                <uicontrols:DecoratedTabItem Header="map" Image="{StaticResource Image_Menu_Map}">
+                </TabItem>
+                <TabItem ext:CustomAdorner.PreserveTemplate="True" Header="map" ext:CustomAdorner.Image="{StaticResource Image_Menu_Map}">
                     <Frame Source="../Pages/Map.xaml" />
-                </uicontrols:DecoratedTabItem>
-                <uicontrols:DecoratedTabItem Header="bandwidth" Image="{StaticResource Image_Menu_Monitor}">
+                </TabItem>
+                <TabItem ext:CustomAdorner.PreserveTemplate="True" Header="bandwidth" ext:CustomAdorner.Image="{StaticResource Image_Menu_Monitor}">
                     <Frame Source="../Pages/Monitor.xaml" />
-                </uicontrols:DecoratedTabItem>
-                <uicontrols:DecoratedTabItem Header="adapters" Image="{StaticResource Image_Menu_Adapters}">
+                </TabItem>
+                <TabItem ext:CustomAdorner.PreserveTemplate="True" Header="adapters" ext:CustomAdorner.Image="{StaticResource Image_Menu_Adapters}">
                     <Frame Source="../Pages/AdapterInfo.xaml" />
-                </uicontrols:DecoratedTabItem>
+                </TabItem>
                 <TabItem Style="{StaticResource Separator}" />
-                <uicontrols:DecoratedTabItem Header="firewall settings" Image="{StaticResource Image_Menu_FirewallStatus}">
+                <TabItem ext:CustomAdorner.PreserveTemplate="True" Header="firewall settings" ext:CustomAdorner.Image="{StaticResource Image_Menu_FirewallStatus}">
                     <Frame Source="../Pages/Status.xaml" />
-                </uicontrols:DecoratedTabItem>
-                <uicontrols:DecoratedTabItem Header="firewall rules" Image="{StaticResource Image_Menu_FirewallRules}">
+                </TabItem>
+                <TabItem ext:CustomAdorner.PreserveTemplate="True" Header="firewall rules" ext:CustomAdorner.Image="{StaticResource Image_Menu_FirewallRules}">
                     <Frame Source="../Pages/Rules.xaml" />
-                </uicontrols:DecoratedTabItem>
-                <uicontrols:DecoratedTabItem Header="security log" Image="{StaticResource Image_Menu_EventsLog}">
+                </TabItem>
+                <TabItem ext:CustomAdorner.PreserveTemplate="True" Header="security log" ext:CustomAdorner.Image="{StaticResource Image_Menu_EventsLog}">
                     <Frame Source="../Pages/EventsLog.xaml" />
-                </uicontrols:DecoratedTabItem>
+                </TabItem>
             </TabControl>
         </Grid>
     </Grid>

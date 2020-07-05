@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -21,15 +22,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// <summary>
     /// Logique d'interaction pour Map.xaml
     /// </summary>
-    public partial class Map : Page, INotifyPropertyChanged
+    public partial class Map : TimerBasedPage
     {
         public Location CurrentCoordinates { get; private set; }
-
-        public bool IsTrackingEnabled
-        {
-            get { return timer.IsEnabled; }
-            set { timer.IsEnabled = value; }
-        }
 
         private bool _isFullRouteDisplayed;
         public bool IsFullRouteDisplayed
@@ -51,17 +46,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             set { _mode = value; NotifyPropertyChanged(nameof(Mode)); }
         }
 
-        public List<int> Intervals { get { return new List<int> { 1, 5, 10 }; } }
-
-        private DispatcherTimer timer = new DispatcherTimer();
-
         public ObservableCollection<MapGroupedView> Connections { get; } = new ObservableCollection<MapGroupedView>();
 
         public ListCollectionView ConnectionsView { get; }
         public ObservableCollection<GeoConnection2> ConnectionsRoutes { get; } = new ObservableCollection<GeoConnection2>();
 
-        private int _interval = 1;
-
+        
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void NotifyPropertyChanged(string propertyName)
@@ -70,31 +60,16 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         }
 
 
-        public int Interval
-        {
-            get { return _interval; }
-            set { _interval = value; timer.Interval = TimeSpan.FromSeconds(value); }
-        }
-
         public Map()
         {
             this.Loaded += Map_Loaded;
-            this.Unloaded += Map_Unloaded;
-
+            
             ConnectionsView = (ListCollectionView)CollectionViewSource.GetDefaultView(ConnectionsRoutes);
             ConnectionsView.IsLiveGrouping = true;
             ConnectionsView.GroupDescriptions.Add(new PropertyGroupDescription("Owner"));
 
             InitializeComponent();
 
-            timer.Interval = TimeSpan.FromSeconds(Interval);
-            timer.Tick += timer_Tick;
-            
-        }
-
-        private void Map_Unloaded(object sender, RoutedEventArgs e)
-        {
-            timer.Stop();
         }
 
         async void Map_Loaded(object sender, RoutedEventArgs e)
@@ -105,9 +80,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 MessageBox.Show("The IP database cannot be found. The Map feature is disabled.", "Missing database");
                 return;
             }
-            
+
             await GeoConnection2.InitCache().ConfigureAwait(true);
-            
+
             try
             {
                 CurrentCoordinates = GeoConnection2.CurrentCoordinates;
@@ -117,16 +92,13 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 // TODO: add log
                 CurrentCoordinates = new Location(0, 0);
             }
-            
+
             initialPoint.SetValue(MapLayer.PositionProperty, CurrentCoordinates);
 
             ProgressStack.Visibility = Visibility.Collapsed;
-
-            //await Dispatcher.InvokeAsync(() => timer_Tick(null, null));
-            timer.Start();
         }
 
-        void timer_Tick(object sender, EventArgs e)
+        protected override async Task OnTimerTick(object sender, EventArgs e)
         {
             foreach (var c in IPHelper.GetAllConnections(true)
                                       .Where(co => co.State == ConnectionStatus.ESTABLISHED && !co.IsLoopback && co.OwnerModule != null))
