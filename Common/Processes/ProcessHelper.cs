@@ -37,14 +37,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             {
                 using var searcher = new ManagementObjectSearcher("SELECT ProcessId, Name, ExecutablePath, CommandLine FROM Win32_Process");
                 using var results = searcher.Get();
-                previousCache = results.Cast<ManagementObject>().ToDictionary(r => (int)r["ProcessId"], r => new[] { (string)r["Name"], (string)r["ExecutablePath"], (string)r["CommandLine"] });
+                // Looks like the first cast to uint is required for this to work (pretty weird if you ask me).
+                previousCache = results.Cast<ManagementObject>().ToDictionary(r => (int)(uint)r["ProcessId"], r => new[] { (string)r["Name"], (string)r["ExecutablePath"], (string)r["CommandLine"] });
             }
 
             if (!previousCache.ContainsKey(owningPid))
             {
                 using var searcher = new ManagementObjectSearcher($"SELECT ProcessId, Name, ExecutablePath, CommandLine FROM Win32_Process WHERE ProcessId = {owningPid}");
                 using var r = searcher.Get().Cast<ManagementObject>().FirstOrDefault();
-                previousCache.Add((int)r["ProcessId"], new[] { (string)r["Name"], (string)r["ExecutablePath"], (string)r["CommandLine"] });
+                previousCache.Add(owningPid, new[] { (string)r["Name"], (string)r["ExecutablePath"], (string)r["CommandLine"] });
             }
 
             return previousCache[owningPid];
