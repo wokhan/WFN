@@ -14,7 +14,7 @@
         <controls:AdminPanel Caption="Information provided here might be inaccurate for non-admin users." />
         <ContentControl Style="{StaticResource ToolBarPanel}" Panel.ZIndex="0">
             <Grid>
-                <ToggleButton Content="Auto-refresh" IsChecked="{Binding IsTrackingEnabled}" Style="{StaticResource AutoTrackButton}" />
+                <ToggleButton HorizontalAlignment="Left" Content="Auto-refresh" IsChecked="{Binding IsTrackingEnabled}" Style="{StaticResource AutoTrackButton}" />
                 <StackPanel HorizontalAlignment="Right">
                     <TextBlock VerticalAlignment="Center" Text="{Binding connectionsView.Count, StringFormat='Active connection(s): {0}', FallbackValue='No active connection'}" />
                     <ComboBox Style="{StaticResource AutoTrackRefresh}" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
