@@ -7,6 +7,7 @@ using Wokhan.ComponentModel.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using Wokhan.WindowsFirewallNotifier.Common.Net.DNS;
+using System.Windows.Media;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
@@ -20,6 +21,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 
         public Connection(IConnectionOwnerInfo ownerMod)
         {
+            this.rawConnection = ownerMod;
+
             PID = ownerMod.OwningPid;
             IsNew = true;
             this._localPort = ownerMod.LocalPort.ToString();
@@ -29,7 +32,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             this._remoteAddress = ownerMod.RemoteAddress;
             this._remotePort = (ownerMod.RemotePort == -1 ? String.Empty : ownerMod.RemotePort.ToString());
             this.LastSeen = DateTime.Now;
-            this._state = Enum.GetName(typeof(ConnectionStatus), ownerMod.State);
+            //this._state = Enum.GetName(typeof(ConnectionStatus), ownerMod.State);
 
             try
             {
@@ -64,7 +67,32 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
                 IconPath = ownerMod.OwnerModule.ModulePath;
             }
 
-            GroupKey = String.Format("{0} ({1}) - [{2}]", ProcName, Path, PID);
+            GroupKey = $"{ProcName} ({Path}) - [{PID}]";
+        }
+
+        private bool TryEnableStats()
+        {
+            try
+            {
+                if (this.rawConnection is MIB_TCPROW_OWNER_MODULE)
+                {
+                    rawrow = ((MIB_TCPROW_OWNER_MODULE)this.rawConnection).ToTCPRow();
+                    TCPHelper.EnsureStatsAreEnabled((TCPHelper.MIB_TCPROW)rawrow);
+                }
+                else if (this.rawConnection is MIB_TCP6ROW_OWNER_MODULE)
+                {
+                    rawrow = ((MIB_TCP6ROW_OWNER_MODULE)this.rawConnection).ToTCPRow();
+                    TCP6Helper.EnsureStatsAreEnabled((TCP6Helper.MIB_TCP6ROW)rawrow);
+                }
+
+                statsEnabled = true;
+            }
+            catch
+            {
+                IsAccessDenied = true;
+            }
+
+            return false;
         }
 
         private bool _isAccessDenied;
@@ -113,6 +141,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             Icon = await IconHelper.GetIconAsync(IconPath ?? Path).ConfigureAwait(false);
         }
 
+        private readonly IConnectionOwnerInfo rawConnection;
+        private object rawrow;
+
         public uint PID { get; private set; }
         public string ProcName { get; private set; }
         public string Path { get; private set; }
@@ -124,22 +155,21 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             //lvi.Protocol = b.Protocol;
             if (this.RemoteAddress != b.RemoteAddress)
             {
-                DnsResolver.ResolveIpAddress(this._remoteAddress, entry => RemoteHostName = entry.DisplayText);
+                _ = DnsResolver.ResolveIpAddress(this._remoteAddress, entry => RemoteHostName = entry.DisplayText);
             }
 
-            var newPort = (b.RemotePort == -1 ? String.Empty : b.RemotePort.ToString());
-            if (this.RemotePort != newPort)
+            RemotePort = (b.RemotePort == -1 ? String.Empty : b.RemotePort.ToString());
+            State = Enum.GetName(typeof(ConnectionStatus), b.State);
+            if (b.State == ConnectionStatus.ESTABLISHED)
             {
-                this.RemotePort = newPort;
+                if (!statsEnabled)
+                {
+                    TryEnableStats();
+                }
+                EstimateBandwidth();
             }
 
-            var newState = Enum.GetName(typeof(ConnectionStatus), b.State);
-            if (this.State != newState)
-            {
-                this.State = newState;
-            }
-
-            this.LastSeen = DateTime.Now;
+            LastSeen = DateTime.Now;
         }
 
         private string _protocol;
@@ -169,7 +199,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             get
             {
                 if (_localHostName is null)
-                    DnsResolver.ResolveIpAddress(_localAddress, entry => LocalHostName = entry.DisplayText);
+                {
+                    _ = DnsResolver.ResolveIpAddress(_localAddress, entry => LocalHostName = entry.DisplayText);
+                }
                 return _localHostName;
             }
             set => this.SetValue(ref _localHostName, value, NotifyPropertyChanged);
@@ -196,7 +228,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             get
             {
                 if (_remoteHostName is null)
-                    DnsResolver.ResolveIpAddress(_remoteAddress, entry => RemoteHostName = entry.DisplayText);
+                {
+                    _ = DnsResolver.ResolveIpAddress(_remoteAddress, entry => RemoteHostName = entry.DisplayText);
+                }
                 return _remoteHostName;
             }
             set => this.SetValue(ref _remoteHostName, value, NotifyPropertyChanged);
@@ -228,5 +262,38 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             get => _isNew;
             set => this.SetValue(ref _isNew, value, NotifyPropertyChanged);
         }
+
+        private Brush _brush = Brushes.Black;
+        public Brush Brush
+        {
+            get => _brush;
+            set => this.SetValue(ref _brush, value, NotifyPropertyChanged);
+        }
+
+        private double _inboundBandwidth;
+        public double InboundBandwidth { get => _inboundBandwidth; private set => this.SetValue(ref _inboundBandwidth, value, NotifyPropertyChanged); }
+
+        private double _outboundBandwidth;
+        public double OutboundBandwidth { get => _outboundBandwidth; private set => this.SetValue(ref _outboundBandwidth, value, NotifyPropertyChanged); }
+
+        private bool statsEnabled;
+        private void EstimateBandwidth()
+        {
+            if (!statsEnabled)
+                return;
+
+            if (rawrow != null && !IsAccessDenied)
+            {
+                var bandwidth = (rawrow is TCPHelper.MIB_TCPROW ? TCPHelper.GetTCPBandwidth((TCPHelper.MIB_TCPROW)rawrow) : TCP6Helper.GetTCPBandwidth((TCP6Helper.MIB_TCP6ROW)rawrow));
+                InboundBandwidth = bandwidth.InboundBandwidth;
+                OutboundBandwidth = bandwidth.OutboundBandwidth;
+            }
+            else
+            {
+                InboundBandwidth = 0;
+                OutboundBandwidth = 0;
+            }
+        }
+
     }
 }

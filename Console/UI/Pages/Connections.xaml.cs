@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
-using System.Windows.Threading;
+using System.Windows.Media;
 
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
@@ -21,62 +20,56 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private const double ConnectionTimeoutDying = 2.0; //seconds
         private const double ConnectionTimeoutNew = 1000.0; //milliseconds
 
-        public ObservableCollection<Connection> lstConnections { get; } = new ObservableCollection<Connection>();
+        private readonly object locker = new object();
 
+        public ObservableCollection<Connection> AllConnections { get; } = new ObservableCollection<Connection>();
         public ListCollectionView connectionsView { get; set; }
-
-        private bool running;
 
         public Connections()
         {
-            //TODO: Use BindingOperations.EnableCollectionSynchronization(lstConnections, locker); instead of Dispatcher invocations
+            BindingOperations.EnableCollectionSynchronization(AllConnections, locker);
 
-            connectionsView = (ListCollectionView)CollectionViewSource.GetDefaultView(lstConnections);
-            connectionsView.GroupDescriptions.Add(new PropertyGroupDescription("GroupKey"));
-            connectionsView.SortDescriptions.Add(new SortDescription("GroupKey", ListSortDirection.Ascending));
+            connectionsView = (ListCollectionView)CollectionViewSource.GetDefaultView(AllConnections);
+            connectionsView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Connection.GroupKey)));
+            connectionsView.SortDescriptions.Add(new SortDescription(nameof(Connection.GroupKey), ListSortDirection.Ascending));
 
             InitializeComponent();
         }
 
         protected override async Task OnTimerTick(object sender, EventArgs e)
         {
-            if (running)
-            {
-                return;
-            }
-
-            running = true;
-
             await Task.Run(() =>
             {
-                // Resets the WMI cache (used for non admin users)
-                Connection.LocalOwnerWMICache = null;
                 foreach (var c in IPHelper.GetAllConnections())
                 {
-                    Dispatcher.Invoke(() => AddOrUpdateConnection(c));
+                    AddOrUpdateConnection(c);
                 }
 
-                for (int i = lstConnections.Count - 1; i >= 0; i--)
+                for (int i = AllConnections.Count - 1; i >= 0; i--)
                 {
-                    var item = lstConnections[i];
+                    var item = AllConnections[i];
                     double elapsed = DateTime.Now.Subtract(item.LastSeen).TotalSeconds;
                     if (elapsed > ConnectionTimeoutRemove)
                     {
-                        Dispatcher.Invoke(() => lstConnections.Remove(item));
+                        AllConnections.Remove(item);
                     }
                     else if (elapsed > ConnectionTimeoutDying)
                     {
                         item.IsDying = true;
                     }
                 }
-            }).ConfigureAwait(false);
 
-            running = false;
+                if (graph.IsVisible) graph.UpdateGraph();
+                if (map.IsVisible) map.UpdateMap();
+            }).ConfigureAwait(false);
         }
 
-        private void AddOrUpdateConnection(IConnectionOwnerInfo b)
+        private void AddOrUpdateConnection(IConnectionOwnerInfo connectionInfo)
         {
-            Connection lvi = lstConnections.SingleOrDefault(l => l.PID == b.OwningPid && l.Protocol == b.Protocol && l.LocalPort == b.LocalPort.ToString());
+            Connection lvi;
+            //TEMP: test to avoid enumerating while modifying (might result in a deadlock, to test carefully!)
+            lock (locker)
+                lvi = AllConnections.SingleOrDefault(l => l.PID == connectionInfo.OwningPid && l.Protocol == connectionInfo.Protocol && l.LocalPort == connectionInfo.LocalPort.ToString());
 
             if (lvi != null)
             {
@@ -85,13 +78,13 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     lvi.IsNew = false;
                 }
 
-                lvi.UpdateValues(b);
+                lvi.UpdateValues(connectionInfo);
             }
             else
             {
-                lstConnections.Add(new Connection(b));
+                lock (locker)
+                    AllConnections.Add(new Connection(connectionInfo) { Brush = Brushes.Blue });
             }
         }
-
     }
 }

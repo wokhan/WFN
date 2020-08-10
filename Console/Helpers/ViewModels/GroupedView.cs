@@ -1,30 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using Wokhan.WindowsFirewallNotifier.Console.UI.Controls;
+﻿using LiveCharts;
+using LiveCharts.Defaults;
+using LiveCharts.Geared;
+using LiveCharts.Wpf;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
     public class GroupedView : GroupedViewBase
     {
 
-        private string _lastin;
-        public string LastIn
+        private double _lastin;
+        public double LastIn
         {
             get { return _lastin; }
             set { _lastin = value; NotifyPropertyChanged(nameof(LastIn)); }
         }
 
-        private string _lastout;
-        public string LastOut
+        private double _lastout;
+        public double LastOut
         {
             get { return _lastout; }
             set { _lastout = value; NotifyPropertyChanged(nameof(LastOut)); }
         }
-        public LineChart.Series SeriesIn { get; set; }
-        public LineChart.Series SeriesOut { get; set; }
+
+        public GearedValues<DateTimePoint> SeriesIn { get; } = new GearedValues<DateTimePoint>();
+        public GearedValues<DateTimePoint> SeriesOut { get; } = new GearedValues<DateTimePoint>();
 
     }
 }

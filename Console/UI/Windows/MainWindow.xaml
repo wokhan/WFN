@@ -96,12 +96,6 @@
                 <TabItem ext:CustomAdorner.PreserveTemplate="True" IsSelected="True" Header="connections" ext:CustomAdorner.Image="{StaticResource Image_Menu_Connections}">
                     <Frame Source="../Pages/Connections.xaml" />
                 </TabItem>
-                <TabItem ext:CustomAdorner.PreserveTemplate="True" Header="map" ext:CustomAdorner.Image="{StaticResource Image_Menu_Map}">
-                    <Frame Source="../Pages/Map.xaml" />
-                </TabItem>
-                <TabItem ext:CustomAdorner.PreserveTemplate="True" Header="bandwidth" ext:CustomAdorner.Image="{StaticResource Image_Menu_Monitor}">
-                    <Frame Source="../Pages/Monitor.xaml" />
-                </TabItem>
                 <TabItem ext:CustomAdorner.PreserveTemplate="True" Header="adapters" ext:CustomAdorner.Image="{StaticResource Image_Menu_Adapters}">
                     <Frame Source="../Pages/AdapterInfo.xaml" />
                 </TabItem>

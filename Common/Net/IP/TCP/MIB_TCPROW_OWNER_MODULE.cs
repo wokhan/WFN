@@ -7,22 +7,23 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP
     [StructLayout(LayoutKind.Sequential)]
     public struct MIB_TCPROW_OWNER_MODULE : IConnectionOwnerInfo
     {
-        internal uint _state;
+        internal ConnectionStatus _state;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
         internal byte[] _localAddr;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
         internal byte[] _localPort;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-        public byte[] _remoteAddr;
+        internal byte[] _remoteAddr;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
         internal byte[] _remotePort;
+
         internal uint _owningPid;
         internal long _creationTime;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
         internal ulong[] _owningModuleInfo;
 
         public byte[] RemoteAddrBytes => _remoteAddr;
-        public ConnectionStatus State => (ConnectionStatus)_state;
+        public ConnectionStatus State => _state;
         public string RemoteAddress => IPHelper.GetAddressAsString(_remoteAddr);
         public string LocalAddress => IPHelper.GetAddressAsString(_localAddr);
         public int RemotePort => IPHelper.GetRealPort(_remotePort);
@@ -35,7 +36,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP
 
         public TCPHelper.MIB_TCPROW ToTCPRow()
         {
-            return new TCPHelper.MIB_TCPROW() { dwLocalAddr = _localAddr, dwRemoteAddr = _remoteAddr, dwLocalPort = _localPort, dwRemotePort = _remotePort, dwState = _state };
+            return new TCPHelper.MIB_TCPROW() { dwLocalAddr = _localAddr, dwRemoteAddr = _remoteAddr, dwLocalPort = _localPort, dwRemotePort = _remotePort, State = _state };
         }
     }
 }

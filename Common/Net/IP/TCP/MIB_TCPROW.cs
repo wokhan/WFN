@@ -7,7 +7,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP
         [StructLayout(LayoutKind.Sequential)]
         public struct MIB_TCPROW
         {
-            public uint dwState;
+            public ConnectionStatus State;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
             public byte[] dwLocalAddr;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
