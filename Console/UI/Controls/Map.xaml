@@ -1,0 +1,73 @@
+﻿<UserControl
+    x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Controls.Map"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:maps="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
+      mc:Ignorable="d" x:Name="me"
+      d:DesignHeight="400" d:DesignWidth="700">
+    <Grid DataContext="{Binding ElementName=me}">
+        <maps:Map x:Name="CurrentMap" BorderThickness="0" CredentialsProvider="AsuL3JPMhN5U5z09JOCSXp5C_4J_X6YV3FTk7jEMCDLkQdGee7xPspAuIAxbhyyK" Mode="{Binding Mode}">
+            <maps:MapItemsControl x:Name="layerRoutes" ItemsSource="{Binding ConnectionsRoutes}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <maps:MapPolyline Stroke="Blue" StrokeLineJoin="Round" StrokeThickness="1">
+                            <maps:MapPolyline.Style>
+                                <Style TargetType="maps:MapPolyline">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsFullRouteDisplayed, ElementName=me}" Value="True">
+                                            <Setter Property="Locations" Value="{Binding FullRoute}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsFullRouteDisplayed, ElementName=me}" Value="False">
+                                            <Setter Property="Locations" Value="{Binding RayCoordinates}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </maps:MapPolyline.Style>
+                        </maps:MapPolyline>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </maps:MapItemsControl>
+            <maps:MapLayer>
+                <maps:Pushpin maps:MapLayer.Position="{Binding CurrentCoordinates}" />
+            </maps:MapLayer>
+            <maps:MapItemsControl ItemsSource="{Binding ConnectionsRoutes}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Ellipse Fill="{Binding Connection.Brush}" maps:MapLayer.Position="{Binding Coordinates}">
+                            <Ellipse.Style>
+                                <Style TargetType="Ellipse">
+                                    <Setter Property="Width" Value="10" />
+                                    <Setter Property="Height" Value="10" />
+                                    <Setter Property="maps:MapLayer.PositionOffset" Value="-5,-5" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                            <Setter Property="Panel.ZIndex" Value="100" />
+                                            <Setter Property="maps:MapLayer.PositionOffset" Value="-10,-10" />
+                                            <Setter Property="Width" Value="20" />
+                                            <Setter Property="Height" Value="20" />
+                                            <Setter Property="Stroke" Value="{DynamicResource AccentColorBrush}" />
+                                            <Setter Property="StrokeThickness" Value="5" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </maps:MapItemsControl>
+        </maps:Map>
+        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right">
+            <ToggleButton ToolTip="Show full routes" Width="40" Height="40" Margin="5" IsChecked="{Binding IsFullRouteDisplayed}" Content="{StaticResource Image_FullRoute}" ext:CustomAdorner.CornerRadius="20" />
+            <ToggleButton ToolTip="Mode (aerial / map)" Width="40" Height="40" Margin="5" IsChecked="{Binding IsAerial}" Content="{StaticResource Image_MapAerial}" ext:CustomAdorner.CornerRadius="20" />
+        </StackPanel>
+        <Border HorizontalAlignment="Center" VerticalAlignment="Center" Background="LightYellow">
+            <StackPanel Margin="30,10" x:Name="ProgressStack">
+                <TextBlock Text="Loading database..." />
+                <ProgressBar x:Name="Progress" Margin="0,10,0,0"  IsIndeterminate="True" Height="5" HorizontalAlignment="Stretch" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

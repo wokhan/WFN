@@ -9,6 +9,7 @@ using MaxMind.GeoIP2;
 using MaxMind.GeoIP2.Responses;
 using Resources = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
+using System.ComponentModel;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
@@ -18,11 +19,13 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
     /// GeoIP2 API: https://github.com/maxmind/GeoIP2-dotnet
     /// </para>
     /// </summary>
-    public class GeoConnection2 : Connection
+    public class GeoConnection2 : INotifyPropertyChanged
     {
-        public Brush Brush { get; set; }
+        public Connection Connection { get; private set; }
 
-        private static Location _currentCoordinates = null;
+        public string Owner => Connection.Owner;
+
+        private static Location _currentCoordinates;
         public static Location CurrentCoordinates
         {
             get
@@ -40,14 +43,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             }
         }
 
-        private Location _coordinates = null;
+        private Location _coordinates;
         public Location Coordinates
         {
             get
             {
                 if (_coordinates is null)
                 {
-                    _coordinates = IPToLocation(this.RemoteAddress);
+                    _coordinates = IPToLocation(Connection.RemoteAddress);
                 }
 
                 return _coordinates;
@@ -66,7 +69,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
                 return IPToLocation(adr);
             }
 
-            return null;
+            return new Location();
         }
 
         private static Location IPToLocation(IPAddress address)
@@ -77,8 +80,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             }
             return new Location();
         }
-        public GeoConnection2(IConnectionOwnerInfo ownerMod) : base(ownerMod)
+        public GeoConnection2(Connection ownerMod)
         {
+            Connection = ownerMod;
         }
 
         public LocationCollection RayCoordinates
@@ -105,6 +109,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             }
         }
 
+        public static bool Initialized { get; private set; }
 
         private async void ComputeRoute()
         {
@@ -112,14 +117,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             {
                 CurrentCoordinates
             };
-            foreach (var x in (await IPHelper.GetFullRoute(RemoteAddress).ConfigureAwait(false)).Select(ip => IPToLocation(ip)).Where(l => l.Latitude != 0 && l.Longitude != 0))
+            foreach (var x in (await IPHelper.GetFullRoute(Connection.RemoteAddress).ConfigureAwait(false)).Select(ip => IPToLocation(ip)).Where(l => l.Latitude != 0 && l.Longitude != 0))
             {
                 r.Add(x);
             }
 
             _fullRoute = r;
 
-            NotifyPropertyChanged(nameof(FullRoute));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FullRoute)));
         }
 
         private static readonly string _DB_PATH = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"IPDatabase\GeoLite2-City.mmdb");
@@ -129,28 +134,28 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         }
 
         private static DatabaseReader _databaseReader;
+        private static bool initPending = false;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public static async Task<bool> InitCache()
         {
+            if (initPending)
+            {
+                return true;
+            }
+
             return await Task.Run(() =>
                 {
+                    initPending = true;
                     if (_databaseReader is null)
                     {
-                        _databaseReader = InitDatabaseReader(_DB_PATH);
+                        _databaseReader = new DatabaseReader(_DB_PATH);
                     }
+                    initPending = false;
+                    Initialized = true;
                     return true;
                 }).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// This creates the DatabaseReader object, which should be reused across lookups.
-        /// </summary>
-        /// <param name="dbPath"></param>
-        /// <returns></returns>
-        public static DatabaseReader InitDatabaseReader(string dbPath = null)
-        {
-            dbPath = string.IsNullOrEmpty(dbPath) ? _DB_PATH : dbPath;
-            DatabaseReader reader = new DatabaseReader(dbPath);
-            return reader;
         }
     }
 }

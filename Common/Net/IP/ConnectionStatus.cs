@@ -1,5 +1,6 @@
 ﻿namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP
 {
+    // MUST match MIB_TCP_STATE enumeration
     public enum ConnectionStatus
     {
         CLOSED = 1,
