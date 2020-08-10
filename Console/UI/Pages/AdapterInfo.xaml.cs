@@ -25,8 +25,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public override List<double> Intervals => new List<double> { 0.5, 1, 5, 10 };
-
 
         private List<ExposedInterfaceView> interfacesCollection = NetworkInterface.GetAllNetworkInterfaces().Select(n => new ExposedInterfaceView(n)).OrderByDescending(n => n.Information.OperationalStatus.ToString()).ToList();
 

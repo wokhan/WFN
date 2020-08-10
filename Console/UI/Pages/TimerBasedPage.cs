@@ -13,7 +13,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     {
         private DispatcherTimer timer = new DispatcherTimer();
 
-        public virtual List<double> Intervals { get; } = new List<double> { 1, 5, 10 };
+        public virtual List<double> Intervals { get; } = new List<double> { 0.5, 1, 5, 10 };
 
         public virtual bool IsTrackingEnabled
         {
@@ -33,6 +33,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             get { return _interval; }
             set { _interval = value; timer.Interval = TimeSpan.FromSeconds(value); }
         }
+
         public TimerBasedPage()
         {
             this.Loaded += Monitor_Loaded;

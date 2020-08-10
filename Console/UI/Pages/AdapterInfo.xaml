@@ -6,7 +6,6 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:Converters="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.Helpers.BindingConverters"
-      xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="600"
       Title="AdapterInfo"
@@ -18,7 +17,7 @@
     <DockPanel>
         <ContentControl Style="{StaticResource ToolBarPanel}">
             <Grid>
-                <ToggleButton Content="Auto-refresh" IsChecked="{Binding IsTrackingEnabled}" Style="{StaticResource AutoTrackButton}" />
+                <ToggleButton HorizontalAlignment="Left" Content="Auto-refresh" IsChecked="{Binding IsTrackingEnabled}" Style="{StaticResource AutoTrackButton}" />
                 <StackPanel HorizontalAlignment="Right">
                     <ComboBox Style="{StaticResource AutoTrackRefresh}" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
                     <Label Style="{StaticResource HelpButtonStyle}" ToolTip="This page displays extended information about all adapters on this computer, including virtual devices or interfaces." />
@@ -39,9 +38,10 @@
                                             <ColumnDefinition Width="Auto" SharedSizeGroup="bandwidthUP" />
                                             <ColumnDefinition Width="Auto" SharedSizeGroup="bandwidthDOWN" />
                                         </Grid.ColumnDefinitions>
-                                        <ContentControl Content="{StaticResource Image_Adapter_Red}">
+                                        <ContentControl>
                                             <ContentControl.Style>
                                                 <Style TargetType="ContentControl">
+                                                    <Setter Property="Content" Value="{StaticResource Image_Adapter_Red}" />
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding Information.OperationalStatus}" Value="Up">
                                                             <Setter Property="Content" Value="{StaticResource Image_Adapter_Green}" />
@@ -51,13 +51,13 @@
                                             </ContentControl.Style>
                                         </ContentControl>
                                         <TextBlock Grid.Column="1" Margin="20,0,0,0" Text="{Binding Information.Name}" />
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="2" Margin="0,0,10,0">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="2" Margin="20,0,10,0">
                                             <ContentControl Margin="0,0,5,0" Content="{StaticResource Image_DataUp}"/>
-                                            <TextBlock Text="{Binding FormattedBytesSent}" Margin="0,0,10,0" />
+                                            <TextBlock Text="{Binding Statistics.BytesSent,Converter={StaticResource unitFormatter}}" Margin="0,0,10,0" />
                                         </StackPanel>
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="3" Margin="0,0,40,0">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="3" Margin="10,0,10,0">
                                             <ContentControl Margin="0,0,5,0" Content="{StaticResource Image_DataDown}"/>
-                                            <TextBlock Text="{Binding FormattedBytesReceived}" />
+                                            <TextBlock Text="{Binding Statistics.BytesReceived,Converter={StaticResource unitFormatter}}" />
                                         </StackPanel>
                                     </Grid>
                                 </Expander.Header>
