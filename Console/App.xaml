@@ -3,28 +3,46 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:BindingConverters="clr-namespace:Wokhan.UI.BindingConverters;assembly=Wokhan.UI" 
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
-             xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
+             xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI" 
              StartupUri="UI/Windows/MainWindow.xaml" Startup="Application_Startup">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Theme.xaml" />
                 <ResourceDictionary Source="Resources/Images.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/LiveCharts.Wpf;component/Themes/Colors/material.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <BindingConverters:BooleanNegateConverter x:Key="booleanNegator" />
+            <BindingConverters:UnitFormatConverter x:Key="unitFormatter" />
             <BindingConverters:ValueToVisibilityConverter x:Key="valueToVisibility" />
             <BindingConverters:ValueToVisibilityNegateConverter x:Key="valueToVisibilityNegate" />
             <system:Double x:Key="ConsoleSizeHeight">600</system:Double>
             <system:Double x:Key="ConsoleSizeWidth">900</system:Double>
             <SolidColorBrush x:Key="AccentColorBrush" Color="Coral" />
-            <!--<Style TargetType="DataGrid" BasedOn="{StaticResource {x:Type DataGrid}}">
-                <Setter Property="Background" Value="White" />
-            </Style>-->
             <Style TargetType="DataGridColumnHeader">
                 <Setter Property="Background" Value="WhiteSmoke" />
                 <Setter Property="BorderThickness" Value="0,0,1,1" />
                 <Setter Property="BorderBrush" Value="LightGray" />
                 <Setter Property="Padding" Value="5" />
+            </Style>
+            <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Foreground" Value="Black" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                <Setter Property="MinHeight" Value="30" />
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="LightBlue" />
+                    </Trigger>
+                </Style.Triggers>
             </Style>
             <Style TargetType="Label" x:Key="SectionHeader">
                 <Setter Property="FontSize" Value="18" />

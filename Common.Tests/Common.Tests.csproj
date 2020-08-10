@@ -41,6 +41,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Wokhan.Core" Version="0.9.2-alpha" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
@@ -54,9 +55,6 @@
   <ItemGroup>
     <Reference Include="Interop.NetFwTypeLib">
       <HintPath>..\Interop\Interop.NetFwTypeLib.dll</HintPath>
-    </Reference>
-    <Reference Include="Wokhan.Core">
-      <HintPath>..\TempSharedLib\Wokhan.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
   <!-- <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

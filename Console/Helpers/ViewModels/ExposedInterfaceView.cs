@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Net.NetworkInformation;
-using Wokhan.WindowsFirewallNotifier.Common.Core.Resources;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
@@ -18,10 +17,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         public string MAC => String.Join(":", Information.GetPhysicalAddress().GetAddressBytes().Select(b => b.ToString("X2")));
 
         public NetworkInterface Information { get; private set; }
-        public string FormattedBytesSent => ResourcesLoader.FormatBytes(Statistics.BytesSent);
-        public string FormattedBytesReceived => ResourcesLoader.FormatBytes(Statistics.BytesReceived);
-
-
+        
         public IPInterfaceStatistics Statistics => Information.GetIPStatistics();
 
         public IPInterfaceProperties Properties => Information.GetIPProperties();
@@ -33,7 +29,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 
         internal ExposedInterfaceView()
         {
-
+            
         }
 
         internal void UpdateInner(NetworkInterface inter)
@@ -43,8 +39,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             NotifyPropertyChanged(nameof(Statistics));
             NotifyPropertyChanged(nameof(Properties));
             NotifyPropertyChanged(nameof(MAC));
-            NotifyPropertyChanged(nameof(FormattedBytesSent));
-            NotifyPropertyChanged(nameof(FormattedBytesReceived));
         }
     }
 }
