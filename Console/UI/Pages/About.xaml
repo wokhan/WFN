@@ -21,34 +21,34 @@
         </Rectangle>
         <Label Background="LightGray" FontSize="18" HorizontalContentAlignment="Center" Content="About" VerticalAlignment="Top" />
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="20">
-        <Grid Margin="0,0,0,20">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Border HorizontalAlignment="Left" Margin="10,0" Padding="2" VerticalAlignment="Center" Background="White" BorderBrush="Gray" BorderThickness="1">
-                <Image Source="/WFN;component/Resources/Images/WFN.ico" Height="60" HorizontalAlignment="Left" />
-            </Border>
-            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                <TextBlock FontSize="13" VerticalAlignment="Center" FontWeight="Bold">
+            <StackPanel Margin="20">
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border HorizontalAlignment="Left" Margin="10,0" Padding="2" VerticalAlignment="Center" Background="White" BorderBrush="Gray" BorderThickness="1">
+                        <Image Source="/WFN;component/Resources/Images/WFN.ico" Height="60" HorizontalAlignment="Left" />
+                    </Border>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock FontSize="13" VerticalAlignment="Center" FontWeight="Bold">
                             <Run Text="{Binding ProductName,Mode=OneTime,FallbackValue='WFN'}" />
                             <Run Text="{Binding Version,Mode=OneTime,FallbackValue='X.X.X.X'}" />
-                </TextBlock>
-                <TextBlock Margin="0,5">
-                    <Run Text="Developed by" />
-                    <Hyperlink RequestNavigate="OpenExernalLink" NavigateUri="https://github.com/wokhansoft/WFN/graphs/contributors">the WFN contributors</Hyperlink>
-                    <LineBreak />
-                    <Run Text="Created by Jérôme Saliba (Khan / @wokhan)" />
-                    <LineBreak />
-                    <Run Text="Maintained by Daniel Pharos (@atlashackert), @harrwiss, @wokhan" />
-                </TextBlock>
-            </StackPanel>
-        </Grid>
-        <Label Content="Description" Style="{StaticResource SectionHeader}" />
-        <TextBlock Margin="10" TextWrapping="Wrap" TextAlignment="Justify" Text="WFN offers network related tools and optionally extends the Windows embedded firewall behavior by displaying notifications to enable users to control outgoing connections (by default, Windows allows all of them, meaning that any program on your computer can send information to the Internet without your consent)." />
-        <Label Content="License" Style="{StaticResource SectionHeader}" />
-        <TextBlock Margin="10" TextWrapping="Wrap" TextAlignment="Justify">This program is free software: you can redistribute it and/or modify
+                        </TextBlock>
+                        <TextBlock Margin="0,5" TextWrapping="Wrap">
+                            <Run Text="Developed by" />
+                            <Hyperlink RequestNavigate="OpenExernalLink" NavigateUri="https://github.com/wokhansoft/WFN/graphs/contributors">the WFN contributors</Hyperlink>
+                            <LineBreak />
+                            <Run Text="Created by Jérôme Saliba (@wokhan), maintained for years by Daniel Pharros (@atlashackert), improved by Harry Wissiak (@harrwiss)." />
+                            <LineBreak />
+                            <Run FontWeight="Bold" Text="In memory of Harry Wissiak (@harrwiss), who passed away on June 6th 2020." />
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+                <Label Content="Description" Style="{StaticResource SectionHeader}" />
+                <TextBlock Margin="10" TextWrapping="Wrap" TextAlignment="Justify" Text="WFN offers network related tools and optionally extends the Windows embedded firewall behavior by displaying notifications to enable users to control outgoing connections (by default, Windows allows all of them, meaning that any program on your computer can send information to the Internet without your consent)." />
+                <Label Content="License" Style="{StaticResource SectionHeader}" />
+                <TextBlock Margin="10" TextWrapping="Wrap" TextAlignment="Justify">This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  (at your option) any later version.
@@ -60,17 +60,17 @@
 <LineBreak/>
  You should have received a copy of the GNU General Public License
  along with this program. If not, see http://www.gnu.org/licenses/.</TextBlock>
-        <Label Content="Donations" Style="{StaticResource SectionHeader}" />
-        <TextBlock Margin="10"  TextAlignment="Justify" TextWrapping="Wrap">
+                <Label Content="Donations" Style="{StaticResource SectionHeader}" />
+                <TextBlock Margin="10"  TextAlignment="Justify" TextWrapping="Wrap">
             <Run Text="WFN is free and will always be. However, if you enjoy using it, you can consider donating using the Sponsor button on" />
             <Hyperlink RequestNavigate="OpenExernalLink" NavigateUri="https://github.com/wokhan/wfn">GitHub</Hyperlink><Run Text=". Thanks!" />
-        </TextBlock>
-        <Label Content="External libraries and components" Style="{StaticResource SectionHeader}" />
-        <StackPanel Margin="10">
-            <TextBlock TextAlignment="Justify" TextWrapping="Wrap" Text="WFN uses XAML icons from http://modernuiicons.com and http://materialdesignicons.com." />
-            <TextBlock Margin="0,10" TextAlignment="Justify" TextWrapping="Wrap" Text="This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com." />
-        </StackPanel>
-    </StackPanel>
+                </TextBlock>
+                <Label Content="External libraries and components" Style="{StaticResource SectionHeader}" />
+                <StackPanel Margin="10">
+                    <TextBlock TextAlignment="Justify" TextWrapping="Wrap" Text="WFN uses XAML icons from http://modernuiicons.com and http://materialdesignicons.com." />
+                    <TextBlock Margin="0,10" TextAlignment="Justify" TextWrapping="Wrap" Text="This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com." />
+                </StackPanel>
+            </StackPanel>
         </ScrollViewer>
         <ContentControl Grid.Row="2" Height="50" DockPanel.Dock="Bottom" Style="{StaticResource ToolBarPanel}">
             <Button Click="Close" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" Content="Close" VerticalAlignment="Top" HorizontalAlignment="Center" />
