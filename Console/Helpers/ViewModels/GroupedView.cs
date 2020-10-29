@@ -1,9 +1,4 @@
-﻿using LiveCharts;
-using LiveCharts.Defaults;
-using LiveCharts.Geared;
-using LiveCharts.Wpf;
-
-namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
+﻿namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 {
     public class GroupedView : GroupedViewBase
     {
@@ -22,8 +17,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             set { _lastout = value; NotifyPropertyChanged(nameof(LastOut)); }
         }
 
-        public GearedValues<DateTimePoint> SeriesIn { get; } = new GearedValues<DateTimePoint>();
-        public GearedValues<DateTimePoint> SeriesOut { get; } = new GearedValues<DateTimePoint>();
+        //public GearedValues<DateTimePoint> SeriesIn { get; } = new GearedValues<DateTimePoint>();
+        //public GearedValues<DateTimePoint> SeriesOut { get; } = new GearedValues<DateTimePoint>();
 
     }
 }

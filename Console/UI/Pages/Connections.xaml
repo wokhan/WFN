@@ -31,62 +31,14 @@
         </ContentControl>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition>
-                    <ColumnDefinition.Style>
-                        <Style TargetType="ColumnDefinition">
-                            <Setter Property="Width" Value="*" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Visibility,ElementName=chart}" Value="Collapsed">
-                                    <DataTrigger.EnterActions>
-                                        <BeginStoryboard Name="BeginStoryboard1">
-                                            <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Width">
-                                                    <ObjectAnimationUsingKeyFrames.KeyFrames>
-                                                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="0" />
-                                                    </ObjectAnimationUsingKeyFrames.KeyFrames>
-                                                </ObjectAnimationUsingKeyFrames>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.EnterActions>
-                                    <DataTrigger.ExitActions>
-                                        <RemoveStoryboard BeginStoryboardName="BeginStoryboard1" />
-                                    </DataTrigger.ExitActions>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ColumnDefinition.Style>
-                </ColumnDefinition>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition>
-                    <ColumnDefinition.Style>
-                        <Style>
-                            <Setter Property="ColumnDefinition.Width" Value="*" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Visibility,ElementName=map}" Value="Collapsed">
-                                    <DataTrigger.EnterActions>
-                                        <BeginStoryboard Name="BeginStoryboard1">
-                                            <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Width">
-                                                    <ObjectAnimationUsingKeyFrames.KeyFrames>
-                                                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="0" />
-                                                    </ObjectAnimationUsingKeyFrames.KeyFrames>
-                                                </ObjectAnimationUsingKeyFrames>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </DataTrigger.EnterActions>
-                                    <DataTrigger.ExitActions>
-                                        <RemoveStoryboard BeginStoryboardName="BeginStoryboard1" />
-                                    </DataTrigger.ExitActions>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ColumnDefinition.Style>
-                </ColumnDefinition>
+                <ColumnDefinition Width="*" x:Name="graphColumn" />
+                <ColumnDefinition Width="4" x:Name="separatorColumn" />
+                <ColumnDefinition Width="*" x:Name="mapColumn" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" x:Name="firstRow" />
+                <RowDefinition Height="Auto" x:Name="separatorRow" />
+                <RowDefinition Height="*" x:Name="secondRow" />
             </Grid.RowDefinitions>
             <DataGrid EnableRowVirtualization="True" VirtualizingPanel.IsVirtualizingWhenGrouping="True" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" d:DataContext="{d:DesignInstance Type=dummydata:ConnectionDummy,IsDesignTimeCreatable=True,CreateList=True}" DataContext="{Binding connectionsView}" ItemsSource="{Binding}" AutoGenerateColumns="False" HeadersVisibility="Column" Grid.ColumnSpan="3">
                 <DataGrid.GroupStyle>
@@ -124,6 +76,7 @@
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
                         <Setter Property="MinHeight" Value="30" />
+                        <Setter Property="Selector.IsSelected" Value="{Binding IsSelected,Mode=OneWayToSource}" />
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsDying}" Value="True">
                                 <Setter Property="Background" Value="Orange" />
@@ -170,8 +123,8 @@
                     <!--<DataGridTextColumn Header="FirewallRule" Binding="{Binding FirewallRule.Count, Mode=OneWay}" />-->
                 </DataGrid.Columns>
             </DataGrid>
-            <GridSplitter Grid.Row="1" Height="4" Background="LightGray" HorizontalAlignment="Stretch" Grid.ColumnSpan="3" />
-            <controls:BandwidthGraph x:Name="graph" Grid.Row="2" Visibility="{Binding IsChecked,ElementName=toggleShowGraph,Mode=OneWay,Converter={StaticResource valueToVisibility}}" Connections="{Binding AllConnections}" />
+            <GridSplitter Grid.Row="1" Grid.ColumnSpan="3" Height="4" Background="LightGray" HorizontalAlignment="Stretch" />
+            <controls:BandwidthGraph x:Name="graph" Grid.Row="2" HorizontalAlignment="Stretch" Visibility="{Binding IsChecked,ElementName=toggleShowGraph,Mode=OneWay,Converter={StaticResource valueToVisibility}}" Connections="{Binding AllConnections}" />
             <GridSplitter Grid.Row="2" Grid.Column="1" Width="4" Background="LightGray"/>
             <controls:Map x:Name="map" Grid.Row="2" Grid.Column="2" Visibility="{Binding IsChecked,ElementName=toggleShowMap,Mode=OneWay,Converter={StaticResource valueToVisibility}}" Connections="{Binding AllConnections}" />
         </Grid>

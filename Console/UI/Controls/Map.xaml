@@ -31,19 +31,33 @@
                 </ItemsControl.ItemTemplate>
             </maps:MapItemsControl>
             <maps:MapLayer>
-                <maps:Pushpin maps:MapLayer.Position="{Binding CurrentCoordinates}" />
+                <maps:Pushpin maps:MapLayer.Position="{Binding CurrentCoordinates,Mode=OneWay}">
+                    <maps:Pushpin.ToolTip>
+                        <StackPanel>
+                            <TextBlock><Run FontWeight="Bold" Text="IP: " /><Run Text="{Binding CurrentIP,Mode=OneWay}" /></TextBlock>
+                            <TextBlock><Run FontWeight="Bold" Text="Coordinates: " /><Run Text="{Binding CurrentCoordinates,Mode=OneWay}" /></TextBlock>
+                        </StackPanel>
+                    </maps:Pushpin.ToolTip>
+                </maps:Pushpin>
             </maps:MapLayer>
             <maps:MapItemsControl ItemsSource="{Binding ConnectionsRoutes}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Ellipse Fill="{Binding Connection.Brush}" maps:MapLayer.Position="{Binding Coordinates}">
+                            <Ellipse.ToolTip>
+                                <StackPanel>
+                                    <TextBlock><Run FontWeight="Bold" Text="IP: " /><Run Text="{Binding Connection.RemoteAddress,Mode=OneTime}" /></TextBlock>
+                                    <TextBlock><Run FontWeight="Bold" Text="Hostname: " /><Run Text="{Binding Connection.RemoteHostName,Mode=OneWay}" /></TextBlock>
+                                    <TextBlock><Run FontWeight="Bold" Text="Coordinates: " /><Run Text="{Binding Coordinates,Mode=OneTime}" /></TextBlock>
+                                </StackPanel>
+                            </Ellipse.ToolTip>
                             <Ellipse.Style>
                                 <Style TargetType="Ellipse">
                                     <Setter Property="Width" Value="10" />
                                     <Setter Property="Height" Value="10" />
                                     <Setter Property="maps:MapLayer.PositionOffset" Value="-5,-5" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                        <DataTrigger Binding="{Binding Connection.IsSelected}" Value="True">
                                             <Setter Property="Panel.ZIndex" Value="100" />
                                             <Setter Property="maps:MapLayer.PositionOffset" Value="-10,-10" />
                                             <Setter Property="Width" Value="20" />

@@ -36,11 +36,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         public TimerBasedPage()
         {
-            this.Loaded += Monitor_Loaded;
-            this.Unloaded += Monitor_Unloaded;
+            this.Loaded += Page_Loaded;
+            this.Unloaded += Page_Unloaded;
 
             timer.Interval = TimeSpan.FromSeconds(Interval);
-            timer.Tick += Timer_Tick; ;
+            timer.Tick += Timer_Tick; 
         }
 
         private async void Timer_Tick(object sender, EventArgs e)
@@ -59,7 +59,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(caller));
         }
 
-        private void Monitor_Loaded(object sender, RoutedEventArgs e)
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             if (wasRunningWhenUnloaded.HasValue)
             {
@@ -71,7 +71,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
         }
 
-        private void Monitor_Unloaded(object sender, RoutedEventArgs e)
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
             wasRunningWhenUnloaded = IsTrackingEnabled;
             IsTrackingEnabled = false;
@@ -79,6 +79,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
 #pragma warning disable CS1998 // Async warning suppression
         protected virtual async Task OnTimerTick(object sender, EventArgs e) { }
+        protected virtual void OnTimerStart() { }
+        protected virtual void OnTimerStop() { }
 #pragma warning restore CS1998 // Async warning suppression
     }
 }

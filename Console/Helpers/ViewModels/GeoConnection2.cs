@@ -3,7 +3,6 @@ using System.Linq;
 using System.IO;
 using System;
 using System.Net;
-using System.Windows.Media;
 using System.Threading.Tasks;
 using MaxMind.GeoIP2;
 using MaxMind.GeoIP2.Responses;
@@ -25,6 +24,23 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
 
         public string Owner => Connection.Owner;
 
+        private static IPAddress _currentIP;
+        //TODO: CurrentIP shouldn't be handled in GeoConnection2 class (but in IPHelper or something alike)
+        public static IPAddress CurrentIP
+        {
+            get
+            {
+                if (_currentIP is null)
+                {
+                    {
+                        _currentIP = IPHelper.GetPublicIpAddress();
+                    }
+                }
+
+                return _currentIP;
+            }
+        }
+
         private static Location _currentCoordinates;
         public static Location CurrentCoordinates
         {
@@ -32,12 +48,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             {
                 if (_currentCoordinates is null)
                 {
-                    IPAddress address = IPHelper.GetPublicIpAddress();
-                    if (address == IPAddress.None)
+                    if (CurrentIP == IPAddress.None)
                     {
                         throw new Exception(Resources.GeoConnection2_CannotRetrieveConnectionLocationForPublicIp);
                     }
-                    _currentCoordinates = IPToLocation(address);
+                    _currentCoordinates = IPToLocation(CurrentIP);
                 }
                 return _currentCoordinates;
             }
