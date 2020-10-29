@@ -88,7 +88,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         {
             this.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
-#if DEBUG
+#if false//DEBUG
             this.Connections.Add(AppDataSample.DemoConnection);
 #endif
 

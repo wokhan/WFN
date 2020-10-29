@@ -1,6 +1,6 @@
 ﻿using Microsoft.Maps.MapControl.WPF;
 
-using System.Collections.Generic;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -90,7 +90,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
             {
                 Dispatcher.Invoke(() =>
                 {
-                    foreach (var c in Connections.Where(co => (co.Protocol == "UDP" || co.State == "ESTABLISHED") && co.RemoteAddress != "127.0.0.1" && co.Owner != null))
+                    foreach (var c in Connections.Where(co => (co.Protocol == "UDP" || co.State == "ESTABLISHED") && IsValid(co.RemoteAddress) && co.Owner != null))
                     {
                         AddOrUpdateConnection(c);
                     }
@@ -98,6 +98,15 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
                     CurrentMap.UpdateLayout();
                 });
             }
+        }
+
+        //TODO: Temporary check for addresses validity (for mapping purpose only). Doesn't look like the right way to do this.
+        private bool IsValid(string remoteAddress)
+        {
+            return (!String.IsNullOrEmpty(remoteAddress)
+                && remoteAddress != "127.0.0.1"
+                && remoteAddress != "0.0.0.0"
+                && remoteAddress != "::0");
         }
 
         private void AddOrUpdateConnection(Connection b)

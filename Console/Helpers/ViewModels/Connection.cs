@@ -89,6 +89,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             }
             catch
             {
+                InboundBandwidth = 0;
+                OutboundBandwidth = 0;
                 IsAccessDenied = true;
             }
 
@@ -167,6 +169,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
                     TryEnableStats();
                 }
                 EstimateBandwidth();
+            }
+            else
+            {
+                InboundBandwidth = 0;
+                OutboundBandwidth = 0;
             }
 
             LastSeen = DateTime.Now;
@@ -280,19 +287,27 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         private void EstimateBandwidth()
         {
             if (!statsEnabled)
+            {
                 return;
+            }
 
-            if (rawrow != null && !IsAccessDenied)
+            try
             {
-                var bandwidth = (rawrow is TCPHelper.MIB_TCPROW ? TCPHelper.GetTCPBandwidth((TCPHelper.MIB_TCPROW)rawrow) : TCP6Helper.GetTCPBandwidth((TCP6Helper.MIB_TCP6ROW)rawrow));
-                InboundBandwidth = bandwidth.InboundBandwidth;
-                OutboundBandwidth = bandwidth.OutboundBandwidth;
+                if (rawrow != null && !IsAccessDenied)
+                {
+                    var bandwidth = (rawrow is TCPHelper.MIB_TCPROW ? TCPHelper.GetTCPBandwidth((TCPHelper.MIB_TCPROW)rawrow) : TCP6Helper.GetTCPBandwidth((TCP6Helper.MIB_TCP6ROW)rawrow));
+                    InboundBandwidth = bandwidth.InboundBandwidth;
+                    OutboundBandwidth = bandwidth.OutboundBandwidth;
+                    return;
+                }
             }
-            else
+            catch
             {
-                InboundBandwidth = 0;
-                OutboundBandwidth = 0;
+                //TODO: Add exception log
             }
+
+            InboundBandwidth = 0;
+            OutboundBandwidth = 0;
         }
 
     }
