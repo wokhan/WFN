@@ -49,15 +49,18 @@
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type GroupItem}">
                                             <StackPanel>
+                                                <StackPanel.Resources>
+                                                    <SolidColorBrush x:Key="color" Color="{Binding Color}" x:Shared="false" />
+                                                </StackPanel.Resources>
                                                 <Grid Background="White" DataContext="{Binding Items[0]}">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="15" />
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition />
                                                     </Grid.ColumnDefinitions>
-                                                    <Ellipse Width="10" Height="10" Fill="{Binding Brush}" />
-                                                    <TextBlock Grid.Column="1" FontWeight="Bold" Text="{Binding GroupKey}" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                                                    <Rectangle Grid.Column="2" VerticalAlignment="Center" Margin="15,0,0,0" HorizontalAlignment="Stretch" Height="1" Fill="Gray" />
+                                                    <Ellipse Width="10" Height="10" Fill="{StaticResource color}" />
+                                                    <TextBlock Grid.Column="1" FontWeight="Bold" Text="{Binding GroupKey}" Foreground="{StaticResource color}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                                    <Rectangle Grid.Column="2" VerticalAlignment="Center" Margin="15,0,0,0" HorizontalAlignment="Stretch" Height="1" Fill="{StaticResource color}" />
                                                 </Grid>
                                                 <ItemsPresenter />
                                             </StackPanel>
@@ -99,14 +102,21 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol, Mode=OneTime}" />
-                    <DataGridTextColumn Header="Local address" Binding="{Binding LocalAddress, Mode=OneTime}">
+                    <DataGridTextColumn Header="PID" Binding="{Binding PID, Mode=OneTime}" />
+                    <DataGridTextColumn Header="Local port" Binding="{Binding LocalPort, Mode=OneTime}">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
-                                <Setter Property="ToolTip" Value="{Binding LocalHostName}" />
+                                <Setter Property="ToolTip">
+                                    <Setter.Value>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding LocalAddress, Mode=OneTime}" />
+                                            <TextBlock Text="{Binding LocalHostName}" />
+                                        </StackPanel>
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Local port" Binding="{Binding LocalPort, Mode=OneTime}" />
                     <DataGridTextColumn Header="Remote address" Binding="{Binding RemoteAddress, Mode=OneTime}">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
@@ -114,7 +124,6 @@
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Remote hostname" Binding="{Binding RemoteHostName, Mode=Default}"/>
                     <DataGridTextColumn Header="Remote port" Binding="{Binding RemotePort, Mode=OneTime}" />
                     <DataGridTextColumn Header="State" Binding="{Binding State, Mode=OneWay}" />
                     <DataGridTextColumn Header="Creation" Binding="{Binding CreationTime, Mode=OneTime}" />

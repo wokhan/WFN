@@ -67,7 +67,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
                 IconPath = ownerMod.OwnerModule.ModulePath;
             }
 
-            GroupKey = $"{ProcName} ({Path}) - [{PID}]";
+            GroupKey = $"{ProcName} ({Path})";
         }
 
         private bool TryEnableStats()
@@ -270,11 +270,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             set => this.SetValue(ref _isNew, value, NotifyPropertyChanged);
         }
 
-        private Brush _brush = Brushes.Black;
-        public Brush Brush
+        private Color _color = Colors.Black;
+        public Color Color
         {
-            get => _brush;
-            set => this.SetValue(ref _brush, value, NotifyPropertyChanged);
+            get => _color;
+            set => this.SetValue(ref _color, value, NotifyPropertyChanged);
         }
 
         private double _inboundBandwidth;

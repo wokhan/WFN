@@ -116,12 +116,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }).ConfigureAwait(false);
         }
 
-        private static List<Color> Colors = typeof(Colors).GetProperties().Select(m => m.GetValue(null)).Cast<Color>().Where(c => c.A > 200 && c.R < 150 && c.G < 150 && c.B < 150).ToList();
+
+        //TODO: let the user pick a color palette for the bandwidth graph & connection
+        private static List<Color> Colors = OxyPlot.OxyPalettes.Rainbow(64).Colors.Select(c => Color.FromArgb(c.A, c.R, c.G, c.B)).ToList();
 
         private void AddOrUpdateConnection(IConnectionOwnerInfo connectionInfo)
         {
             Connection lvi;
-            //TEMP: test to avoid enumerating while modifying (might result in a deadlock, to test carefully!)
+            // TEMP: test to avoid enumerating while modifying (might result in a deadlock, to test carefully!)
             lock (locker)
                 lvi = AllConnections.FirstOrDefault(l => l.PID == connectionInfo.OwningPid && l.Protocol == connectionInfo.Protocol && l.LocalPort == connectionInfo.LocalPort.ToString());
 
@@ -136,10 +138,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
             else
             {
-                Brush br = null;
-                Dispatcher.Invoke(() => { br = new SolidColorBrush(Colors[AllConnections.Count % Colors.Count]); });
                 lock (locker)
-                    AllConnections.Add(new Connection(connectionInfo) { Brush = br });
+                    AllConnections.Add(new Connection(connectionInfo) { Color = Colors[AllConnections.Count % Colors.Count] });
             }
         }
     }

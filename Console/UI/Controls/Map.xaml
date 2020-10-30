@@ -43,7 +43,10 @@
             <maps:MapItemsControl ItemsSource="{Binding ConnectionsRoutes}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Ellipse Fill="{Binding Connection.Brush}" maps:MapLayer.Position="{Binding Coordinates}">
+                        <DataTemplate.Resources>
+                            <SolidColorBrush x:Key="color" Color="{Binding Connection.Color}" />
+                        </DataTemplate.Resources>
+                        <Ellipse maps:MapLayer.Position="{Binding Coordinates}" Fill="{StaticResource color}">
                             <Ellipse.ToolTip>
                                 <StackPanel>
                                     <TextBlock><Run FontWeight="Bold" Text="IP: " /><Run Text="{Binding Connection.RemoteAddress,Mode=OneTime}" /></TextBlock>

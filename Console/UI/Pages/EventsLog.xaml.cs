@@ -177,6 +177,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             PauseHandlingSecurityLogEvents();
             securityLog?.Dispose();
+            securityLog = null;
         }
 
         private void SecurityLog_EntryWritten(object sender, EntryWrittenEventArgs e)

@@ -67,7 +67,7 @@
                             <Setter.Value>
                                 <ControlTemplate TargetType="{x:Type TabItem}">
                                     <Grid ClipToBounds="True">
-                                        <Label x:Name="Label" Height="40" Margin="5,3,0,3" Padding="10,5,20,5" Content="{TemplateBinding Header}" ext:CustomAdorner.CornerRadius="5,0,0,5" ext:CustomAdorner.Image="{Binding Path=(ext:CustomAdorner.Image),RelativeSource={x:Static RelativeSource.TemplatedParent}}" />
+                                        <Label x:Name="Label" Height="40" Margin="0,3,0,3" Padding="10,5,15,5" Content="{TemplateBinding Header}" ext:CustomAdorner.Image="{Binding Path=(ext:CustomAdorner.Image),RelativeSource={x:Static RelativeSource.TemplatedParent}}" />
                                     </Grid>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
