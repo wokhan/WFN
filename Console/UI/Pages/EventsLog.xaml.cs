@@ -14,6 +14,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Threading;
+
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
@@ -151,6 +152,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 if (securityLog is null)
                 {
                     securityLog = new EventLog("security");
+                    LogEntries.Clear();
                 }
                 securityLog.BeginInit();
                 Dispatcher.Invoke(() => { ScanProgressMax = securityLog.Entries.Count; });
@@ -234,11 +236,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 }
                 LogHelper.Debug($"InitEventLog - Logentries.count={LogEntries.Count}");
             }
-            catch (ObjectDisposedException ede)
-            {
-                // Could use a cancellation token instead, but chances are that dispose will occur before the token is actually checked. Going for the ugly way then.
-                // LogHelper.Error($"{ede.Message} - ignored", ede);
-            }
+            // Could use a cancellation token instead, but chances are that dispose will occur before the token is actually checked. Going for the ugly way then.
+            // LogHelper.Error($"{ede.Message} - ignored", ede);
+            catch (ObjectDisposedException) { }
+            catch (NullReferenceException) { }
             catch (IndexOutOfRangeException oex)
             {
                 LogHelper.Error($"Unable to load the event log entry: index={i} lastIndex={lastIndex} count={securityLog?.Entries?.Count} - ignored", oex);
