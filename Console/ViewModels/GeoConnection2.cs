@@ -10,7 +10,7 @@ using Resources = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using System.ComponentModel;
 
-namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
+namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
 {
     /// <summary>
     /// Geo locations v2 using GeoIP2 API supporting ipv4 andv ipv6.<para>
@@ -109,7 +109,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
         }
 
         private bool computePending;
-        private LocationCollection _fullRoute = null;
+        private LocationCollection _fullRoute;
         public LocationCollection FullRoute
         {
             get
@@ -142,14 +142,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FullRoute)));
         }
 
-        private static readonly string _DB_PATH = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"IPDatabase\GeoLite2-City.mmdb");
+        private static readonly string _DB_PATH = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Resources\IPDatabase\GeoLite2-City.mmdb");
         public static bool CheckDB()
         {
             return File.Exists(_DB_PATH);
         }
 
         private static DatabaseReader _databaseReader;
-        private static bool initPending = false;
+        private static bool initPending;
 
         public event PropertyChangedEventHandler PropertyChanged;
 

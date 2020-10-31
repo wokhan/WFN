@@ -19,7 +19,7 @@ using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
-using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
+using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {

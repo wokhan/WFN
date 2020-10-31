@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
+using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {

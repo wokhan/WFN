@@ -9,7 +9,7 @@
     xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
     xmlns:settings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Config;assembly=Wokhan.WindowsFirewallNotifier.Common"
     DataContext="{Binding RelativeSource={x:Static RelativeSource.Self}}"
-    xmlns:dummydata="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels"
+    xmlns:dummydata="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.ViewModels"
     mc:Ignorable="d" 
     d:DesignHeight="400" d:DesignWidth="800"
 	Title="Connections">

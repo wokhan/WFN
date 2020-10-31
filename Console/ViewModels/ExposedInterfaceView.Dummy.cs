@@ -1,6 +1,6 @@
 ﻿using System.Net.NetworkInformation;
 
-namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
+namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
 {
     internal class ExposedInterfaceViewDummy : ExposedInterfaceView
     {

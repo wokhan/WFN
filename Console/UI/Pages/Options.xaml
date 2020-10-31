@@ -50,7 +50,7 @@
                         <CheckBox Margin="0,0,0,10" Padding="5,0" Content="Enable DNS host name resolver in Security log (experimental)*" ToolTip="Enables host name resolver in Security Log" IsChecked="{Binding EnableDnsResolver,Mode=TwoWay}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
                         <CheckBox Margin="0,0,0,10" Padding="5,0" Content="Enable successful connection events*" ToolTip="Enables logging of successful connection events in Security Log" IsChecked="{Binding AuditPolEnableSuccessEvent, Mode=TwoWay}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
                     </StackPanel>
-                    <Label Content="Appearance" Style="{StaticResource SectionHeader}" />
+                    <!--<Label Content="Appearance" Style="{StaticResource SectionHeader}" />
                     <StackPanel Margin="10">
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Accent color: " />
@@ -69,7 +69,7 @@
                             <Label Content="Height" Margin="3,0,0,0"/>
                             <TextBox Text="{Binding ConsoleSizeHeight, Mode=TwoWay}" ToolTip="Needs a restart to take effect." IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Width="50" Height="20" BorderBrush="{DynamicResource AccentColorBrush}" />
                         </StackPanel>
-                    </StackPanel>
+                    </StackPanel>-->
                     <Label Content="Portable mode" Style="{StaticResource SectionHeader}" />
                     <StackPanel Margin="10">
                         <Label Content="When portable mode is enabled, all users on this computer will share the same configuration, stored in the current application folder." />

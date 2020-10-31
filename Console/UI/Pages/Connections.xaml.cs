@@ -9,7 +9,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
-using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
+using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {

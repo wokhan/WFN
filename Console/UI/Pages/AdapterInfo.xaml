@@ -5,11 +5,11 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:Converters="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.Helpers.BindingConverters"
+      xmlns:Converters="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.BindingConverters"
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="600"
       Title="AdapterInfo"
-      xmlns:dummydata="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels"
+      xmlns:dummydata="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.ViewModels"
       DataContext="{Binding RelativeSource={x:Static RelativeSource.Self}}">
     <Page.Resources>
         <Converters:SecondsToDateTimeConverter x:Key="secondsConverter" />

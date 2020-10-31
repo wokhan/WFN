@@ -14,10 +14,10 @@ using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
 {
-    public class InstallHelper
+    public static class InstallHelper
     {
 
-        internal const String NOTIFIER_TASK_NAME = "WindowsFirewallNotifierTask";
+        internal const string NOTIFIER_TASK_NAME = "WindowsFirewallNotifierTask";
 
         /// <summary>
         /// Check install after save.
@@ -172,11 +172,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
                 string command = "\"" + Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe") + "\"";
                 string arguments = Settings.Default.StartNotifierMinimized ? "-minimized " + Settings.Default.StartNotifierMinimized : ""; // TODO: To be implemented
                 string dateTime = DateTime.Now.ToString("s");
-                newtask = String.Format(taskStr.ReadToEnd(),
-                                        principle,
-                                        command,
-                                        arguments,
-                                        dateTime);
+                newtask = String.Format(taskStr.ReadToEnd(), principle, command, arguments, dateTime);
             }
 
             File.WriteAllText(tmpXML, newtask, Encoding.Unicode);

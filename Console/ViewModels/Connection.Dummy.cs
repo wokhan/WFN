@@ -4,7 +4,7 @@ using System.Text;
 
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 
-namespace Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels
+namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
 {
     public class ConnectionDummy : Connection
     {

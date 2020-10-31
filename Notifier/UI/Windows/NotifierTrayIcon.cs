@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.IO;
-using WinForms = System.Windows.Forms;
 using Messages = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources; // ns for message resources
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -15,10 +14,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
      */
     public sealed class NotifierTrayIcon : IDisposable
     {
-        private readonly System.Windows.Forms.NotifyIcon trayIcon;
+        private readonly NotifyIcon trayIcon;
         private readonly IContainer components;
 
-        private bool activityTipShown = false;
+        private bool activityTipShown;
         private readonly NotificationWindow notifierWindow;
 
         public static NotifierTrayIcon Init(NotificationWindow window)
@@ -35,9 +34,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             components = new System.ComponentModel.Container();
 
             // Create the NotifyIcon. 
-            trayIcon = new WinForms::NotifyIcon(components)
+            trayIcon = new NotifyIcon(components)
             {
-                Icon = Notifier.Properties.Resources.TrayIcon22,
+                Icon = Properties.Resources.TrayIcon22,
                 ContextMenuStrip = InitMenu(),
                 Text = Messages.NotifierTrayIcon_NotifierStaysHiddenWhenMinimizedClickToOpen, // max 64 chars
                 Visible = false
@@ -76,9 +75,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             App.GetActivityWindow().Show();
         }
 
-        private WinForms::ContextMenuStrip InitMenu()
+        private ContextMenuStrip InitMenu()
         {
-            var contextMenu = new WinForms::ContextMenuStrip();
+            var contextMenu = new ContextMenuStrip();
             contextMenu.Items.Add(Messages.NotifierTrayIcon_ShowNotifier, null, MenuShow_Click);
             contextMenu.Items.Add(Messages.NotifierTrayIcon_OpenConsole, null, MenuConsole_Click);
             contextMenu.Items.Add(Messages.NotifierTrayIcon_ShowActivityWindow, null, MenuShowActivity_Click);
@@ -88,7 +87,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void TrayIcon_Click(object Sender, EventArgs e)
         {
-            if (WinForms::MouseButtons.Left.Equals(((WinForms::MouseEventArgs)e).Button))
+            if (MouseButtons.Left.Equals(((MouseEventArgs)e).Button))
             {
                 if (notifierWindow.WindowState == WindowState.Minimized)
                 {
@@ -115,29 +114,29 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             string tooltipText = Messages.NotifierTrayIcon_ShowActivity_Notifier;
 
-            // TODO: @harrwiss, why using a local method here also?
-            void ShowBalloonTip()
-            {
-                if (!activityTipShown)
-                {
-                    activityTipShown = true;
-                    trayIcon.BalloonTipTitle = Messages.NotifierTrayIcon_ShowBalloonTip_WFNNotifier;
-                    trayIcon.BalloonTipText = tooltipText;
-                    trayIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Warning;
-                    trayIcon.ShowBalloonTip(400);
-                }
-            }
-
             // TODO: @harrwiss, tooltipText is a constant, so it's size is already known.
             if (tooltipText.Length > 64)
             {
                 // limited to 64 chars in Win10
                 tooltipText = tooltipText.Substring(0, 63);
             }
+
             if (trayIcon.Visible)
             {
-                trayIcon.Icon = Notifier.Properties.Resources.TrayIcon21; // with exclamation mark
-                ShowBalloonTip();
+                trayIcon.Icon = Properties.Resources.TrayIcon21; // with exclamation mark
+                ShowBalloonTip(tooltipText);
+            }
+        }
+
+        private void ShowBalloonTip(string tooltipText)
+        {
+            if (!activityTipShown)
+            {
+                activityTipShown = true;
+                trayIcon.BalloonTipTitle = Messages.NotifierTrayIcon_ShowBalloonTip_WFNNotifier;
+                trayIcon.BalloonTipText = tooltipText;
+                trayIcon.BalloonTipIcon = ToolTipIcon.Warning;
+                trayIcon.ShowBalloonTip(400);
             }
         }
 

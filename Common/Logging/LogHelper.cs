@@ -3,7 +3,6 @@ using System.IO;
 using System.Reflection;
 using log4net;
 using log4net.Config;
-using Wokhan.WindowsFirewallNotifier.Common.Config;
 
 #if DEBUG
 using System.Runtime.CompilerServices;
@@ -133,44 +132,45 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 
         private static void WriteLog(LogLevel type, string msg, string? memberName, string? filePath, int lineNumber)
         {
-            // TODO: @harrwiss, you should use a switch instead
-            if (LogLevel.DEBUG.Equals(type))
+            switch (type)
             {
-                LOGGER.Debug($"{msg} [{memberName}() in {System.IO.Path.GetFileName(filePath)}, line {lineNumber}]");
-            }
-            else if (LogLevel.WARNING.Equals(type))
-            {
-                LOGGER.Warn($"{msg} [{memberName}() in {System.IO.Path.GetFileName(filePath)}, line {lineNumber}]");
-            }
-            else if (LogLevel.ERROR.Equals(type))
-            {
-                LOGGER.Error($"{msg} [{memberName}()\n in {System.IO.Path.GetFileName(filePath)}, line {lineNumber}]");
-            }
-            else
-            {
-                LOGGER.Info(msg);
+                case LogLevel.DEBUG:
+                    LOGGER.Debug($"{msg} [{memberName}() in {System.IO.Path.GetFileName(filePath)}, line {lineNumber}]");
+                    break;
+
+                case LogLevel.WARNING:
+                    LOGGER.Warn($"{msg} [{memberName}() in {System.IO.Path.GetFileName(filePath)}, line {lineNumber}]");
+                    break;
+
+                case LogLevel.ERROR:
+                    LOGGER.Error($"{msg} [{memberName}()\n in {System.IO.Path.GetFileName(filePath)}, line {lineNumber}]");
+                    break;
+
+                default:
+                    LOGGER.Info(msg);
+                    break;
             }
         }
 
         private static void WriteLog(LogLevel type, string msg)
         {
-            // TODO: @harrwiss, you should use a switch instead
-            // Console.WriteLine($"{DateTime.Now:yyyy/MM/dd HH:mm:ss} - {DateTime.Now} [{Environment.UserName}] - [{type}] {msg}");
-            if (LogLevel.DEBUG.Equals(type))
+            switch (type)
             {
-                LOGGER.Debug($"{msg}");
-            }
-            else if (LogLevel.WARNING.Equals(type))
-            {
-                LOGGER.Warn($"{msg}");
-            }
-            else if (LogLevel.ERROR.Equals(type))
-            {
-                LOGGER.Error($"{msg}");
-            }
-            else
-            {
-                LOGGER.Info(msg);
+                case LogLevel.DEBUG:
+                    LOGGER.Debug($"{msg}");
+                    break;
+
+                case LogLevel.WARNING:
+                    LOGGER.Warn($"{msg}");
+                    break;
+
+                case LogLevel.ERROR:
+                    LOGGER.Error($"{msg}");
+                    break;
+
+                default:
+                    LOGGER.Info(msg);
+                    break;
             }
         }
 

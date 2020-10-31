@@ -59,7 +59,7 @@
     <PackageReference Include="Wokhan.UI" Version="0.9.2-alpha" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="IPDatabase\GeoLite2-City.mmdb">
+    <Content Include="Resources\IPDatabase\GeoLite2-City.mmdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Properties\app.manifest" />
@@ -73,25 +73,16 @@
     <EmbeddedResource Include="Resources\TaskTemplate.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="IPDatabase\LICENSE.txt">
+    <Content Include="Resources\IPDatabase\LICENSE.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="IPDatabase\COPYRIGHT.txt">
+    <Content Include="Resources\IPDatabase\COPYRIGHT.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="DisableWFN.cmd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="LICENSE.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="LICENSE_MaxMind.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="lisezmoi.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="readme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

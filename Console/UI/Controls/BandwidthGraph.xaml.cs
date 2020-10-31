@@ -10,7 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 
 using Wokhan.Core.Core;
-using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
+using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
 {

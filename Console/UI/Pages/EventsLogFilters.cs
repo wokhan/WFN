@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Wokhan.WindowsFirewallNotifier.Console.Helpers.ViewModels;
+using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {

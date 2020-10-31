@@ -19,7 +19,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     {
         FirewallStatusWrapper status = new FirewallStatusWrapper();
 
-        bool isInstalled = false;
+        bool isInstalled;
 
         private string _lastMessage;
         public string LastMessage
@@ -96,27 +96,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
 
             init();
-        }
-
-        // TODO: remove?
-        private static bool isEnabled(FirewallStatusWrapper status)
-        {
-            return status.PrivateIsEnabled || status.DomainIsEnabled || status.PublicIsEnabled;
-        }
-
-
-        // TODO: remove?
-        private static bool isBlockAndPromptEnabledInProfile(FirewallStatusWrapper status)
-        {
-            return ((status.PrivateIsEnabled && status.PrivateIsOutBlockedNotif)
-                       || (status.PublicIsEnabled && status.PublicIsOutBlockedNotif)
-                       || (status.DomainIsEnabled && status.DomainIsOutBlockedNotif));
-        }
-
-        // TODO: remove?
-        private static bool IsBlockAndPromptEnabled(FirewallStatusWrapper status)
-        {
-            return status.PrivateIsOutBlockedNotif || status.PublicIsOutBlockedNotif || status.DomainIsOutBlockedNotif;
         }
 
         private void btnRevert_Click(object sender, RoutedEventArgs e)

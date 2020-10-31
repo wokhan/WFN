@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
+using static Wokhan.WindowsFirewallNotifier.Common.Net.WFP.FirewallHelper;
 using WFPRules = Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
@@ -15,6 +16,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// </summary>
     public partial class Rules : Page
     {
+        FirewallStatusWrapper status = new FirewallStatusWrapper();
+
+        public bool IsFirewallEnabled => status.PrivateIsEnabled || status.PublicIsEnabled || status.DomainIsEnabled;
+
         public Rules()
         {
             this.Loaded += Rules_Loaded;
