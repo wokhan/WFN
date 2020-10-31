@@ -6,6 +6,8 @@ using log4net.Config;
 
 #if DEBUG
 using System.Runtime.CompilerServices;
+#else
+using Wokhan.WindowsFirewallNotifier.Common.Config;
 #endif
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
