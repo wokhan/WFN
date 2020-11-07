@@ -19,15 +19,11 @@
                 <Button Content="Reload" x:Name="btnRevert" Click="btnRevert_Click" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" />
             </StackPanel>
         </ContentControl>
-        <Border x:Name="messsageInfoPanel" Padding="10" DockPanel.Dock="Top" Visibility="{Binding LastMessage,Converter={StaticResource valueToVisibility}}">
+        <Border x:Name="messsageInfoPanel" Style="{StaticResource InfoPanel}" Padding="10" DockPanel.Dock="Top" Visibility="{Binding LastMessage,Converter={StaticResource valueToVisibility}}">
             <TextBlock Text="{Binding LastMessage}" />
         </Border>
         <StackPanel x:Name="stackOptions">
             <TextBlock Margin="5" TextWrapping="Wrap" Text="{x:Static resx:Resources.Status_Heading1 }" />
-            <WrapPanel>
-                <Label FontWeight="Bold" Content="Current profile: "/>
-                <Label Content="{Binding CurrentProfile, FallbackValue=Unknown}" />
-            </WrapPanel>
             <TextBlock Margin="5" TextWrapping="Wrap" FontStyle="Italic" Text="{x:Static resx:Resources.Status_NoteAboutProfiles}" />
             <Grid IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}">
                 <Grid.Style>
@@ -72,12 +68,23 @@
                 <Rectangle Grid.Column="2" Grid.Row="0" Grid.RowSpan="10" Fill="#FFC5FFC5" />
                 <Rectangle Grid.Column="3" Grid.Row="0" Grid.RowSpan="10" Fill="#FFC1F4FF" />
                 <!-- -->
-                <Label Grid.Column="1" HorizontalContentAlignment="Center" FontWeight="Bold" Content="Private" />
-                <Label Grid.Column="2" HorizontalContentAlignment="Center" FontWeight="Bold" Content="Public" />
-                <Label Grid.Column="3" HorizontalContentAlignment="Center" FontWeight="Bold" Content="Domain" />
-                <Label Grid.Column="4" HorizontalContentAlignment="Center" FontWeight="Bold" Content="All" />
+                <TextBlock Grid.Column="1" Padding="5" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold">
+                    <Run Text="Private" />
+                    <InlineUIContainer><TextBlock Text="(current)" Visibility="{Binding CurrentProfileIsPrivate,Converter={StaticResource valueToVisibility}}" /></InlineUIContainer>
+                </TextBlock>
+                <TextBlock Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold">
+                    <Run Text="Public" />
+                    <InlineUIContainer><TextBlock Text="(current)" Visibility="{Binding CurrentProfileIsPublic,Converter={StaticResource valueToVisibility}}" /></InlineUIContainer>
+                </TextBlock>
+                <TextBlock Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold">
+                    <Run Text="Domain" />
+                    <InlineUIContainer><TextBlock Text="(current)" Visibility="{Binding CurrentProfileIsDomain,Converter={StaticResource valueToVisibility}}" /></InlineUIContainer>
+                </TextBlock>
+                <TextBlock Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold">
+                    <Run Text="All" />
+                </TextBlock>
                 <!-- -->
-                <Label Grid.Row="1" Grid.ColumnSpan="5" FontWeight="Bold" Content="{x:Static resx:Resources.Status_WindowsFirewallGlobalStatus}" Background="{DynamicResource AccentColorBrush}" />
+                <TextBlock Grid.Row="1" Padding="5" Grid.ColumnSpan="5" FontWeight="Bold" Text="{x:Static resx:Resources.Status_WindowsFirewallGlobalStatus}" Background="{DynamicResource AccentColorBrush}" />
                 <!-- -->
                 <CheckBox Padding="5" Grid.Row="2" Grid.Column="1" IsChecked="{Binding PrivateIsEnabled}" Content="{Binding PrivateIsEnabled}" />
                 <CheckBox Padding="5" Grid.Row="2" Grid.Column="2" IsChecked="{Binding PublicIsEnabled}" Content="{Binding PublicIsEnabled}" />
@@ -85,7 +92,7 @@
                 <CheckBox Padding="5" Grid.Row="2" Grid.Column="4" IsChecked="{Binding AllIsEnabled}" Content="{Binding AllIsEnabled}" />
 
                 <!-- -->
-                <Label Grid.Row="4" FontWeight="Bold" Grid.ColumnSpan="5" Content="{x:Static resx:Resources.Status_DefaultActionsWhenNoFilteringRuleMatches}" Background="{DynamicResource AccentColorBrush}" />
+                <TextBlock Grid.Row="4" FontWeight="Bold" Grid.ColumnSpan="5" Padding="5" Text="{x:Static resx:Resources.Status_DefaultActionsWhenNoFilteringRuleMatches}" Background="{DynamicResource AccentColorBrush}" />
                 <!-- -->
                 <Label Grid.Row="5" Content="Inbound" FontWeight="Bold" />
                 <StackPanel Grid.Row="5" Grid.Column="1" IsEnabled="{Binding PrivateIsEnabled}">
@@ -130,12 +137,18 @@
                     <RadioButton GroupName="rdbOutAll" Padding="0,10,0,0" IsChecked="{Binding AllIsOutBlockedNotif}" Content="Block and prompt*" />
                 </StackPanel>
             </Grid>
-            <TextBlock Margin="10,0" FontStyle="Italic" TextWrapping="Wrap" Text="{x:Static resx:Resources.Status_FooterRemark}" />
-            <StackPanel Margin="10">
-                <CheckBox x:Name="tgStartNotifier" Content="Start notifier after windows login" IsChecked="{Binding StartNotifierAfterLogin, Source={x:Static settings:Settings.Default}}" />
-                <CheckBox Content="Start notifier minimized" IsChecked="{Binding StartNotifierMinimized, Source={x:Static settings:Settings.Default}}" />
-                <Button x:Name="btnTestNotif" Click="btnTestNotif_Click" HorizontalAlignment="Center" ext:CustomAdorner.Image="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Content="Start Notifier now" />
-            </StackPanel>
+            <TextBlock Margin="10,10,10,0" FontStyle="Italic" TextWrapping="Wrap" Text="{x:Static resx:Resources.Status_FooterRemark}" />
+            <Grid Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <CheckBox Margin="0,10" x:Name="tgStartNotifier" Content="Start notifier after windows login" IsChecked="{Binding StartNotifierAfterLogin, Source={x:Static settings:Settings.Default}}" />
+                    <CheckBox Content="Start notifier minimized" IsChecked="{Binding StartNotifierMinimized, Source={x:Static settings:Settings.Default}}" />
+                </StackPanel>
+                <Button Grid.Column="1" Margin="50,10" x:Name="btnTestNotif" Click="btnTestNotif_Click" Height="Auto" HorizontalAlignment="Center" ext:CustomAdorner.Image="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Content="Start Notifier now" />
+            </Grid>
         </StackPanel>
     </DockPanel>
 </Page>

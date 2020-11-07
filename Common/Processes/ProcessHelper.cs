@@ -248,7 +248,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             // And if it still fails, fall backs to the most ugly way ever I am not able to get rid of :-P
             // Retrieves corresponding existing rules
             LogHelper.Info("Trying to retrieve service name through rule information.");
-            int profile = FirewallHelper.GetCurrentProfile();
             var cRules = FirewallHelper.GetMatchingRules(path, GetAppPkgId(pid), protocol, target, remoteport.ToString(), localport.ToString(), svc, GetLocalUserOwner(pid), false, false)
                                        .Select(r => r.ServiceName)
                                        .Distinct()

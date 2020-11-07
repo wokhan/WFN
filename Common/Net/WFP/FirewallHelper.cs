@@ -239,10 +239,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             }
         }
 
-        public static int GetCurrentProfile()
-        {
-            return firewallPolicy.CurrentProfileTypes;
-        }
+        public static bool IsCurrentProfilePublic() => firewallPolicy.CurrentProfileTypes == (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC;
+        public static bool IsCurrentProfilePrivate() => firewallPolicy.CurrentProfileTypes == (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE;
+        public static bool IsCurrentProfileDomain() => firewallPolicy.CurrentProfileTypes == (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN;
+        public static int GetCurrentProfile() => firewallPolicy.CurrentProfileTypes;
 
         public static IEnumerable<Rule> GetMatchingRules(string path, string appPkgId, int protocol, string target, string targetPort, string localPort, IEnumerable<string> svc, string localUserOwner, bool blockOnly, bool outgoingOnly = true)
         {

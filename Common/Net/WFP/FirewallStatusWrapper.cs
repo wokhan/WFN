@@ -415,7 +415,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
                 }
             }
 
-            public string CurrentProfile => GetCurrentProfileAsText();
+            public bool CurrentProfileIsPublic => FirewallHelper.IsCurrentProfilePublic();
+            public bool CurrentProfileIsPrivate => FirewallHelper.IsCurrentProfilePrivate();
+            public bool CurrentProfileIsDomain => FirewallHelper.IsCurrentProfileDomain();
 
             public FirewallStatusWrapper()
             {
