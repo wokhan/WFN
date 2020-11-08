@@ -124,7 +124,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             }
         }
 
-        
+
 
         public static bool CheckFirewallEnabled()
         {
@@ -239,9 +239,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             }
         }
 
-        public static bool IsCurrentProfilePublic() => firewallPolicy.CurrentProfileTypes == (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC;
-        public static bool IsCurrentProfilePrivate() => firewallPolicy.CurrentProfileTypes == (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE;
-        public static bool IsCurrentProfileDomain() => firewallPolicy.CurrentProfileTypes == (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN;
+        public static bool IsCurrentProfilePublic() => (firewallPolicy.CurrentProfileTypes & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC) != 0;
+        public static bool IsCurrentProfilePrivate() =>  (firewallPolicy.CurrentProfileTypes & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE) != 0;
+        public static bool IsCurrentProfileDomain() => (firewallPolicy.CurrentProfileTypes & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN) != 0;
+
         public static int GetCurrentProfile() => firewallPolicy.CurrentProfileTypes;
 
         public static IEnumerable<Rule> GetMatchingRules(string path, string appPkgId, int protocol, string target, string targetPort, string localPort, IEnumerable<string> svc, string localUserOwner, bool blockOnly, bool outgoingOnly = true)
@@ -268,7 +269,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             return ret;
         }
 
-        
+
         /*class SimpleEventRuleCompare : IEqualityComparer<Rule>
         {
             public bool Equals(Rule x, Rule y)
@@ -329,6 +330,82 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
         public static string GetCurrentProfileAsText()
         {
             return Rule.GetProfileAsText(GetCurrentProfile());
+        }
+
+        public static void UpdatePrivatePolicy(bool enable, bool blockInbound, bool blockOutbound, bool enableNotifBlocked)
+        {
+            UpdatePolicy(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE, enable, blockInbound, blockOutbound, enableNotifBlocked);
+        }
+
+        public static void UpdatePublicPolicy(bool enable, bool blockInbound, bool blockOutbound, bool enableNotifBlocked)
+        {
+            UpdatePolicy(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC, enable, blockInbound, blockOutbound, enableNotifBlocked);
+        }
+
+        public static void UpdateDomainPolicy(bool enable, bool blockInbound, bool blockOutbound, bool enableNotifBlocked)
+        {
+            UpdatePolicy(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN, enable, blockInbound, blockOutbound, enableNotifBlocked);
+        }
+
+
+        private static void UpdatePolicy(NET_FW_PROFILE_TYPE2_ profile, bool enable, bool blockInbound, bool blockOutbound, bool enableNotifBlocked)
+        {
+            firewallPolicy.FirewallEnabled[profile] = enable;
+            firewallPolicy.DefaultInboundAction[profile] = blockInbound ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
+            firewallPolicy.DefaultOutboundAction[profile] = blockOutbound ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
+            firewallPolicy.NotificationsDisabled[profile] = enableNotifBlocked;
+        }
+
+        public enum Status
+        {
+            DISABLED,
+            ENABLED_ALLOW,
+            ENABLED_BLOCK,
+            ENABLED_NOTIFY
+        }
+
+        public static void UpdatePrivateStatus(out Status inStatus, out Status outStatus)
+        {
+            UpdateStatus(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE, out inStatus, out outStatus);
+        }
+
+        public static void UpdatePublicStatus(out Status inStatus, out Status outStatus)
+        {
+            UpdateStatus(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC, out inStatus, out outStatus);
+        }
+
+        public static void UpdateDomainStatus(out Status inStatus, out Status outStatus)
+        {
+            UpdateStatus(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN, out inStatus, out outStatus);
+        }
+
+        private static void UpdateStatus(NET_FW_PROFILE_TYPE2_ profile, out Status inStatus, out Status outStatus)
+        {
+            if (firewallPolicy.FirewallEnabled[profile])
+            {
+                if (firewallPolicy.DefaultInboundAction[profile] == NET_FW_ACTION_.NET_FW_ACTION_BLOCK)
+                {
+                    if (firewallPolicy.NotificationsDisabled[profile])
+                    {
+                        inStatus = Status.ENABLED_BLOCK;
+                    }
+                    else
+                    {
+                        inStatus = Status.ENABLED_NOTIFY;
+                    }
+                }
+                else
+                {
+                    inStatus = Status.ENABLED_ALLOW;
+                }
+
+                outStatus = firewallPolicy.DefaultOutboundAction[profile] == NET_FW_ACTION_.NET_FW_ACTION_BLOCK ? Status.ENABLED_BLOCK : Status.ENABLED_ALLOW;
+            }
+            else
+            {
+                inStatus = Status.DISABLED;
+                outStatus = Status.DISABLED;
+            }
         }
 
 

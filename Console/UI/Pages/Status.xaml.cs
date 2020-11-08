@@ -8,7 +8,7 @@ using System.IO;
 using System;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
-using static Wokhan.WindowsFirewallNotifier.Common.Net.WFP.FirewallHelper;
+using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -51,34 +51,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             //PrivateIsOutBlockedNotif is also valid for public and domain
             status.PublicIsOutBlockedNotif = status.PrivateIsOutBlockedNotif;
             status.DomainIsOutBlockedNotif = status.PrivateIsOutBlockedNotif;
-            if (status.PrivateIsOutBlockedNotif == false)
+            if (!status.PrivateIsOutBlockedNotif)
             {
                 //if not blocked, allowed must be true
-                if (status.PrivateIsOutBlocked == false)
-                    status.PrivateIsOutAllowed = true;
-                if (status.PublicIsOutBlocked == false)
-                    status.PublicIsOutAllowed = true;
-                if (status.DomainIsOutBlocked == false)
-                    status.DomainIsOutAllowed = true;
+                status.PrivateIsOutAllowed = true;
+                status.PublicIsOutAllowed = true;
+                status.DomainIsOutAllowed = true;
             }
             status.Save();
-
-            bool checkResult(Func<bool> boolFunction, string okMsg, string errorMsg)
-            {
-                try
-                {
-                    bool success = boolFunction.Invoke();
-                    LastMessage = success ? okMsg : errorMsg;
-                    LogHelper.Debug($"{boolFunction.Method.Name}: {LastMessage}");
-                    return success;
-                }
-                catch (Exception ex)
-                {
-                    LogHelper.Error(ex.Message, ex);
-                    LastMessage = $"{errorMsg}: {ex.Message}";
-                    return false;
-                }
-            }
 
             if (!isInstalled)
             {
@@ -87,7 +67,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     return;
                 }
             }
-            else if (isInstalled)
+            else 
             {
                 if (!InstallHelper.InstallCheck(checkResult))
                 {
@@ -96,6 +76,23 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
 
             init();
+        }
+
+        private bool checkResult(Func<bool> boolFunction, string okMsg, string errorMsg)
+        {
+            try
+            {
+                bool success = boolFunction.Invoke();
+                LastMessage = success ? okMsg : errorMsg;
+                LogHelper.Debug($"{boolFunction.Method.Name}: {LastMessage}");
+                return success;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error(ex.Message, ex);
+                LastMessage = $"{errorMsg}: {ex.Message}";
+                return false;
+            }
         }
 
         private void btnRevert_Click(object sender, RoutedEventArgs e)

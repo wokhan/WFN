@@ -4,9 +4,11 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
-using static Wokhan.WindowsFirewallNotifier.Common.Net.WFP.FirewallHelper;
+using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
+
 using WFPRules = Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
