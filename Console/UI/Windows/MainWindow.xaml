@@ -51,7 +51,7 @@
                     </TransformGroup>
                 </Border.RenderTransform>
                 <Border.Effect>
-                    <DropShadowEffect Direction="180" Color="LightGray" ShadowDepth="2" />
+                    <DropShadowEffect Direction="180" Color="LightGray" ShadowDepth="1" />
                 </Border.Effect>
             </Border>
             <TabControl x:Name="menuGrid" Grid.ColumnSpan="2" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0" TabStripPlacement="Left" Grid.IsSharedSizeScope="True">
@@ -65,13 +65,16 @@
                         <Setter Property="FontSize" Value="13" />
                         <Setter Property="Template">
                             <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type TabItem}">
-                                    <Grid ClipToBounds="True">
-                                        <Label x:Name="Label" Height="40" Margin="0,3,0,3" Padding="10,5,15,5" Content="{TemplateBinding Header}" ext:CustomAdorner.Image="{Binding Path=(ext:CustomAdorner.Image),RelativeSource={x:Static RelativeSource.TemplatedParent}}" />
+                                <ControlTemplate TargetType="TabItem">
+                                    <Grid ClipToBounds="True" Margin="5,0,1,0">
+                                        <Grid Margin="0,0,-2,0">
+                                            <Label x:Name="Label" BorderThickness="4,0,0,0" BorderBrush="Transparent" Height="40" Margin="0,3,0,3" Padding="10,5,15,5" Content="{TemplateBinding Header}" ext:CustomAdorner.Image="{Binding Path=(ext:CustomAdorner.Image),RelativeSource={x:Static RelativeSource.TemplatedParent}}" />
+                                        </Grid>
                                     </Grid>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
                                             <Setter TargetName="Label" Property="Background" Value="White" />
+                                            <Setter TargetName="Label" Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
                                             <Setter TargetName="Label" Property="ext:CustomAdorner.BackgroundEffect">
                                                 <Setter.Value>
                                                     <DropShadowEffect Direction="-90" ShadowDepth="0" Color="LightGray" />
@@ -80,9 +83,10 @@
                                         </Trigger>
                                         <Trigger Property="IsSelected" Value="True">
                                             <Setter TargetName="Label" Property="Background" Value="White" />
+                                            <Setter TargetName="Label" Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
                                             <Setter TargetName="Label" Property="ext:CustomAdorner.BackgroundEffect">
                                                 <Setter.Value>
-                                                    <DropShadowEffect Direction="-90" ShadowDepth="2" Color="LightGray" />
+                                                    <DropShadowEffect Direction="-90" ShadowDepth="1" Color="LightGray" />
                                                 </Setter.Value>
                                             </Setter>
                                         </Trigger>
