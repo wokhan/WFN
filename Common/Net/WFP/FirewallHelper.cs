@@ -332,28 +332,28 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             return Rule.GetProfileAsText(GetCurrentProfile());
         }
 
-        public static void UpdatePrivatePolicy(bool enable, bool blockInbound, bool blockOutbound, bool enableNotifBlocked)
+        public static void UpdatePrivatePolicy(bool enable, bool blockInbound, bool blockOutbound, bool disableInNotif)
         {
-            UpdatePolicy(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE, enable, blockInbound, blockOutbound, enableNotifBlocked);
+            UpdatePolicy(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE, enable, blockInbound, blockOutbound, disableInNotif);
         }
 
-        public static void UpdatePublicPolicy(bool enable, bool blockInbound, bool blockOutbound, bool enableNotifBlocked)
+        public static void UpdatePublicPolicy(bool enable, bool blockInbound, bool blockOutbound, bool disableInNotif)
         {
-            UpdatePolicy(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC, enable, blockInbound, blockOutbound, enableNotifBlocked);
+            UpdatePolicy(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC, enable, blockInbound, blockOutbound, disableInNotif);
         }
 
-        public static void UpdateDomainPolicy(bool enable, bool blockInbound, bool blockOutbound, bool enableNotifBlocked)
+        public static void UpdateDomainPolicy(bool enable, bool blockInbound, bool blockOutbound, bool disableInNotif)
         {
-            UpdatePolicy(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN, enable, blockInbound, blockOutbound, enableNotifBlocked);
+            UpdatePolicy(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN, enable, blockInbound, blockOutbound, disableInNotif);
         }
 
 
-        private static void UpdatePolicy(NET_FW_PROFILE_TYPE2_ profile, bool enable, bool blockInbound, bool blockOutbound, bool enableNotifBlocked)
+        private static void UpdatePolicy(NET_FW_PROFILE_TYPE2_ profile, bool enable, bool blockInbound, bool blockOutbound, bool disableInNotif)
         {
             firewallPolicy.FirewallEnabled[profile] = enable;
             firewallPolicy.DefaultInboundAction[profile] = blockInbound ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
             firewallPolicy.DefaultOutboundAction[profile] = blockOutbound ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
-            firewallPolicy.NotificationsDisabled[profile] = enableNotifBlocked;
+            firewallPolicy.NotificationsDisabled[profile] = disableInNotif;
         }
 
         public enum Status

@@ -36,11 +36,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
 
             if (Settings.Default.StartNotifierAfterLogin)
             {
-                if (!checkResult(() => CreateNotifierTask(), $"{Resources.MSG_INST_OK} Notitifer auto-start after login enabled.", Resources.MSG_INST_TASK_ERR)) return false;
+                if (!checkResult(CreateNotifierTask, $"{Resources.MSG_INST_OK} Notifier has been enabled and will start on user's login.", Resources.MSG_INST_TASK_ERR)) return false;
             }
             else
             {
-                if (!checkResult(() => RemoveNotifierTask(), $"{Resources.MSG_INST_OK} Notifier auto-start disabled.", Resources.MSG_UNINST_TASK_ERR)) return false;
+                if (!checkResult(RemoveNotifierTask, $"{Resources.MSG_UNINST_OK} Notifier has been disabled. You will not get any notification!", Resources.MSG_UNINST_TASK_ERR)) return false;
             }
 
             Settings.Default.Save();
@@ -68,7 +68,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
 
             if (Settings.Default.StartNotifierAfterLogin)
             {
-                if (!checkResult(() => CreateNotifierTask(), "Notifier will start after next windows login", Resources.MSG_INST_TASK_ERR)) return false;
+                if (!checkResult(CreateNotifierTask, "Notifier will start after next windows login", Resources.MSG_INST_TASK_ERR)) return false;
             }
 
             if (!checkResult(() => (ProcessHelper.GetProcessFeedback(
@@ -81,18 +81,19 @@ namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
                 , "Audit policy enabled."
                 , Resources.MSG_INST_ENABLE_LOG_ERR)) return false;
 
-            if (!checkResult(() => FirewallHelper.EnableWindowsFirewall()
-                , "Windows firewall enabled."
-                , Resources.MSG_INST_ENABLE_FW_ERR)) return false;
+            if (!checkResult(FirewallHelper.EnableWindowsFirewall, "Windows firewall enabled.", Resources.MSG_INST_ENABLE_FW_ERR)) return false;
 
-            if (!checkResult(() => CreateDefaultRules()
-                , Resources.MSG_INST_OK
-                , "Unable to create the default windows firewall rules.")) return false;
+            if (!checkResult(CreateDefaultRules, Resources.MSG_INST_OK, "Unable to create the default windows firewall rules.")) return false;
 
             Settings.Default.IsInstalled = true;
             Settings.Default.Save();
 
             return true;
+        }
+
+        public static bool Uninstall([param: NotNull] Func<Func<bool>, string, string, bool> checkResult)
+        {
+            return checkResult(RemoveNotifierTask, "Disabling automatic startup", "Unable to disable automatic startup");
         }
 
         public static bool SetAuditPolConnection(bool enableSuccess, bool enableFailure)

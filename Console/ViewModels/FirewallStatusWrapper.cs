@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 using Wokhan.ComponentModel.Extensions;
+using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
+using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
 {
@@ -64,6 +68,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
             {
                 this.SetValue(ref _privateIsOutBlocked, value, OnPropertyChanged);
                 OnPropertyChanged(nameof(AllIsOutBlocked));
+                OnPropertyChanged(nameof(OneIsOutBlocked));
             }
         }
 
@@ -97,16 +102,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
             }
         }
 
-        public bool PrivateIsOutBlockedNotif
-        {
-            get => _privateIsOutBlockedNotif;
-            set
-            {
-                this.SetValue(ref _privateIsOutBlockedNotif, value, OnPropertyChanged);
-                OnPropertyChanged(nameof(AllIsOutBlockedNotif));
-            }
-        }
-
         public bool PublicIsEnabled
         {
             get => _publicIsEnabled;
@@ -134,6 +129,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
             {
                 this.SetValue(ref _publicIsOutBlocked, value, OnPropertyChanged);
                 OnPropertyChanged(nameof(AllIsOutBlocked));
+                OnPropertyChanged(nameof(OneIsOutBlocked));
             }
         }
 
@@ -167,16 +163,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
             }
         }
 
-        public bool PublicIsOutBlockedNotif
-        {
-            get => _publicIsOutBlockedNotif;
-            set
-            {
-                this.SetValue(ref _publicIsOutBlockedNotif, value, OnPropertyChanged);
-                OnPropertyChanged(nameof(AllIsOutBlockedNotif));
-            }
-        }
-
         public bool DomainIsEnabled
         {
             get => _domainIsEnabled;
@@ -204,6 +190,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
             {
                 this.SetValue(ref _domainIsOutBlocked, value, OnPropertyChanged);
                 OnPropertyChanged(nameof(AllIsOutBlocked));
+                OnPropertyChanged(nameof(OneIsOutBlocked));
             }
         }
 
@@ -237,16 +224,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
             }
         }
 
-        public bool DomainIsOutBlockedNotif
-        {
-            get => _domainIsOutBlockedNotif;
-            set
-            {
-                this.SetValue(ref _domainIsOutBlockedNotif, value, OnPropertyChanged);
-                OnPropertyChanged(nameof(AllIsOutBlockedNotif));
-            }
-        }
-
         public bool? AllIsEnabled
         {
             get
@@ -263,9 +240,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
                 if (value != null)
                 {
                     PublicIsEnabled = PrivateIsEnabled = DomainIsEnabled = value.Value;
-                    OnPropertyChanged(nameof(PublicIsEnabled));
-                    OnPropertyChanged(nameof(PrivateIsEnabled));
-                    OnPropertyChanged(nameof(DomainIsEnabled));
                 }
             }
         }
@@ -273,77 +247,36 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
         public bool AllIsInBlocked
         {
             get => PublicIsInBlocked && PrivateIsInBlocked && DomainIsInBlocked;
-            set
-            {
-                PublicIsInBlocked = PrivateIsInBlocked = DomainIsInBlocked = value;
-                OnPropertyChanged(nameof(PublicIsInBlocked));
-                OnPropertyChanged(nameof(PrivateIsInBlocked));
-                OnPropertyChanged(nameof(DomainIsInBlocked));
-            }
+            set => PublicIsInBlocked = PrivateIsInBlocked = DomainIsInBlocked = value;
         }
 
         public bool AllIsInAllowed
         {
             get => PublicIsInAllowed && PrivateIsInAllowed && DomainIsInAllowed;
-            set
-            {
-                PublicIsInAllowed = PrivateIsInAllowed = DomainIsInAllowed = value;
-                OnPropertyChanged(nameof(PublicIsInAllowed));
-                OnPropertyChanged(nameof(PrivateIsInAllowed));
-                OnPropertyChanged(nameof(DomainIsInAllowed));
-            }
+            set => PublicIsInAllowed = PrivateIsInAllowed = DomainIsInAllowed = value;
         }
 
         public bool AllIsOutBlocked
         {
             get => PublicIsOutBlocked && PrivateIsOutBlocked && DomainIsOutBlocked;
-            set
-            {
-                PublicIsOutBlocked = PrivateIsOutBlocked = DomainIsOutBlocked = value;
-                OnPropertyChanged(nameof(PublicIsOutBlocked));
-                OnPropertyChanged(nameof(PrivateIsOutBlocked));
-                OnPropertyChanged(nameof(DomainIsOutBlocked));
-            }
+            set => PublicIsOutBlocked = PrivateIsOutBlocked = DomainIsOutBlocked = value;
         }
 
         public bool AllIsOutAllowed
         {
             get => PublicIsOutAllowed && PrivateIsOutAllowed && DomainIsOutAllowed;
-            set
-            {
-                PublicIsOutAllowed = PrivateIsOutAllowed = DomainIsOutAllowed = value;
-                OnPropertyChanged(nameof(PublicIsOutAllowed));
-                OnPropertyChanged(nameof(PrivateIsOutAllowed));
-                OnPropertyChanged(nameof(DomainIsOutAllowed));
-            }
+            set => PublicIsOutAllowed = PrivateIsOutAllowed = DomainIsOutAllowed = value;
         }
 
         public bool AllIsInBlockedNotif
         {
             get => PublicIsInBlockedNotif && PrivateIsInBlockedNotif && DomainIsInBlockedNotif;
-            set
-            {
-                PublicIsInBlockedNotif = value;
-                PrivateIsInBlockedNotif = value;
-                DomainIsInBlockedNotif = value;
-                OnPropertyChanged(nameof(PublicIsInBlockedNotif));
-                OnPropertyChanged(nameof(PrivateIsInBlockedNotif));
-                OnPropertyChanged(nameof(DomainIsInBlockedNotif));
-            }
+            set => PublicIsInBlockedNotif = PrivateIsInBlockedNotif = DomainIsInBlockedNotif = value;
         }
 
-        public bool AllIsOutBlockedNotif
+        public bool OneIsOutBlocked
         {
-            get => PublicIsOutBlockedNotif && PrivateIsOutBlockedNotif && DomainIsOutBlockedNotif;
-            set
-            {
-                PublicIsOutBlockedNotif = value;
-                PrivateIsOutBlockedNotif = value;
-                DomainIsOutBlockedNotif = value;
-                OnPropertyChanged(nameof(PublicIsOutBlockedNotif));
-                OnPropertyChanged(nameof(PrivateIsOutBlockedNotif));
-                OnPropertyChanged(nameof(DomainIsOutBlockedNotif));
-            }
+            get => PrivateIsOutBlocked || PublicIsOutBlocked || DomainIsOutBlocked;
         }
 
         public bool CurrentProfileIsPublic => FirewallHelper.IsCurrentProfilePublic();
@@ -360,27 +293,44 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
             PrivateIsInBlocked = privateInStatus == FirewallHelper.Status.ENABLED_BLOCK;
             PrivateIsInBlockedNotif = privateInStatus == FirewallHelper.Status.ENABLED_NOTIFY;
             PrivateIsOutBlocked = privateOutStatus == FirewallHelper.Status.ENABLED_BLOCK;
-            PrivateIsOutAllowed = !PrivateIsOutBlocked && !PrivateIsOutBlockedNotif;
+            PrivateIsOutAllowed = !PrivateIsOutBlocked;
 
             PublicIsEnabled = publicInStatus != FirewallHelper.Status.DISABLED;
             PublicIsInBlocked = publicInStatus == FirewallHelper.Status.ENABLED_BLOCK;
             PublicIsInBlockedNotif = publicInStatus == FirewallHelper.Status.ENABLED_NOTIFY;
             PublicIsOutBlocked = publicOutStatus == FirewallHelper.Status.ENABLED_BLOCK;
-            PublicIsOutAllowed = !PublicIsOutBlocked && !PublicIsOutBlockedNotif;
+            PublicIsOutAllowed = !PublicIsOutBlocked;
 
             DomainIsEnabled = domainInStatus != FirewallHelper.Status.DISABLED;
             DomainIsInBlocked = domainInStatus == FirewallHelper.Status.ENABLED_BLOCK;
             DomainIsInBlockedNotif = domainInStatus == FirewallHelper.Status.ENABLED_NOTIFY;
             DomainIsOutBlocked = domainOutStatus == FirewallHelper.Status.ENABLED_BLOCK;
-            DomainIsOutAllowed = !DomainIsOutBlocked && !DomainIsOutBlockedNotif;
+            DomainIsOutAllowed = !DomainIsOutBlocked;
         }
 
 
-        public void Save()
+        public void Save([param: NotNull] Func<Func<bool>, string, string, bool> checkResult)
         {
-            FirewallHelper.UpdatePrivatePolicy(PrivateIsEnabled, PrivateIsInBlockedNotif || PrivateIsInBlocked, PrivateIsOutBlockedNotif || PrivateIsOutBlocked, !PrivateIsInBlockedNotif);
-            FirewallHelper.UpdatePublicPolicy(PublicIsEnabled, PublicIsInBlockedNotif || PublicIsInBlocked, PublicIsOutBlockedNotif || PublicIsOutBlocked, !PublicIsInBlockedNotif);
-            FirewallHelper.UpdateDomainPolicy(DomainIsEnabled, DomainIsInBlockedNotif || DomainIsInBlocked, DomainIsOutBlockedNotif || DomainIsOutBlocked, !DomainIsInBlockedNotif);
+            FirewallHelper.UpdatePrivatePolicy(PrivateIsEnabled, PrivateIsInBlockedNotif || PrivateIsInBlocked, PrivateIsOutBlocked, !PrivateIsInBlockedNotif);
+            FirewallHelper.UpdatePublicPolicy(PublicIsEnabled, PublicIsInBlockedNotif || PublicIsInBlocked, PublicIsOutBlocked, !PublicIsInBlockedNotif);
+            FirewallHelper.UpdateDomainPolicy(DomainIsEnabled, DomainIsInBlockedNotif || DomainIsInBlocked, DomainIsOutBlocked, !DomainIsInBlockedNotif);
+
+            // Checking if Notifications are to be enabled or not
+            if (Settings.Default.StartNotifierAfterLogin && (!PrivateIsEnabled || !PublicIsEnabled || !DomainIsEnabled))
+            {
+                if (!InstallHelper.IsInstalled())
+                {
+                    InstallHelper.Install(checkResult);
+                }
+                else
+                {
+                    InstallHelper.InstallCheck(checkResult);
+                }
+            }
+            else
+            {
+                InstallHelper.Uninstall(checkResult);
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

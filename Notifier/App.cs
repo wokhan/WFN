@@ -71,7 +71,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 else
                 {
                     LOGGER.Warn("A notififer instance is already running - showing it.");
-                    MessageBox.Show("A notifier instance is already running");
+                    //MessageBox.Show("A notifier instance is already running");
                     APP_INSTANCE.ShowNotifierWindow();  // FIXME: show it - seems not to work as it should
                 }
             }

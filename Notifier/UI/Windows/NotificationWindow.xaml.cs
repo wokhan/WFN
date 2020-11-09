@@ -102,7 +102,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             Debug.WriteLine($"Show Top: {Top} ExpTop: {ExpectedTop}");
 
             base.Show();
-
+            base.Activate();
             //Top = ExpectedTop;
         }
 

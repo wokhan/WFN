@@ -9,6 +9,7 @@
         Title="{Binding MainWindowTitle}"
         Height="{DynamicResource ConsoleSizeHeight}" 
         Width="{DynamicResource ConsoleSizeWidth}"
+        MinHeight="620" MinWidth="950"
         DataContext="{Binding RelativeSource={x:Static RelativeSource.Self}}"
         mc:Ignorable="d" 
         d:DesignHeight="460"

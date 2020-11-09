@@ -309,7 +309,7 @@ This application has NOT been totally disabled.</value>
     <value>Note: if you don't know what a profile is all about, the private one usually refers to your home network, while the public one is for public places (restaurant, hotels...). A domain profile is usually for workplaces.</value>
   </data>
   <data name="Status_FooterRemark" xml:space="preserve">
-    <value>* WFN is notified everytime an outgoing connection is blocked by the windows firewall. Notifications are shown in Notifier or alternatively in the security log menu. The recommended setting is "Block and prompt" for all profiles.</value>
+    <value>* WFN is notified everytime an outgoing connection is blocked by the windows firewall. Notifications are shown in Notifier or alternatively in the security log menu. Enabling this option is recommended since you wouldn't get notified at all otherwise.</value>
   </data>
   <data name="Status_WindowsFirewallGlobalStatus" xml:space="preserve">
     <value>Windows firewall global status</value>

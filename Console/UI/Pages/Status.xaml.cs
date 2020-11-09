@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers;
@@ -9,88 +8,50 @@ using System;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
 using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
+using System.Collections.ObjectModel;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
     /// <summary>
     /// Logique d'interaction pour Status.xaml
     /// </summary>
-    public partial class Status : Page, INotifyPropertyChanged
+    public partial class Status : Page
     {
         FirewallStatusWrapper status = new FirewallStatusWrapper();
 
-        bool isInstalled;
-
-        private string _lastMessage;
-        public string LastMessage
-        {
-            get { return _lastMessage; }
-            private set { _lastMessage = value; NotifyPropertyChanged(nameof(LastMessage)); }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged(string propertyName)
-        {
-            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        public ObservableCollection<string> Messages { get; } = new ObservableCollection<string>();
 
         public Status()
         {
             InitializeComponent();
 
-            this.Loaded += Status_Loaded;
-        }
-
-        private void Status_Loaded(object sender, RoutedEventArgs e)
-        {
-            init();
+            this.Loaded += (sender, args) => init();
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            //PrivateIsOutBlockedNotif is also valid for public and domain
-            status.PublicIsOutBlockedNotif = status.PrivateIsOutBlockedNotif;
-            status.DomainIsOutBlockedNotif = status.PrivateIsOutBlockedNotif;
-            if (!status.PrivateIsOutBlockedNotif)
-            {
-                //if not blocked, allowed must be true
-                status.PrivateIsOutAllowed = true;
-                status.PublicIsOutAllowed = true;
-                status.DomainIsOutAllowed = true;
-            }
-            status.Save();
-
-            if (!isInstalled)
-            {
-                if (!InstallHelper.Install(checkResult))
-                {
-                    return;
-                }
-            }
-            else 
-            {
-                if (!InstallHelper.InstallCheck(checkResult))
-                {
-                    return;
-                }
-            }
-
+            Settings.Default.Save();
+            status.Save(checkResult);
             init();
         }
 
-        private bool checkResult(Func<bool> boolFunction, string okMsg, string errorMsg)
+        private bool checkResult(Func<bool> func, string okMsg, string errorMsg)
         {
             try
             {
-                bool success = boolFunction.Invoke();
-                LastMessage = success ? okMsg : errorMsg;
-                LogHelper.Debug($"{boolFunction.Method.Name}: {LastMessage}");
+                bool success = func();
+                var msg = success ? okMsg : errorMsg;
+                Messages.Add(msg);
+
+                LogHelper.Debug($"{func.Method.Name}: {msg}");
+
                 return success;
             }
             catch (Exception ex)
             {
                 LogHelper.Error(ex.Message, ex);
-                LastMessage = $"{errorMsg}: {ex.Message}";
+
+                Messages.Add($"{errorMsg}: {ex.Message}");
                 return false;
             }
         }
@@ -105,27 +66,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void init()
         {
-            isInstalled = InstallHelper.IsInstalled();
-
             status = new FirewallStatusWrapper();
-
-            if (status.PrivateIsOutBlocked && isInstalled)
-            {
-                status.PrivateIsOutBlockedNotif = true;
-                status.PrivateIsOutBlocked = false;
-            }
-
-            if (status.PublicIsOutBlocked && isInstalled)
-            {
-                status.PublicIsOutBlockedNotif = true;
-                status.PublicIsOutBlocked = false;
-            }
-
-            if (status.DomainIsOutBlocked && isInstalled)
-            {
-                status.DomainIsOutBlockedNotif = true;
-                status.DomainIsOutBlocked = false;
-            }
 
             stackOptions.DataContext = status;
             messsageInfoPanel.DataContext = this;

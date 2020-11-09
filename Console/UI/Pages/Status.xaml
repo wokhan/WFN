@@ -9,7 +9,7 @@
       xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls" 
       x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.Status" 
       mc:Ignorable="d" 
-      d:DesignHeight="600" d:DesignWidth="600"
+      d:DesignHeight="600" d:DesignWidth="800"
       Title="Status" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
     <DockPanel>
         <controls:AdminPanel Caption="Only an administrator can use this feature." />
@@ -19,31 +19,52 @@
                 <Button Content="Reload" x:Name="btnRevert" Click="btnRevert_Click" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" />
             </StackPanel>
         </ContentControl>
-        <Border x:Name="messsageInfoPanel" Style="{StaticResource InfoPanel}" Padding="10" DockPanel.Dock="Top" Visibility="{Binding LastMessage,Converter={StaticResource valueToVisibility}}">
-            <TextBlock Text="{Binding LastMessage}" />
-        </Border>
+        <ScrollViewer DockPanel.Dock="Bottom" Background="AliceBlue" Height="70">
+            <ItemsControl x:Name="messsageInfoPanel" ItemsSource="{Binding Messages}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
         <StackPanel x:Name="stackOptions">
             <TextBlock Margin="5" TextWrapping="Wrap" Text="{x:Static resx:Resources.Status_Heading1 }" />
             <TextBlock Margin="5" TextWrapping="Wrap" FontStyle="Italic" Text="{x:Static resx:Resources.Status_NoteAboutProfiles}" />
             <Grid IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}">
-                <Grid.Style>
-                    <Style>
-                        <Style.Resources>
-                            <Style TargetType="{x:Type StackPanel}">
-                                <Setter Property="Margin" Value="5" />
-                            </Style>
-                            <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource RadioButtonSlide}">
-                                <Setter Property="Margin" Value="5,0" />
-                                <Style.Triggers>
-                                    <Trigger Property="IsEnabled" Value="False">
-                                        <Setter Property="BorderBrush" Value="Gray" />
-                                        <Setter Property="Foreground" Value="Gray" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Style.Resources>
+                <Grid.Resources>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Margin" Value="5" />
                     </Style>
-                </Grid.Style>
+                    <Style TargetType="RadioButton" BasedOn="{StaticResource RadioButtonSlide}">
+                        <Setter Property="Margin" Value="5,0" />
+                        <Style.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="BorderBrush" Value="Gray" />
+                                <Setter Property="Foreground" Value="Gray" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                    <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+                        <Setter Property="Content" Value="Disabled" />
+                        <Style.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Content" Value="Enabled" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                    <Style x:Key="BlockPromptContentStyle" TargetType="RadioButton" BasedOn="{StaticResource {x:Type RadioButton}}">
+                        <Setter Property="Content" Value="Block silently" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsChecked,ElementName=tgStartNotifier}" Value="True">
+                                <Setter Property="Content" Value="Block and prompt" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsEnabled,ElementName=tgStartNotifier}" Value="False">
+                                <Setter Property="Content" Value="Block" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Resources>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
@@ -52,33 +73,34 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
+                    <RowDefinition Height="26*" />
+                    <RowDefinition Height="26*" />
+                    <RowDefinition Height="26*" />
+                    <RowDefinition Height="0*" />
+                    <RowDefinition Height="26*" />
+                    <RowDefinition Height="84*" />
+                    <RowDefinition Height="56*" />
+                    <RowDefinition Height="35*" />
+                    <RowDefinition Height="0*" />
+                    <RowDefinition Height="0*" />
                 </Grid.RowDefinitions>
                 <!-- -->
                 <Rectangle Grid.Column="1" Grid.Row="0" Grid.RowSpan="10" Fill="Lavender" />
                 <Rectangle Grid.Column="2" Grid.Row="0" Grid.RowSpan="10" Fill="#FFC5FFC5" />
                 <Rectangle Grid.Column="3" Grid.Row="0" Grid.RowSpan="10" Fill="#FFC1F4FF" />
+                <Border Grid.Column="4" Grid.Row="0" Grid.RowSpan="10" Background="LightGray" BorderThickness="4,0,0,0" BorderBrush="Gray" />
                 <!-- -->
                 <TextBlock Grid.Column="1" Padding="5" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold">
                     <Run Text="Private" />
-                    <InlineUIContainer><TextBlock Text="(current)" Visibility="{Binding CurrentProfileIsPrivate,Converter={StaticResource valueToVisibility}}" /></InlineUIContainer>
+                    <InlineUIContainer><TextBlock Text="(active)" Visibility="{Binding CurrentProfileIsPrivate,Converter={StaticResource valueToVisibility}}" /></InlineUIContainer>
                 </TextBlock>
                 <TextBlock Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold">
                     <Run Text="Public" />
-                    <InlineUIContainer><TextBlock Text="(current)" Visibility="{Binding CurrentProfileIsPublic,Converter={StaticResource valueToVisibility}}" /></InlineUIContainer>
+                    <InlineUIContainer><TextBlock Text="(active)" Visibility="{Binding CurrentProfileIsPublic,Converter={StaticResource valueToVisibility}}" /></InlineUIContainer>
                 </TextBlock>
                 <TextBlock Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold">
                     <Run Text="Domain" />
-                    <InlineUIContainer><TextBlock Text="(current)" Visibility="{Binding CurrentProfileIsDomain,Converter={StaticResource valueToVisibility}}" /></InlineUIContainer>
+                    <InlineUIContainer><TextBlock Text="(active)" Visibility="{Binding CurrentProfileIsDomain,Converter={StaticResource valueToVisibility}}" /></InlineUIContainer>
                 </TextBlock>
                 <TextBlock Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold">
                     <Run Text="All" />
@@ -86,15 +108,16 @@
                 <!-- -->
                 <TextBlock Grid.Row="1" Padding="5" Grid.ColumnSpan="5" FontWeight="Bold" Text="{x:Static resx:Resources.Status_WindowsFirewallGlobalStatus}" Background="{DynamicResource AccentColorBrush}" />
                 <!-- -->
-                <CheckBox Padding="5" Grid.Row="2" Grid.Column="1" IsChecked="{Binding PrivateIsEnabled}" Content="{Binding PrivateIsEnabled}" />
-                <CheckBox Padding="5" Grid.Row="2" Grid.Column="2" IsChecked="{Binding PublicIsEnabled}" Content="{Binding PublicIsEnabled}" />
-                <CheckBox Padding="5" Grid.Row="2" Grid.Column="3" IsChecked="{Binding DomainIsEnabled}" Content="{Binding DomainIsEnabled}" />
-                <CheckBox Padding="5" Grid.Row="2" Grid.Column="4" IsChecked="{Binding AllIsEnabled}" Content="{Binding AllIsEnabled}" />
+                <CheckBox Padding="5" Grid.Row="2" Grid.Column="1" IsChecked="{Binding PrivateIsEnabled}" />
+                <CheckBox Padding="5" Grid.Row="2" Grid.Column="2" IsChecked="{Binding PublicIsEnabled}" />
+                <CheckBox Padding="5" Grid.Row="2" Grid.Column="3" IsChecked="{Binding DomainIsEnabled}" />
+                <CheckBox Padding="5" Grid.Row="2" Grid.Column="4" IsChecked="{Binding AllIsEnabled}" />
 
                 <!-- -->
                 <TextBlock Grid.Row="4" FontWeight="Bold" Grid.ColumnSpan="5" Padding="5" Text="{x:Static resx:Resources.Status_DefaultActionsWhenNoFilteringRuleMatches}" Background="{DynamicResource AccentColorBrush}" />
                 <!-- -->
-                <Label Grid.Row="5" Content="Inbound" FontWeight="Bold" />
+                <TextBlock Grid.Row="5" Text="Inbound" Margin="5,5,10,5" FontWeight="Bold" />
+                <Rectangle Grid.Row="5" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="4" Fill="Green" />
                 <StackPanel Grid.Row="5" Grid.Column="1" IsEnabled="{Binding PrivateIsEnabled}">
                     <RadioButton GroupName="rdbInPrv" Padding="0,0,0,10" IsChecked="{Binding PrivateIsInAllowed}" Content="Allow" Tag="IsFirst" />
                     <RadioButton GroupName="rdbInPrv" IsChecked="{Binding PrivateIsInBlocked}" Content="Block silently" />
@@ -115,27 +138,36 @@
                     <RadioButton GroupName="rdbInAll" IsChecked="{Binding AllIsInBlocked}" Content="Block silently" />
                     <RadioButton GroupName="rdbInAll" Padding="0,10,0,0" IsChecked="{Binding AllIsInBlockedNotif}" Content="Block and prompt" />
                 </StackPanel>
-                <Label Grid.Row="6" Content="Outbound" FontWeight="Bold" />
+                <TextBlock Grid.Row="6" Grid.RowSpan="2" Text="Outbound" Margin="5,5,10,5" FontWeight="Bold" />
+                <Rectangle Grid.Row="6" Grid.RowSpan="2" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="4" Fill="OrangeRed" />
                 <StackPanel Grid.Row="6" Grid.Column="1" IsEnabled="{Binding PrivateIsEnabled}">
                     <RadioButton GroupName="rdbOutPrv" Padding="0,0,0,10" IsChecked="{Binding PrivateIsOutAllowed}" Content="Allow" />
-                    <RadioButton GroupName="rdbOutPrv" IsChecked="{Binding PrivateIsOutBlocked}" Content="Block silently" />
-                    <RadioButton GroupName="rdbOutPrv" Padding="0,10,0,0" IsChecked="{Binding PrivateIsOutBlockedNotif}" Content="Block and prompt*" />
+                    <RadioButton GroupName="rdbOutPrv" IsChecked="{Binding PrivateIsOutBlocked}" Style="{StaticResource BlockPromptContentStyle}" />
                 </StackPanel>
                 <StackPanel Grid.Row="6" Grid.Column="2" IsEnabled="{Binding PublicIsEnabled}">
                     <RadioButton GroupName="rdbOutPub" Padding="0,0,0,10" IsChecked="{Binding PublicIsOutAllowed}" Content="Allow" />
-                    <RadioButton GroupName="rdbOutPub" IsChecked="{Binding PublicIsOutBlocked}" Content="Block silently" />
-                    <RadioButton GroupName="rdbOutPub" Padding="0,10,0,0" IsChecked="{Binding PublicIsOutBlockedNotif}" Content="Block and prompt*" />
+                    <RadioButton GroupName="rdbOutPub" IsChecked="{Binding PublicIsOutBlocked}" Style="{StaticResource BlockPromptContentStyle}" />
                 </StackPanel>
                 <StackPanel Grid.Row="6" Grid.Column="3" IsEnabled="{Binding DomainIsEnabled}">
                     <RadioButton GroupName="rdbOutDom" Padding="0,0,0,10" IsChecked="{Binding DomainIsOutAllowed}" Content="Allow" />
-                    <RadioButton GroupName="rdbOutDom" IsChecked="{Binding DomainIsOutBlocked}" Content="Block silently" />
-                    <RadioButton GroupName="rdbOutDom" Padding="0,10,0,0" IsChecked="{Binding DomainIsOutBlockedNotif}" Content="Block and prompt*" />
+                    <RadioButton GroupName="rdbOutDom" IsChecked="{Binding DomainIsOutBlocked}" Style="{StaticResource BlockPromptContentStyle}" />
                 </StackPanel>
                 <StackPanel Grid.Row="6" Grid.Column="4">
                     <RadioButton GroupName="rdbOutAll" Padding="0,0,0,10" IsChecked="{Binding AllIsOutAllowed}" Content="Allow" />
-                    <RadioButton GroupName="rdbOutAll" IsChecked="{Binding AllIsOutBlocked}" Content="Block silently" />
-                    <RadioButton GroupName="rdbOutAll" Padding="0,10,0,0" IsChecked="{Binding AllIsOutBlockedNotif}" Content="Block and prompt*" />
+                    <RadioButton GroupName="rdbOutAll" IsChecked="{Binding AllIsOutBlocked}" Style="{StaticResource BlockPromptContentStyle}" />
                 </StackPanel>
+                <Rectangle Height="35" Fill="LightGray" Opacity="0.6" Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="7" />
+                <CheckBox x:Name="tgStartNotifier" IsEnabled="{Binding OneIsOutBlocked}" Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="7" HorizontalAlignment="Center" Content="Enable notifications (applies for all profiles)*">
+                    <CheckBox.Style>
+                        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding OneIsOutBlocked}" Value="True">
+                                    <Setter Property="IsChecked" Value="{Binding StartNotifierAfterLogin, Source={x:Static settings:Settings.Default}}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </CheckBox.Style>
+                </CheckBox>
             </Grid>
             <TextBlock Margin="10,10,10,0" FontStyle="Italic" TextWrapping="Wrap" Text="{x:Static resx:Resources.Status_FooterRemark}" />
             <Grid Margin="0">
@@ -144,8 +176,6 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel>
-                    <CheckBox Margin="0,10" x:Name="tgStartNotifier" Content="Start notifier after windows login" IsChecked="{Binding StartNotifierAfterLogin, Source={x:Static settings:Settings.Default}}" />
-                    <CheckBox Content="Start notifier minimized" IsChecked="{Binding StartNotifierMinimized, Source={x:Static settings:Settings.Default}}" />
                 </StackPanel>
                 <Button Grid.Column="1" Margin="50,10" x:Name="btnTestNotif" Click="btnTestNotif_Click" Height="Auto" HorizontalAlignment="Center" ext:CustomAdorner.Image="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Content="Start Notifier now" />
             </Grid>

@@ -44,13 +44,13 @@
                 <DataGrid.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.ContainerStyle>
-                            <Style TargetType="{x:Type GroupItem}">
+                            <Style TargetType="GroupItem">
                                 <Setter Property="Template">
                                     <Setter.Value>
-                                        <ControlTemplate TargetType="{x:Type GroupItem}">
+                                        <ControlTemplate TargetType="GroupItem">
                                             <StackPanel>
                                                 <StackPanel.Resources>
-                                                    <SolidColorBrush x:Key="color" Color="{Binding Color}" x:Shared="false" />
+                                                    <SolidColorBrush x:Key="color" Color="{Binding Color}" />
                                                 </StackPanel.Resources>
                                                 <Grid Background="White" DataContext="{Binding Items[0]}">
                                                     <Grid.ColumnDefinitions>

@@ -659,7 +659,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à * WFN is notified everytime an outgoing connection is blocked by the windows firewall. Notifications are shown in Notifier or alternatively in the security log menu. The recommended setting is &quot;Block and prompt&quot; for all profiles..
+        ///   Recherche une chaîne localisée semblable à * WFN is notified everytime an outgoing connection is blocked by the windows firewall. Notifications are shown in Notifier or alternatively in the security log menu. Enabling this option is recommended since you wouldn&apos;t get notified at all otherwise..
         /// </summary>
         public static string Status_FooterRemark {
             get {
