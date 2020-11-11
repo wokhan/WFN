@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Messages = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
 using System.Windows.Media.Imaging;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
-using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 {
@@ -24,26 +23,24 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private readonly BitmapImage ICON_NORMAL = new BitmapImage(new Uri(@"/Notifier;component/Resources/TrayIcon22.ico", UriKind.Relative));
         private readonly BitmapImage ICON_BLOCKED = new BitmapImage(new Uri(@"/Notifier;component/Resources/TrayIcon21.ico", UriKind.Relative));
+        
+        private readonly DispatcherTimer ResetGreenLightTimer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(200), IsEnabled = false };
+        private readonly DispatcherTimer ResetRedLightTimer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(200), IsEnabled = false };
 
-        public static ActivityWindow Init(NotificationWindow window)
-        {
-            ActivityWindow factory = new ActivityWindow(window);
-            return factory;
-        }
-
-        private ActivityWindow() { }
-        private ActivityWindow(NotificationWindow window)
+        public ActivityWindow(NotificationWindow window, bool showWhenCreated)
         {
             notifierWindow = window;
 
             InitializeComponent();
-            InitWindowsMouseEvents();
 
-            ShowInTaskbar = false;  // hide the icon in the taskbar
+            InitWindowsMouseEvents();
 
             ClickableIcon.Source = ICON_NORMAL;
             ClickableIcon.ContextMenu = InitMenu();
             ClickableIcon.ToolTip = Messages.ActivityWindow_ClickableIcon_Tooltip;
+
+            ResetGreenLightTimer.Tick += GreenTurnOff;
+            ResetRedLightTimer.Tick += RedTurnOff;
 
             notifierWindow.PropertyChanged += (s, e) =>
             {
@@ -52,6 +49,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                     RefreshClickableIcon();
                 }
             };
+
+            if (showWhenCreated)
+            {
+                Show();
+            }
         }
 
         private void InitWindowsMouseEvents()
@@ -87,17 +89,21 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private ContextMenu InitMenu()
         {
-            ContextMenu contextMenu = new ContextMenu();
-            addMenuItem(contextMenu, Messages.ActivityWindow_ShowNotifier, (s, e) => notifierWindow.RestoreWindowState());
-            addMenuItem(contextMenu, Messages.ActivityWindow_OpenConsole, (s, e) => notifierWindow.ShowConsole());
-            addMenuItem(contextMenu, Messages.ActivityWindow_DiscardAndClose, (s, e) => { notifierWindow.Close(); Close(); });
-            addMenuItem(contextMenu, Messages.ActivityWindow_HideThisWindow, (s, e) => Hide());
-            addMenuItem(contextMenu, SetOrientationGetMessage(), (s, e) => ((MenuItem)s).Header = SetOrientationGetMessage(true));
+            ContextMenu contextMenu = new ContextMenu()
+            {
+                Items = {
+                    CreateMenuItem(Messages.ActivityWindow_ShowNotifier, (s, e) => notifierWindow.RestoreWindowState()),
+                    CreateMenuItem(Messages.ActivityWindow_OpenConsole, (s, e) => notifierWindow.ShowConsole()),
+                    CreateMenuItem(Messages.ActivityWindow_DiscardAndClose, (s, e) => { notifierWindow.Close(); Close(); }),
+                    CreateMenuItem(Messages.ActivityWindow_HideThisWindow, (s, e) => Hide()),
+                    CreateMenuItem(SetOrientationGetMessage(), (s, e) => ((MenuItem)s).Header = SetOrientationGetMessage(true))
+                }
+            };
 
             return contextMenu;
         }
 
-        private string SetOrientationGetMessage(bool toggle = false)
+        private static string SetOrientationGetMessage(bool toggle = false)
         {
             if (toggle)
             {
@@ -107,14 +113,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             return (Settings.Default.ActivityWindow_Orientation == Orientation.Horizontal ? Messages.ActivityWindow_OrientationVertical : Messages.ActivityWindow_OrientationHorizontal);
         }
 
-        private void addMenuItem(ContextMenu cm, string caption, RoutedEventHandler eh)
+        private static MenuItem CreateMenuItem(string caption, RoutedEventHandler handler)
         {
-            MenuItem mi = new MenuItem
-            {
-                Header = caption
-            };
-            mi.Click += eh;
-            cm.Items.Add(mi);
+            MenuItem mi = new MenuItem { Header = caption };
+            mi.Click += handler;
+
+            return mi;
         }
 
 
@@ -135,8 +139,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             Topmost = true;
             ResetTopmostVisibility();
-            Settings.Default.ActivityWindow_Shown = true;
 
+            Settings.Default.ActivityWindow_Shown = true;
             Settings.Default.Save();
         }
 
@@ -147,37 +151,30 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             Settings.Default.Save();
         }
 
-        private void ToggleGreen()
+        private void GreenTurnOn()
         {
-            var gradStop = ((RadialGradientBrush)GreenLight.Fill).GradientStops[0];
-            gradStop.Color = Colors.Green.Equals(gradStop.Color) ? Colors.White : Colors.Green;
+            ResetGreenLightTimer.Stop();
+            Dispatcher.Invoke(() => ((RadialGradientBrush)GreenLight.Fill).GradientStops[0].Color = Colors.LightGreen);
+            ResetGreenLightTimer.Start();
         }
 
-        private void ToggleRed()
+        private void GreenTurnOff(object sender, EventArgs e)
         {
-            var gradStop = ((RadialGradientBrush)RedLight.Fill).GradientStops[0];
-            gradStop.Color = Colors.Red.Equals(gradStop.Color) ? Colors.White : Colors.Red;
+            ResetGreenLightTimer.Stop();
+            ((RadialGradientBrush)GreenLight.Fill).GradientStops[0].Color = Colors.Green;
         }
 
-        private async void ToggleLightsTask(Ellipse control, int waitMillis)
+        private void RedTurnOn()
         {
-            void action()
-            {
-                if (GreenLight.Equals(control))
-                {
-                    ToggleGreen();
-                }
-                else if (RedLight.Equals(control))
-                {
-                    ToggleRed();
-                }
-            };
+            ResetRedLightTimer.Stop();
+            Dispatcher.Invoke(() => ((RadialGradientBrush)RedLight.Fill).GradientStops[0].Color = Colors.OrangeRed);
+            ResetRedLightTimer.Start();
+        }
 
-            for (int i = 0; i < 2; i++)
-            {
-                Dispatcher.Invoke(action);
-                await Task.Delay(waitMillis).ConfigureAwait(false);
-            }
+        private void RedTurnOff(object sender, EventArgs e)
+        {
+            ResetRedLightTimer.Stop();
+            ((RadialGradientBrush)RedLight.Fill).GradientStops[0].Color = Colors.Red;
         }
 
         public enum ActivityEnum
@@ -214,11 +211,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             if (ActivityEnum.Allowed.Equals(activity))
             {
-                ToggleLightsTask(GreenLight, 200);
+                GreenTurnOn();
             }
             else
             {
-                ToggleLightsTask(RedLight, 200);
+                RedTurnOn();
             }
         }
     }

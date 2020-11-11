@@ -1,6 +1,8 @@
 ﻿using NetFwTypeLib;
+
 using System;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
 {

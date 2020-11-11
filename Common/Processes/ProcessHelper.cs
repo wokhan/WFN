@@ -13,9 +13,9 @@ using System.Windows;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using System.IO;
-using Wokhan.WindowsFirewallNotifier.Common.Processes;
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
-namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
+namespace Wokhan.WindowsFirewallNotifier.Common.Processes
 {
     public static partial class ProcessHelper
     {

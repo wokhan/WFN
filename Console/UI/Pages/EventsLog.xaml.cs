@@ -7,18 +7,18 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Threading;
-
+using Wokhan.ComponentModel.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
+using Wokhan.WindowsFirewallNotifier.Common.Processes;
 using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
@@ -49,30 +49,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         public int ScanProgress
         {
             get => _scanProgress;
-            set
-            {
-                // TODO: replace with helpers from Wokhan libraries (once they are moved to github)
-                if (_scanProgress != value)
-                {
-                    _scanProgress = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ScanProgress)));
-                }
-            }
+            set => this.SetValue(ref _scanProgress, value, NotifyPropertyChanged); 
         }
 
         private int _scanProgressMax;
         public int ScanProgressMax
         {
             get => _scanProgressMax;
-            set
-            {
-                // TODO: replace with helpers from Wokhan libraries (once they are moved to github)
-                if (_scanProgressMax != value)
-                {
-                    _scanProgressMax = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ScanProgressMax)));
-                }
-            }
+            set => this.SetValue(ref _scanProgressMax, value, NotifyPropertyChanged);
         }
 
         private bool _isTrackingEnabled = true;
@@ -475,6 +459,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         public void Dispose()
         {
             securityLog?.Dispose();
+        }
+
+        private void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

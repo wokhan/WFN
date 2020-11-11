@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using log4net;
 using log4net.Config;
+using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
 #if DEBUG
 using System.Runtime.CompilerServices;
@@ -10,7 +11,7 @@ using System.Runtime.CompilerServices;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 #endif
 
-namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
+namespace Wokhan.WindowsFirewallNotifier.Common.Logging
 {
     public static class LogHelper
     {
@@ -19,7 +20,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         private const string LOG4NET_CONFIG_FILE = "WFN.config.log4net";
 
         private static readonly bool IsAdmin = UAC.CheckProcessElevated();
-        public static readonly string CurrentLogsPath = AppDomain.CurrentDomain.BaseDirectory ?? String.Empty;
+        public static readonly string CurrentLogsPath = AppDomain.CurrentDomain.BaseDirectory ?? string.Empty;
 
         enum LogLevel
         {
@@ -29,14 +30,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
         static LogHelper()
         {
             var assembly = Assembly.GetCallingAssembly().GetName();
-            string appVersion = assembly.Version?.ToString() ?? String.Empty;
+            var appVersion = assembly.Version?.ToString() ?? string.Empty;
 
             // log4net - look for a configuration file in the installation dir
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.ConfigureAndWatch(logRepository, new FileInfo(LOG4NET_CONFIG_FILE));
 
             // better to have this info always in the log
-            WriteLog(LogLevel.INFO, String.Format("OS: {0} ({1} bit) / .Net CLR: {2} / Path: {3} / Version: {4} ({5} bit)", Environment.OSVersion, Environment.Is64BitOperatingSystem ? 64 : 32, Environment.Version, AppDomain.CurrentDomain.BaseDirectory, appVersion, Environment.Is64BitProcess ? 64 : 32));
+            WriteLog(LogLevel.INFO, string.Format("OS: {0} ({1} bit) / .Net CLR: {2} / Path: {3} / Version: {4} ({5} bit)", Environment.OSVersion, Environment.Is64BitOperatingSystem ? 64 : 32, Environment.Version, AppDomain.CurrentDomain.BaseDirectory, appVersion, Environment.Is64BitProcess ? 64 : 32));
             WriteLog(LogLevel.INFO, $"Process elevated: {IsAdmin}");
         }
 
@@ -137,15 +138,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             switch (type)
             {
                 case LogLevel.DEBUG:
-                    LOGGER.Debug($"{msg} [{memberName}() in {System.IO.Path.GetFileName(filePath)}, line {lineNumber}]");
+                    LOGGER.Debug($"{msg} [{memberName}() in {Path.GetFileName(filePath)}, line {lineNumber}]");
                     break;
 
                 case LogLevel.WARNING:
-                    LOGGER.Warn($"{msg} [{memberName}() in {System.IO.Path.GetFileName(filePath)}, line {lineNumber}]");
+                    LOGGER.Warn($"{msg} [{memberName}() in {Path.GetFileName(filePath)}, line {lineNumber}]");
                     break;
 
                 case LogLevel.ERROR:
-                    LOGGER.Error($"{msg} [{memberName}()\n in {System.IO.Path.GetFileName(filePath)}, line {lineNumber}]");
+                    LOGGER.Error($"{msg} [{memberName}()\n in {Path.GetFileName(filePath)}, line {lineNumber}]");
                     break;
 
                 default:

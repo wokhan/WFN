@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
 using System.Threading.Tasks;
+
 using Wokhan.Collections;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
 /// <summary>
 /// DnsResolver resolves IP addesses to IPHostEntry records asynchronously and caches them in a dictionary.

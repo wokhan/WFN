@@ -1,5 +1,7 @@
 ﻿using log4net;
+
 using System;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -9,14 +11,17 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Windows;
+
 using Wokhan.WindowsFirewallNotifier.Common.Config;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Net.DNS;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
+using Wokhan.WindowsFirewallNotifier.Common.Processes;
 using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
 using Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows;
+
 using WinForms = System.Windows.Forms;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier
@@ -32,13 +37,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         private static App APP_INSTANCE;
         private static NotificationWindow notifierWindow;
         private static ActivityWindow activityWindow;
+        private EventLogListener eventLogListener;
 
         public ObservableCollection<CurrentConn> Connections { get; } = new ObservableCollection<CurrentConn>();
 
         private string[] exclusions = null;
-
-        private readonly AsyncTaskRunner asyncTaskRunner;
-
 
         /// <summary>
         /// Main entrypoint of the application.
@@ -101,14 +104,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 WindowState = WindowState.Normal
             };
             MainWindow = notifierWindow;
-            activityWindow = ActivityWindow.Init(notifierWindow);
-            if (Settings.Default.ActivityWindow_Shown)
-            {
-                activityWindow.Show();
-            }
-
-            asyncTaskRunner = new AsyncTaskRunner(this);
-            asyncTaskRunner.StartTasks();
+            activityWindow = new ActivityWindow(notifierWindow, Settings.Default.ActivityWindow_Shown);
+            
+            eventLogListener = new EventLogListener(this);
         }
 
         public static ActivityWindow GetActivityWindow()
@@ -123,7 +121,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
         protected override void OnExit(ExitEventArgs e)
         {
-            asyncTaskRunner.CancelTasks();
             if (notifierWindow != null)
             {
                 notifierWindow.Close();
@@ -168,7 +165,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 string fileName = System.IO.Path.GetFileName(friendlyPath);
 
                 // try to get the servicename from pid (works only if service is running)
-                string serviceName = AsyncTaskRunner.GetServicName(pid);
+                string serviceName = ServiceNameResolver.GetServicName(pid);
 
                 LogHelper.Info($"Handle {direction.ToString().ToUpper(CultureInfo.InvariantCulture)}-going connection for '{fileName}', service: {serviceName} ...");
                 if (!AddItem(pid, friendlyPath, targetIp, protocol: protocol, targetPort: targetPort, localPort: sourcePort))
@@ -211,7 +208,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             {
                 if (!Settings.Default.UseBlockRules && exclusions is null) //@wokhan: WHY NOT~Settings.Default.UseBlockRules ??
                 {
-                    string exclusionsPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exclusions.set");
+                    string exclusionsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exclusions.set");
                     if (File.Exists(exclusionsPath))
                     {
                         exclusions = File.ReadAllLines(exclusionsPath);
@@ -239,21 +236,22 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         {
             try
             {
-                string fileName = System.IO.Path.GetFileName(path);
+                string fileName = Path.GetFileName(path);
                 if (path != "System")
                 {
                     path = Common.IO.Files.PathResolver.GetFriendlyPath(path);
                 }
 
-                //FIXME: Do a proper path compare...? CASE!
-                var existing = this.Connections.FirstOrDefault(c => c.CurrentPath == path && c.Target == target && c.TargetPort == targetPort.ToString() && (localPort >= IPHelper.GetMaxUserPort() || c.LocalPort == localPort.ToString()) && c.Protocol == protocol);
+                var existing = Dispatcher.Invoke(() => this.Connections.FirstOrDefault(c => StringComparer.InvariantCultureIgnoreCase.Equals(c.CurrentPath, path) && c.Target == target && c.TargetPort == targetPort.ToString() && (localPort >= IPHelper.GetMaxUserPort() || c.LocalPort == localPort.ToString()) && c.Protocol == protocol));
                 if (existing != null)
                 {
                     LogHelper.Debug("Connection matches an already existing connection request.");
                     if (!existing.LocalPortArray.Contains(localPort))
                     {
                         existing.LocalPortArray.Add(localPort);
-                        existing.LocalPortArray.Sort(); //Note: Unfortunately, C# doesn't have a simple List that automatically sorts... :(
+                        //Note: Unfortunately, C# doesn't have a simple List that automatically sorts... :(
+                        // TODO: it does with SortedList. Don't get this comment...
+                        existing.LocalPortArray.Sort(); 
                         existing.LocalPort = IPHelper.MergePorts(existing.LocalPortArray);
                     }
                     existing.TentativesCounter++;
@@ -295,7 +293,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
                         if (Settings.Default.EnableServiceDetection)
                         {
-                            ServiceInfoResult svcInfo = AsyncTaskRunner.GetServiceInfo(pid, fileName);
+                            ServiceInfoResult svcInfo = ServiceNameResolver.GetServiceInfo(pid, fileName);
                             if (svcInfo != null)
                             {
                                 svc = new string[] { svcInfo.Name };
@@ -383,7 +381,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
                     ResolveHostForConnection(conn);
 
-                    this.Connections.Add(conn);
+                    Dispatcher.Invoke(() => this.Connections.Add(conn));
 
                     return true;
                 }
@@ -411,7 +409,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
         public void Dispose()
         {
-            asyncTaskRunner?.Dispose();
+            eventLogListener?.Dispose();
         }
     }
 }

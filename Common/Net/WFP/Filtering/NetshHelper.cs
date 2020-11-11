@@ -3,7 +3,7 @@ using System.Xml;
 using System.Diagnostics;
 using System.Text;
 using System.IO;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
 /// <summary>
 /// NetshHelper executes netsh commands and parses the resulting xml content.

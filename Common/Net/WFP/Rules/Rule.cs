@@ -2,11 +2,11 @@
 using System.ComponentModel;
 using System.Windows.Media;
 using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Properties;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules
 {

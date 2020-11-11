@@ -2,8 +2,8 @@
 using NetFwTypeLib;
 using System.Linq;
 using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Core.Resources;
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules
 {

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP.UDP;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP.UDP6

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Media.Imaging;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using System.Collections.Generic;
 using Wokhan.Core.ComponentModel;
 using Wokhan.ComponentModel.Extensions;
@@ -8,6 +7,7 @@ using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using Wokhan.WindowsFirewallNotifier.Common.Net.DNS;
 using System.Windows.Media;
+using Wokhan.WindowsFirewallNotifier.Common.Processes;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
 {

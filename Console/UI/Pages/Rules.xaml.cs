@@ -5,8 +5,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
+using Wokhan.WindowsFirewallNotifier.Common.Processes;
 using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 using WFPRules = Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;

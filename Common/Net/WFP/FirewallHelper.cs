@@ -4,8 +4,9 @@ using System.Linq;
 using Microsoft.Win32;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
+using Wokhan.WindowsFirewallNotifier.Common.Processes;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
 {

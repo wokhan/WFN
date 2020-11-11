@@ -8,7 +8,8 @@
         SizeToContent="WidthAndHeight"
         AllowsTransparency="True"
         WindowStartupLocation="Manual" 
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        ShowInTaskbar="False">
     <Window.Resources>
         <Style x:Key="BorderStyle" TargetType="Border">
             <Setter Property="BorderBrush" Value="Black"/>

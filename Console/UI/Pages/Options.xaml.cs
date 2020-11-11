@@ -6,11 +6,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Linq;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
-using System.ComponentModel;
-using System.Threading.Channels;
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
+using Wokhan.WindowsFirewallNotifier.Common.Processes;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {

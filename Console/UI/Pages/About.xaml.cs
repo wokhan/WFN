@@ -4,8 +4,7 @@ using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Navigation;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
-using System.ComponentModel;
+using Wokhan.WindowsFirewallNotifier.Common.Processes;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {

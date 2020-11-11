@@ -2,7 +2,6 @@
 using System.IO;
 using System.Security.Principal;
 using System.Text;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Properties;
 using System.Reflection;
 using System.ServiceProcess;
@@ -11,6 +10,8 @@ using System.Diagnostics.CodeAnalysis;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
+using Wokhan.WindowsFirewallNotifier.Common.Processes;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers
 {

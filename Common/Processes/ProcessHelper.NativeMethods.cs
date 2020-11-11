@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
+namespace Wokhan.WindowsFirewallNotifier.Common.Processes
 {
     public static partial class ProcessHelper
     {

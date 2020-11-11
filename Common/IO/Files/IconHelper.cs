@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
-using Wokhan.WindowsFirewallNotifier.Common.Helpers;
+
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.IO.Files
 {

@@ -1,4 +1,4 @@
-﻿namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
+﻿namespace Wokhan.WindowsFirewallNotifier.Common.Processes
 {
     public class ServiceInfoResult
     {
