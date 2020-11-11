@@ -50,7 +50,7 @@
                                         <ControlTemplate TargetType="GroupItem">
                                             <StackPanel>
                                                 <StackPanel.Resources>
-                                                    <SolidColorBrush x:Key="color" Color="{Binding Color}" />
+                                                    <SolidColorBrush x:Key="color" Color="{Binding Color}" x:Shared="False"/>
                                                 </StackPanel.Resources>
                                                 <Grid Background="White" DataContext="{Binding Items[0]}">
                                                     <Grid.ColumnDefinitions>
