@@ -74,6 +74,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
         {
             try
             {
+                // Ignoring bandwidth measurement for loopbacks as it is meaningless anyway
+                if (this.RemoteAddress == "127.0.0.1")
+                {
+                    return false;
+                }
+
                 if (this.rawConnection is MIB_TCPROW_OWNER_MODULE)
                 {
                     rawrow = ((MIB_TCPROW_OWNER_MODULE)this.rawConnection).ToTCPRow();
@@ -162,7 +168,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
 
             RemotePort = (b.RemotePort == -1 ? String.Empty : b.RemotePort.ToString());
             State = Enum.GetName(typeof(ConnectionStatus), b.State);
-            if (b.State == ConnectionStatus.ESTABLISHED)
+            if (b.State == ConnectionStatus.ESTABLISHED && !IsAccessDenied)
             {
                 if (!statsEnabled)
                 {
@@ -277,11 +283,22 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
             set => this.SetValue(ref _color, value, NotifyPropertyChanged);
         }
 
-        private double _inboundBandwidth;
-        public double InboundBandwidth { get => _inboundBandwidth; private set => this.SetValue(ref _inboundBandwidth, value, NotifyPropertyChanged); }
+        private ulong _inboundBandwidth;
+        public ulong InboundBandwidth
+        {
+            get => _inboundBandwidth;
+            private set => this.SetValue(ref _inboundBandwidth, value, NotifyPropertyChanged);
+        }
 
-        private double _outboundBandwidth;
-        public double OutboundBandwidth { get => _outboundBandwidth; private set => this.SetValue(ref _outboundBandwidth, value, NotifyPropertyChanged); }
+        private ulong _outboundBandwidth;
+        public ulong OutboundBandwidth
+        {
+            get => _outboundBandwidth;
+            private set => this.SetValue(ref _outboundBandwidth, value, NotifyPropertyChanged);
+        }
+
+        private ulong _lastInboundReadValue;
+        private ulong _lastOutboundReadValue;
 
         private bool statsEnabled;
         private void EstimateBandwidth()
@@ -296,8 +313,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
                 if (rawrow != null && !IsAccessDenied)
                 {
                     var bandwidth = (rawrow is TCPHelper.MIB_TCPROW ? TCPHelper.GetTCPBandwidth((TCPHelper.MIB_TCPROW)rawrow) : TCP6Helper.GetTCPBandwidth((TCP6Helper.MIB_TCP6ROW)rawrow));
-                    InboundBandwidth = bandwidth.InboundBandwidth;
-                    OutboundBandwidth = bandwidth.OutboundBandwidth;
+                    // Fix according to https://docs.microsoft.com/en-us/windows/win32/api/iphlpapi/nf-iphlpapi-setpertcpconnectionestats
+                    // One must subtract the previously read value to get the right one (as reenabling statistics doesn't work as before starting from Win 10 1709)
+                    InboundBandwidth = bandwidth.InboundBandwidth >= _lastInboundReadValue ? bandwidth.InboundBandwidth - _lastInboundReadValue : bandwidth.InboundBandwidth;
+                    OutboundBandwidth = bandwidth.OutboundBandwidth >= _lastOutboundReadValue ? bandwidth.OutboundBandwidth - _lastOutboundReadValue : bandwidth.OutboundBandwidth;
+                    _lastInboundReadValue = bandwidth.InboundBandwidth;
+                    _lastOutboundReadValue = bandwidth.OutboundBandwidth;
                     return;
                 }
             }

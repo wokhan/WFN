@@ -65,18 +65,18 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
                 {
                     var colorbrush = connectionGroup.First().Color;
                     var color = OxyColor.FromArgb(colorbrush.A, colorbrush.R, colorbrush.G, colorbrush.B);
-                    Model.Series.Add(new LineSeries() { Title = seriesInTitle, Color = color, ItemsSource = seriesInValues = new ObservableCollection<DataPoint>(), InterpolationAlgorithm = InterpolationAlgorithms.CatmullRomSpline });
-                    Model.Series.Add(new LineSeries() { Title = seriesOutTitle, Color = color, LineStyle = LineStyle.Dash, ItemsSource = seriesOutValues = new ObservableCollection<DataPoint>(), InterpolationAlgorithm = InterpolationAlgorithms.CatmullRomSpline });
+                    Model.Series.Add(new LineSeries() { Title = seriesInTitle, Color = color, ItemsSource = seriesInValues = new ObservableCollection<DataPoint>(), InterpolationAlgorithm = InterpolationAlgorithms.UniformCatmullRomSpline });
+                    Model.Series.Add(new LineSeries() { Title = seriesOutTitle, Color = color, LineStyle = LineStyle.Dash, ItemsSource = seriesOutValues = new ObservableCollection<DataPoint>(), InterpolationAlgorithm = InterpolationAlgorithms.UniformCatmullRomSpline });
                 }
 
-                var lastIn = connectionGroup.Sum(connection => connection.InboundBandwidth);
+                var lastIn = connectionGroup.Sum(connection => (long)connection.InboundBandwidth);
                 seriesInValues.Add(DateTimeAxis.CreateDataPoint(datetime, lastIn));
                 if (seriesInValues.Count > 3 && seriesInValues[^2].Y == lastIn && seriesInValues[^3].Y == lastIn)
                 {
                     seriesInValues.RemoveAt(seriesInValues.Count - 2);
                 }
 
-                var lastOut = connectionGroup.Sum(connection => connection.OutboundBandwidth);
+                var lastOut = connectionGroup.Sum(connection => (long)connection.OutboundBandwidth);
                 seriesOutValues.Add(DateTimeAxis.CreateDataPoint(datetime, lastOut));
                 if (seriesOutValues.Count > 3 && seriesOutValues[^2].Y == lastOut && seriesOutValues[^3].Y == lastOut)
                 {
