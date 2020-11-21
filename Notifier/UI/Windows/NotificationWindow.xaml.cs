@@ -221,7 +221,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             var activeConn = (CurrentConn)lstConnections.SelectedItem;
 
-            if (Protocol.IsUnknown(activeConn.Protocol))
+            if (Protocol.IsUnknown(activeConn.RawProtocol))
             {
                 OptionsView.IsProtocolChecked = false;
             }
@@ -233,9 +233,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             // By default one would usually make a rule on the target ip/port for outgoing connections
             OptionsView.IsLocalPortChecked = false;
-            OptionsView.IsTargetPortEnabled = Protocol.IsIPProtocol(activeConn.Protocol);
-            OptionsView.IsTargetPortChecked = Protocol.IsIPProtocol(activeConn.Protocol);
-            OptionsView.IsTargetIPChecked = Protocol.IsIPProtocol(activeConn.Protocol);
+            OptionsView.IsTargetPortEnabled = Protocol.IsIPProtocol(activeConn.RawProtocol);
+            OptionsView.IsTargetPortChecked = Protocol.IsIPProtocol(activeConn.RawProtocol);
+            OptionsView.IsTargetIPChecked = Protocol.IsIPProtocol(activeConn.RawProtocol);
 
             if (!String.IsNullOrEmpty(activeConn.CurrentService))
             {
@@ -379,11 +379,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             {
                 return;
             }
-            String skipPath = ((CurrentConn)lstConnections.SelectedItem).CurrentPath;
+            String skipPath = ((CurrentConn)lstConnections.SelectedItem).Path;
             List<CurrentConn> toRemove = new List<CurrentConn>(); //Can't remove while iterating.
             foreach (var connection in lstConnections.Items)
             {
-                if (((CurrentConn)connection).CurrentPath == skipPath)
+                if (((CurrentConn)connection).Path == skipPath)
                 {
                     toRemove.Add((CurrentConn)connection);
                 }
@@ -474,13 +474,14 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 }
             }
 
+            var ruleName = String.Format(Common.Properties.Resources.RULE_NAME_FORMAT, activeConn.CurrentServiceDesc ?? activeConn.Description);
             if (doAllow)
             {
-                success = createAllowRule(activeConn, services, isTemp);
+                success = createAllowRule(activeConn, services, isTemp, ruleName);
             }
             else
             {
-                success = createBlockRule(activeConn, services, isTemp);
+                success = createBlockRule(activeConn, services, isTemp, ruleName);
             }
 
             if (success)
@@ -490,12 +491,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 for (int i = ((App)System.Windows.Application.Current).Connections.Count - 1; i >= 0; i--)
                 {
                     var c = ((App)System.Windows.Application.Current).Connections[i];
-                    string[] svc = Array.Empty<string>();
-                    if (!String.IsNullOrEmpty(c.CurrentService))
-                    {
-                        svc = new[] { c.CurrentService };
-                    }
-                    if (FirewallHelper.GetMatchingRules(c.CurrentPath, c.CurrentAppPkgId, c.Protocol, c.Target, c.TargetPort, c.LocalPort, svc, c.CurrentLocalUserOwner, false).Any()) //FIXME: LocalPort may have multiple!)
+                    if (FirewallHelper.GetMatchingRules(c.Path, c.CurrentAppPkgId, c.RawProtocol, c.TargetIP, c.TargetPort, c.SourcePort, c.CurrentService, c.CurrentLocalUserOwner, false).Any()) //FIXME: LocalPort may have multiple!)
                     {
                         LogHelper.Debug("Auto-removing a similar connection...");
                         ((App)System.Windows.Application.Current).Connections.Remove(c);
@@ -514,17 +510,24 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
         }
 
-        private bool createBlockRule(CurrentConn activeConn, string[] services, bool isTemp)
+        private bool createBlockRule(CurrentConn activeConn, string[] services, bool isTemp, string ruleName)
         {
             bool success;
             if (Settings.Default.UseBlockRules)
             {
                 int Profiles = OptionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
-                string ruleName = (isTemp) ? Messages.RULE_TEMP_PREFIX + activeConn.RuleName : activeConn.RuleName;
-                CustomRule newRule = new CustomRule(ruleName, OptionsView.IsPathChecked ? activeConn.CurrentPath : null, OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null
-                    , activeConn.CurrentLocalUserOwner, services, OptionsView.IsProtocolChecked ? activeConn.Protocol : -1, OptionsView.IsTargetIPChecked ? activeConn.Target : null
-                    , OptionsView.IsTargetPortChecked ? activeConn.TargetPort : null, OptionsView.IsLocalPortChecked ? activeConn.LocalPort : null, Profiles
-                    , CustomRule.CustomRuleAction.B);
+                string finalRuleName = (isTemp) ? Messages.RULE_TEMP_PREFIX + ruleName : ruleName;
+                var newRule = new CustomRule(finalRuleName,
+                                             OptionsView.IsPathChecked ? activeConn.Path : null,
+                                             OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null,
+                                             activeConn.CurrentLocalUserOwner,
+                                             services,
+                                             OptionsView.IsProtocolChecked ? activeConn.RawProtocol : -1,
+                                             OptionsView.IsTargetIPChecked ? activeConn.TargetIP : null,
+                                             OptionsView.IsTargetPortChecked ? activeConn.TargetPort : null,
+                                             OptionsView.IsLocalPortChecked ? activeConn.SourcePort : null,
+                                             Profiles,
+                                             CustomRule.CustomRuleAction.Block);
                 success = FirewallHelper.AddRule(newRule.GetPreparedRule(isTemp)); // does not use RuleManager
                 if (success && isTemp)
                 {
@@ -540,9 +543,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 // FIXME: Remove and always use Global Rules?
                 throw new ArgumentException("Only global block rules can be used - check options");
 
-                string entry = (!OptionsView.IsServiceRuleChecked || String.IsNullOrEmpty(activeConn.CurrentService) ? activeConn.CurrentPath : activeConn.CurrentService) +
-                               (OptionsView.IsLocalPortChecked ? ";" + activeConn.LocalPort : ";") +
-                               (OptionsView.IsTargetIPChecked ? ";" + activeConn.Target : ";") +
+                string entry = (!OptionsView.IsServiceRuleChecked || String.IsNullOrEmpty(activeConn.CurrentService) ? activeConn.Path : activeConn.CurrentService) +
+                               (OptionsView.IsLocalPortChecked ? ";" + activeConn.SourcePort : ";") +
+                               (OptionsView.IsTargetIPChecked ? ";" + activeConn.TargetIP : ";") +
                                (OptionsView.IsTargetPortChecked ? ";" + activeConn.TargetPort : ";"); //FIXME: Need to add more?
                 using (StreamWriter sw = new StreamWriter(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exclusions.set"), true))
                 {
@@ -555,14 +558,21 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             return success;
         }
 
-        private bool createAllowRule(CurrentConn activeConn, string[] services, bool isTemp)
+        private bool createAllowRule(CurrentConn activeConn, string[] services, bool isTemp, string ruleName)
         {
             int Profiles = OptionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
-            string ruleName = isTemp ? Messages.RULE_TEMP_PREFIX + activeConn.RuleName : activeConn.RuleName;
-            CustomRule newRule = new CustomRule(ruleName, OptionsView.IsPathChecked ? activeConn.CurrentPath : null, OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null
-                , activeConn.CurrentLocalUserOwner, services, OptionsView.IsProtocolChecked ? activeConn.Protocol : -1, OptionsView.IsTargetIPChecked ? activeConn.Target : null
-                , OptionsView.IsTargetPortChecked ? activeConn.TargetPort : null, OptionsView.IsLocalPortChecked ? activeConn.LocalPort : null, Profiles
-                , CustomRule.CustomRuleAction.A);
+            string finalRuleName = isTemp ? Messages.RULE_TEMP_PREFIX + ruleName : ruleName;
+            var newRule = new CustomRule(finalRuleName,
+                                         OptionsView.IsPathChecked ? activeConn.Path : null,
+                                         OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null,
+                                         activeConn.CurrentLocalUserOwner,
+                                         services,
+                                         OptionsView.IsProtocolChecked ? activeConn.RawProtocol : -1,
+                                         OptionsView.IsTargetIPChecked ? activeConn.TargetIP : null,
+                                         OptionsView.IsTargetPortChecked ? activeConn.TargetPort : null,
+                                         OptionsView.IsLocalPortChecked ? activeConn.SourcePort : null,
+                                         Profiles,
+                                         CustomRule.CustomRuleAction.Allow);
 
             bool success = FirewallHelper.AddRule(newRule.GetPreparedRule(isTemp)); // does not use RuleManager
 
@@ -574,7 +584,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             return success;
         }
 
-        private static WinForms::NotifyIcon tempNotifyIcon_ = null;
+        private static WinForms::NotifyIcon tempNotifyIcon_;
         private List<CustomRule> tempRules_ = new List<CustomRule>();
         private void CreateTempRuleNotifyIcon(CustomRule newRule)
         {
@@ -584,16 +594,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
             if (tempNotifyIcon_ is null)
             {
-                void iconClick(object sender, EventArgs e)
-                {
-                    if (!RemoveTempRulesAndNotfyIcon())
-                    {
-                        WinForms::MessageBox.Show(Messages.MSG_RULE_RM_FAILED, Messages.MSG_DLG_ERR_TITLE, WinForms::MessageBoxButtons.OK, WinForms::MessageBoxIcon.Error);
-                    }
-                }
                 // tray icon for temporary rule
                 WinForms::NotifyIcon ni = new WinForms::NotifyIcon();
-                ni.Click += new EventHandler(iconClick);
+                ni.Click += iconClick;
                 // shown in message center on win10
                 ni.BalloonTipIcon = WinForms::ToolTipIcon.Info;
                 ni.BalloonTipTitle = Common.Properties.Resources.RULE_TEMP_TITLE;
@@ -606,6 +609,14 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 ni.Visible = true;
 
                 tempNotifyIcon_ = ni;
+            }
+        }
+
+        private void iconClick(object sender, EventArgs e)
+        {
+            if (!RemoveTempRulesAndNotfyIcon())
+            {
+                WinForms::MessageBox.Show(Messages.MSG_RULE_RM_FAILED, Messages.MSG_DLG_ERR_TITLE, WinForms::MessageBoxButtons.OK, WinForms::MessageBoxIcon.Error);
             }
         }
 

@@ -61,7 +61,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP
             return new IPAddress(_remoteAddress).ToString();
         }
 
-        public static string MergePorts(List<int> ports)
+        public static string MergePorts(IEnumerable<int> ports)
         {
             var result = "";
             var BeginRange = -2; //-2 to make sure it never matches any starting port (0 or larger).
@@ -138,7 +138,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP
         /// </summary>
         /// <param name="row"></param>
         /// <returns></returns>
-        public static Owner? GetOwner(int pid, int localPort)
+        public static Owner? GetOwner(uint pid, int localPort)
         {
             var allConn = GetAllConnections();
             var ret = allConn.FirstOrDefault(r => r.LocalPort == localPort && r.OwningPid == pid);

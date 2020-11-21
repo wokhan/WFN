@@ -1,25 +1,23 @@
-﻿using System;
+﻿using AlphaChiTech.Virtualization;
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Media;
-using System.Windows.Threading;
+
 using Wokhan.ComponentModel.Extensions;
+using Wokhan.UI.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
-using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
-using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
+using Wokhan.WindowsFirewallNotifier.Common.Security;
+using Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -28,8 +26,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// </summary>
     public sealed partial class EventsLog : Page, INotifyPropertyChanged, IDisposable
     {
-        private readonly Dictionary<int, ServiceInfoResult> services = ProcessHelper.GetAllServicesByPidWMI();
-        internal readonly ICollectionView dataView;
         private readonly EventsLogFilters eventsLogFilters;
 
         private static readonly ToolTip toolTipInstance = new ToolTip
@@ -40,16 +36,13 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             IsOpen = false
         };
 
-        private EventLog securityLog;
-
-        public ObservableCollection<LogEntryViewModel> LogEntries { get; } = new ObservableCollection<LogEntryViewModel>();
-        //public List<LogEntryViewModel> TempEntries { get; } = new List<LogEntryViewModel>();
+        private EventLogAsyncReader<LogEntryViewModel> LogListener;
 
         private int _scanProgress;
         public int ScanProgress
         {
             get => _scanProgress;
-            set => this.SetValue(ref _scanProgress, value, NotifyPropertyChanged); 
+            set => this.SetValue(ref _scanProgress, value, NotifyPropertyChanged);
         }
 
         private int _scanProgressMax;
@@ -107,12 +100,17 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
         }
 
-        private readonly object EntriesLock = new object();
-
-        int SecurityLogEntryIndex_last { get; set; }
+        private EventLogAsyncReader<LogEntryViewModel> virtualizedLogEntries;
+        public EventLogAsyncReader<LogEntryViewModel> eventsReader
+        {
+            get => virtualizedLogEntries;
+            private set => this.SetValue(ref virtualizedLogEntries, value, NotifyPropertyChanged);
+        }
 
         public EventsLog()
         {
+            VirtualizedQueryableExtensions.Init(Dispatcher);
+
             Loaded += (s, e) => StartHandlingSecurityLogEvents();
             Unloaded += (s, e) => StopHandlingSecurityLogEvents();
 
@@ -124,179 +122,49 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             {
                 RemoteHostCol.Visibility = Visibility.Hidden;
             }
-
-            dataView = CollectionViewSource.GetDefaultView(gridLog.ItemsSource);
-            dataView.SortDescriptions.Add(new SortDescription(nameof(LogEntryViewModel.Timestamp), ListSortDirection.Descending));
         }
 
         private void StartHandlingSecurityLogEvents()
         {
             try
             {
-                if (securityLog is null)
+                if (eventsReader is null)
                 {
-                    securityLog = new EventLog("security");
-                    LogEntries.Clear();
+                    eventsReader = new EventLogAsyncReader<LogEntryViewModel>(EventLogAsyncReader.EVENTLOG_SECURITY, LogEntryViewModel.CreateFromEventLogEntry);
+                    gridLog.ItemsSource = eventsReader.Entries;
                 }
-                securityLog.BeginInit();
-                Dispatcher.Invoke(() => { ScanProgressMax = securityLog.Entries.Count; });
-                eventsLogFilters.ResetTcpFilter();
-                SecurityLogEntryIndex_last = securityLog.Entries.Count - 1;
-                _ = Task.Run(() => { InitEventLog(SecurityLogEntryIndex_last, value => ScanProgress = value); }).ConfigureAwait(false);
-                securityLog.EntryWritten += SecurityLog_EntryWritten;
-                securityLog.EnableRaisingEvents = true;
-                securityLog.EndInit();
 
+                ScanProgressMax = eventsReader.Count;
+
+                eventsLogFilters.ResetTcpFilter();
             }
             catch (Exception exc)
             {
                 LogHelper.Error("Unable to connect to the event log", exc);
                 throw;
             }
-
         }
+
         private void PauseHandlingSecurityLogEvents()
         {
-            securityLog.EnableRaisingEvents = false;
+            LogListener.StopRaisingEvents();
         }
+
         private void StopHandlingSecurityLogEvents()
         {
             PauseHandlingSecurityLogEvents();
-            securityLog?.Dispose();
-            securityLog = null;
+
+            LogListener?.Dispose();
+            LogListener = null;
         }
 
-        private void SecurityLog_EntryWritten(object sender, EntryWrittenEventArgs e)
+        private void SecurityLog_EntryWritten(EventLogEntry entry, bool allowed)
         {
-            //LogHelper.Debug($"EntryWritten event ...");
-            if (!FirewallHelper.IsEventAccepted(e.Entry))
+            //if (source.CurrentPageOffset == 0)
             {
-                return;
-            }
-
-            lock (EntriesLock)
-            {
-                if (e.Entry != null && e.Entry.Index > SecurityLogEntryIndex_last)
-                {
-                    LogEntryViewModel entry = EntryViewFromLogEntry(e.Entry);
-                    if (entry != null)
-                    {
-                        Dispatcher.Invoke(() => { LogEntries.Add(entry); ScanProgress = LogEntries.Count; });
-                    }
-                }
-                if (ScanProgressMax < LogEntries.Count)
-                {
-                    // overflow handling
-                    LogEntries.RemoveAt(0);
-                }
-                SecurityLogEntryIndex_last = securityLog.Entries.Count - 1;
+                //VirtualizedLogEntries.ResetAsync();
             }
         }
-
-        /*
-         * Initializes the LogEntries list to show the most recent events
-         */
-        private void InitEventLog(int lastIndex, Action<int> progressCallback)
-        {
-            int i = 0;
-            try
-            {
-                LogHelper.Debug($"InitEventLog ...");
-                for (i = lastIndex; i >= 0; i--)
-                {
-                    lock (EntriesLock)
-                    {
-                        if (i > securityLog.Entries.Count - 1) { continue; }
-                        EventLogEntry entry = securityLog.Entries[i];
-                        if (FirewallHelper.IsEventAccepted(entry))
-                        {
-                            LogEntryViewModel entryView = EntryViewFromLogEntry(entry);
-                            if (entryView != null)
-                            {
-                                Dispatcher.Invoke(() => { LogEntries.Insert(0, entryView); progressCallback?.Invoke(LogEntries.Count); });
-                            }
-                        }
-                    }
-                }
-                LogHelper.Debug($"InitEventLog - Logentries.count={LogEntries.Count}");
-            }
-            // Could use a cancellation token instead, but chances are that dispose will occur before the token is actually checked. Going for the ugly way then.
-            // LogHelper.Error($"{ede.Message} - ignored", ede);
-            catch (ObjectDisposedException) { }
-            catch (NullReferenceException) { }
-            catch (IndexOutOfRangeException oex)
-            {
-                LogHelper.Error($"Unable to load the event log entry: index={i} lastIndex={lastIndex} count={securityLog?.Entries?.Count} - ignored", oex);
-            }
-            catch (Exception exc)
-            {
-                LogHelper.Error($"Unable to load the event log entry: index={i} lastIndex={lastIndex} count={securityLog?.Entries?.Count} - thrown", exc);
-                throw;
-            }
-        }
-
-        private LogEntryViewModel EntryViewFromLogEntry(EventLogEntry entry)
-        {
-            try
-            {
-                //LogHelper.Debug($"Create EntryViewModel entry...");
-                var pid = int.Parse(GetReplacementString(entry, 0));
-                var direction = GetReplacementString(entry, 2) == @"%%14593" ? "Out" : "In";
-                string targetIp;
-                string targetPort;
-                if (direction == "Out")
-                {
-                    // outgoing target ip
-                    targetIp = GetReplacementString(entry, 5);
-                    targetPort = GetReplacementString(entry, 6);
-                }
-                else
-                {
-                    // incoming source ip
-                    targetIp = GetReplacementString(entry, 3);
-                    targetPort = GetReplacementString(entry, 4);
-                }
-
-                var friendlyPath = GetReplacementString(entry, 1) == "-" ? "System" : PathResolver.GetFriendlyPath(GetReplacementString(entry, 1));
-                var fileName = System.IO.Path.GetFileName(friendlyPath);
-                var protocol = int.Parse(GetReplacementString(entry, 7));
-
-                // try to get the servicename from pid (works only if service is running)
-                var serviceName = services.ContainsKey(pid) ? services[pid].Name : "-";
-
-                var le = new LogEntryViewModel()
-                {
-                    Id = entry.Index,
-                    Pid = pid,
-                    Timestamp = entry.TimeGenerated,
-                    Path = GetReplacementString(entry, 1) == "-" ? "System" : GetReplacementString(entry, 1),
-                    FriendlyPath = friendlyPath,
-                    ServiceName = serviceName,
-                    FileName = fileName,
-                    TargetIP = targetIp,
-                    TargetPort = targetPort,
-                    Protocol = Protocol.GetProtocolAsString(protocol),
-                    Direction = direction,
-                    FilterId = GetReplacementString(entry, 8),
-                    Reason = FirewallHelper.GetEventInstanceIdAsString(entry.InstanceId),
-                    Reason_Info = entry.Message
-                };
-
-                le.ReasonColor = le.Reason.StartsWith("Block") ? Brushes.OrangeRed : Brushes.Blue;
-                le.DirectionColor = le.Direction.StartsWith("In") ? Brushes.OrangeRed : Brushes.Black;
-
-                return le;
-            }
-            catch (Exception ex)
-            {
-                LogHelper.Error("Cannot parse eventlog entry: eventID=" + entry.InstanceId.ToString(), ex);
-            }
-
-            return null;
-        }
-
-        private static string GetReplacementString(EventLogEntry entry, int i) => entry.ReplacementStrings.DefaultIfEmpty(string.Empty).ElementAtOrDefault(i);
-
         private void btnLocate_Click(object sender, RoutedEventArgs e)
         {
             var selectedLog = (LogEntryViewModel)gridLog.SelectedItem;
@@ -305,7 +173,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 //@
                 return;
             }
-            ProcessHelper.StartShellExecutable("explorer.exe", "/select," + selectedLog.FriendlyPath, true);
+            ProcessHelper.StartShellExecutable("explorer.exe", "/select," + selectedLog.Path, true);
         }
 
         private void btnEventLogVwr_Click(object sender, RoutedEventArgs e)
@@ -447,18 +315,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             }
         }
 
-        private class EntryComparer : IEqualityComparer<LogEntryViewModel>
-        {
-            public static IEqualityComparer<LogEntryViewModel> Instance { get; } = new EntryComparer();
-
-            public bool Equals([AllowNull] LogEntryViewModel x, [AllowNull] LogEntryViewModel y) => x.Id == y.Id;
-
-            public int GetHashCode([DisallowNull] LogEntryViewModel obj) => obj.Id;
-        }
-
         public void Dispose()
         {
-            securityLog?.Dispose();
+            LogListener?.Dispose();
         }
 
         private void NotifyPropertyChanged(string propertyName)

@@ -2,7 +2,7 @@
 {
     public class ServiceInfoResult
     {
-        public ServiceInfoResult(int processId, string name, string displayName, string pathName)
+        public ServiceInfoResult(uint processId, string name, string displayName, string pathName)
         {
             ProcessId = processId;
             Name = name;
@@ -10,7 +10,7 @@
             PathName = pathName;
         }
 
-        public int ProcessId { get; set; }
+        public uint ProcessId { get; set; }
         public string Name { get; set; }
         public string DisplayName { get; set; }
         public string PathName { get; set; }

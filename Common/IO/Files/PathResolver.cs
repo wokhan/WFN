@@ -53,7 +53,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.IO.Files
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public static string GetFriendlyPath(string p)
+        public static string ResolvePath(string p)
         {
             if (string.IsNullOrEmpty(p))
             {

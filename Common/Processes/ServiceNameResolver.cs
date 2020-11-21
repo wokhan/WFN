@@ -1,30 +1,29 @@
 ﻿using System.Collections.Generic;
 
-using Wokhan.Core.Core;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Processes
 {
     public static class ServiceNameResolver
     {
-        internal static Dictionary<int, ServiceInfoResult> services = ProcessHelper.GetAllServicesByPidWMI();
+        internal static Dictionary<uint, ServiceInfoResult> services = ProcessHelper.GetAllServicesByPidWMI();
 
         private static void Reload()
         {
             services = ProcessHelper.GetAllServicesByPidWMI();
         }
 
-        public static string GetServicName(int pid)
+        public static string GetServicName(uint pid)
         {
             if (!services.ContainsKey(pid))
             {
-                Reload();
+                //Reload();
             }
 
             return services.TryGetValue(pid, out ServiceInfoResult? service) ? service.Name : "-";
         }
 
-        public static ServiceInfoResult? GetServiceInfo(int pid, string fileName)
+        public static ServiceInfoResult? GetServiceInfo(uint pid, string fileName)
         {
             if (services.TryGetValue(pid, out ServiceInfoResult? svcInfo))
             {

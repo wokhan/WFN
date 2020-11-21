@@ -12,7 +12,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
      * Notifier tray icon shown when minimizing the Notifier Window.
      * @Author: harrwiss
      */
-    public sealed class NotifierTrayIcon : IDisposable
+    internal sealed class NotifierTrayIcon : IDisposable
     {
         private readonly NotifyIcon trayIcon;
         private readonly IContainer components;
@@ -20,7 +20,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         private bool activityTipShown;
         private readonly NotificationWindow notifierWindow;
 
-        public static NotifierTrayIcon Init(NotificationWindow window)
+        internal static NotifierTrayIcon Init(NotificationWindow window)
         {
             NotifierTrayIcon factory = new NotifierTrayIcon(window);
             return factory;

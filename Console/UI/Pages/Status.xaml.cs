@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 using System.Diagnostics;
 using System.IO;
 using System;
@@ -31,17 +30,18 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             Settings.Default.Save();
-            status.Save(checkResult);
+            Messages.Add("=== Applying modifications ===");
+            status.Save(RunAndLogResult);
             init();
         }
 
-        private bool checkResult(Func<bool> func, string okMsg, string errorMsg)
+        private bool RunAndLogResult(Func<bool> func, string okMsg, string errorMsg)
         {
             try
             {
                 bool success = func();
                 var msg = success ? okMsg : errorMsg;
-                Messages.Add(msg);
+                Messages.Add($"{DateTime.Now} - {msg}");
 
                 LogHelper.Debug($"{func.Method.Name}: {msg}");
 
@@ -51,13 +51,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             {
                 LogHelper.Error(ex.Message, ex);
 
-                Messages.Add($"{errorMsg}: {ex.Message}");
+                Messages.Add($"{DateTime.Now} - {errorMsg}: {ex.Message}");
                 return false;
             }
         }
 
         private void btnRevert_Click(object sender, RoutedEventArgs e)
         {
+            //TODO: not implemented properly
             Settings.Default.IsInstalled = false;
             Settings.Default.Save();
 

@@ -125,7 +125,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             Connection lvi;
             // TEMP: test to avoid enumerating while modifying (might result in a deadlock, to test carefully!)
             lock (locker)
-                lvi = AllConnections.FirstOrDefault(l => l.PID == connectionInfo.OwningPid && l.Protocol == connectionInfo.Protocol && l.LocalPort == connectionInfo.LocalPort.ToString());
+                lvi = AllConnections.FirstOrDefault(l => l.Pid == connectionInfo.OwningPid && l.Protocol == connectionInfo.Protocol && l.SourcePort == connectionInfo.LocalPort.ToString());
 
             if (lvi != null)
             {

@@ -46,7 +46,6 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <PackageReference Include="log4net" Version="2.0.11" />
     <PackageReference Include="MaxMind.Db" Version="2.6.1" />
     <PackageReference Include="MaxMind.GeoIP2" Version="3.3.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">

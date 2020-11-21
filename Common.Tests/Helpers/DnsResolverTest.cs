@@ -24,9 +24,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             };
 
             WriteDebugOutput("Resolve first 3 entries:");
-            _ = DnsResolver.ResolveIpAddress(ipList[0]).ConfigureAwait(true);
-            _ = DnsResolver.ResolveIpAddress(ipList[1]).ConfigureAwait(true);
-            _ = DnsResolver.ResolveIpAddress(ipList[2]).ConfigureAwait(false);
+            _ = DnsResolver.ResolveIpAddressAsync(ipList[0]).ConfigureAwait(true);
+            _ = DnsResolver.ResolveIpAddressAsync(ipList[1]).ConfigureAwait(true);
+            _ = DnsResolver.ResolveIpAddressAsync(ipList[2]).ConfigureAwait(false);
 
             Task.WaitAll();
 
@@ -42,10 +42,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 "1.78.64.10", // sp1-78-64-10.msa.spmode.ne.jp
             };
             WriteDebugOutput("Resolve next 3 entries:");
-            _ = DnsResolver.ResolveIpAddress(ipList[0]).ConfigureAwait(false);
-            _ = DnsResolver.ResolveIpAddress(ipList[1]).ConfigureAwait(false);
-            _ = DnsResolver.ResolveIpAddress(ipList[2]).ConfigureAwait(false);
-            _ = DnsResolver.ResolveIpAddress(ipList[3]).ConfigureAwait(false);
+            _ = DnsResolver.ResolveIpAddressAsync(ipList[0]).ConfigureAwait(false);
+            _ = DnsResolver.ResolveIpAddressAsync(ipList[1]).ConfigureAwait(false);
+            _ = DnsResolver.ResolveIpAddressAsync(ipList[2]).ConfigureAwait(false);
+            _ = DnsResolver.ResolveIpAddressAsync(ipList[3]).ConfigureAwait(false);
             
             LogDictEntries();
             Assert.True(DnsResolver.CachedIPHostEntryDict.Values.Count == 7);
@@ -64,7 +64,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             };
             WriteDebugOutput("Unresolvabe IPs:");
 
-            _ = DnsResolver.ResolveIpAddress("1.9.1.9").ConfigureAwait(false);
+            _ = DnsResolver.ResolveIpAddressAsync("1.9.1.9").ConfigureAwait(false);
             
             LogDictEntries();
 

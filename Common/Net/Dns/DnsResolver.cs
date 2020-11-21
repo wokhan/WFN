@@ -25,7 +25,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.DNS
         public static readonly ObservableDictionary<IPAddress, CachedIPHostEntry> CachedIPHostEntryDict = new ObservableDictionary<IPAddress, CachedIPHostEntry>();
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
-        public static async Task<bool?> ResolveIpAddress(string ip, Action<CachedIPHostEntry>? callback = null)
+        public static async Task<bool?> ResolveIpAddressAsync(string ip, Action<CachedIPHostEntry>? callback = null)
         {
             return await Task.Run(() =>
             {

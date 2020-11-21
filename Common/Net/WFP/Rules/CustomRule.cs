@@ -10,9 +10,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules
         public enum CustomRuleAction
         {
             [Description("Allow")]
-            A,
+            Allow,
             [Description("Block")]
-            B
+            Block
         }
 
         public override NET_FW_ACTION_ Action { get; }
@@ -119,11 +119,11 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules
             Profiles = profiles;
             switch (action)
             {
-                case CustomRuleAction.A:
+                case CustomRuleAction.Allow:
                     Action = NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
                     break;
 
-                case CustomRuleAction.B:
+                case CustomRuleAction.Block:
                     Action = NET_FW_ACTION_.NET_FW_ACTION_BLOCK;
                     break;
 

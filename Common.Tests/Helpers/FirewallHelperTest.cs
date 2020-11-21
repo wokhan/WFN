@@ -35,10 +35,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             int cntMatch = 0;
             foreach (Rule rule in ret)
             {
-                bool matches = rule.MatchesEvent(currentProfile: PROF_ALL, appPkgId: null, svcName: "*", path: exePath, target: "*", remoteport: "*");
+                bool matches = rule.MatchesEvent(currentProfile: PROF_ALL, appPkgId: null, service: "*", path: exePath, target: "*", remoteport: "*");
                 if (matches)
                 {
-                    string ruleFriendlyPath = String.IsNullOrWhiteSpace(rule.ApplicationName) ? rule.ApplicationName : PathResolver.GetFriendlyPath(rule.ApplicationName);
+                    string ruleFriendlyPath = String.IsNullOrWhiteSpace(rule.ApplicationName) ? rule.ApplicationName : PathResolver.ResolvePath(rule.ApplicationName);
                     Assert.True(String.IsNullOrWhiteSpace(ruleFriendlyPath) || exePath.Equals(ruleFriendlyPath, StringComparison.OrdinalIgnoreCase));
                     WriteDebugOutput($"match found={matches}, rule={rule.Name}");
                     cntMatch++;

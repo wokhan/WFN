@@ -196,7 +196,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules
             }
         }
 
-        internal bool Matches(string path, IEnumerable<string> svc, int protocol, string localport, string target, string remoteport, string appPkgId, string LocalUserOwner, int currentProfile)
+        internal bool Matches(string path, string service, int protocol, string localport, string target, string remoteport, string appPkgId, string LocalUserOwner, int currentProfile)
         {
             //Note: This outputs *really* a lot, so use the if-statement to filter!
             /*if (!String.IsNullOrEmpty(r.ApplicationName) && r.ApplicationName.Contains("winword.exe"))
@@ -215,7 +215,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules
             return Enabled
                      && ((Profiles & currentProfile) != 0 || (Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0)
                      && (string.IsNullOrEmpty(ApplicationName) || StringComparer.CurrentCultureIgnoreCase.Compare(ApplicationName, path) == 0)
-                     && (string.IsNullOrEmpty(ServiceName) || svc.Any() && ServiceName == "*" || svc.Contains(ServiceName, StringComparer.CurrentCultureIgnoreCase))
+                     && (string.IsNullOrEmpty(ServiceName) || service.Any() && ServiceName == "*" || StringComparer.CurrentCultureIgnoreCase.Equals(service, ServiceName))
                      && (Protocol == WFP.Protocol.ANY || Protocol == protocol)
                      && CheckRuleAddresses(RemoteAddresses, target)
                      && CheckRulePorts(RemotePorts, remoteport)
@@ -229,17 +229,17 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules
         }
 
 
-        public bool MatchesEvent(int currentProfile, string appPkgId, string svcName, string path, string target = "*", string remoteport = "*")
+        public bool MatchesEvent(int currentProfile, string appPkgId, string service, string path, string target = "*", string remoteport = "*")
         {
-            var friendlyPath = string.IsNullOrWhiteSpace(path) ? path : PathResolver.GetFriendlyPath(path);
-            var ruleFriendlyPath = string.IsNullOrWhiteSpace(ApplicationName) ? ApplicationName : PathResolver.GetFriendlyPath(ApplicationName);
+            var friendlyPath = string.IsNullOrWhiteSpace(path) ? path : PathResolver.ResolvePath(path);
+            var ruleFriendlyPath = string.IsNullOrWhiteSpace(ApplicationName) ? ApplicationName : PathResolver.ResolvePath(ApplicationName);
             var ret = Enabled
                        && ((Profiles & currentProfile) != 0 || (Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0)
                        && (string.IsNullOrEmpty(ruleFriendlyPath) || ruleFriendlyPath.Equals(friendlyPath, StringComparison.OrdinalIgnoreCase))
                        && CheckRuleAddresses(RemoteAddresses, target)
                        && CheckRulePorts(RemotePorts, remoteport)
                        && (string.IsNullOrEmpty(AppPkgId) || AppPkgId == appPkgId)
-                       && (string.IsNullOrEmpty(ServiceName) || svcName.Any() && ServiceName == "*" || svcName.Equals(ServiceName, StringComparison.OrdinalIgnoreCase))
+                       && (string.IsNullOrEmpty(ServiceName) || service.Any() && ServiceName == "*" || service.Equals(ServiceName, StringComparison.OrdinalIgnoreCase))
                        ;
             if (ret && LogHelper.IsDebugEnabled())
             {
@@ -249,7 +249,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules
                 LogHelper.Debug("\t" + RemoteAddresses + " <--> " + target + " : " + CheckRuleAddresses(RemoteAddresses, target).ToString());
                 LogHelper.Debug("\t" + RemotePorts + " <--> " + remoteport + " : " + CheckRulePorts(RemotePorts, remoteport).ToString());
                 LogHelper.Debug("\t" + AppPkgId + " <--> " + appPkgId + "  : " + (string.IsNullOrEmpty(AppPkgId) || AppPkgId == appPkgId).ToString());
-                LogHelper.Debug("\t" + ServiceName + " <--> " + svcName + " : " + (string.IsNullOrEmpty(ServiceName) || svcName.Equals(ServiceName, StringComparison.OrdinalIgnoreCase)).ToString());
+                LogHelper.Debug("\t" + ServiceName + " <--> " + service + " : " + (string.IsNullOrEmpty(ServiceName) || service.Equals(ServiceName, StringComparison.OrdinalIgnoreCase)).ToString());
             }
             return ret;
         }

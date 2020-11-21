@@ -90,7 +90,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
             {
                 Dispatcher.Invoke(() =>
                 {
-                    foreach (var c in Connections.Where(co => (co.Protocol == "UDP" || co.State == "ESTABLISHED") && IsValid(co.RemoteAddress) && co.Owner != null))
+                    foreach (var c in Connections.Where(co => (co.Protocol == "UDP" || co.State == "ESTABLISHED") && IsValid(co.TargetIP) && co.Owner != null))
                     {
                         AddOrUpdateConnection(c);
                     }
@@ -111,7 +111,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
 
         private void AddOrUpdateConnection(Connection b)
         {
-            GeoConnection2 existingRoute = ConnectionsRoutes.FirstOrDefault(l => l.Connection.RemoteAddress.Equals(b.RemoteAddress));
+            GeoConnection2 existingRoute = ConnectionsRoutes.FirstOrDefault(l => l.Connection.TargetIP.Equals(b.TargetIP));
             if (existingRoute is null)
             {
                 ConnectionsRoutes.Add(new GeoConnection2(b));

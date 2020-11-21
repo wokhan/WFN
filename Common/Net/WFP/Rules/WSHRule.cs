@@ -31,7 +31,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules
                 //@@@ "ByPass"
                 parsed["action"].FirstOrDefault() == "Block" ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
 
-        public override string ApplicationName => PathResolver.GetFriendlyPath(parsed["app"].FirstOrDefault());
+        public override string ApplicationName => PathResolver.ResolvePath(parsed["app"].FirstOrDefault());
 
         public override string? ApplicationShortName => System.IO.Path.GetFileName(ApplicationName);
 

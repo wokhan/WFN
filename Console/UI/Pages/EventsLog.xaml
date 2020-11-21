@@ -41,16 +41,16 @@
                 <ColumnDefinition Width="6*"/>
                 <ColumnDefinition Width="43*"/>
             </Grid.ColumnDefinitions>
-            <DataGrid BorderThickness="0" x:Name="gridLog" EnableRowVirtualization="True" AlternatingRowBackground="Gainsboro" IsReadOnly="True" ColumnWidth="*" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" HeadersVisibility="Column" SelectionChanged="GridLog_SelectionChanged" DataGridCell.Selected="GridLog_CellSelected" GotFocus="GridLog_GotFocus" GridLinesVisibility="None" Grid.ColumnSpan="3">
+            <DataGrid VirtualizingPanel.VirtualizationMode="Recycling" BorderThickness="0" x:Name="gridLog" AlternatingRowBackground="Gainsboro" IsReadOnly="True" ColumnWidth="*" AutoGenerateColumns="False" HeadersVisibility="Column" SelectionChanged="GridLog_SelectionChanged" DataGridCell.Selected="GridLog_CellSelected" GotFocus="GridLog_GotFocus" GridLinesVisibility="None" Grid.ColumnSpan="3">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp,Mode=OneTime}" Width="Auto"/>
+                    <DataGridTextColumn Header="Date/Time" Binding="{Binding CreationTime,Mode=OneTime}" Width="Auto"/>
                     <DataGridTextColumn Header="PID" Binding="{Binding Pid,Mode=OneTime}" Width="Auto"/>
-                    <DataGridTemplateColumn Header="App" SortMemberPath="FileName" Width="0.2*" >
+                    <DataGridTemplateColumn Header="Application" SortMemberPath="FileName" Width="0.2*" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
                                     <Image Source="{Binding Icon}" Width="16" HorizontalAlignment="Left" />
-                                    <Label Content="{Binding FileName}" Margin="20,0,0,0" ToolTip="{Binding FriendlyPath}"/>
+                                    <Label Content="{Binding FileName}" Margin="20,0,0,0" ToolTip="{Binding Path}"/>
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

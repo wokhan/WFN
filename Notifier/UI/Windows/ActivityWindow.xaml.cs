@@ -94,9 +94,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 Items = {
                     CreateMenuItem(Messages.ActivityWindow_ShowNotifier, (s, e) => notifierWindow.RestoreWindowState()),
                     CreateMenuItem(Messages.ActivityWindow_OpenConsole, (s, e) => notifierWindow.ShowConsole()),
-                    CreateMenuItem(Messages.ActivityWindow_DiscardAndClose, (s, e) => { notifierWindow.Close(); Close(); }),
                     CreateMenuItem(Messages.ActivityWindow_HideThisWindow, (s, e) => Hide()),
-                    CreateMenuItem(SetOrientationGetMessage(), (s, e) => ((MenuItem)s).Header = SetOrientationGetMessage(true))
+                    CreateMenuItem(SetOrientationGetMessage(), (s, e) => ((MenuItem)s).Header = SetOrientationGetMessage(true)),
+                    new Separator(),
+                    CreateMenuItem(Messages.ActivityWindow_DiscardAndClose, (s, e) => { notifierWindow.Close(); Close(); })
                 }
             };
 

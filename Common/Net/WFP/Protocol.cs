@@ -55,6 +55,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
                 case 36:
                     return "XTP";
 
+                case 38:
+                    return "IDPR-CMTP";
+
                 default:
                     LogHelper.Warning("Unknown protocol type: " + protocol.ToString());
                     return protocol >= 0 ? protocol.ToString() : "Unknown";

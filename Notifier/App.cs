@@ -1,24 +1,20 @@
-﻿using log4net;
-
+﻿
 using System;
-using System.Collections;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Globalization;
-using System.IO;
 using System.Linq;
+using System.Security;
 using System.Security.Principal;
-using System.Text;
 using System.Threading;
 using System.Windows;
 
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
-using Wokhan.WindowsFirewallNotifier.Common.Net.DNS;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
-using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
+using Wokhan.WindowsFirewallNotifier.Common.Security;
+using Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
 using Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows;
 
@@ -32,16 +28,12 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
     public sealed class App : Application, IDisposable
     {
         // Use log4net directly in case LogHelper throws exceptions during startup
-        private readonly static ILog LOGGER = LogManager.GetLogger(typeof(App));
-
         private static App APP_INSTANCE;
         private static NotificationWindow notifierWindow;
         private static ActivityWindow activityWindow;
-        private EventLogListener eventLogListener;
+        private EventLogAsyncReader<LogEntryViewModel> eventLogListener;
 
         public ObservableCollection<CurrentConn> Connections { get; } = new ObservableCollection<CurrentConn>();
-
-        private string[] exclusions = null;
 
         /// <summary>
         /// Main entrypoint of the application.
@@ -51,10 +43,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         {
             try
             {
-                LOGGER.Info("Checking access rights...");
+                LogHelper.Info("Checking access rights...");
                 if (!IsUserAdministrator())
                 {
-                    LOGGER.Error("User must have admin rights to access to run Notifier.", null);
+                    LogHelper.Error("User must have admin rights to access to run Notifier.", null);
                     MessageBox.Show($"User must have admin rights to run Notifier\nNotifier will exit now!", "Security check", MessageBoxButton.OK, MessageBoxImage.Error);
                     Environment.Exit(1);
                 }
@@ -73,7 +65,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                 }
                 else
                 {
-                    LOGGER.Warn("A notififer instance is already running - showing it.");
+                    LogHelper.Warning("A notififer instance is already running - showing it.");
                     //MessageBox.Show("A notifier instance is already running");
                     APP_INSTANCE.ShowNotifierWindow();  // FIXME: show it - seems not to work as it should
                 }
@@ -81,7 +73,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             catch (Exception e)
             {
                 // use log4net directly in case LogHelper throws an exception itself during startup
-                LOGGER.Error(e.Message, e);  
+                LogHelper.Error(e.Message, e);
                 Environment.Exit(1);
             }
             Environment.Exit(0);
@@ -91,22 +83,30 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         {
             this.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
-#if false//DEBUG
+#if DEBUG
             this.Connections.Add(AppDataSample.DemoConnection);
 #endif
 
-            LOGGER.Info("Initializing exclusions...");
-            initExclusions();
-
-            LOGGER.Info("Init notification window...");
+            LogHelper.Info("Init notification window...");
             notifierWindow = new NotificationWindow
             {
                 WindowState = WindowState.Normal
             };
             MainWindow = notifierWindow;
             activityWindow = new ActivityWindow(notifierWindow, Settings.Default.ActivityWindow_Shown);
-            
-            eventLogListener = new EventLogListener(this);
+
+            try
+            {
+                eventLogListener = new EventLogAsyncReader<LogEntryViewModel>(EventLogAsyncReader.EVENTLOG_SECURITY, LogEntryViewModel.CreateFromEventLogEntry);
+               eventLogListener.FilterPredicate = null;
+                eventLogListener.EntryWritten += HandleEventLogNotification;
+            }
+            catch (SecurityException se)
+            {
+                LogHelper.Error($"Notifier cannot access security event log: {se.Message}. Notifier needs to be started with admin rights and will exit now", se);
+                MessageBox.Show($"Notifier cannot access security event log:\n{se.Message}\nNotifier needs to be started with admin rights.\nNotifier will exit.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Shutdown();
+            }
         }
 
         public static ActivityWindow GetActivityWindow()
@@ -121,10 +121,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
 
         protected override void OnExit(ExitEventArgs e)
         {
-            if (notifierWindow != null)
-            {
-                notifierWindow.Close();
-            }
+            notifierWindow?.Close();
             base.OnExit(e);
         }
 
@@ -149,76 +146,28 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             In, Out
         }
 
-        internal void HandleEventLogNotification(EventLogEntry entry)
+        internal void HandleEventLogNotification(object sender, EntryWrittenEventArgs eventArgs)
         {
+            var entry = eventArgs.Entry;
+            bool allowed = EventLogAsyncReader.IsFirewallEventAllowed(entry.InstanceId); 
+            activityWindow.ShowActivity(allowed ? ActivityWindow.ActivityEnum.Allowed : ActivityWindow.ActivityEnum.Blocked);
+            if (allowed || !LogEntryViewModel.TryCreateFromEventLogEntry(entry, out CurrentConn view))
+            {
+                return;
+            }
 
-            try
+            LogHelper.Info($"Handle {view.Direction}-going connection for '{view.FileName}', service: {view.ServiceName} ...");
+            if (!AddItem(view))
             {
-                int pid = int.Parse(GetReplacementString(entry, 0));
-                Direction direction = GetReplacementString(entry, 2) == @"%%14593" ? Direction.Out : Direction.In;
-                int protocol = int.Parse(GetReplacementString(entry, 7));
-                string targetIp = GetReplacementString(entry, 5);
-                int targetPort = int.Parse(GetReplacementString(entry, 6));
-                string sourceIp = GetReplacementString(entry, 3);
-                int sourcePort = int.Parse(GetReplacementString(entry, 4));
-                string friendlyPath = GetReplacementString(entry, 1) == "-" ? "System" : Common.IO.Files.PathResolver.GetFriendlyPath(GetReplacementString(entry, 1));
-                string fileName = System.IO.Path.GetFileName(friendlyPath);
+                //This connection is blocked by a specific rule. No action necessary.
+                LogHelper.Info($"{view.Direction}-going connection for '{view.FileName}' is blocked by a rule - ignored.");
+                return;
+            }
 
-                // try to get the servicename from pid (works only if service is running)
-                string serviceName = ServiceNameResolver.GetServicName(pid);
-
-                LogHelper.Info($"Handle {direction.ToString().ToUpper(CultureInfo.InvariantCulture)}-going connection for '{fileName}', service: {serviceName} ...");
-                if (!AddItem(pid, friendlyPath, targetIp, protocol: protocol, targetPort: targetPort, localPort: sourcePort))
-                {
-                    //This connection is blocked by a specific rule. No action necessary.
-                    LogHelper.Info($"{direction}-going connection for '{fileName}' is blocked by a rule - ignored.");
-                    return;
-                }
-
-                //if (notifierWindow.WindowState == WindowState.Minimized)
-                //{
-                //    notifierWindow.ShowActivityTrayIcon($"Notifier blocked connections - click tray icon to show");  // max 64 chars!
-                //}
-            }
-            catch (Exception e)
-            {
-                LogHelper.Error("HandleEventLogNotification exception", e);
-            }
-        }
-
-        private static string GetReplacementString(EventLogEntry entry, int i)
-        {
-            // check out of bounds
-            if (i < entry.ReplacementStrings.Length)
-            {
-                return entry.ReplacementStrings[i];
-            }
-            else
-            {
-                return "";
-            }
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        private void initExclusions()
-        {
-            // FIXME: Remove - only use global block rules.
-            try
-            {
-                if (!Settings.Default.UseBlockRules && exclusions is null) //@wokhan: WHY NOT~Settings.Default.UseBlockRules ??
-                {
-                    string exclusionsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exclusions.set");
-                    if (File.Exists(exclusionsPath))
-                    {
-                        exclusions = File.ReadAllLines(exclusionsPath);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                LogHelper.Error("Unable to load the exceptions list.", e);
-            }
+            //if (notifierWindow.WindowState == WindowState.Minimized)
+            //{
+            //    notifierWindow.ShowActivityTrayIcon($"Notifier blocked connections - click tray icon to show");  // max 64 chars!
+            //}
         }
 
         /// <summary>
@@ -232,154 +181,50 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         /// <param name="localPort"></param>
         /// 
         /// <returns>false if item is blocked and was thus not added to internal query list</returns>
-        internal bool AddItem(int pid, string path, string target, int protocol, int targetPort, int localPort)
+        internal bool AddItem(CurrentConn conn)
         {
             try
             {
-                string fileName = Path.GetFileName(path);
-                if (path != "System")
-                {
-                    path = Common.IO.Files.PathResolver.GetFriendlyPath(path);
-                }
-
-                var existing = Dispatcher.Invoke(() => this.Connections.FirstOrDefault(c => StringComparer.InvariantCultureIgnoreCase.Equals(c.CurrentPath, path) && c.Target == target && c.TargetPort == targetPort.ToString() && (localPort >= IPHelper.GetMaxUserPort() || c.LocalPort == localPort.ToString()) && c.Protocol == protocol));
+                var sourcePortAsInt = int.Parse(conn.SourcePort);
+                var existing = Dispatcher.Invoke(() => this.Connections.FirstOrDefault(c => StringComparer.InvariantCultureIgnoreCase.Equals(c.Path, conn.Path) && c.TargetIP == conn.TargetIP && c.TargetPort == conn.TargetPort && (sourcePortAsInt >= IPHelper.GetMaxUserPort() || c.SourcePort == conn.SourcePort) && c.RawProtocol == conn.RawProtocol));
                 if (existing != null)
                 {
                     LogHelper.Debug("Connection matches an already existing connection request.");
-                    if (!existing.LocalPortArray.Contains(localPort))
+                    if (!existing.LocalPortArray.Contains(sourcePortAsInt))
                     {
-                        existing.LocalPortArray.Add(localPort);
+                        existing.LocalPortArray.Add(sourcePortAsInt);
                         //Note: Unfortunately, C# doesn't have a simple List that automatically sorts... :(
-                        // TODO: it does with SortedList. Don't get this comment...
-                        existing.LocalPortArray.Sort(); 
-                        existing.LocalPort = IPHelper.MergePorts(existing.LocalPortArray);
+                        // TODO: it does with SortedSet. Don't get this comment...
+                        // existing.LocalPortArray.Sort();
+                        existing.SourcePort = IPHelper.MergePorts(existing.LocalPortArray);
                     }
                     existing.TentativesCounter++;
                 }
                 else
                 {
-                    string[] svc = Array.Empty<string>();
-                    string[] svcdsc = Array.Empty<string>();
-                    bool unsure = false;
-                    string description = null;
-
-                    if (path == "System")
+                    ServiceInfoResult svcInfo = null;
+                    if (Settings.Default.EnableServiceDetection)
                     {
-                        description = "System";
-                    }
-                    else
-                    {
-                        try
-                        {
-                            if (File.Exists(path))
-                            {
-                                description = FileVersionInfo.GetVersionInfo(path).FileDescription;
-                                if(String.IsNullOrWhiteSpace(description))
-                                {
-                                    description = path.Substring(path.LastIndexOf('\\') + 1);
-                                }
-                            }
-                            else
-                            {
-                                // TODO: this happens when accessing system32 files from a x86 application i.e. File.Exists always returns false; solution would be to target AnyCPU
-                                description = path;
-                            }
-                        }
-                        catch (Exception exc)
-                        {
-                            LogHelper.Error("Unable to check the file description.", exc);
-                            description = path + " (not found)";
-                        }
-
-                        if (Settings.Default.EnableServiceDetection)
-                        {
-                            ServiceInfoResult svcInfo = ServiceNameResolver.GetServiceInfo(pid, fileName);
-                            if (svcInfo != null)
-                            {
-                                svc = new string[] { svcInfo.Name };
-                                svcdsc = new string[] { svcInfo.DisplayName };
-                                unsure = false;
-                            }
-                        }
-                    }
-
-                    // Check whether this connection has been excluded - exclusion means ignore i.e do not notify
-                    if (exclusions != null)
-                    {
-                        // WARNING: check for regressions
-                        LogHelper.Debug("Checking exclusions...");
-                        var exclusion = exclusions.FirstOrDefault(e => e.StartsWith(/*svc ??*/path, StringComparison.InvariantCulture) || svc != null && svc.All(s => e.StartsWith(s, StringComparison.InvariantCulture)));
-                        if (exclusion != null)
-                        {
-                            string[] esplit = exclusion.Split(';');
-                            if (esplit.Length == 1 ||
-                                    (String.IsNullOrEmpty(esplit[1]) || esplit[1] == localPort.ToString()) &&
-                                    (String.IsNullOrEmpty(esplit[2]) || esplit[2] == target) &&
-                                    (String.IsNullOrEmpty(esplit[3]) || esplit[3] == targetPort.ToString())
-                               )
-                            {
-                                LogHelper.Info($"Connection is excluded: {exclusion}");
-                                return false;
-                            }
-                        }
+                        //TODO: using FileName, not Path?
+                        svcInfo = ServiceNameResolver.GetServiceInfo(conn.Pid, conn.FileName);
                     }
 
                     // Check whether this connection is blocked by a rule.
-                    var blockingRules = FirewallHelper.GetMatchingRules(path, ProcessHelper.GetAppPkgId(pid), protocol, target, targetPort.ToString(), localPort.ToString(), unsure ? svc : svc.Take(1), ProcessHelper.GetLocalUserOwner(pid), blockOnly:true, outgoingOnly:true);
+                    var blockingRules = FirewallHelper.GetMatchingRules(conn.Path, ProcessHelper.GetAppPkgId(conn.Pid), conn.RawProtocol, conn.TargetIP, conn.TargetPort, conn.SourcePort, svcInfo?.Name, ProcessHelper.GetLocalUserOwner(conn.Pid), blockOnly: true, outgoingOnly: true);
                     if (blockingRules.Any())
                     {
                         LogHelper.Info("Connection matches a block-rule!");
 
-                        StringBuilder sb = new StringBuilder();
-                        sb.Append("Blocked by: ");
-                        foreach (Rule s in blockingRules)
-                        {
-                            sb.Append(s.Name + ": " + s.ApplicationName + ", " + s.Description + ", " + s.ActionStr + ", " + s.ServiceName + ", " + s.Enabled);
-                        }
-                        LogHelper.Debug("pid: " + Process.GetCurrentProcess().Id + " GetMatchingRules: " + path + ", " + protocol + ", " + target + ", " + targetPort + ", " + localPort + ", " + String.Join(",", svc));
+                        LogHelper.Debug($"pid: {Process.GetCurrentProcess().Id} GetMatchingRules: {conn.FileName}, {conn.Protocol}, {conn.TargetIP}, {conn.TargetPort}, {conn.SourcePort}, {svcInfo?.Name}");
 
                         return false;
                     }
 
-                    FileVersionInfo fileinfo = null;
-                    try
-                    {
-                        fileinfo = FileVersionInfo.GetVersionInfo(path);
-                    }
-                    catch (FileNotFoundException)
-                    { }
-
-                    var conn = new CurrentConn
-                    {
-                        Description = description,
-                        CurrentAppPkgId = ProcessHelper.GetAppPkgId(pid),
-                        CurrentLocalUserOwner = ProcessHelper.GetLocalUserOwner(pid),
-                        ProductName = fileinfo != null ? fileinfo.ProductName : String.Empty,
-                        Company = fileinfo != null ? fileinfo.CompanyName : String.Empty,
-                        CurrentPath = path,
-                        Protocol = protocol,
-                        TargetPort = targetPort.ToString(),
-                        RuleName = String.Format(Common.Properties.Resources.RULE_NAME_FORMAT, unsure || String.IsNullOrEmpty(svcdsc.FirstOrDefault()) ? description : svcdsc.FirstOrDefault()),
-                        Target = target,
-                        LocalPort = localPort.ToString()
-                    };
-
-                    conn.LocalPortArray.Add(localPort);
-
-                    if (unsure)
-                    {
-                        //LogHelper.Debug("Adding services (unsure): " + String.Join(",", svc));
-                        conn.PossibleServices = svc;
-                        conn.PossibleServicesDesc = svcdsc;
-                    }
-                    else
-                    {
-                        //LogHelper.Debug("Adding services: " + svc.FirstOrDefault());
-                        conn.CurrentService = svc.FirstOrDefault();
-                        conn.CurrentServiceDesc = svcdsc.FirstOrDefault();
-                    }
-
-                    ResolveHostForConnection(conn);
+                    conn.CurrentAppPkgId = ProcessHelper.GetAppPkgId(conn.Pid);
+                    conn.CurrentLocalUserOwner = ProcessHelper.GetLocalUserOwner(conn.Pid);
+                    conn.CurrentService = svcInfo?.DisplayName;
+                    conn.CurrentServiceDesc = svcInfo?.Name;
+                    conn.LocalPortArray.Add(sourcePortAsInt);
 
                     Dispatcher.Invoke(() => this.Connections.Add(conn));
 
@@ -394,18 +239,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             return false;
         }
 
-        
-        private static void ResolveHostForConnection(CurrentConn conn)
-        {
-            try
-            {
-                _ = DnsResolver.ResolveIpAddress(conn.Target, entry => conn.ResolvedHost = conn.Target != entry.HostEntry.HostName ? entry.HostEntry.HostName : "..."); 
-            }
-            catch (Exception e) 
-            {
-                LogHelper.Warning($"Cannot resolve host name for {conn.Target} - Exception: {e.Message}");
-            }
-        }
 
         public void Dispose()
         {

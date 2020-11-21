@@ -208,26 +208,28 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
 
         public void Save([param: NotNull] Func<Func<bool>, string, string, bool> checkResult)
         {
-            FirewallHelper.UpdatePrivatePolicy(PrivateIsEnabled, PrivateIsInBlockedNotif || PrivateIsInBlocked, PrivateIsOutBlocked, !PrivateIsInBlockedNotif);
-            FirewallHelper.UpdatePublicPolicy(PublicIsEnabled, PublicIsInBlockedNotif || PublicIsInBlocked, PublicIsOutBlocked, !PublicIsInBlockedNotif);
-            FirewallHelper.UpdateDomainPolicy(DomainIsEnabled, DomainIsInBlockedNotif || DomainIsInBlocked, DomainIsOutBlocked, !DomainIsInBlockedNotif);
-
-            // Checking if Notifications are to be enabled or not
-            if (Settings.Default.StartNotifierAfterLogin && (!PrivateIsEnabled || !PublicIsEnabled || !DomainIsEnabled))
+            if (!checkResult(UpdateFirewallPolicies, "Successfully applied the firewall settings", "Failed to apply the firewall settings!"))
             {
-                if (!InstallHelper.IsInstalled())
-                {
-                    InstallHelper.Install(checkResult);
-                }
-                else
-                {
-                    InstallHelper.InstallCheck(checkResult);
-                }
+                return;
+            }
+
+            if ((PrivateIsEnabled && PrivateIsOutBlocked) || (PublicIsEnabled && PublicIsOutBlocked) || (DomainIsEnabled && DomainIsOutBlocked))
+            {
+                InstallHelper.Install(checkResult);
             }
             else
             {
                 InstallHelper.Uninstall(checkResult);
             }
+        }
+
+        private bool UpdateFirewallPolicies()
+        {
+            FirewallHelper.UpdatePrivatePolicy(PrivateIsEnabled, PrivateIsInBlockedNotif || PrivateIsInBlocked, PrivateIsOutBlocked, !PrivateIsInBlockedNotif);
+            FirewallHelper.UpdatePublicPolicy(PublicIsEnabled, PublicIsInBlockedNotif || PublicIsInBlocked, PublicIsOutBlocked, !PublicIsInBlockedNotif);
+            FirewallHelper.UpdateDomainPolicy(DomainIsEnabled, DomainIsInBlockedNotif || DomainIsInBlocked, DomainIsOutBlocked, !DomainIsInBlockedNotif);
+
+            return true;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -65,7 +65,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
             {
                 if (_coordinates is null)
                 {
-                    _coordinates = IPToLocation(Connection.RemoteAddress);
+                    _coordinates = IPToLocation(Connection.TargetIP);
                 }
 
                 return _coordinates;
@@ -132,7 +132,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
             {
                 CurrentCoordinates
             };
-            foreach (var x in (await IPHelper.GetFullRoute(Connection.RemoteAddress).ConfigureAwait(false)).Select(ip => IPToLocation(ip)).Where(l => l.Latitude != 0 && l.Longitude != 0))
+            foreach (var x in (await IPHelper.GetFullRoute(Connection.TargetIP).ConfigureAwait(false)).Select(ip => IPToLocation(ip)).Where(l => l.Latitude != 0 && l.Longitude != 0))
             {
                 r.Add(x);
             }

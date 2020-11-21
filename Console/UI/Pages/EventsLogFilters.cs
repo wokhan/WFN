@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
+
+using Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 {
@@ -27,22 +28,17 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
             this._eventsLog = eventsLog;
         }
 
-        private readonly Predicate<object> TcpFilterPredicate = (object o) =>
-        {
-            LogEntryViewModel le = (LogEntryViewModel)o;
-            bool result = le.Protocol == "TCP";
-            return result;
-        };
+        private readonly Predicate<object> TcpFilterPredicate = (o) => ((LogEntryViewModel)o).Protocol == "TCP";
 
         internal void ResetTcpFilter()
         {
-            if (_eventsLog.dataView is null) { return; }
+          /*  if (_eventsLog.dataView is null) { return; }
 
             _eventsLog.dataView.Filter -= TcpFilterPredicate;
             if (_eventsLog.IsTCPOnlyEnabled)
             {
                 _eventsLog.dataView.Filter += TcpFilterPredicate;
-            }
+            }*/
         }
 
         private Predicate<object> FilterTextPredicate = (o) =>
@@ -55,31 +51,24 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         };
 
 
-        private bool _isResetTextFilterPending = false;
-        internal void ResetTextfilter()
+        private bool _isResetTextFilterPending;
+        internal async void ResetTextfilter()
         {
-            if (!_isResetTextFilterPending)
+           /* if (!_isResetTextFilterPending)
             {
-                Task t = new Task(async () =>
+                _isResetTextFilterPending = true;
+                await Task.Delay(500).ConfigureAwait(true);
+                if (!string.IsNullOrWhiteSpace(_filterText))
                 {
-                    _isResetTextFilterPending = true;
-                    await Task.Delay(500).ConfigureAwait(false);
-                    if (!string.IsNullOrWhiteSpace(_filterText))
-                    {
-                        _eventsLog.Dispatcher.Invoke(() =>
-                        {
-                            _eventsLog.dataView.Filter -= FilterTextPredicate;
-                            _eventsLog.dataView.Filter += FilterTextPredicate;
-                        });
-                    }
-                    else
-                    {
-                        _eventsLog.Dispatcher.Invoke(() => { _eventsLog.dataView.Filter -= FilterTextPredicate; });
-                    }
-                    _isResetTextFilterPending = false;
-                });
-                t.Start();
-            }
+                    _eventsLog.dataView.Filter -= FilterTextPredicate;
+                    _eventsLog.dataView.Filter += FilterTextPredicate;
+                }
+                else
+                {
+                    _eventsLog.dataView.Filter -= FilterTextPredicate;
+                }
+                _isResetTextFilterPending = false;
+            }*/
         }
     }
 }

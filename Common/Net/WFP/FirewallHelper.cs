@@ -3,7 +3,6 @@ using NetFwTypeLib;
 using System.Linq;
 using Microsoft.Win32;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
@@ -12,21 +11,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
 {
     public static partial class FirewallHelper
     {
-        //[DllImport("user32.dll", SetLastError = true)]
-        //private static extern int LoadString(IntPtr hInstance, uint uID, StringBuilder lpBuffer, int nBufferMax);
-
-        //[DllImport("kernel32.dll", SetLastError = true)]
-        //private static extern IntPtr FindResource(IntPtr hModule, int lpName, int lpType);
-
-        //[DllImport("kernel32.dll", SetLastError = true)]
-        //private static extern IntPtr LoadLibraryEx(string lpFileName, [In] IntPtr hFile, uint dwFlags);
-
-        //[DllImport("kernel32.dll", SetLastError = true)]
-        //[return: MarshalAs(UnmanagedType.Bool)]
-        //private static extern bool FreeLibrary([In] IntPtr hModule);
-
-        //private const uint LOAD_LIBRARY_AS_DATAFILE = 0&00000002;
-
 #pragma warning disable CS8600,CS8601,CS8604 // Ignore possible null value.
         private static INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
 #pragma warning restore CS8600,CS8601,CS8604
@@ -81,51 +65,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
         {
             return (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL;
         }
-
-        public static bool IsEventAccepted(EventLogEntry entry)
-        {
-            var instanceId = entry.InstanceId;
-
-            // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
-            return
-                instanceId == 5157 // block connection
-                || instanceId == 5152 // drop packet
-                                      // Cannot parse this event: || instanceId == 5031 
-                || instanceId == 5150
-                || instanceId == 5151
-                || instanceId == 5154
-                || instanceId == 5155
-                || instanceId == 5156;
-        }
-
-        public static string GetEventInstanceIdAsString(long eventId)
-        {
-            // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
-            var reason = "Block: {0} ";
-            switch (eventId)
-            {
-                case 5157:
-                    return string.Format(reason, "connection");
-                case 5152:
-                    return string.Format(reason, "packet droped");
-                case 5031:
-                    return string.Format(reason, "app connection"); //  Firewall blocked an application from accepting incoming connections on the network.
-                case 5150:
-                    return string.Format(reason, "packet");
-                case 5151:
-                    return string.Format(reason, "packet (other FW)");
-                case 5154:
-                    return "Allow: listen";
-                case 5155:
-                    return string.Format(reason, "listen");
-                case 5156:
-                    return "Allow: connection";
-                default:
-                    return "[UNKNOWN] eventId:" + eventId.ToString();
-            }
-        }
-
-
 
         public static bool CheckFirewallEnabled()
         {
@@ -241,15 +180,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
         }
 
         public static bool IsCurrentProfilePublic() => (firewallPolicy.CurrentProfileTypes & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC) != 0;
-        public static bool IsCurrentProfilePrivate() =>  (firewallPolicy.CurrentProfileTypes & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE) != 0;
+        public static bool IsCurrentProfilePrivate() => (firewallPolicy.CurrentProfileTypes & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE) != 0;
         public static bool IsCurrentProfileDomain() => (firewallPolicy.CurrentProfileTypes & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN) != 0;
 
         public static int GetCurrentProfile() => firewallPolicy.CurrentProfileTypes;
 
-        public static IEnumerable<Rule> GetMatchingRules(string path, string appPkgId, int protocol, string target, string targetPort, string localPort, IEnumerable<string> svc, string localUserOwner, bool blockOnly, bool outgoingOnly = true)
+        public static IEnumerable<Rule> GetMatchingRules(string path, string appPkgId, int protocol, string target, string targetPort, string localPort, string service, string localUserOwner, bool blockOnly, bool outgoingOnly = true)
         {
             var currentProfile = GetCurrentProfile(); //This call is relatively slow, and calling it many times causes a startup delay. Let's cache it!
-            IEnumerable<Rule> ret = GetRules().Where(r => r.Matches(path, svc, protocol, localPort, target, targetPort, appPkgId, localUserOwner, currentProfile));
+            IEnumerable<Rule> ret = GetRules().Where(r => r.Matches(path, service, protocol, localPort, target, targetPort, appPkgId, localUserOwner, currentProfile));
             if (blockOnly)
             {
                 ret = ret.Where(r => r.Action == NET_FW_ACTION_.NET_FW_ACTION_BLOCK);
@@ -259,31 +198,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
                 ret = ret.Where(r => r.Direction == NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT);
             }
 
-            //Note: This fills up the logfile quite quickly...
-            /*LogHelper.Debug("GetMatchingRules: Matching the following rule:");
-            LogHelper.Debug("ToMatch: " + path + ", " + protocol + ", " + target + ", " + targetPort + ", " + localPort + ", " + String.Join(",", svc) + ", " + appPkgId + ", " + blockOnly.ToString(), ", " + outgoingOnly.ToString());
-            foreach (var r in ret)
-            {
-                LogHelper.Debug("Matched rule: " + r.ApplicationName + ", " + r.Protocol + ", " + r.RemoteAddresses + ", " + r.RemotePorts + ", " + r.LocalPorts + ", " + r.ServiceName + ", " + r.AppPkgId + ", " + r.LUOwn + ", " + r.ActionStr + ", " + r.Description + ", " + r.Enabled);
-            }*/
-
             return ret;
         }
-
-
-        /*class SimpleEventRuleCompare : IEqualityComparer<Rule>
-        {
-            public bool Equals(Rule x, Rule y)
-            {
-                // Two items are equal if their keys are equal.
-                return x.Name == y.Name;
-            }
-
-            public int GetHashCode(Rule obj)
-            {
-                return obj.Name.GetHashCode();
-            }
-        }*/
 
         /// <summary>
         /// Get the rules matching an eventlog item taking process appPkgId and svcName into account.
@@ -294,7 +210,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
         /// <param name="blockOnly">Filter for block only rules</param>
         /// <param name="outgoingOnly">Filter for outgoing rules only</param>
         /// <returns></returns>
-        public static IEnumerable<Rule> GetMatchingRulesForEvent(int pid, string path, string target, string targetPort, bool blockOnly = true, bool outgoingOnly = false)
+        public static IEnumerable<Rule> GetMatchingRulesForEvent(uint pid, string path, string target, string targetPort, bool blockOnly = true, bool outgoingOnly = false)
         {
             var appPkgId = pid > 0 ? ProcessHelper.GetAppPkgId(pid) : string.Empty;
             var currentProfile = GetCurrentProfile();
