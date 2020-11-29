@@ -13,6 +13,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private readonly EventsLog _eventsLog;
 
         private static string _filterText;
+
         internal string FilterText
         {
             get => _filterText;
@@ -32,13 +33,13 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         internal void ResetTcpFilter()
         {
-          /*  if (_eventsLog.dataView is null) { return; }
+            if (_eventsLog.dataView is null) { return; }
 
             _eventsLog.dataView.Filter -= TcpFilterPredicate;
             if (_eventsLog.IsTCPOnlyEnabled)
             {
                 _eventsLog.dataView.Filter += TcpFilterPredicate;
-            }*/
+            }
         }
 
         private Predicate<object> FilterTextPredicate = (o) =>
@@ -54,7 +55,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private bool _isResetTextFilterPending;
         internal async void ResetTextfilter()
         {
-           /* if (!_isResetTextFilterPending)
+            if (!_isResetTextFilterPending)
             {
                 _isResetTextFilterPending = true;
                 await Task.Delay(500).ConfigureAwait(true);
@@ -68,7 +69,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                     _eventsLog.dataView.Filter -= FilterTextPredicate;
                 }
                 _isResetTextFilterPending = false;
-            }*/
+            }
         }
     }
 }

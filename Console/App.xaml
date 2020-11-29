@@ -13,6 +13,7 @@
             </ResourceDictionary.MergedDictionaries>
             <BindingConverters:BooleanNegateConverter x:Key="booleanNegator" />
             <BindingConverters:UnitFormatConverter x:Key="unitFormatter" />
+            <BindingConverters:ObjectToBoolConverter x:Key="objectToBool" />
             <BindingConverters:ValueToVisibilityConverter x:Key="valueToVisibility" />
             <BindingConverters:ValueToVisibilityNegateConverter x:Key="valueToVisibilityNegate" />
             <system:Double x:Key="ConsoleSizeHeight">600</system:Double>
@@ -43,7 +44,7 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-            <Style TargetType="Label" x:Key="SectionHeader">
+            <Style TargetType="TextBlock" x:Key="SectionHeader">
                 <Setter Property="FontSize" Value="18" />
             </Style>
             <Style TargetType="RadioButton" x:Key="RadioButtonSlide">

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Text;
 using System.IO;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
+using System.Threading.Tasks;
 
 /// <summary>
 /// NetshHelper executes netsh commands and parses the resulting xml content.
@@ -16,8 +17,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
     /// </summary>
     public static class NetshHelper
     {
-        private static XmlDocument? FiltersXmlDoc = null;
-        private static XmlDocument? WFPStateXmlDoc = null;
+        private static XmlDocument? FiltersXmlDoc;
+        private static XmlDocument? WFPStateXmlDoc;
 
         private static FilterResult FILTER_RESULT_ERROR = new FilterResult
         {
@@ -27,12 +28,20 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             HasErrors = true
         };
 
+        private static object InitLocker = new object();
+
         private static void Init(bool refreshData = false)
         {
-            if (FiltersXmlDoc is null || WFPStateXmlDoc is null || refreshData)
+            lock (InitLocker)
             {
-                FiltersXmlDoc = LoadWfpFilters(); // firewall filters
-                WFPStateXmlDoc = LoadWfpState(); // all filters added by other provider e.g. firewall apps
+                if (FiltersXmlDoc is null || WFPStateXmlDoc is null || refreshData)
+                {
+                    // Use parallel tasks to speed things up a bit
+                    var tFilters = Task.Run(() => FiltersXmlDoc = LoadWfpFilters()); // firewall filters
+                    var tStates = Task.Run(() => WFPStateXmlDoc = LoadWfpState()); // all filters added by other provider e.g. firewall apps
+
+                    Task.WaitAll(tFilters, tStates);
+                }
             }
         }
 
@@ -78,7 +87,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             }
             else
             {
-                LogHelper.Debug($"netsh error: exitCode={rr.exitCode}\noutput: {rr.outputData.ToString().Substring(1, Math.Min(rr.outputData.Length - 1, 300))}...\nerror: { rr.errorData?.ToString() }");
+                LogHelper.Info($"netsh error: exitCode={rr.exitCode}\noutput: {(rr.outputData.Length > 0 ? rr.outputData.ToString().Substring(0, Math.Min(rr.outputData.Length - 1, 300)) : String.Empty)}...\nerror: { rr.errorData?.ToString() }");
             }
             return xmlDoc;
         }
@@ -94,7 +103,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             }
             else
             {
-                LogHelper.Debug($"netsh error: exitCode={rr.exitCode}\noutput: {rr.outputData.ToString().Substring(1, Math.Min(rr.outputData.Length - 1, 300))}...\nerror: { rr.errorData?.ToString() }");
+                LogHelper.Info($"netsh error: exitCode={rr.exitCode}\noutput: {(rr.outputData.Length > 0 ? rr.outputData.ToString().Substring(0, Math.Min(rr.outputData.Length - 1, 300)) : String.Empty)}...\nerror: { rr.errorData?.ToString() }");
             }
             return xmlDoc;
         }
@@ -229,7 +238,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
 
         private class RunResult
         {
-            internal int dataLineCnt = 0;
+            internal int dataLineCnt;
             internal StringBuilder errorData = new StringBuilder();
             internal StringBuilder outputData = new StringBuilder();
             internal int exitCode = -1;
@@ -259,9 +268,18 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
                 p.Start();
                 p.BeginOutputReadLine();
                 p.BeginErrorReadLine();
-                p.WaitForExit(10000);   // wait 10s max
-
-                rr.exitCode = p.ExitCode;
+                // wait 10s max
+                if (p.WaitForExit(10000))
+                {
+                    rr.exitCode = p.ExitCode;
+                }
+                else
+                {
+                    var msg = $"Process didn't respond after 10s, killing it now. Command: {command} / Args: {args}";
+                    LogHelper.Error(msg, null);
+                    rr.errorData.AppendLine(msg);
+                    p.Kill();
+                }
             }
             catch (Exception ex)
             {
@@ -270,7 +288,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP
             }
             return rr;
         }
-        
+
         private static XmlDocument? SafeLoadXml(string xml)
         {
             XmlDocument? xmlDoc = null;

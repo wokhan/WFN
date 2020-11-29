@@ -7,22 +7,28 @@ using Wokhan.WindowsFirewallNotifier.Common.Security;
 using WFP = Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using System.Linq;
+using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
+using Wokhan.WindowsFirewallNotifier.Common.Core;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels
 {
     public class LogEntryViewModel : ConnectionBaseInfo
     {
+        public int Index { get; protected set; }
         public int Id { get; protected set; }
         public string? FilterId { get; protected set; }
+
+        private FilterResult? _matchingFilter;
+        public FilterResult? MatchingFilter => this.GetOrSetAsyncValue(() => NetshHelper.FindMatchingFilterInfo(int.Parse(FilterId)), NotifyPropertyChanged, nameof(_matchingFilter));
         public string? Reason { get; protected set; }
-        public string? Reason_Info { get; protected set; }
+        public string? Message { get; protected set; }
 
         //TODO: should be in the XAML as conditionally triggered style
         public SolidColorBrush? ReasonColor { get; protected set; }
 
         public SolidColorBrush? DirectionColor { get; protected set; }
 
-        public static bool TryCreateFromEventLogEntry<T>(EventLogEntry entry, out T? view) where T : LogEntryViewModel, new()
+        public static bool TryCreateFromEventLogEntry<T>(EventLogEntry entry, int index, out T? view) where T : LogEntryViewModel, new()
         {
             if (entry == null)
             {
@@ -53,6 +59,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels
 
                 var le = new T()
                 {
+                    Index = index,
                     Id = entry.Index,
                     Pid = pid,
                     CreationTime = entry.TimeGenerated,
@@ -68,7 +75,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels
                     Direction = direction,
                     FilterId = GetReplacementString(entry, 8),
                     Reason = EventLogAsyncReader.GetEventInstanceIdAsString(entry.InstanceId),
-                    Reason_Info = entry.Message
+                    Message = entry.Message
                 };
 
                 le.ReasonColor = le.Reason.StartsWith("Block") ? Brushes.OrangeRed : Brushes.Blue;
@@ -93,9 +100,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels
             return entry.ReplacementStrings.DefaultIfEmpty(string.Empty).ElementAtOrDefault(i);
         }
 
-        public static LogEntryViewModel? CreateFromEventLogEntry(EventLogEntry entry)
+        public static LogEntryViewModel? CreateFromEventLogEntry(EventLogEntry entry, int index)
         {
-            return TryCreateFromEventLogEntry(entry, out LogEntryViewModel? ret) ? ret : null;
+            return TryCreateFromEventLogEntry(entry, index, out LogEntryViewModel? ret) ? ret : null;
         }
     }
 

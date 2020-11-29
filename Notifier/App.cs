@@ -98,7 +98,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
             try
             {
                 eventLogListener = new EventLogAsyncReader<LogEntryViewModel>(EventLogAsyncReader.EVENTLOG_SECURITY, LogEntryViewModel.CreateFromEventLogEntry);
-               eventLogListener.FilterPredicate = null;
+                eventLogListener.FilterPredicate = EventLogAsyncReader.IsFirewallEventSimple;
                 eventLogListener.EntryWritten += HandleEventLogNotification;
             }
             catch (SecurityException se)
@@ -149,9 +149,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
         internal void HandleEventLogNotification(object sender, EntryWrittenEventArgs eventArgs)
         {
             var entry = eventArgs.Entry;
-            bool allowed = EventLogAsyncReader.IsFirewallEventAllowed(entry.InstanceId); 
+            bool allowed = EventLogAsyncReader.IsFirewallEventAllowed(entry.InstanceId);
             activityWindow.ShowActivity(allowed ? ActivityWindow.ActivityEnum.Allowed : ActivityWindow.ActivityEnum.Blocked);
-            if (allowed || !LogEntryViewModel.TryCreateFromEventLogEntry(entry, out CurrentConn view))
+            if (allowed || !LogEntryViewModel.TryCreateFromEventLogEntry(entry, 0, out CurrentConn view))
             {
                 return;
             }
@@ -205,12 +205,15 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                     ServiceInfoResult svcInfo = null;
                     if (Settings.Default.EnableServiceDetection)
                     {
-                        //TODO: using FileName, not Path?
                         svcInfo = ServiceNameResolver.GetServiceInfo(conn.Pid, conn.FileName);
                     }
 
+                    conn.CurrentAppPkgId = ProcessHelper.GetAppPkgId(conn.Pid);
+                    conn.CurrentLocalUserOwner = ProcessHelper.GetLocalUserOwner(conn.Pid);
+                    conn.CurrentService = svcInfo?.DisplayName;
+                    conn.CurrentServiceDesc = svcInfo?.Name;
                     // Check whether this connection is blocked by a rule.
-                    var blockingRules = FirewallHelper.GetMatchingRules(conn.Path, ProcessHelper.GetAppPkgId(conn.Pid), conn.RawProtocol, conn.TargetIP, conn.TargetPort, conn.SourcePort, svcInfo?.Name, ProcessHelper.GetLocalUserOwner(conn.Pid), blockOnly: true, outgoingOnly: true);
+                    var blockingRules = FirewallHelper.GetMatchingRules(conn.Path, conn.CurrentAppPkgId, conn.RawProtocol, conn.TargetIP, conn.TargetPort, conn.SourcePort, conn.CurrentServiceDesc, conn.CurrentLocalUserOwner, blockOnly: true, outgoingOnly: true);
                     if (blockingRules.Any())
                     {
                         LogHelper.Info("Connection matches a block-rule!");
@@ -220,10 +223,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier
                         return false;
                     }
 
-                    conn.CurrentAppPkgId = ProcessHelper.GetAppPkgId(conn.Pid);
-                    conn.CurrentLocalUserOwner = ProcessHelper.GetLocalUserOwner(conn.Pid);
-                    conn.CurrentService = svcInfo?.DisplayName;
-                    conn.CurrentServiceDesc = svcInfo?.Name;
+
                     conn.LocalPortArray.Add(sourcePortAsInt);
 
                     Dispatcher.Invoke(() => this.Connections.Add(conn));

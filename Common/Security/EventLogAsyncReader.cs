@@ -2,11 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-
-using Wokhan.WindowsFirewallNotifier.Common.Logging;
-using System.Diagnostics;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Security
 {
@@ -15,16 +13,20 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Security
         public static readonly string EVENTLOG_SECURITY = "security";
 
 
-        public static bool IsFirewallEventSimple(long instanceId)
+        public static bool IsFirewallEventSimple(EventLogEntry entry)
         {
+            var instanceId = entry.InstanceId;
+
             // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
             return instanceId == 5156
                 || instanceId == 5157 // block connection
                 || instanceId == 5152;// drop packet
         }
 
-        public static bool IsFirewallEvent(long instanceId)
+        public static bool IsFirewallEvent(EventLogEntry entry)
         {
+            var instanceId = entry.InstanceId;
+
             // https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-connection
             //5031: The Windows Firewall Service blocked an application from accepting incoming connections on the network.
             //5150: The Windows Filtering Platform blocked a packet.
@@ -78,35 +80,38 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Security
         }
     }
 
-    public class EventLogAsyncReader<T> : IPagedSourceProviderAsync<T>, IDisposable where T : class, new()
+    public sealed class EventLogAsyncReader<T> : IPagedSourceProviderAsync<T>, IDisposable where T : class, new()
     {
-        public Func<long, bool>? FilterPredicate { get; set; }
+        public Func<EventLogEntry, bool>? FilterPredicate { get; set; }
 
-        public event EntryWrittenEventHandler EntryWritten;
+        public event EntryWrittenEventHandler EntryWritten
+        {
+            add { eventLog.EntryWritten += value; }
+            remove { eventLog.EntryWritten -= value; }
+        }
 
         private EventLog eventLog;
 
-        public EventLogAsyncReader(string eventLogName, Func<EventLogEntry, T?> projection)
+        public EventLogAsyncReader(string eventLogName, Func<EventLogEntry, int, T?> projection, int pageSize = 20)
         {
             _projection = projection;
-         
+
             eventLog = new EventLog(eventLogName);
             eventLog.BeginInit();
-            eventLog.EntryWritten += DefaultEntryWrittenHandler;
-            if (EntryWritten != null)
-            {
-                eventLog.EntryWritten += EntryWritten;
-            }
+            //    eventLog.EntryWritten += DefaultEntryWrittenEventHandler;
+            firstEventTimeWritten = DateTime.Now;
             eventLog.EnableRaisingEvents = true;
             eventLog.EndInit();
 
-            Entries = new VirtualizingObservableCollection<T>(this);
+            paginationManager = new PaginationManager<T>(this, pageSize: pageSize);
+
+            Entries = new VirtualizingObservableCollection<T>(paginationManager);
         }
 
 
-        private Func<EventLogEntry, T?> _projection;
+        private readonly Func<EventLogEntry, int, T?> _projection;
         public Func<int, T>? PlaceHolderCreator { get; set; }
-        private Dictionary<int, int> filteredPagesMap = new Dictionary<int, int>();
+        private readonly Dictionary<int, int> filteredPagesMap = new Dictionary<int, int>();
 
         public int Count => eventLog.Entries.Count;
 
@@ -114,6 +119,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Security
 
         public void OnReset(int count)
         {
+            firstEventTimeWritten = DateTime.Now;
             newEntriesOffset = 0;
             filteredPagesMap.Clear();
         }
@@ -128,12 +134,17 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Security
             return await Task.Run(() => GetItemsAt(pageoffset, count, usePlaceholder)).ConfigureAwait(false);
         }
 
-        T placeHolder = new T();
+        private readonly T placeHolder = new T();
+        private int matchesCount;
         private int newEntriesOffset;
-        
-        public VirtualizingObservableCollection<T> Entries { get; }
+        private DateTime firstEventTimeWritten;
+        private readonly PaginationManager<T> paginationManager;
+        //private int newMatchingEntries;
 
-        public T GetPlaceHolder(int index, int page, int offset)
+        public VirtualizingObservableCollection<T> Entries { get; }
+        public bool AutoUpdate { get; set; }
+
+        public T GetPlaceHolder(int index, int _ignored, int _alsoignored)
         {
             return PlaceHolderCreator?.Invoke(index) ?? placeHolder;
         }
@@ -143,20 +154,22 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Security
             return await Task.FromResult(Count).ConfigureAwait(false);
         }
 
-        public async Task<int> IndexOfAsync(T item) => 0;
+        public async Task<int> IndexOfAsync(T item)
+        {
+            return 0;
+        }
 
         public PagedSourceItemsPacket<T> GetItemsAt(int pageoffset, int count, bool usePlaceholder)
         {
             pageoffset = filteredPagesMap.GetValueOrDefault(pageoffset, pageoffset);
 
-            CurrentPageOffset = pageoffset;
-
-            var ret = new PagedSourceItemsPacket<T>();
-
-            ret.LoadedAt = DateTime.Now;
+            var ret = new PagedSourceItemsPacket<T>
+            {
+                LoadedAt = DateTime.Now
+            };
             if (usePlaceholder)
             {
-                ret.Items = Enumerable.Range(0, count).Select(_ => placeHolder);
+                ret.Items = Enumerable.Range(0, count).Select((_, i) => GetPlaceHolder(pageoffset + i, 0, 0));
             }
             else
             {
@@ -168,22 +181,29 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Security
 
         private IEnumerable<T> GetAsEnumerable(int pageoffset, int count)
         {
-            int cpt = 0;
-            for (var i = pageoffset + 1; i < eventLog.Entries.Count && cpt < count; i++)
+            var cpt = 0;
+            if (pageoffset == 0)
+            {
+                firstEventTimeWritten = eventLog.Entries[0].TimeWritten;
+            }
+
+            var totalCount = eventLog?.Entries.Count ?? 0;
+            for (var i = pageoffset + 1; i < totalCount && cpt < count; i++)
             {
                 T? ret = null;
                 try
                 {
-                    var entry = eventLog.Entries[^(i + newEntriesOffset)];
-                    if (EventLogAsyncReader.IsFirewallEvent(entry.InstanceId))
+                    EventLogEntry? entry = eventLog.Entries[^(i + newEntriesOffset)];
+                    if (FilterPredicate?.Invoke(entry) ?? true)
                     {
+                        matchesCount++;
                         cpt++;
                         if (cpt == count - 1)
                         {
                             filteredPagesMap.Add(pageoffset + count, i);
                         }
 
-                        ret = _projection(entry);
+                        ret = _projection(entry, matchesCount);
                     }
                     else
                     {
@@ -197,27 +217,38 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Security
                 }
 
                 if (ret is object)
+                {
                     yield return ret;
+                }
             }
         }
 
-        private void DefaultEntryWrittenHandler(object sender, EntryWrittenEventArgs e)
-        {
-            newEntriesOffset++;
+        // TODO: fix and enable back. As of now AutoUpdate cannot be used.
+        //private void DefaultEntryWrittenEventHandler(object sender, EntryWrittenEventArgs e)
+        //{
+        //    if (e.Entry.TimeWritten <= firstEventTimeWritten)
+        //    {
+        //        return;
+        //    }
 
-            if (!FilterPredicate?.Invoke(e.Entry.InstanceId) ?? false)
-            {
-                return;
-            }
-        }
+        //    newEntriesOffset++;
+
+        //    if (FilterPredicate?.Invoke(e.Entry) ?? true)
+        //    {
+        //        newMatchingEntries++;
+        //        if (AutoUpdate)
+        //        {
+        //            newEntriesOffset = 0;
+        //            paginationManager.AddOrUpdateAdjustment(0, -1);
+        //            newMatchingEntries = 0;
+        //        }
+        //    }
+        //}
 
         public void Dispose()
         {
-            LogHelper.Debug($"AsyncTaskRunner: Disposing resources...");
-            if (eventLog != null)
-            {
-                eventLog.Dispose();
-            }
+            eventLog?.Dispose();
+            eventLog = null;
         }
 
 

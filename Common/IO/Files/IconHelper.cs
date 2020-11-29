@@ -21,7 +21,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.IO.Files
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        private static BitmapSource GetIconFromPath(string path)
+        private static BitmapSource GetIconFromPath(string? path)
         {
             path = path ?? string.Empty;
 
@@ -88,7 +88,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.IO.Files
             return bitmap;
         }
 
-        public static async Task<BitmapSource> GetIconAsync(string path = "")
+        public static async Task<BitmapSource> GetIconAsync(string? path = "")
         {
             return await Task.Run(() => GetIconFromPath(path)).ConfigureAwait(false);
         }

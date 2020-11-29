@@ -181,14 +181,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void NotificationWindow_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if (lstConnections.Items.Count > 0)
+            if (lstConnections.Items.Count > 0 && lstConnections.SelectedItem is null)
             {
-                if (lstConnections.SelectedItem is null)
-                {
-                    lstConnections.SelectedIndex = 0;
-                }
-
+                lstConnections.SelectedIndex = 0;
             }
+
             NotifyPropertyChanged(nameof(NbConnectionsAfter));
             NotifyPropertyChanged(nameof(NbConnectionsBefore));
         }
@@ -273,7 +270,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         }
 
         /// <summary>
-        /// Creates a rule for the current application (ALLOW)
+        /// Creates an "always allow" rule for the current application (depending on selected information)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -283,11 +280,11 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         }
 
         /// <summary>
-        /// Adds the application to the exceptions list so that no further notifications will be displayed
+        /// Creates a blocking rule for the current application (depending on selected information)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnIgnore_Click(object sender, RoutedEventArgs e) //FIXME: Naming?
+        private void btnBlock_Click(object sender, RoutedEventArgs e) 
         {
             createRule(false);
         }
@@ -354,14 +351,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
         }
 
-        private void ctxtCopy_Click(object sender, RoutedEventArgs e) //FIXME: Not referenced (anymore!)
-        {
-            //var srccontrol = ((ContextMenuStrip)((ToolStripMenuItem)sender).Owner).SourceControl;
-            //var copiedValue = (string)(srccontrol.Tag ?? String.Empty);
-
-            //Clipboard.SetText(copiedValue);
-        }
-
         private void btnSkip_Click(object sender, RoutedEventArgs e)
         {
             var tmpSelectedItem = (CurrentConn)lstConnections.SelectedItem;
@@ -379,15 +368,16 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             {
                 return;
             }
-            String skipPath = ((CurrentConn)lstConnections.SelectedItem).Path;
-            List<CurrentConn> toRemove = new List<CurrentConn>(); //Can't remove while iterating.
-            foreach (var connection in lstConnections.Items)
-            {
-                if (((CurrentConn)connection).Path == skipPath)
-                {
-                    toRemove.Add((CurrentConn)connection);
-                }
-            }
+
+            SkipAllEntriesForPath(((CurrentConn)lstConnections.SelectedItem).Path);
+        }
+
+        private void SkipAllEntriesForPath(string path)
+        {
+            var toRemove = lstConnections.Items.Cast<CurrentConn>()
+                                               .Where(connection => connection.Path == path)
+                                               .ToList();
+
             foreach (var connection in toRemove)
             {
                 if (lstConnections.SelectedItem == connection)
@@ -396,6 +386,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 }
                 ((App)Application.Current).Connections.Remove(connection);
             }
+
             if (lstConnections.Items.Count == 0)
             {
                 //this.Close();
@@ -442,7 +433,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void createRule(bool doAllow)
         {
-            var isTemp = (bool)togTempRule.IsChecked;
+            var createTempRule = (bool)togTempRule.IsChecked;
+            var createWithAdvancedOptions = !expand.IsExpanded;
             bool success;
             var activeConn = (CurrentConn)lstConnections.SelectedItem;
             if (activeConn is null)
@@ -474,31 +466,31 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
                 }
             }
 
-            var ruleName = String.Format(Common.Properties.Resources.RULE_NAME_FORMAT, activeConn.CurrentServiceDesc ?? activeConn.Description);
+            var ruleName = String.Format(Messages.RULE_NAME_FORMAT, activeConn.CurrentServiceDesc ?? activeConn.Description);
             if (doAllow)
             {
-                success = createAllowRule(activeConn, services, isTemp, ruleName);
+                success = createAllowRule(activeConn, services, createWithAdvancedOptions, createTempRule, ruleName);
             }
             else
             {
-                success = createBlockRule(activeConn, services, isTemp, ruleName);
+                success = createBlockRule(activeConn, services, createWithAdvancedOptions, createTempRule, ruleName);
             }
 
             if (success)
             {
                 LogHelper.Info("New rule for connection successfully created!");
 
-                for (int i = ((App)System.Windows.Application.Current).Connections.Count - 1; i >= 0; i--)
+                for (int i = ((App)Application.Current).Connections.Count - 1; i >= 0; i--)
                 {
-                    var c = ((App)System.Windows.Application.Current).Connections[i];
+                    var c = ((App)Application.Current).Connections[i];
                     if (FirewallHelper.GetMatchingRules(c.Path, c.CurrentAppPkgId, c.RawProtocol, c.TargetIP, c.TargetPort, c.SourcePort, c.CurrentService, c.CurrentLocalUserOwner, false).Any()) //FIXME: LocalPort may have multiple!)
                     {
                         LogHelper.Debug("Auto-removing a similar connection...");
-                        ((App)System.Windows.Application.Current).Connections.Remove(c);
+                        ((App)Application.Current).Connections.Remove(c);
                     }
                 }
 
-                if (((App)System.Windows.Application.Current).Connections.Count == 0)
+                if (((App)Application.Current).Connections.Count == 0)
                 {
                     LogHelper.Debug("No connections left; closing notification window.");
                     HideWindowState();
@@ -510,26 +502,26 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
         }
 
-        private bool createBlockRule(CurrentConn activeConn, string[] services, bool isTemp, string ruleName)
+        private bool createBlockRule(CurrentConn activeConn, string[] services, bool createWithAdvancedOptions, bool createTempRule, string ruleName)
         {
             bool success;
             if (Settings.Default.UseBlockRules)
             {
                 int Profiles = OptionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
-                string finalRuleName = (isTemp) ? Messages.RULE_TEMP_PREFIX + ruleName : ruleName;
+                string finalRuleName = (createTempRule) ? Messages.RULE_TEMP_PREFIX + ruleName : ruleName;
                 var newRule = new CustomRule(finalRuleName,
-                                             OptionsView.IsPathChecked ? activeConn.Path : null,
-                                             OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null,
+                                             createWithAdvancedOptions || OptionsView.IsPathChecked ? activeConn.Path : null,
+                                             !createWithAdvancedOptions && OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null,
                                              activeConn.CurrentLocalUserOwner,
                                              services,
-                                             OptionsView.IsProtocolChecked ? activeConn.RawProtocol : -1,
-                                             OptionsView.IsTargetIPChecked ? activeConn.TargetIP : null,
-                                             OptionsView.IsTargetPortChecked ? activeConn.TargetPort : null,
-                                             OptionsView.IsLocalPortChecked ? activeConn.SourcePort : null,
+                                             !createWithAdvancedOptions && OptionsView.IsProtocolChecked ? activeConn.RawProtocol : -1,
+                                             !createWithAdvancedOptions && OptionsView.IsTargetIPChecked ? activeConn.TargetIP : null,
+                                             !createWithAdvancedOptions && OptionsView.IsTargetPortChecked ? activeConn.TargetPort : null,
+                                             !createWithAdvancedOptions && OptionsView.IsLocalPortChecked ? activeConn.SourcePort : null,
                                              Profiles,
                                              CustomRule.CustomRuleAction.Block);
-                success = FirewallHelper.AddRule(newRule.GetPreparedRule(isTemp)); // does not use RuleManager
-                if (success && isTemp)
+                success = FirewallHelper.AddRule(newRule.GetPreparedRule(createTempRule)); // does not use RuleManager
+                if (success && createTempRule)
                 {
                     CreateTempRuleNotifyIcon(newRule);
                 }
@@ -558,25 +550,25 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             return success;
         }
 
-        private bool createAllowRule(CurrentConn activeConn, string[] services, bool isTemp, string ruleName)
+        private bool createAllowRule(CurrentConn activeConn, string[] services, bool createWithAdvancedOptions, bool createTempRule, string ruleName)
         {
             int Profiles = OptionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
-            string finalRuleName = isTemp ? Messages.RULE_TEMP_PREFIX + ruleName : ruleName;
+            string finalRuleName = createTempRule ? Messages.RULE_TEMP_PREFIX + ruleName : ruleName;
             var newRule = new CustomRule(finalRuleName,
-                                         OptionsView.IsPathChecked ? activeConn.Path : null,
-                                         OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null,
+                                         createWithAdvancedOptions || OptionsView.IsPathChecked ? activeConn.Path : null,
+                                         !createWithAdvancedOptions && OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null,
                                          activeConn.CurrentLocalUserOwner,
                                          services,
-                                         OptionsView.IsProtocolChecked ? activeConn.RawProtocol : -1,
-                                         OptionsView.IsTargetIPChecked ? activeConn.TargetIP : null,
-                                         OptionsView.IsTargetPortChecked ? activeConn.TargetPort : null,
-                                         OptionsView.IsLocalPortChecked ? activeConn.SourcePort : null,
+                                         !createWithAdvancedOptions && OptionsView.IsProtocolChecked ? activeConn.RawProtocol : -1,
+                                         !createWithAdvancedOptions && OptionsView.IsTargetIPChecked ? activeConn.TargetIP : null,
+                                         !createWithAdvancedOptions && OptionsView.IsTargetPortChecked ? activeConn.TargetPort : null,
+                                         !createWithAdvancedOptions && OptionsView.IsLocalPortChecked ? activeConn.SourcePort : null,
                                          Profiles,
                                          CustomRule.CustomRuleAction.Allow);
 
-            bool success = FirewallHelper.AddRule(newRule.GetPreparedRule(isTemp)); // does not use RuleManager
+            bool success = FirewallHelper.AddRule(newRule.GetPreparedRule(createTempRule)); // does not use RuleManager
 
-            if (success && isTemp)
+            if (success && createTempRule)
             {
                 CreateTempRuleNotifyIcon(newRule);
             }

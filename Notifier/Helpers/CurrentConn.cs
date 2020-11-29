@@ -3,15 +3,24 @@ using System.ComponentModel;
 
 using Wokhan.ComponentModel.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
+using Wokhan.WindowsFirewallNotifier.Common.Core;
+using Wokhan.WindowsFirewallNotifier.Common.Processes;
 using Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
 {
     public class CurrentConn : LogEntryViewModel, INotifyPropertyChanged
     {
-        public string CurrentAppPkgId { get; set; }
-        public string CurrentLocalUserOwner { get; set; }
+        //private string _currentAppPkgId;
+        //TODO: rename as it's not something "current"
+        public string CurrentAppPkgId { get; set; }// => this.GetOrSetAsyncValue(() => ProcessHelper.GetAppPkgId(Pid), NotifyPropertyChanged, nameof(_currentAppPkgId));
+
+        //private string _currentLocalUserOwner;
+        //TODO: rename as it's not something "current"
+        public string CurrentLocalUserOwner { get; set; }// => this.GetOrSetAsyncValue(() => ProcessHelper.GetLocalUserOwner(Pid), NotifyPropertyChanged, nameof(_currentLocalUserOwner));
+        //TODO: rename as it's not something "current"
         public string CurrentService { get; set; }
+        //TODO: rename as it's not something "current"
         public string CurrentServiceDesc { get; set; }
         public SortedSet<int> LocalPortArray { get; } = new SortedSet<int>();
         
@@ -23,17 +32,19 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers
         private string _resolvedHost;
         public string ResolvedHost
         {
-            get { return _resolvedHost; }
+            get => _resolvedHost;
             set => this.SetValue(ref _resolvedHost, value, NotifyPropertyChanged);
         }
 
+        //TODO: remove since it's now useless
         public string[] PossibleServices { get; set; }
+        //TODO: remove since it's now useless
         public string[] PossibleServicesDesc { get; set; }
 
         private int _tentativesCounter = 1;
         public int TentativesCounter
         {
-            get { return _tentativesCounter; }
+            get => _tentativesCounter;
             set => this.SetValue(ref _tentativesCounter, value, NotifyPropertyChanged);
         }
     }

@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
+      xmlns:console="clr-namespace:Wokhan.WindowsFirewallNotifier.Console"
       xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
       DataContext="{Binding RelativeSource={x:Static RelativeSource.Self}}"
       mc:Ignorable="d" 
@@ -14,35 +15,37 @@
         <ContentControl Style="{StaticResource ToolBarPanel}">
             <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
                 <StackPanel>
-                    <ToggleButton x:Name="btnAutoRefreshToggle" Style="{StaticResource AutoTrackButton}" Content="Auto-refresh" ToolTip="Toggle auto-refresh - turned off if a row is selected" />
-                    <Button x:Name="btnLocate" Content="Locate" ext:CustomAdorner.Image="{StaticResource Image_Locate}" Click="btnLocate_Click" IsEnabled="false" ToolTip="Locate the selected item" />
+                    <Button ext:CustomAdorner.Image="{StaticResource Image_Refresh}" Content="Refresh" ToolTip="Reload to show the newest events" IsEnabled="{Binding NewEntriesCount,Converter={StaticResource objectToBool}}" Click="Refresh_Click" />
+                    <Button Content="Locate" ext:CustomAdorner.Image="{StaticResource Image_Locate}" Click="btnLocate_Click" ToolTip="Locate the selected item" IsEnabled="{Binding SelectedItem,ElementName=gridLog,Converter={StaticResource objectToBool}}" />
                     <Button x:Name="btnEventLogVwr" ext:CustomAdorner.Image="/WFN;component/Resources/Images/btnLEvents.Image.png" Content="Events log viewer" Click="btnEventLogVwr_Click" />
-                    <!--<TextBlock VerticalAlignment="Center" Text="{Binding LogEntries.Count, StringFormat='{}{0} item(s)', FallbackValue='No item found'}" />-->
+                    <TextBlock VerticalAlignment="Center" Text="{Binding NewEntriesCount, StringFormat='{}{0} new event(s)', FallbackValue=''}" />
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Right" Margin="3,0,3,0">
-                    <Label Content="Filter"/>
-                    <TextBox x:Name="txtFilter" Width="149" Margin="3,0,3,0" Text="{Binding FilterText,  UpdateSourceTrigger=PropertyChanged}" Background="White" Padding="3,0,3,0" Height="20" ToolTip="Filter to be applied for App, Service or Remote IP"/>
+                    <TextBox ext:CustomAdorner.Header="Filter" x:Name="txtFilter" Width="149" Margin="3,0,3,0" Text="{Binding FilterText,  UpdateSourceTrigger=PropertyChanged}" Background="White" Padding="3,0,3,0" Height="20" ToolTip="Filter to be applied for App, Service or Remote IP"/>
                     <CheckBox x:Name="cbxIsTCPOnlyEnabled" Content="TCP only" IsChecked="{Binding IsTCPOnlyEnabled}" ToolTip="Only show TCP Protocol events" VerticalContentAlignment="Center" Margin="15,0" />
-                    <StackPanel Orientation="Vertical" VerticalAlignment="Center" Width="105" Margin="5">
-                        <TextBlock HorizontalAlignment="Center">
-                            <Run Text="{Binding ScanProgress, FallbackValue='-'}" />
-                                 /
-                            <Run Text="{Binding ScanProgressMax, FallbackValue='-'}" />
-                        </TextBlock>
-                        <ProgressBar Value="{Binding ScanProgress}" BorderThickness="0" Maximum="{Binding ScanProgressMax}" Height="4" Width="105" />
-                    </StackPanel>
                     <Label Style="{StaticResource HelpButtonStyle}" ToolTip="This page displays a list of the latest connections, updated in real-time.&#10;Click on a cell in the Action column to view details from the eventlog including the name of the filter rule which triggered the event." />
                 </StackPanel>
             </Grid>
         </ContentControl>
-        <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="151*"/>
-                <ColumnDefinition Width="6*"/>
-                <ColumnDefinition Width="43*"/>
-            </Grid.ColumnDefinitions>
-            <DataGrid VirtualizingPanel.VirtualizationMode="Recycling" BorderThickness="0" x:Name="gridLog" AlternatingRowBackground="Gainsboro" IsReadOnly="True" ColumnWidth="*" AutoGenerateColumns="False" HeadersVisibility="Column" SelectionChanged="GridLog_SelectionChanged" DataGridCell.Selected="GridLog_CellSelected" GotFocus="GridLog_GotFocus" GridLinesVisibility="None" Grid.ColumnSpan="3">
+        <Grid IsEnabled="{Binding IsElevated,Source={x:Static console:App.Current}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.7*" />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="0.3*" />
+            </Grid.RowDefinitions>
+            <DataGrid VirtualizingPanel.VirtualizationMode="Recycling" BorderThickness="0" x:Name="gridLog" IsReadOnly="True" ColumnWidth="*" AutoGenerateColumns="False" HeadersVisibility="Column" GridLinesVisibility="None" Grid.ColumnSpan="3">
                 <DataGrid.Columns>
+                    <DataGridTextColumn Header="Index" Binding="{Binding Index,Mode=OneTime}" Width="Auto">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                                <Setter Property="ToolTip">
+                                    <Setter.Value>
+                                        <TextBlock Text="{Binding Id, Mode=OneTime}" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="Date/Time" Binding="{Binding CreationTime,Mode=OneTime}" Width="Auto"/>
                     <DataGridTextColumn Header="PID" Binding="{Binding Pid,Mode=OneTime}" Width="Auto"/>
                     <DataGridTemplateColumn Header="Application" SortMemberPath="FileName" Width="0.2*" >
@@ -63,18 +66,14 @@
                     <DataGridTextColumn Header="FilterId" Binding="{Binding FilterId,Mode=OneTime}" Width="Auto"/>
                     <DataGridTextColumn Header="Dir" Binding="{Binding Direction,Mode=OneTime}" Width="Auto">
                         <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell">
+                            <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
                                 <Setter Property="Foreground" Value="{Binding DirectionColor}"/>
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn x:Name="Reason" Header="Action" Binding="{Binding Reason}" Width="Auto">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell">
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
                         <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
                                 <Setter Property="ToolTip" Value="click for details" />
                                 <Setter Property="Foreground" Value="{Binding ReasonColor}"/>
                                 <Setter Property="TextBlock.TextDecorations" Value="Underline"/>
@@ -83,6 +82,18 @@
                     </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
+            <GridSplitter Grid.Row="1" Height="4" Background="LightGray" HorizontalAlignment="Stretch" />
+            <ScrollViewer Background="WhiteSmoke" Grid.Row="2">
+                <Grid Margin="10">
+                    <StackPanel DataContext="{Binding SelectedItem,ElementName=gridLog}">
+                        <TextBlock><Run FontWeight="Bold" Text="Reason: "/><Run Text="{Binding Reason,Mode=OneTime,FallbackValue='-'}"/></TextBlock>
+                        <TextBlock><Run FontWeight="Bold" Text="Filter: "/><Run Text="{Binding MatchingFilter.Name,Mode=OneWay, FallbackValue='-'}"/> (Id: <Run Text="{Binding MatchingFilter.FilterId,Mode=OneWay,FallbackValue='-'}"/>)</TextBlock>
+                        <TextBlock><Run FontWeight="Bold" Text="Filter details : "/><Run Text="{Binding MatchingFilter.Description,Mode=OneWay,FallbackValue='-'}"/></TextBlock>
+                        <TextBlock><Run FontWeight="Bold" Text="Service: " /><Run Text="{Binding ServiceName,Mode=OneTime,FallbackValue='-'}"/></TextBlock>
+                        <TextBlock><Run FontWeight="Bold" Text="Entry details: " /><LineBreak /><Run Text="{Binding Message,Mode=OneTime,FallbackValue='-'}"/></TextBlock>
+                    </StackPanel>
+                </Grid>
+            </ScrollViewer>
         </Grid>
     </DockPanel>
 </Page>
