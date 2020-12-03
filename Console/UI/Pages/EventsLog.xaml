@@ -15,10 +15,10 @@
         <ContentControl Style="{StaticResource ToolBarPanel}">
             <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
                 <StackPanel>
-                    <Button ext:CustomAdorner.Image="{StaticResource Image_Refresh}" Content="Refresh" ToolTip="Reload to show the newest events" IsEnabled="{Binding NewEntriesCount,Converter={StaticResource objectToBool}}" Click="Refresh_Click" />
+                    <Button ext:CustomAdorner.Image="{StaticResource Image_Refresh}" Content="Refresh" ToolTip="Reload to show the newest events" IsEnabled="{Binding EventsReader.NewMatchingEntriesCount,Converter={StaticResource objectToBool}}" Click="Refresh_Click" />
                     <Button Content="Locate" ext:CustomAdorner.Image="{StaticResource Image_Locate}" Click="btnLocate_Click" ToolTip="Locate the selected item" IsEnabled="{Binding SelectedItem,ElementName=gridLog,Converter={StaticResource objectToBool}}" />
                     <Button x:Name="btnEventLogVwr" ext:CustomAdorner.Image="/WFN;component/Resources/Images/btnLEvents.Image.png" Content="Events log viewer" Click="btnEventLogVwr_Click" />
-                    <TextBlock VerticalAlignment="Center" Text="{Binding NewEntriesCount, StringFormat='{}{0} new event(s)', FallbackValue=''}" />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding EventsReader.NewMatchingEntriesCount, StringFormat='{}{0} new event(s)', FallbackValue='',TargetNullValue=''}" />
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Right" Margin="3,0,3,0">
                     <TextBox ext:CustomAdorner.Header="Filter" x:Name="txtFilter" Width="149" Margin="3,0,3,0" Text="{Binding FilterText,  UpdateSourceTrigger=PropertyChanged}" Background="White" Padding="3,0,3,0" Height="20" ToolTip="Filter to be applied for App, Service or Remote IP"/>

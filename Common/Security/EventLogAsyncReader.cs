@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -80,7 +81,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Security
         }
     }
 
-    public sealed class EventLogAsyncReader<T> : IPagedSourceProviderAsync<T>, IDisposable where T : class, new()
+    public sealed class EventLogAsyncReader<T> : IPagedSourceProviderAsync<T>, INotifyPropertyChanged, IDisposable where T : class, new()
     {
         public Func<EventLogEntry, bool>? FilterPredicate { get; set; }
 
@@ -97,11 +98,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Security
             _projection = projection;
 
             eventLog = new EventLog(eventLogName);
-            eventLog.BeginInit();
-            //    eventLog.EntryWritten += DefaultEntryWrittenEventHandler;
-            firstEventTimeWritten = DateTime.Now;
             eventLog.EnableRaisingEvents = true;
-            eventLog.EndInit();
 
             paginationManager = new PaginationManager<T>(this, pageSize: pageSize);
 
@@ -120,7 +117,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Security
         public void OnReset(int count)
         {
             firstEventTimeWritten = DateTime.Now;
-            newEntriesOffset = 0;
+            NewEntriesCount = 0;
+            NewMatchingEntriesCount = 0;
+            firstLoad = true;
             filteredPagesMap.Clear();
         }
 
@@ -136,13 +135,18 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Security
 
         private readonly T placeHolder = new T();
         private int matchesCount;
-        private int newEntriesOffset;
+        private bool firstLoad = true;
         private DateTime firstEventTimeWritten;
         private readonly PaginationManager<T> paginationManager;
-        //private int newMatchingEntries;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public int NewMatchingEntriesCount { get; private set; }
+        public int NewEntriesCount { get; private set; }
 
         public VirtualizingObservableCollection<T> Entries { get; }
-        public bool AutoUpdate { get; set; }
+        
+        //public bool AutoUpdate { get; set; }
 
         public T GetPlaceHolder(int index, int _ignored, int _alsoignored)
         {
@@ -161,6 +165,14 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Security
 
         public PagedSourceItemsPacket<T> GetItemsAt(int pageoffset, int count, bool usePlaceholder)
         {
+            if (firstLoad)
+            {
+                firstLoad = false;
+                eventLog.EntryWritten -= DefaultEntryWrittenEventHandler;
+                eventLog.EntryWritten += DefaultEntryWrittenEventHandler;
+                firstEventTimeWritten = DateTime.Now;
+            }
+
             pageoffset = filteredPagesMap.GetValueOrDefault(pageoffset, pageoffset);
 
             var ret = new PagedSourceItemsPacket<T>
@@ -193,7 +205,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Security
                 T? ret = null;
                 try
                 {
-                    EventLogEntry? entry = eventLog.Entries[^(i + newEntriesOffset)];
+                    EventLogEntry? entry = eventLog.Entries[^(i + NewEntriesCount)];
                     if (FilterPredicate?.Invoke(entry) ?? true)
                     {
                         matchesCount++;
@@ -223,27 +235,31 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Security
             }
         }
 
-        // TODO: fix and enable back. As of now AutoUpdate cannot be used.
-        //private void DefaultEntryWrittenEventHandler(object sender, EntryWrittenEventArgs e)
-        //{
-        //    if (e.Entry.TimeWritten <= firstEventTimeWritten)
-        //    {
-        //        return;
-        //    }
+        private void DefaultEntryWrittenEventHandler(object sender, EntryWrittenEventArgs e)
+        {
+            if (e.Entry.TimeWritten <= firstEventTimeWritten)
+            {
+                return;
+            }
 
-        //    newEntriesOffset++;
+            NewEntriesCount++;
 
-        //    if (FilterPredicate?.Invoke(e.Entry) ?? true)
-        //    {
-        //        newMatchingEntries++;
-        //        if (AutoUpdate)
-        //        {
-        //            newEntriesOffset = 0;
-        //            paginationManager.AddOrUpdateAdjustment(0, -1);
-        //            newMatchingEntries = 0;
-        //        }
-        //    }
-        //}
+            if (FilterPredicate?.Invoke(e.Entry) ?? true)
+            {
+                NewMatchingEntriesCount++;
+
+                // TODO: fix and enable back. As of now AutoUpdate cannot be used.
+                //if (AutoUpdate)
+                //{
+                //    NewEntriesCount = 0;
+                //    paginationManager.AddOrUpdateAdjustment(0, -1);
+                //    NewMatchingEntriesCount = 0;
+                //}
+            }
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NewEntriesCount)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NewMatchingEntriesCount)));
+        }
 
         public void Dispose()
         {

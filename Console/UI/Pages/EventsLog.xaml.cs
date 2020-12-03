@@ -1,17 +1,13 @@
 ﻿
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-using Wokhan.ComponentModel.Extensions;
 using Wokhan.UI.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
-using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
 using Wokhan.WindowsFirewallNotifier.Common.Security;
 using Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
@@ -23,18 +19,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
     /// </summary>
     public sealed partial class EventsLog : Page, INotifyPropertyChanged, IDisposable
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public EventLogAsyncReader<LogEntryViewModel> EventsReader { get; set; }
 
-        private EventLogAsyncReader<LogEntryViewModel> eventsReader;
         public ICollectionView dataView;
         private readonly EventsLogFilters eventsLogFilters;
 
-        private uint newEntriesCount;
-        public uint NewEntriesCount
-        {
-            get => newEntriesCount;
-            set => this.SetValue(ref newEntriesCount, value, NotifyPropertyChanged);
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public bool IsTCPOnlyEnabled
         {
@@ -81,16 +71,16 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             try
             {
-                if (reset || eventsReader is null)
+                if (reset || EventsReader is null)
                 {
-                    NewEntriesCount = 0;
-                    eventsReader?.Dispose();
-                    eventsReader = new EventLogAsyncReader<LogEntryViewModel>(EventLogAsyncReader.EVENTLOG_SECURITY, LogEntryViewModel.CreateFromEventLogEntry)
+                    EventsReader?.Dispose();
+                    EventsReader = new EventLogAsyncReader<LogEntryViewModel>(EventLogAsyncReader.EVENTLOG_SECURITY, LogEntryViewModel.CreateFromEventLogEntry)
                     {
                         FilterPredicate = EventLogAsyncReader.IsFirewallEvent
                     };
-                    eventsReader.EntryWritten += EntryWritten;
-                    dataView = CollectionViewSource.GetDefaultView(eventsReader.Entries);
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EventsReader)));
+                   
+                    dataView = CollectionViewSource.GetDefaultView(EventsReader.Entries);
                     gridLog.ItemsSource = dataView;
                 }
 
@@ -105,15 +95,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         private void StopHandlingSecurityLogEvents()
         {
-            eventsReader?.Dispose();
-            eventsReader = null;
+            EventsReader?.Dispose();
+            EventsReader = null;
         }
-
-        private void EntryWritten(object sender, EntryWrittenEventArgs e)
-        {
-            NewEntriesCount++;
-        }
-
+       
         private void btnLocate_Click(object sender, RoutedEventArgs e)
         {
             var selectedLog = (LogEntryViewModel)gridLog.SelectedItem;
@@ -133,12 +118,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
         public void Dispose()
         {
-            eventsReader?.Dispose();
-        }
-
-        private void NotifyPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            EventsReader?.Dispose();
         }
 
         private void Refresh_Click(object sender, RoutedEventArgs e)

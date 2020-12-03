@@ -364,15 +364,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
         private void btnSkipProgram_Click(object sender, RoutedEventArgs e)
         {
-            if (lstConnections.SelectedItem is null)
-            {
-                return;
-            }
-
-            SkipAllEntriesForPath(((CurrentConn)lstConnections.SelectedItem).Path);
+            SkipAllEntriesFromPath(((CurrentConn)lstConnections.SelectedItem).Path);
         }
 
-        private void SkipAllEntriesForPath(string path)
+        private void SkipAllEntriesFromPath(string path)
         {
             var toRemove = lstConnections.Items.Cast<CurrentConn>()
                                                .Where(connection => connection.Path == path)
@@ -479,15 +474,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             if (success)
             {
                 LogHelper.Info("New rule for connection successfully created!");
-
-                for (int i = ((App)Application.Current).Connections.Count - 1; i >= 0; i--)
+                if (!createWithAdvancedOptions)
                 {
-                    var c = ((App)Application.Current).Connections[i];
-                    if (FirewallHelper.GetMatchingRules(c.Path, c.CurrentAppPkgId, c.RawProtocol, c.TargetIP, c.TargetPort, c.SourcePort, c.CurrentService, c.CurrentLocalUserOwner, false).Any()) //FIXME: LocalPort may have multiple!)
-                    {
-                        LogHelper.Debug("Auto-removing a similar connection...");
-                        ((App)Application.Current).Connections.Remove(c);
-                    }
+                    SkipAllEntriesFromPath(activeConn.Path);
+                }
+                else
+                {
+                    SkipAllEntriesFromRules();
                 }
 
                 if (((App)Application.Current).Connections.Count == 0)
@@ -499,6 +492,19 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             else
             {
                 MessageBox.Show(Messages.MSG_RULE_FAILED, Messages.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private static void SkipAllEntriesFromRules()
+        {
+            for (int i = ((App)Application.Current).Connections.Count - 1; i >= 0; i--)
+            {
+                var c = ((App)Application.Current).Connections[i];
+                if (FirewallHelper.GetMatchingRules(c.Path, c.CurrentAppPkgId, c.RawProtocol, c.TargetIP, c.TargetPort, c.SourcePort, c.CurrentService, c.CurrentLocalUserOwner, false).Any()) //FIXME: LocalPort may have multiple!)
+                {
+                    LogHelper.Debug("Auto-removing a similar connection...");
+                    ((App)Application.Current).Connections.Remove(c);
+                }
             }
         }
 
