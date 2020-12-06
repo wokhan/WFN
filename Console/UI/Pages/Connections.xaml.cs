@@ -38,14 +38,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
 
             InitializeComponent();
 
-            map.IsVisibleChanged += GraphMap_VisibilityChanged;
-            graph.IsVisibleChanged += GraphMap_VisibilityChanged;
-
-            GraphMap_VisibilityChanged(null, new DependencyPropertyChangedEventArgs());
+            Components_VisibilityChanged(null, new DependencyPropertyChangedEventArgs());
         }
 
-        private void GraphMap_VisibilityChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void Components_VisibilityChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            firstRow.MaxHeight = connections.IsVisible ? double.PositiveInfinity : 1;
+            separatorRow.MaxHeight = connections.IsVisible ? double.PositiveInfinity : 0;
+            
             switch ((map.IsVisible, graph.IsVisible))
             {
                 // All hidden
@@ -60,7 +60,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 // Map is visible
                 case (true, false):
                     secondRow.MaxHeight = double.PositiveInfinity;
-                    separatorRow.MaxHeight = double.PositiveInfinity;
                     // Workaround: if set to 0, total width will be wrongly set
                     graphColumn.MaxWidth = 1;
                     separatorColumn.MaxWidth = 0;
@@ -70,7 +69,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 // Graph is visible
                 case (false, true):
                     secondRow.MaxHeight = double.PositiveInfinity;
-                    separatorRow.MaxHeight = double.PositiveInfinity;
                     graphColumn.MaxWidth = double.PositiveInfinity;
                     separatorColumn.MaxWidth = 0;
                     mapColumn.MaxWidth = 0;
@@ -79,7 +77,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
                 // Both are visible
                 case (true, true):
                     secondRow.MaxHeight = double.PositiveInfinity;
-                    separatorRow.MaxHeight = double.PositiveInfinity;
                     graphColumn.MaxWidth = double.PositiveInfinity;
                     separatorColumn.MaxWidth = double.PositiveInfinity;
                     mapColumn.MaxWidth = double.PositiveInfinity;

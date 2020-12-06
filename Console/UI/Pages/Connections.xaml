@@ -19,6 +19,7 @@
             <Grid>
                 <StackPanel HorizontalAlignment="Left">
                     <ToggleButton Content="Auto-refresh" IsChecked="{Binding IsTrackingEnabled}" Style="{StaticResource AutoTrackButton}" />
+                    <ToggleButton Content="Grid" ext:CustomAdorner.Image="{StaticResource Image_Menu_Connections}" x:Name="toggleShowConnections" DataContext="{Binding Path=(settings:Settings.Default)}" IsChecked="{Binding ShowConnections}" />
                     <ToggleButton Content="Bandwidth graph" ext:CustomAdorner.Image="{StaticResource Image_Menu_Monitor}" x:Name="toggleShowGraph" DataContext="{Binding Path=(settings:Settings.Default)}" IsChecked="{Binding ShowGraph}" />
                     <ToggleButton Content="Map" ext:CustomAdorner.Image="{StaticResource Image_Menu_Map}" x:Name="toggleShowMap" DataContext="{Binding Path=(settings:Settings.Default)}" IsChecked="{Binding ShowMap}" />
                 </StackPanel>
@@ -37,10 +38,10 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" x:Name="firstRow" />
-                <RowDefinition Height="Auto" x:Name="separatorRow" />
+                <RowDefinition Height="4" x:Name="separatorRow" />
                 <RowDefinition Height="*" x:Name="secondRow" />
             </Grid.RowDefinitions>
-            <DataGrid VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizingWhenGrouping="True" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" d:DataContext="{d:DesignInstance Type=dummydata:ConnectionDummy,IsDesignTimeCreatable=True,CreateList=True}" DataContext="{Binding connectionsView}" ItemsSource="{Binding}" AutoGenerateColumns="False" HeadersVisibility="Column" Grid.ColumnSpan="3">
+            <DataGrid x:Name="connections" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizingWhenGrouping="True" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" d:DataContext="{d:DesignInstance Type=dummydata:ConnectionDummy,IsDesignTimeCreatable=True,CreateList=True}" DataContext="{Binding connectionsView}" ItemsSource="{Binding}" AutoGenerateColumns="False" HeadersVisibility="Column" Grid.ColumnSpan="3" Visibility="{Binding IsChecked,ElementName=toggleShowConnections,Mode=OneWay,Converter={StaticResource valueToVisibility}}" IsVisibleChanged="Components_VisibilityChanged">
                 <DataGrid.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.ContainerStyle>
@@ -129,10 +130,10 @@
                     <!--<DataGridTextColumn Header="FirewallRule" Binding="{Binding FirewallRule.Count, Mode=OneWay}" />-->
                 </DataGrid.Columns>
             </DataGrid>
-            <GridSplitter Grid.Row="1" Grid.ColumnSpan="3" Height="4" Background="LightGray" HorizontalAlignment="Stretch" />
-            <controls:BandwidthGraph x:Name="graph" Grid.Row="2" HorizontalAlignment="Stretch" Visibility="{Binding IsChecked,ElementName=toggleShowGraph,Mode=OneWay,Converter={StaticResource valueToVisibility}}" Connections="{Binding AllConnections}" />
-            <GridSplitter Grid.Row="2" Grid.Column="1" Width="4" Background="LightGray"/>
-            <controls:Map x:Name="map" Grid.Row="2" Grid.Column="2" Visibility="{Binding IsChecked,ElementName=toggleShowMap,Mode=OneWay,Converter={StaticResource valueToVisibility}}" Connections="{Binding AllConnections}" />
+            <GridSplitter Grid.Row="1" Grid.ColumnSpan="3" Height="4" Background="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+            <controls:BandwidthGraph x:Name="graph" Connections="{Binding AllConnections}" Grid.Row="2" Visibility="{Binding IsChecked,ElementName=toggleShowGraph,Mode=OneWay,Converter={StaticResource valueToVisibility}}"  IsVisibleChanged="Components_VisibilityChanged" />
+            <GridSplitter Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="4" Background="LightGray"/>
+            <controls:Map x:Name="map" Connections="{Binding AllConnections}" Grid.Row="2" Grid.Column="2" Visibility="{Binding IsChecked,ElementName=toggleShowMap,Mode=OneWay,Converter={StaticResource valueToVisibility}}"  IsVisibleChanged="Components_VisibilityChanged" />
         </Grid>
     </DockPanel>
 </pages:TimerBasedPage>

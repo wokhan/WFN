@@ -3,6 +3,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -28,6 +29,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
         private const int MAX_DURATION_SEC = 10;
 
         private DateTime datetime = DateTime.Now;
+        private ConcurrentDictionary<string, ObservableCollection<DataPoint>> allSeriesIn = new ConcurrentDictionary<string, ObservableCollection<DataPoint>>();
+        private ConcurrentDictionary<string, ObservableCollection<DataPoint>> allSeriesOut = new ConcurrentDictionary<string, ObservableCollection<DataPoint>>();
+
         private double Start => DateTimeAxis.ToDouble(datetime.AddSeconds(-MAX_DURATION_SEC));
         private double End => DateTimeAxis.ToDouble(datetime);
 
@@ -55,19 +59,24 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
             var localConnections = Dispatcher.Invoke(() => Connections.GroupBy(connection => connection.GroupKey).ToList());
             foreach (var connectionGroup in localConnections)
             {
-                var seriesInTitle = $"{connectionGroup.Key}#In";
-                var seriesOutTitle = $"{connectionGroup.Key}#Out";
-                var seriesInValues = (ObservableCollection<DataPoint>)((LineSeries)Model.Series.FirstOrDefault(s => s.Title == seriesInTitle))?.ItemsSource;
-                var seriesOutValues = (ObservableCollection<DataPoint>)((LineSeries)Model.Series.FirstOrDefault(s => s.Title == seriesOutTitle))?.ItemsSource;
+                ObservableCollection<DataPoint> seriesInValues;
+                ObservableCollection<DataPoint> seriesOutValues;
 
-                if (seriesInValues is null)
+                if (!allSeriesIn.TryGetValue(connectionGroup.Key, out seriesInValues))
                 {
                     var colorbrush = connectionGroup.First().Color;
                     var color = OxyColor.FromArgb(colorbrush.A, colorbrush.R, colorbrush.G, colorbrush.B);
-                    Model.Series.Add(new LineSeries() { Title = seriesInTitle, Color = color, ItemsSource = seriesInValues = new ObservableCollection<DataPoint>(), InterpolationAlgorithm = InterpolationAlgorithms.UniformCatmullRomSpline });
-                    Model.Series.Add(new LineSeries() { Title = seriesOutTitle, Color = color, LineStyle = LineStyle.Dash, ItemsSource = seriesOutValues = new ObservableCollection<DataPoint>(), InterpolationAlgorithm = InterpolationAlgorithms.UniformCatmullRomSpline });
-                }
+                    Model.Series.Add(new LineSeries() { Title = $"{connectionGroup.Key}#In", Color = color, ItemsSource = seriesInValues = new ObservableCollection<DataPoint>() });
+                    Model.Series.Add(new LineSeries() { Title = $"{connectionGroup.Key}#Out", Color = color, LineStyle = LineStyle.Dash, ItemsSource = seriesOutValues = new ObservableCollection<DataPoint>() });
 
+                    allSeriesIn.TryAdd(connectionGroup.Key, seriesInValues);
+                    allSeriesOut.TryAdd(connectionGroup.Key, seriesOutValues);
+                }
+                else
+                {
+                    seriesOutValues = allSeriesOut[connectionGroup.Key];
+                }
+                
                 var lastIn = connectionGroup.Sum(connection => (long)connection.InboundBandwidth);
                 seriesInValues.Add(DateTimeAxis.CreateDataPoint(datetime, lastIn));
                 if (seriesInValues.Count > 3 && seriesInValues[^2].Y == lastIn && seriesInValues[^3].Y == lastIn)

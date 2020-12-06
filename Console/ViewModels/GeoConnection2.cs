@@ -9,9 +9,12 @@ using MaxMind.GeoIP2.Responses;
 using Resources = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using System.ComponentModel;
+using Wokhan.WindowsFirewallNotifier.Common.Core;
+using System.Runtime.CompilerServices;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
 {
+    //TODO: Inherit from Connection as well
     /// <summary>
     /// Geo locations v2 using GeoIP2 API supporting ipv4 andv ipv6.<para>
     /// Uses database from: https://dev.maxmind.com/geoip/geoip2/geolite2/
@@ -24,22 +27,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
 
         public string Owner => Connection.Owner;
 
-        private static IPAddress _currentIP;
         //TODO: CurrentIP shouldn't be handled in GeoConnection2 class (but in IPHelper or something alike)
-        public static IPAddress CurrentIP
-        {
-            get
-            {
-                if (_currentIP is null)
-                {
-                    {
-                        _currentIP = IPHelper.GetPublicIpAddress();
-                    }
-                }
-
-                return _currentIP;
-            }
-        }
+        private static IPAddress _currentIP;
+        public static IPAddress CurrentIP => (_currentIP ?? (_currentIP = IPHelper.GetPublicIpAddress()));
 
         private static Location _currentCoordinates;
         public static Location CurrentCoordinates
@@ -59,18 +49,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
         }
 
         private Location _coordinates;
-        public Location Coordinates
-        {
-            get
-            {
-                if (_coordinates is null)
-                {
-                    _coordinates = IPToLocation(Connection.TargetIP);
-                }
-
-                return _coordinates;
-            }
-        }
+        public Location Coordinates => _coordinates ?? (_coordinates = IPToLocation(Connection.TargetIP));
 
         /// <summary>
         /// Retrieves the location based on IPv4 or IPv6 address.
@@ -95,51 +74,30 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
             }
             return new Location();
         }
+
         public GeoConnection2(Connection ownerMod)
         {
             Connection = ownerMod;
         }
 
-        public LocationCollection RayCoordinates
-        {
-            get
-            {
-                return new LocationCollection() { CurrentCoordinates, Coordinates };
-            }
-        }
+        private LocationCollection _rayCoordinates;
+        public LocationCollection RayCoordinates => _rayCoordinates ?? (_rayCoordinates = new LocationCollection() { CurrentCoordinates, Coordinates });
 
-        private bool computePending;
+        //TODO: should be defined on the Map side, not GeoConnection, as it relies on Bing Maps control
         private LocationCollection _fullRoute;
-        public LocationCollection FullRoute
-        {
-            get
-            {
-                if (_fullRoute is null && !computePending)
-                {
-                    computePending = true;
-                    ComputeRoute();
-                }
-
-                return _fullRoute;
-            }
-        }
+        public LocationCollection FullRoute => this.GetOrSetValueAsync(ComputeRoute, NotifyPropertyChanged, nameof(_fullRoute));
 
         public static bool Initialized { get; private set; }
 
-        private async void ComputeRoute()
+        private async Task<LocationCollection> ComputeRoute()
         {
-            var r = new LocationCollection
+            var collection = new LocationCollection { CurrentCoordinates };
+            var fullroute = await IPHelper.GetFullRoute(Connection.TargetIP).ConfigureAwait(false);
+            foreach (var location in fullroute.Select(ip => IPToLocation(ip)).Where(l => l.Latitude != 0 && l.Longitude != 0))
             {
-                CurrentCoordinates
-            };
-            foreach (var x in (await IPHelper.GetFullRoute(Connection.TargetIP).ConfigureAwait(false)).Select(ip => IPToLocation(ip)).Where(l => l.Latitude != 0 && l.Longitude != 0))
-            {
-                r.Add(x);
+                collection.Add(location);
             }
-
-            _fullRoute = r;
-
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FullRoute)));
+            return collection;
         }
 
         private static readonly string _DB_PATH = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Resources\IPDatabase\GeoLite2-City.mmdb");
@@ -150,6 +108,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
 
         private static DatabaseReader _databaseReader;
         private static bool initPending;
+
+        // Indicates whether the actual location has been injected
+        private bool startingPointAddedSingle;
+        private bool startingPointAddedFull;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -172,5 +134,34 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
                     return true;
                 }).ConfigureAwait(false);
         }
+
+        internal void UpdateStartingPoint(Location currentCoordinates)
+        {
+            if (startingPointAddedSingle)
+            {
+                this.RayCoordinates.RemoveAt(0);
+            }
+            startingPointAddedSingle = true;
+            this.RayCoordinates.Insert(0, currentCoordinates);
+            NotifyPropertyChanged(nameof(RayCoordinates));
+
+            if (startingPointAddedFull)
+            {
+                this.FullRoute.RemoveAt(0);
+            }
+
+            if (this.FullRoute != null)
+            {
+                startingPointAddedFull = true;
+                this.FullRoute.Insert(0, currentCoordinates);
+                NotifyPropertyChanged(nameof(FullRoute));
+            }
+        }
+
+        protected void NotifyPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
     }
 }

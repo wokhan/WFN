@@ -8,23 +8,44 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Device.Location;
 
 using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
+using Wokhan.ComponentModel.Extensions;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
 {
-    public partial class Map : UserControl, INotifyPropertyChanged
+    public partial class Map : UserControl, INotifyPropertyChanged, IDisposable
     {
-        public ObservableCollection<Connection> Connections { get => (ObservableCollection<Connection>)GetValue(ConnectionsProperty); set => SetValue(ConnectionsProperty, value); }
-        public static readonly DependencyProperty ConnectionsProperty = DependencyProperty.Register(nameof(Connections), typeof(ObservableCollection<Connection>), typeof(Map));
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public Location CurrentCoordinates { get; private set; }
+        private GeoCoordinateWatcher geoWatcher;
+
+        private object locker = new object();
+
+
+        public static readonly DependencyProperty ConnectionsProperty = DependencyProperty.Register(nameof(Connections), typeof(ObservableCollection<Connection>), typeof(Map));
+        public ObservableCollection<Connection> Connections
+        {
+            get => (ObservableCollection<Connection>)GetValue(ConnectionsProperty);
+            set => SetValue(ConnectionsProperty, value);
+        }
+
+        public string CurrentIP => GeoConnection2.CurrentIP.ToString();
+
+        private Location _currentCoordinates;
+        public Location CurrentCoordinates
+        {
+            get => _currentCoordinates;
+            private set => this.SetValue(ref _currentCoordinates, value, NotifyPropertyChanged);
+        }
 
         private bool _isFullRouteDisplayed;
         public bool IsFullRouteDisplayed
         {
-            get { return _isFullRouteDisplayed; }
-            set { _isFullRouteDisplayed = value; NotifyPropertyChanged(); }
+            get => _isFullRouteDisplayed;
+            set => this.SetValue(ref _isFullRouteDisplayed, value, NotifyPropertyChanged);
         }
 
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
@@ -34,19 +55,16 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
 
         public bool IsAerial
         {
-            get { return _mode is AerialMode; }
+            get => _mode is AerialMode;
             set { Mode = (value ? new AerialMode(true) : (MapMode)new RoadMode()); NotifyPropertyChanged(); }
         }
 
+
         private MapMode _mode = new RoadMode();
-        private object locker = new object();
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public MapMode Mode
         {
-            get { return _mode; }
-            set { _mode = value; NotifyPropertyChanged(); }
+            get => _mode;
+            set => this.SetValue(ref _mode, value, NotifyPropertyChanged);
         }
 
         public ObservableCollection<GeoConnection2> ConnectionsRoutes { get; } = new ObservableCollection<GeoConnection2>();
@@ -54,10 +72,16 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
         public Map()
         {
             this.Loaded += Map_Loaded;
+            this.Unloaded += Map_Unloaded;
 
             InitializeComponent();
             BindingOperations.EnableCollectionSynchronization(ConnectionsRoutes, locker);
 
+        }
+
+        private void Map_Unloaded(object sender, RoutedEventArgs e)
+        {
+            geoWatcher?.Dispose();
         }
 
         async void Map_Loaded(object sender, RoutedEventArgs e)
@@ -73,15 +97,48 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
 
             try
             {
-                CurrentCoordinates = GeoConnection2.CurrentCoordinates;
+                geoWatcher = new GeoCoordinateWatcher();
+                geoWatcher.PositionChanged += GeoWatcher_PositionChanged;
+                geoWatcher.Start();
             }
-            catch
+            catch (Exception exc)
             {
-                // TODO: add log
+                LogHelper.Error("Unable to use GeoCoordinateWatcher. Falling back to IP address based method.", exc);
+            }
+
+            try
+            {
+                if (CurrentCoordinates is null)
+                {
+                    CurrentCoordinates = GeoConnection2.CurrentCoordinates;
+                }
+            }
+            catch (Exception exc)
+            {
+                LogHelper.Error("Unable to determine GeoLocation from IP address. Using default location.", exc);
+
                 CurrentCoordinates = new Location(0, 0);
             }
 
             ProgressStack.Visibility = Visibility.Collapsed;
+        }
+
+        private void GeoWatcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
+        {
+            if (!geoWatcher.Position.Location.IsUnknown)
+            {
+                CurrentCoordinates = new Location(geoWatcher.Position.Location.Latitude, geoWatcher.Position.Location.Longitude);
+                UpdateAllRoutes();
+            }
+        }
+
+        private void UpdateAllRoutes()
+        {
+            foreach (var route in ConnectionsRoutes)
+            {
+                route.UpdateStartingPoint(CurrentCoordinates);
+            }
+            CurrentMap.UpdateLayout();
         }
 
         public void UpdateMap()
@@ -116,6 +173,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
             {
                 ConnectionsRoutes.Add(new GeoConnection2(b));
             }
+        }
+
+        public void Dispose()
+        {
+            geoWatcher?.Dispose();
         }
     }
 }

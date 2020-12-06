@@ -13,15 +13,36 @@
             <maps:MapItemsControl x:Name="layerRoutes" ItemsSource="{Binding ConnectionsRoutes}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <maps:MapPolyline Stroke="Blue" StrokeLineJoin="Round" StrokeThickness="1">
+                        <maps:MapPolyline ToolTipService.InitialShowDelay="0" ToolTipService.HasDropShadow="True" StrokeLineJoin="Round" StrokeThickness="2" Selector.IsSelected="{Binding Connection.IsSelected,Mode=TwoWay}">
+                            <maps:MapPolyline.ToolTip>
+                                <StackPanel>
+                                    <TextBlock><Run FontWeight="Bold" Text="Connection owner: " /><Image Source="{Binding Connection.Icon}" Stretch="Uniform" Margin="5,0" VerticalAlignment="Center" Height="16" /><Run Text="{Binding Connection.Owner,Mode=OneTime}" /></TextBlock>
+                                    <TextBlock><Run FontWeight="Bold" Text="Bandwidth: " />Up=<Run Text="{Binding Connection.InboundBandwidth,Mode=OneWay,Converter={StaticResource unitFormatter}, ConverterParameter='ps'}" /> / Down=<Run Text="{Binding Connection.InboundBandwidth,Mode=OneWay,Converter={StaticResource unitFormatter}, ConverterParameter='ps'}" /></TextBlock>
+                                </StackPanel>
+                            </maps:MapPolyline.ToolTip>
+                            <maps:MapPolyline.Resources>
+                                <Style TargetType="Polyline">
+                                    <Setter Property="Stroke" Value="Gray" />
+                                    <Style.Triggers>
+                                        <Trigger Property="Selector.IsSelected" Value="True">
+                                            <Setter Property="Stroke" Value="Blue" />
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Stroke" Value="SteelBlue" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </maps:MapPolyline.Resources>
                             <maps:MapPolyline.Style>
                                 <Style TargetType="maps:MapPolyline">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsFullRouteDisplayed, ElementName=me}" Value="True">
-                                            <Setter Property="Locations" Value="{Binding FullRoute}" />
+                                            <!-- "Locations" dependency property is created as readonly, hence this error. 
+                                            Fixing it would require to inherit from MapPolyline and override said dependency property. Not worth it. -->
+                                            <Setter Property="Locations" Value="{Binding FullRoute,Mode=OneWay}" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding IsFullRouteDisplayed, ElementName=me}" Value="False">
-                                            <Setter Property="Locations" Value="{Binding RayCoordinates}" />
+                                            <Setter Property="Locations" Value="{Binding RayCoordinates,Mode=OneWay}" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -30,28 +51,20 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </maps:MapItemsControl>
-            <maps:MapLayer>
-                <maps:Pushpin maps:MapLayer.Position="{Binding CurrentCoordinates,Mode=OneWay}">
-                    <maps:Pushpin.ToolTip>
-                        <StackPanel>
-                            <TextBlock><Run FontWeight="Bold" Text="IP: " /><Run Text="{Binding CurrentIP,Mode=OneWay}" /></TextBlock>
-                            <TextBlock><Run FontWeight="Bold" Text="Coordinates: " /><Run Text="{Binding CurrentCoordinates,Mode=OneWay}" /></TextBlock>
-                        </StackPanel>
-                    </maps:Pushpin.ToolTip>
-                </maps:Pushpin>
-            </maps:MapLayer>
             <maps:MapItemsControl ItemsSource="{Binding ConnectionsRoutes}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <DataTemplate.Resources>
-                            <SolidColorBrush x:Key="color" Color="{Binding Connection.Color}" />
+                            <SolidColorBrush x:Key="color" Color="{Binding Connection.Color}" x:Shared="False" />
                         </DataTemplate.Resources>
-                        <Ellipse maps:MapLayer.Position="{Binding Coordinates}" Fill="{StaticResource color}">
+                        <Ellipse maps:MapLayer.Position="{Binding Coordinates}" Fill="{StaticResource color}" Selector.IsSelected="{Binding Connection.IsSelected,Mode=TwoWay}" ToolTipService.InitialShowDelay="0" ToolTipService.HasDropShadow="True">
                             <Ellipse.ToolTip>
                                 <StackPanel>
-                                    <TextBlock><Run FontWeight="Bold" Text="IP: " /><Run Text="{Binding Connection.RemoteAddress,Mode=OneTime}" /></TextBlock>
-                                    <TextBlock><Run FontWeight="Bold" Text="Hostname: " /><Run Text="{Binding Connection.RemoteHostName,Mode=OneWay}" /></TextBlock>
+                                    <TextBlock><Run FontWeight="Bold" Text="IP: " /><Run Text="{Binding Connection.TargetIP,Mode=OneTime}" /></TextBlock>
+                                    <TextBlock><Run FontWeight="Bold" Text="Hostname: " /><Run Text="{Binding Connection.TargetHostName,Mode=OneWay}" /></TextBlock>
                                     <TextBlock><Run FontWeight="Bold" Text="Coordinates: " /><Run Text="{Binding Coordinates,Mode=OneTime}" /></TextBlock>
+                                    <Separator />
+                                    <TextBlock><Run FontWeight="Bold" Text="Connection owner: " /><Image Source="{Binding Connection.Icon}" Stretch="Uniform" Margin="5,0" VerticalAlignment="Center" Height="16" /><Run Text="{Binding Connection.Owner,Mode=OneTime}" /></TextBlock>
                                 </StackPanel>
                             </Ellipse.ToolTip>
                             <Ellipse.Style>
@@ -60,14 +73,14 @@
                                     <Setter Property="Height" Value="10" />
                                     <Setter Property="maps:MapLayer.PositionOffset" Value="-5,-5" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Connection.IsSelected}" Value="True">
+                                        <Trigger Property="Selector.IsSelected" Value="True">
                                             <Setter Property="Panel.ZIndex" Value="100" />
                                             <Setter Property="maps:MapLayer.PositionOffset" Value="-10,-10" />
                                             <Setter Property="Width" Value="20" />
                                             <Setter Property="Height" Value="20" />
                                             <Setter Property="Stroke" Value="{DynamicResource AccentColorBrush}" />
                                             <Setter Property="StrokeThickness" Value="5" />
-                                        </DataTrigger>
+                                        </Trigger>
                                     </Style.Triggers>
                                 </Style>
                             </Ellipse.Style>
@@ -75,6 +88,16 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </maps:MapItemsControl>
+            <maps:MapLayer>
+                <maps:Pushpin maps:MapLayer.Position="{Binding CurrentCoordinates,Mode=OneWay}" ToolTipService.InitialShowDelay="0" ToolTipService.HasDropShadow="True">
+                    <maps:Pushpin.ToolTip>
+                        <StackPanel>
+                            <TextBlock><Run FontWeight="Bold" Text="IP: " /><Run Text="{Binding CurrentIP,Mode=OneWay}" /></TextBlock>
+                            <TextBlock><Run FontWeight="Bold" Text="Coordinates: " /><Run Text="{Binding CurrentCoordinates,Mode=OneWay}" /></TextBlock>
+                        </StackPanel>
+                    </maps:Pushpin.ToolTip>
+                </maps:Pushpin>
+            </maps:MapLayer>
         </maps:Map>
         <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right">
             <ToggleButton ToolTip="Show full routes" Width="40" Height="40" Margin="5" IsChecked="{Binding IsFullRouteDisplayed}" Content="{StaticResource Image_FullRoute}" ext:CustomAdorner.CornerRadius="20" />
