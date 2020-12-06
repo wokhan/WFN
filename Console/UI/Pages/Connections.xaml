@@ -9,10 +9,20 @@
     xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
     xmlns:settings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Config;assembly=Wokhan.WindowsFirewallNotifier.Common"
     DataContext="{Binding RelativeSource={x:Static RelativeSource.Self}}"
-    xmlns:dummydata="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.ViewModels"
+    xmlns:dummydata="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.ViewModels" xmlns:componentmodel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     mc:Ignorable="d" 
     d:DesignHeight="400" d:DesignWidth="800"
 	Title="Connections">
+    <pages:TimerBasedPage.Resources>
+        <CollectionViewSource x:Key="connectionsView" Source="{Binding AllConnections}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="GroupKey" />
+            </CollectionViewSource.GroupDescriptions>
+            <CollectionViewSource.SortDescriptions>
+                <componentmodel:SortDescription PropertyName="GroupKey" Direction="Ascending" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </pages:TimerBasedPage.Resources>
     <DockPanel>
         <controls:AdminPanel Caption="Information provided here might be inaccurate for non-admin users." />
         <ContentControl Style="{StaticResource ToolBarPanel}" Panel.ZIndex="0">
@@ -41,7 +51,7 @@
                 <RowDefinition Height="4" x:Name="separatorRow" />
                 <RowDefinition Height="*" x:Name="secondRow" />
             </Grid.RowDefinitions>
-            <DataGrid x:Name="connections" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizingWhenGrouping="True" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" d:DataContext="{d:DesignInstance Type=dummydata:ConnectionDummy,IsDesignTimeCreatable=True,CreateList=True}" DataContext="{Binding connectionsView}" ItemsSource="{Binding}" AutoGenerateColumns="False" HeadersVisibility="Column" Grid.ColumnSpan="3" Visibility="{Binding IsChecked,ElementName=toggleShowConnections,Mode=OneWay,Converter={StaticResource valueToVisibility}}" IsVisibleChanged="Components_VisibilityChanged">
+            <DataGrid x:Name="connections" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizingWhenGrouping="True" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" d:DataContext="{d:DesignInstance Type=dummydata:ConnectionDummy,IsDesignTimeCreatable=True,CreateList=True}" DataContext="{StaticResource connectionsView}" ItemsSource="{Binding}" AutoGenerateColumns="False" HeadersVisibility="Column" Grid.ColumnSpan="3" Visibility="{Binding IsChecked,ElementName=toggleShowConnections,Mode=OneWay,Converter={StaticResource valueToVisibility}}" IsVisibleChanged="Components_VisibilityChanged">
                 <DataGrid.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.ContainerStyle>

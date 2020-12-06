@@ -96,7 +96,7 @@
       <HintPath>..\Interop\Interop.NetFwTypeLib.dll</HintPath>
     </Reference>
     <Reference Include="System.Device">
-      <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\Framework\v4.0.30319\System.Device.dll</HintPath>
+      <HintPath>..\TempSharedLib\System.Device.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -26,26 +26,19 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private readonly object uisynclocker = new object();
 
         public ObservableCollection<Connection> AllConnections { get; } = new ObservableCollection<Connection>();
-        public ListCollectionView connectionsView { get; set; }
 
         public Connections()
         {
             BindingOperations.EnableCollectionSynchronization(AllConnections, uisynclocker);
 
-            connectionsView = (ListCollectionView)CollectionViewSource.GetDefaultView(AllConnections);
-            connectionsView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Connection.GroupKey)));
-            connectionsView.SortDescriptions.Add(new SortDescription(nameof(Connection.GroupKey), ListSortDirection.Ascending));
-
             InitializeComponent();
-
-            Components_VisibilityChanged(null, new DependencyPropertyChangedEventArgs());
         }
 
         private void Components_VisibilityChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             firstRow.MaxHeight = connections.IsVisible ? double.PositiveInfinity : 1;
             separatorRow.MaxHeight = connections.IsVisible ? double.PositiveInfinity : 0;
-            
+
             switch ((map.IsVisible, graph.IsVisible))
             {
                 // All hidden
