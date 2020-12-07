@@ -644,5 +644,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             ProcessHelper.StartShellExecutable(e.Uri?.AbsoluteUri, null, true);
             e.Handled = true;
         }
+
+        private void NotifWindow_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+
+        }
     }
 }

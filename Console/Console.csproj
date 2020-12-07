@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <!-- auto-increment version - see: https://stackoverflow.com/a/60571414 -->
     <!-- TODO: add this to other projects as well? -->
     <FileVersion>2.1.$([System.DateTime]::UtcNow.Date.Subtract($([System.DateTime]::Parse("2020-01-01"))).TotalDays).$([System.Math]::Floor($([MSBuild]::Divide($([System.DateTime]::UtcNow.TimeOfDay.TotalSeconds), 1.32))))</FileVersion>
@@ -10,18 +9,18 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>WFN</AssemblyName>
     <RootNamespace>Wokhan.WindowsFirewallNotifier.Console</RootNamespace>
-    <StartupObject>Wokhan.WindowsFirewallNotifier.Console.App</StartupObject>
+    <StartupObject></StartupObject>
     <NeutralLanguage>en-US</NeutralLanguage>
     <ApplicationIcon>Resources\Images\WFN.ico</ApplicationIcon>
-    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
-    <!-- TODO: @wokhan: remove? see Version, FileVersion above -->
+    <!-- TODO: @wokhan: remove? see Version, FileVersion above --><!--
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>-->
     <Description>Windows Firewall Notifier - Console</Description>
     <Product>Windows Firewall Notifier</Product>
     <Copyright>2011-2020 Wokhan (https://github.com/wokhansoft/WFN)</Copyright>
     <Authors>Wokhan Solutions</Authors>
     <OutputPath>..\bin\$(ConfigurationName)</OutputPath>
+    <OutputType>WinExe</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG</DefineConstants>
@@ -48,10 +47,10 @@
   <ItemGroup>
     <PackageReference Include="MaxMind.Db" Version="2.6.1" />
     <PackageReference Include="MaxMind.GeoIP2" Version="3.3.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
+    <!--<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    </PackageReference>-->
     <PackageReference Include="Microsoft.Maps.MapControl.WPF" Version="1.0.0.3" />
     <PackageReference Include="OxyPlot.Wpf" Version="2.0.0" />
     <PackageReference Include="Wokhan.Core" Version="0.9.2-alpha" />

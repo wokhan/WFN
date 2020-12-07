@@ -20,14 +20,13 @@
         x:Name="NotifWindow"
         WindowStartupLocation="Manual"
         UseLayoutRounding="True"
-        BorderThickness="1"
-        BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
         ScrollViewer.CanContentScroll="False"
         DataContext="{Binding RelativeSource={RelativeSource Self}}" 
         Visibility="Visible" 
         Loaded="NotificationWindow_Loaded" 
         Initialized="NotificationWindow_Initialized" 
         MouseEnter="NotificationWindow_MouseEnter" 
+        MouseLeave="NotifWindow_MouseLeave" 
         WindowState="Normal" 
         StateChanged="NotificationWindow_StateChanged" 
         ResizeMode="CanMinimize" 
@@ -82,8 +81,8 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Padding="0" Grid.Column="0" Margin="2" Click="btnOptions_Click">
-                <Image Source="{Binding Icon,Mode=OneTime}" />
+            <Button Padding="0" Grid.Column="0" Margin="0" Click="btnOptions_Click">
+                <Image Source="/Notifier;component/Resources/WFN.ico" />
             </Button>
             <TextBlock Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Padding="8,0" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" FontWeight="Bold" Text="{Binding Title,Mode=OneTime}" />
             <UniformGrid Grid.Column="2" Rows="1">
@@ -121,7 +120,7 @@
                                         <Trigger.EnterActions>
                                             <BeginStoryboard>
                                                 <Storyboard Duration="0:0:1" SpeedRatio="2">
-                                                    <!--<ThicknessAnimation From="100,0,0,0" To="0,0,0,0" Storyboard.TargetProperty="Margin" />-->
+                                                    <ThicknessAnimation From="300,0,0,0" To="0,0,0,0" Duration="0:0:0:0.5" Storyboard.TargetProperty="Margin" />
                                                     <DoubleAnimation From="0" To="1" Storyboard.TargetProperty="Opacity" />
                                                 </Storyboard>
                                             </BeginStoryboard>
@@ -143,11 +142,11 @@
                                         <ColumnDefinition />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <Image Margin="5,0,0,0" Grid.Column="0" Height="32" MinWidth="32" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Icon,Mode=OneWay}" />
-                                    <StackPanel Margin="5" Grid.Column="1">
+                                    <Image VerticalAlignment="Center" Margin="5,0,0,0" Grid.Column="0" Height="32" MinWidth="32" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Icon,Mode=OneWay}" />
+                                    <StackPanel VerticalAlignment="Center" Margin="5" Grid.Column="1">
                                         <TextBlock FontWeight="Bold" Text="{Binding Description,Mode=OneWay}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
                                         <TextBlock Text="{Binding CurrentServiceDesc,Mode=OneWay}" Visibility="{Binding CurrentService,Mode=OneWay,Converter={StaticResource valueToVisibility}}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" FontSize="10" />
-                                        <TextBlock Text="{Binding ProductName,Mode=OneWay}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" FontSize="10" />
+                                        <TextBlock Text="{Binding ProductName,Mode=OneWay}" Visibility="{Binding ProductName,Mode=OneWay,Converter={StaticResource valueToVisibility}}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" FontSize="10" />
                                     </StackPanel>
                                     <TextBlock Margin="5,5" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" Text="{Binding TentativesCounter,Mode=OneWay,StringFormat='Attempts: {0}'}" FontSize="10" />
                                 </Grid>
