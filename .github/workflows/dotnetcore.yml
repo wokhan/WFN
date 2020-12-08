@@ -2,7 +2,8 @@ name: .NET Core
 
 on: 
   push:
-    branches: master
+    branches: 
+        - master
   #schedule: # to be enabled to have real nightlies
     #- cron: 0 0 * * *
 

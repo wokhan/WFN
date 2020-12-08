@@ -56,7 +56,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
             Model.DefaultXAxis.Minimum = Start;
             Model.DefaultXAxis.Maximum = End;
 
-            var localConnections = Dispatcher.Invoke(() => Connections.GroupBy(connection => connection.GroupKey).ToList());
+            var localConnections = Dispatcher.Invoke(() => Connections.GroupBy(connection => connection.GroupKey));
             foreach (var connectionGroup in localConnections)
             {
                 ObservableCollection<DataPoint> seriesInValues;
@@ -91,6 +91,14 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
                     seriesOutValues.RemoveAt(seriesOutValues.Count - 2);
                 }
             }
+
+            //TODO: there has to be a better way
+            allSeriesIn.Where(series => !localConnections.Any(group => group.Key == series.Key))
+                       .ToList()
+                       .ForEach(series => allSeriesIn.TryRemove(series));
+            allSeriesOut.Where(series => !localConnections.Any(group => group.Key == series.Key))
+                       .ToList()
+                       .ForEach(series => allSeriesIn.TryRemove(series));
 
             Model.InvalidatePlot(true);
         }

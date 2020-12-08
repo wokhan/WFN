@@ -152,6 +152,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
                         AddOrUpdateConnection(c);
                     }
 
+                    //TODO: there has to be a better way
+                    ConnectionsRoutes.Where(route => !Connections.Contains(route.Connection))
+                                     .ToList()
+                                     .ForEach(route => ConnectionsRoutes.Remove(route));
+
                     CurrentMap.UpdateLayout();
                 });
             }

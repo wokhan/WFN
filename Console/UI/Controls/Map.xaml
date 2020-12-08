@@ -25,11 +25,25 @@
                                     <Setter Property="Stroke" Value="Gray" />
                                     <Style.Triggers>
                                         <Trigger Property="Selector.IsSelected" Value="True">
+                                            <Setter Property="StrokeThickness" Value="4" />
                                             <Setter Property="Stroke" Value="Blue" />
                                         </Trigger>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Stroke" Value="SteelBlue" />
+                                            <Setter Property="StrokeThickness" Value="4" />
                                         </Trigger>
+                                        <DataTrigger Binding="{Binding Connection.IsNew}" Value="True">
+                                            <Setter Property="Stroke" Value="LightBlue" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Connection.IsDying}" Value="True">
+                                            <Setter Property="Stroke" Value="Orange" />
+                                            <DataTrigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:5" From="1" To="0" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </DataTrigger.EnterActions>
+                                        </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </maps:MapPolyline.Resources>
@@ -81,6 +95,15 @@
                                             <Setter Property="Stroke" Value="{DynamicResource AccentColorBrush}" />
                                             <Setter Property="StrokeThickness" Value="5" />
                                         </Trigger>
+                                        <DataTrigger Binding="{Binding Connection.IsDying}" Value="True">
+                                            <DataTrigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:5" From="1" To="0" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </DataTrigger.EnterActions>
+                                        </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </Ellipse.Style>
