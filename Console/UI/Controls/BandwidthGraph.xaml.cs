@@ -31,22 +31,30 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
         private DateTime datetime = DateTime.Now;
         private ConcurrentDictionary<string, ObservableCollection<DataPoint>> allSeriesIn = new ConcurrentDictionary<string, ObservableCollection<DataPoint>>();
         private ConcurrentDictionary<string, ObservableCollection<DataPoint>> allSeriesOut = new ConcurrentDictionary<string, ObservableCollection<DataPoint>>();
+        private bool isXPanned;
 
         private double Start => DateTimeAxis.ToDouble(datetime.AddSeconds(-MAX_DURATION_SEC));
         private double End => DateTimeAxis.ToDouble(datetime);
 
         public BandwidthGraph()
         {
+            var xAxis = new DateTimeAxis() { Position = AxisPosition.Bottom, StringFormat = "HH:mm:ss", Minimum = Start, Maximum = End, IsPanEnabled = true, IsZoomEnabled = true };
+            var yAxis = new LinearAxis() { Position = AxisPosition.Left, Minimum = 0, LabelFormatter = (y) => UnitFormatter.FormatBytes(y, "ps") };
+
+            xAxis.AxisChanged += XAxis_AxisChanged;
+
             Model = new PlotModel()
             {
-                Axes = {
-                    new DateTimeAxis() { Position = AxisPosition.Bottom, StringFormat = "HH:mm:ss", Minimum = Start, Maximum = End },
-                    new LinearAxis() { Position = AxisPosition.Left, Minimum = 0, LabelFormatter = (y) => UnitFormatter.FormatBytes(y, "ps") }
-                },
+                Axes = { xAxis, yAxis },
                 IsLegendVisible = false
             };
 
             InitializeComponent();
+        }
+
+        private void XAxis_AxisChanged(object sender, AxisChangedEventArgs e)
+        {
+            isXPanned = ((e.ChangeType == AxisChangeTypes.Pan || e.ChangeType == AxisChangeTypes.Zoom) && e.DeltaMaximum > 0);
         }
 
         public void UpdateGraph()
@@ -76,7 +84,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
                 {
                     seriesOutValues = allSeriesOut[connectionGroup.Key];
                 }
-                
+
                 var lastIn = connectionGroup.Sum(connection => (long)connection.InboundBandwidth);
                 seriesInValues.Add(DateTimeAxis.CreateDataPoint(datetime, lastIn));
                 if (seriesInValues.Count > 3 && seriesInValues[^2].Y == lastIn && seriesInValues[^3].Y == lastIn)
@@ -92,15 +100,15 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
                 }
             }
 
-            //TODO: there has to be a better way
-            allSeriesIn.Where(series => !localConnections.Any(group => group.Key == series.Key))
-                       .ToList()
-                       .ForEach(series => allSeriesIn.TryRemove(series));
-            allSeriesOut.Where(series => !localConnections.Any(group => group.Key == series.Key))
-                       .ToList()
-                       .ForEach(series => allSeriesIn.TryRemove(series));
+            if (!isXPanned)
+            {
+                Model.InvalidatePlot(true);
+            }
+        }
 
-            Model.InvalidatePlot(true);
+        private void ResetZoom(object sender, RoutedEventArgs e)
+        {
+            chart.ResetAllAxes();
         }
     }
 }

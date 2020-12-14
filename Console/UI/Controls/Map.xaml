@@ -49,14 +49,12 @@
                             </maps:MapPolyline.Resources>
                             <maps:MapPolyline.Style>
                                 <Style TargetType="maps:MapPolyline">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsFullRouteDisplayed, ElementName=me}" Value="True">
-                                            <!-- "Locations" dependency property is created as readonly, hence this error. 
+                                    <!-- "Locations" dependency property is created as private, hence this error. 
                                             Fixing it would require to inherit from MapPolyline and override said dependency property. Not worth it. -->
-                                            <Setter Property="Locations" Value="{Binding FullRoute,Mode=OneWay}" />
-                                        </DataTrigger>
+                                    <Setter Property="Locations" Value="{Binding RayCoordinates,Mode=OneWay}" />
+                                    <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsFullRouteDisplayed, ElementName=me}" Value="False">
-                                            <Setter Property="Locations" Value="{Binding RayCoordinates,Mode=OneWay}" />
+                                            <Setter Property="Locations" Value="{Binding FullRoute,Mode=OneWay}" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -122,9 +120,9 @@
                 </maps:Pushpin>
             </maps:MapLayer>
         </maps:Map>
-        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right">
-            <ToggleButton ToolTip="Show full routes" Width="40" Height="40" Margin="5" IsChecked="{Binding IsFullRouteDisplayed}" Content="{StaticResource Image_FullRoute}" ext:CustomAdorner.CornerRadius="20" />
-            <ToggleButton ToolTip="Mode (aerial / map)" Width="40" Height="40" Margin="5" IsChecked="{Binding IsAerial}" Content="{StaticResource Image_MapAerial}" ext:CustomAdorner.CornerRadius="20" />
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal">
+            <ToggleButton Style="{StaticResource RoundedToggleButton}" ToolTip="Show full routes" IsChecked="{Binding IsFullRouteDisplayed}" Content="{StaticResource Image_FullRoute}" />
+            <ToggleButton Style="{StaticResource RoundedToggleButton}" ToolTip="Mode (aerial / map)" IsChecked="{Binding IsAerial}" Content="{StaticResource Image_MapAerial}" />
         </StackPanel>
         <Border HorizontalAlignment="Center" VerticalAlignment="Center" Background="LightYellow">
             <StackPanel Margin="30,10" x:Name="ProgressStack">

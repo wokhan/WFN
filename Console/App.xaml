@@ -118,6 +118,28 @@
                     </Style>
                 </Style.Resources>
             </Style>
+            <Style x:Key="RoundedButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="Width" Value="40" />
+                <Setter Property="Height" Value="40" />
+                <Setter Property="Margin" Value="0,10,10,0" />
+                <Setter Property="ext:CustomAdorner.CornerRadius" Value="20" />
+                <Setter Property="ext:CustomAdorner.BackgroundEffect">
+                    <Setter.Value>
+                        <DropShadowEffect Direction="-90" BlurRadius="10" ShadowDepth="0" Color="LightGray" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="RoundedToggleButton" TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
+                <Setter Property="Width" Value="40" />
+                <Setter Property="Height" Value="40" />
+                <Setter Property="Margin" Value="0,10,10,0" />
+                <Setter Property="ext:CustomAdorner.CornerRadius" Value="20" />
+                <Setter Property="ext:CustomAdorner.BackgroundEffect">
+                    <Setter.Value>
+                        <DropShadowEffect Direction="-90" BlurRadius="10" ShadowDepth="0" Color="LightGray" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
             <Style x:Key="InfoPanel" TargetType="Border">
                 <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.InfoBrushKey}}" />
