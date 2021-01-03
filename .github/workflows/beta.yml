@@ -2,15 +2,13 @@ name: Beta
 
 on: 
   push:
-    branches: 
-        - master
     tags:
-      - 'v*beta' # Push events to matching v*, i.e. v1.0, v20.15.10
+      - 'v*beta'
   #schedule: # to be enabled to have real nightlies
     #- cron: 0 0 * * *
 
 jobs:
-  publish-nightly:
+  publish-anycpu:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
@@ -28,8 +26,8 @@ jobs:
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-          tag_name: v${{ github.ref }}-beta
-          release_name: v${{ github.ref }} (beta)
+          tag_name: v${{ github.ref }}
+          release_name: v${{ github.ref }}
           draft: false
           prerelease: true
     - name: Upload Release Asset
@@ -42,7 +40,7 @@ jobs:
           asset_path: ./bin/net5.0-windows/wfn-${{ github.ref }}.zip 
           asset_name: wfn-${{ github.ref }}.zip 
           asset_content_type: application/zip
-  publish-nightly-x64:
+  publish-x64:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
@@ -60,8 +58,8 @@ jobs:
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-          tag_name: v${{ github.ref }}-beta
-          release_name: v${{ github.ref }} (beta)
+          tag_name: v${{ github.ref }}
+          release_name: v${{ github.ref }}
           draft: false
           prerelease: true
     - name: Upload Release Asset
@@ -74,7 +72,7 @@ jobs:
           asset_path: ./bin/net5.0-windows/wfn-x64-${{ github.ref }}.zip 
           asset_name: wfn-x64-standalone-${{ github.ref }}.zip
           asset_content_type: application/zip 
-  publish-nightly-x86:
+  publish-x86:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
