@@ -5,9 +5,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:maps="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
-      mc:Ignorable="d" x:Name="me"
-      d:DesignHeight="400" d:DesignWidth="700">
+    mc:Ignorable="d" x:Name="me"
+    d:DesignHeight="400" d:DesignWidth="700">
     <Grid DataContext="{Binding ElementName=me}">
         <maps:Map x:Name="CurrentMap" BorderThickness="0" CredentialsProvider="AsuL3JPMhN5U5z09JOCSXp5C_4J_X6YV3FTk7jEMCDLkQdGee7xPspAuIAxbhyyK" Mode="{Binding Mode}">
             <maps:MapItemsControl x:Name="layerRoutes" ItemsSource="{Binding ConnectionsRoutes}">

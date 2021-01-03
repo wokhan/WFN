@@ -68,8 +68,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
                 Owner = ownerMod.OwnerModule.ModuleName;
                 IconPath = ownerMod.OwnerModule.ModulePath;
             }
-
-            GroupKey = $"{FileName} ({Path})";
         }
 
         private bool TryEnableStats()
@@ -132,8 +130,6 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
             get => _lastError;
             set => this.SetValue(ref _lastError, value, NotifyPropertyChanged);
         }
-
-        public string GroupKey { get; private set; }
 
         private readonly IConnectionOwnerInfo rawConnection;
         private object rawrow;

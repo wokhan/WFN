@@ -7,9 +7,31 @@
              mc:Ignorable="d" x:Name="me"
              d:DesignHeight="450" d:DesignWidth="800" ClipToBounds="True">
     <Grid>
-        <oxy:PlotView x:Name="chart" Model="{Binding Model}" PanCursor="ScrollWE" DataContext="{Binding ElementName=me}" />
-        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal">
-            <Button Style="{StaticResource RoundedButton}" ToolTip="Reset zoom / pan" Content="{StaticResource Image_Refresh}" Click="ResetZoom" />
-        </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <oxy:PlotView x:Name="chart" BorderThickness="0" Model="{Binding Model}" DataContext="{Binding ElementName=me}" />
+        <oxy:PlotView x:Name="miniChart" Grid.Row="1" Background="WhiteSmoke" BorderThickness="0" Margin="0,0,5,0" Model="{Binding MiniModel}" DataContext="{Binding ElementName=me}" IsEnabled="False" />
+        <ScrollBar x:Name="scrollArea" Grid.Row="1" Opacity="0.3" Height="50" Margin="0" Padding="0" Orientation="Horizontal" Minimum="{Binding AbsoluteStart,ElementName=me,FallbackValue=0}" Value="{Binding CurrentStart,ElementName=me,FallbackValue=10,Mode=TwoWay}" Thumb.DragStarted="scrollArea_DragStarted" Maximum="{Binding AbsoluteEnd,ElementName=me,FallbackValue=10}">
+            <ScrollBar.Template>
+                <ControlTemplate TargetType="ScrollBar">
+                    <Grid x:Name="GridRoot">
+                        <Track x:Name="PART_Track" ViewportSize="NaN" Margin="0" IsDirectionReversed="False" Focusable="False">
+                            <Track.Thumb>
+                                <Thumb x:Name="Thumb" Cursor="Hand" Focusable="False" OverridesDefaultStyle="True" IsTabStop="False" Width="{Binding ThumbSize,RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                    <Thumb.Template>
+                                        <ControlTemplate TargetType="Thumb">
+                                            <Rectangle Fill="Gray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </ScrollBar.Template>
+        </ScrollBar>
+        <Button Padding="10" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource RoundedButton}" ToolTip="Reset zoom / pan" Content="{StaticResource Image_Refresh}" Click="ResetZoom" />
     </Grid>
 </UserControl>

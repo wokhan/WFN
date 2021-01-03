@@ -98,7 +98,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels
             if (Path == "System")
             {
                 description = "System";
-                productName = String.Empty;
+                productName = "System";
                 company = String.Empty;
             }
             else if (File.Exists(Path))
@@ -107,8 +107,8 @@ namespace Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels
                 {
                     var fileinfo = FileVersionInfo.GetVersionInfo(Path);
 
-                    productName = fileinfo.ProductName;
-                    company = fileinfo.CompanyName;
+                    productName = fileinfo.ProductName ?? String.Empty;
+                    company = fileinfo.CompanyName ?? String.Empty;
 
                     if (string.IsNullOrWhiteSpace(fileinfo.FileDescription))
                     {

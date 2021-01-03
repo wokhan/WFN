@@ -16,10 +16,10 @@
     <pages:TimerBasedPage.Resources>
         <CollectionViewSource x:Key="connectionsView" Source="{Binding AllConnections}">
             <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="GroupKey" />
+                <PropertyGroupDescription PropertyName="Path" />
             </CollectionViewSource.GroupDescriptions>
             <CollectionViewSource.SortDescriptions>
-                <componentmodel:SortDescription PropertyName="GroupKey" Direction="Ascending" />
+                <componentmodel:SortDescription PropertyName="FileName" Direction="Ascending" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
     </pages:TimerBasedPage.Resources>
@@ -34,7 +34,7 @@
                     <ToggleButton Content="Map" ext:CustomAdorner.Image="{StaticResource Image_Menu_Map}" x:Name="toggleShowMap" DataContext="{Binding Path=(settings:Settings.Default)}" IsChecked="{Binding ShowMap}" />
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Right">
-                    <TextBlock VerticalAlignment="Center" Text="{Binding connectionsView.Count, StringFormat='Active connection(s): {0}', FallbackValue='No active connection'}" />
+                    <TextBlock VerticalAlignment="Center" Margin="10,0" DataContext="{StaticResource connectionsView}" Text="{Binding Count, StringFormat='Active connection(s): {0}', FallbackValue='No active connection'}" />
                     <ComboBox Style="{StaticResource AutoTrackRefresh}" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
                     <Label Style="{StaticResource HelpButtonStyle}" ToolTip="This screen displays all active connections on this computer, updated every second (by default).&#10;Closed connections (in orange) will remain displayed a few seconds before disappearing." />
                 </StackPanel>
@@ -67,11 +67,13 @@
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="15" />
                                                         <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition />
                                                     </Grid.ColumnDefinitions>
                                                     <Ellipse Width="10" Height="10" Fill="{StaticResource color}" />
-                                                    <TextBlock Grid.Column="1" FontWeight="Bold" Text="{Binding GroupKey}" Foreground="{StaticResource color}" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                                                    <Rectangle Grid.Column="2" VerticalAlignment="Center" Margin="15,0,0,0" HorizontalAlignment="Stretch" Height="1" Fill="{StaticResource color}" />
+                                                    <TextBlock Grid.Column="1" FontWeight="Bold" Text="{Binding FileName}" ToolTip="{Binding Path}" Foreground="{StaticResource color}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                                    <TextBlock Grid.Column="2" FontWeight="Bold" Text="{Binding ProductName,StringFormat=' ({0})'}" Foreground="{StaticResource color}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                                    <Rectangle Grid.Column="3" VerticalAlignment="Center" Margin="15,0,0,0" HorizontalAlignment="Stretch" Height="1" Fill="{StaticResource color}" />
                                                 </Grid>
                                                 <ItemsPresenter />
                                             </StackPanel>
