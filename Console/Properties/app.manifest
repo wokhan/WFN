@@ -3,16 +3,16 @@
   <assemblyIdentity
     type="win32"
     name="Windows Firewall Notifier Console"
-    version="2.1.0.0"
+    version="2.5.0.0"
     processorArchitecture="*"
   />
-  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
+  <!--<trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
     <security>
       <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
         <requestedExecutionLevel level="highestAvailable" uiAccess="false" />
       </requestedPrivileges>
     </security>
-  </trustInfo>
+  </trustInfo>-->
   <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
     <application>
       <!-- Windows 10 -->

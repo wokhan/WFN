@@ -7,6 +7,7 @@ using System.Windows.Data;
 
 using Wokhan.UI.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
+using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
 using Wokhan.WindowsFirewallNotifier.Common.Security;
@@ -54,8 +55,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         {
             VirtualizedQueryableExtensions.Init(Dispatcher);
 
-            Loaded += (s, e) => StartHandlingSecurityLogEvents();
-            Unloaded += (s, e) => StopHandlingSecurityLogEvents();
+            if (UAC.CheckProcessElevated())
+            {
+                Loaded += (s, e) => StartHandlingSecurityLogEvents();
+                Unloaded += (s, e) => StopHandlingSecurityLogEvents();
+            }
 
             eventsLogFilters = new EventsLogFilters(this);
 

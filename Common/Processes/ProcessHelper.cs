@@ -10,8 +10,6 @@ using System.Text;
 using System.Management;
 using System.Text.RegularExpressions;
 using System.Windows;
-using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
-using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using System.IO;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
@@ -19,13 +17,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Processes
 {
     public static partial class ProcessHelper
     {
-        public static void ElevateCurrentProcess()
+        public static void RunElevated(string process)
         {
             ProcessStartInfo proc = new ProcessStartInfo
             {
                 UseShellExecute = true,
                 WorkingDirectory = Environment.CurrentDirectory,
-                FileName = Path.Combine(Assembly.GetCallingAssembly().Location),
+                FileName = process,
                 Verb = "runas"
             };
 

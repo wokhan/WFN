@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Windows;
 
 using Wokhan.WindowsFirewallNotifier.Common.Config;
@@ -33,7 +35,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console
             MessageBox.Show(((Exception)e.ExceptionObject).Message, Common.Properties.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        public bool IsElevated { get; } = UAC.CheckProcessElevated(); 
+        public bool IsElevated { get; } = UAC.CheckProcessElevated();
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
@@ -55,7 +57,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console
 
         internal void RestartAsAdmin()
         {
-            ProcessHelper.ElevateCurrentProcess();
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                MessageBox.Show("WFN is currently being debugged with a non-admin Visual Studio instance.\r\nDebugger will be detached if you want to use admin-only features as it requires launching a new WFN instance.\r\nTo avoid this, please run Visual Studio with admin privileges.", "Non-admin debugger detected", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
+            ProcessHelper.RunElevated(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ProcessNames.WFN.FileName));
             Environment.Exit(0);
         }
     }

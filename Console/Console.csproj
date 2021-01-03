@@ -3,9 +3,9 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <!-- auto-increment version - see: https://stackoverflow.com/a/60571414 -->
     <!-- TODO: add this to other projects as well? -->
-    <FileVersion>2.1.$([System.DateTime]::UtcNow.Date.Subtract($([System.DateTime]::Parse("2020-01-01"))).TotalDays).$([System.Math]::Floor($([MSBuild]::Divide($([System.DateTime]::UtcNow.TimeOfDay.TotalSeconds), 1.32))))</FileVersion>
+    <FileVersion>2.5.$([System.DateTime]::UtcNow.Date.Subtract($([System.DateTime]::Parse("2020-01-01"))).TotalDays).$([System.Math]::Floor($([MSBuild]::Divide($([System.DateTime]::UtcNow.TimeOfDay.TotalSeconds), 1.32))))</FileVersion>
     <!-- Version impacts location of the user.config location, therefore remove the last part (seconds) -->
-    <Version>2.1.$([System.DateTime]::UtcNow.Date.Subtract($([System.DateTime]::Parse("2020-01-01"))).TotalDays)</Version>
+    <Version>2.5.$([System.DateTime]::UtcNow.Date.Subtract($([System.DateTime]::Parse("2020-01-01"))).TotalDays)</Version>
     <UseWPF>true</UseWPF>
     <AssemblyName>WFN</AssemblyName>
     <RootNamespace>Wokhan.WindowsFirewallNotifier.Console</RootNamespace>
@@ -17,7 +17,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>-->
     <Description>Windows Firewall Notifier - Console</Description>
     <Product>Windows Firewall Notifier</Product>
-    <Copyright>2011-2020 Wokhan (https://github.com/wokhansoft/WFN)</Copyright>
+    <Copyright>2011-2021 Wokhan (https://github.com/wokhansoft/WFN)</Copyright>
     <Authors>Wokhan Solutions</Authors>
     <OutputPath>..\bin\$(ConfigurationName)</OutputPath>
     <OutputType>WinExe</OutputType>

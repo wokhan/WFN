@@ -9,7 +9,7 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <Description>Windows Firewall Notifier - Common Library</Description>
     <Product>Windows Firewall Notifier</Product>
-    <Copyright>2011-2020 Wokhan (https://github.com/wokhansoft/WFN)</Copyright>
+    <Copyright>2011-2021 Wokhan (https://github.com/wokhansoft/WFN)</Copyright>
     <Authors>Wokhan Solutions</Authors>
     <OutputPath>..\bin\$(ConfigurationName)</OutputPath>
     <Nullable>Enable</Nullable>

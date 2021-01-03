@@ -36,7 +36,8 @@
                     <TextBlock Text="Notifier settings" Style="{StaticResource SectionHeader}" />
                     <StackPanel Margin="10">
                         <TextBlock Margin="0,0,0,10" TextWrapping="Wrap" Text="The following options only apply if you chose 'Block and prompt' for the outgoing connections in the Firewall settings page, as they target the WFN notification window." />
-                        <CheckBox Padding="3" Content="Start minimized" IsChecked="{Binding StartNotifierMinimized, Source={x:Static settings:Settings.Default}}" />
+                        <CheckBox Padding="3" Content="Always run as an admin" IsChecked="{Binding AlwaysRunAs,Mode=TwoWay}" />
+                        <CheckBox Padding="3" Content="Start minimized" IsChecked="{Binding StartNotifierMinimized,Mode=TwoWay}" />
                         <CheckBox Padding="3" Content="Use an animated notification" IsChecked="{Binding UseAnimation,Mode=TwoWay}" />
                         <CheckBox Padding="3" Content="Enable services detection*" ToolTip="Additionally tries to detect the service making a connection in the notifier." IsChecked="{Binding EnableServiceDetection,Mode=TwoWay}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
                         <Button x:Name="btnTestNotif" Click="btnTestNotif_Click" HorizontalAlignment="Center" ext:CustomAdorner.Image="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Content="Start Notifier now" />

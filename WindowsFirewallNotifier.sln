@@ -25,7 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{1DBB954C-E22
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github-actions", "github-actions", "{573DABCD-1C81-465A-AD08-41F109761D74}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\dotnetcore.yml = .github\workflows\dotnetcore.yml
+		.github\workflows\beta.yml = .github\workflows\beta.yml
+		.github\workflows\nightly.yml = .github\workflows\nightly.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "legal", "legal", "{28683BDB-380A-4B87-AC28-142192543EEB}"

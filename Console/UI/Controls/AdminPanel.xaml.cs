@@ -3,12 +3,15 @@ using System.Windows.Controls;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls
 {
-    /// <summary>
-    /// Logique d'interaction pour AdminPanel.xaml
-    /// </summary>
     public partial class AdminPanel : UserControl
     {
-        public string Caption { get; set; }
+        public string Caption
+        {
+            get => (string)GetValue(CaptionProperty);
+            set => SetValue(CaptionProperty, value);
+        }
+
+        public static readonly DependencyProperty CaptionProperty = DependencyProperty.Register(nameof(Caption), typeof(string), typeof(AdminPanel));
 
         public AdminPanel()
         {

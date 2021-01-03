@@ -12,7 +12,10 @@
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Label Content="{Binding Caption,FallbackValue=Message}" />
+            <StackPanel Orientation="Vertical">
+                <Label VerticalAlignment="Center" Padding="5,2,5,0" Content="{Binding Caption,FallbackValue=Message}" />
+                <Label VerticalAlignment="Center" Padding="5,0,2,0" FontStyle="Italic" FontSize="11" Content="You can also head to the options and set WFN to be always started as an admin to avoid this message." />
+            </StackPanel>
             <Button Grid.Column="1" Click="btnRestartAdmin_Click" ext:CustomAdorner.Image="{StaticResource Image_Shield}" Content="Restart as admin" />
         </Grid>
     </ContentControl>
