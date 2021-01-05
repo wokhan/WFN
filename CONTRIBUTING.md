@@ -27,7 +27,7 @@ Some rules apply, of course...
 
 Any IDE would do as long as conventions are followed. 
 
-The best one being Visual Studio (Community is way enough) 2019.
+The best one being Visual Studio (Community is way enough) 2019 (last update to support .NET 5.0).
 
 You can use the latest update, but avoid any preview as they're not production ready. 
 
@@ -52,3 +52,20 @@ New features: ***feature**/my_new_feature*
 Bug fixing on official releases: *2.1/**bugfix**/short_description*
 
 A review is then required to merge with master. 
+
+### Nightlies
+
+Nightlies will be automatically compiled on each push / merge on the master branch, and will always be uploaded in the same "Nightly" Release.
+
+### Releases
+
+Releases can be created the standard way through GitHub Releases feature.
+
+WFN will be compiled once a release is created, and named according to the tag name which must reflect the current version (ex : if the tag/release name is v2.0.0-beta, the asset will be named wfn-[x64|x86]{-standalone}-v2.0.0-beta.zip).
+
+So you don't have to compile locally and upload your assets: it will be done automatically by the "Release" GitHub action.
+
+Note that three packages will be created:
+- one for x64 (standalone)
+- one for x86 (standalone)
+- one for AnyCPU (requires .NET to be installed on the client computer)
