@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
@@ -11,7 +11,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <Description>Windows Firewall Notifier - Notification handler</Description>
     <Product>Windows Firewall Notifier</Product>
-    <Copyright>2011-2021 Wokhan and others (https://github.com/wokhansoft/WFN)</Copyright>
+    <Copyright>2011-2021 Wokhan and others (https://github.com/wokhan/WFN)</Copyright>
     <Authors>Wokhan Solutions, Harrwiss</Authors>
     <OutputPath>..\bin\$(ConfigurationName)</OutputPath>
     <Company>Wokhan Solutions</Company>

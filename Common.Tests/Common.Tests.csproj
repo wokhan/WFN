@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-	<TargetFramework>net5.0-windows</TargetFramework>
+	<TargetFramework>net6.0-windows</TargetFramework>
     <AssemblyName>Wokhan.WindowsFirewallNotifier.Console.Tests</AssemblyName>
     <RootNamespace>Wokhan.WindowsFirewallNotifier.Console.Tests</RootNamespace>
     <Description>Windows Firewall Notifier - Common Tests</Description>
     <Product>Windows Firewall Notifier</Product>
-    <Copyright>2011-2020 Wokhan (https://github.com/wokhansoft/WFN)</Copyright>
+    <Copyright>2011-2022 Wokhan (https://github.com/wokhan/WFN)</Copyright>
     <Authors>Wokhan Solutions</Authors>
     <OutputPath>..\bin</OutputPath>
     <IsPublishable>false</IsPublishable>

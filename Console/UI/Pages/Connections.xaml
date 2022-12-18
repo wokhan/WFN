@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
     xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
+    xmlns:vm="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;assembly=Wokhan.WindowsFirewallNotifier.Common"
     xmlns:settings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Config;assembly=Wokhan.WindowsFirewallNotifier.Common"
     DataContext="{Binding RelativeSource={x:Static RelativeSource.Self}}"
     xmlns:dummydata="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.ViewModels" xmlns:componentmodel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
@@ -59,24 +60,26 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="GroupItem">
-                                            <StackPanel>
-                                                <StackPanel.Resources>
+                                            <Expander IsExpanded="True" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Background="White">
+                                                <Expander.Resources>
                                                     <SolidColorBrush x:Key="color" Color="{Binding Color}" x:Shared="False"/>
-                                                </StackPanel.Resources>
-                                                <Grid Background="White" DataContext="{Binding Items[0]}">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="15" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Ellipse Width="10" Height="10" Fill="{StaticResource color}" />
-                                                    <TextBlock Grid.Column="1" FontWeight="Bold" Text="{Binding FileName}" ToolTip="{Binding Path}" Foreground="{StaticResource color}" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                                                    <TextBlock Grid.Column="2" FontWeight="Bold" Text="{Binding ProductName,StringFormat=' ({0})'}" Foreground="{StaticResource color}" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                                                    <Rectangle Grid.Column="3" VerticalAlignment="Center" Margin="15,0,0,0" HorizontalAlignment="Stretch" Height="1" Fill="{StaticResource color}" />
-                                                </Grid>
+                                                </Expander.Resources>
+                                                <Expander.Header>
+                                                    <Grid DataContext="{Binding Items[0]}">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="15" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Ellipse Width="10" Height="10" Fill="{StaticResource color}" />
+                                                        <TextBlock Grid.Column="1" FontWeight="Bold" Text="{Binding FileName}" ToolTip="{Binding Path}" Foreground="{StaticResource color}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                                        <TextBlock Grid.Column="2" FontWeight="Bold" Text="{Binding ProductName,StringFormat=' ({0})'}" Foreground="{StaticResource color}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                                        <Rectangle Grid.Column="3" VerticalAlignment="Center" Margin="15,0,0,0" HorizontalAlignment="Stretch" Height="1" Fill="{StaticResource color}" />
+                                                    </Grid>
+                                                </Expander.Header>
                                                 <ItemsPresenter />
-                                            </StackPanel>
+                                            </Expander>
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>
