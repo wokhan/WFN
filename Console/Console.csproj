@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <!-- auto-increment version - see: https://stackoverflow.com/a/60571414 -->
     <!-- TODO: add this to other projects as well? -->
     <FileVersion>2.5.$([System.DateTime]::UtcNow.Date.Subtract($([System.DateTime]::Parse("2020-01-01"))).TotalDays).$([System.Math]::Floor($([MSBuild]::Divide($([System.DateTime]::UtcNow.TimeOfDay.TotalSeconds), 1.32))))</FileVersion>
