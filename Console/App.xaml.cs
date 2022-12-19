@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Drawing;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -25,6 +25,16 @@ namespace Wokhan.WindowsFirewallNotifier.Console
             {
                 RestartAsAdmin();
             }
+
+            Settings.Default.PropertyChanged += SettingsChanged;
+        }
+
+        private void SettingsChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Settings.Theme))
+            {
+                Resources.MergedDictionaries[0].Source = new Uri($"pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/{Settings.Default.Theme}.xaml");
+            }
         }
 
         private void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
@@ -41,11 +51,11 @@ namespace Wokhan.WindowsFirewallNotifier.Console
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            if (Settings.Default.AccentColor != null)
-            {
-                Resources["AccentColorBrush"] = Settings.Default.AccentColor;
-            }
-            
+            //if (Settings.Default.AccentColor != null)
+            //{
+            //    Resources["AccentColorBrush"] = Settings.Default.AccentColor;
+            //}
+
             if (Settings.Default.ConsoleSizeWidth > 900)
             {
                 Resources["ConsoleSizeWidth"] = Settings.Default.ConsoleSizeWidth;
@@ -55,8 +65,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console
             {
                 Resources["ConsoleSizeHeight"] = Settings.Default.ConsoleSizeHeight;
             }
-            
-            Resources.MergedDictionaries[0].Source = new Uri("Themes/Dark.xaml", UriKind.Relative);
+
+            Resources.MergedDictionaries[0].Source = new Uri("pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/Light.xaml");
         }
 
         internal void RestartAsAdmin()

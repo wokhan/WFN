@@ -151,17 +151,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Config {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Windows.Media.SolidColorBrush AccentColor {
-            get {
-                return ((global::System.Windows.Media.SolidColorBrush)(this["AccentColor"]));
-            }
-            set {
-                this["AccentColor"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool EnableVerboseLogging {
             get {
@@ -362,6 +351,18 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Config {
             }
             set {
                 this["ShowConnections"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Theme {
+            get {
+                return ((string)(this["Theme"]));
+            }
+            set {
+                this["Theme"] = value;
             }
         }
     }

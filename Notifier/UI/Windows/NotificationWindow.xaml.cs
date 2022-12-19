@@ -75,16 +75,18 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         /// </summary>
         public NotificationWindow()
         {
+            this.Resources.MergedDictionaries[0].Source = new Uri("pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/Light.xaml");
+
             InitializeComponent();
 
             notifierTrayIcon = NotifierTrayIcon.Init(this);
 
             isDetailsExpanded = expand.IsExpanded;
             
-            if (Settings.Default.AccentColor != null)
-            {
-                Resources["AccentColorBrush"] = Settings.Default.AccentColor;
-            }
+            //if (Settings.Default.AccentColor != null)
+            //{
+            //    Resources["AccentColorBrush"] = Settings.Default.AccentColor;
+            //}
 
             lstConnections.SelectionChanged += LstConnections_SelectionChanged;
             ((ObservableCollection<CurrentConn>)lstConnections.ItemsSource).CollectionChanged += NotificationWindow_CollectionChanged;

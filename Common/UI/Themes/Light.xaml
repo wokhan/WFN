@@ -7,7 +7,6 @@
     
     <SolidColorBrush x:Key="TabItemOverBackground" Color="WhiteSmoke" />
     
-    <SolidColorBrush x:Key="ToolBarPanelBackground" Color="White" />
     <SolidColorBrush x:Key="ButtonBackground" Color="WhiteSmoke" />
     <SolidColorBrush x:Key="ButtonOverBackground" Color="LightBlue" />
 
@@ -18,11 +17,12 @@
     
     <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="WhiteSmoke" />
     <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.ScrollBarBrushKey}" Color="WhiteSmoke" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.MenuBarBrushKey}" Color="LightGray" />
     <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="Black" />
     <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="White" />
-    <SolidColorBrush x:Key="{x:Static SystemColors.ScrollBarBrushKey}" Color="WhiteSmoke" />
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Theme.xaml" />
+        <ResourceDictionary Source="../Theme.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

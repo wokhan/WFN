@@ -26,6 +26,6 @@
     <SolidColorBrush x:Key="{x:Static SystemColors.ControlLightBrushKey}" Color="Black" />
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Theme.xaml" />
+        <ResourceDictionary Source="../Theme.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

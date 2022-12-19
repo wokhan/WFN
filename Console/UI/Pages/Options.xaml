@@ -6,6 +6,7 @@
       xmlns:settings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Config;assembly=Wokhan.WindowsFirewallNotifier.Common"
       xmlns:logging="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Logging;assembly=Wokhan.WindowsFirewallNotifier.Common" 
       xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
       xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
       mc:Ignorable="d" 
       x:Name="me"
@@ -19,7 +20,7 @@
         </Rectangle>
         <DockPanel>
             <Label Background="LightGray" FontSize="18" HorizontalContentAlignment="Center" Content="Options" DockPanel.Dock="Top" />
-            <controls:AdminPanel Caption="*Those options can only be modified by an administrator." />
+            <controls:AdminPanel Margin="-10" Caption="*Those options can only be modified by an administrator." />
             <ContentControl Height="50" DockPanel.Dock="Bottom" Style="{StaticResource ToolBarPanel}">
                 <Grid>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
@@ -31,7 +32,7 @@
                     </StackPanel>
                 </Grid>
             </ContentControl>
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
                 <StackPanel>
                     <TextBlock Text="Notifier settings" Style="{StaticResource SectionHeader}" />
                     <StackPanel Margin="10">
@@ -45,6 +46,14 @@
                     <TextBlock Text="Miscellaneous options" Style="{StaticResource SectionHeader}" />
                     <StackPanel Margin="10">
                         <!-- TODO: not working  <CheckBox Margin="0,0,0,10"  Padding="5,0" Content="Minimize the console to the system tray instead of the taskbar." IsChecked="{Binding MinimizeToTray, Source={x:Static settings:Settings.Default}}" /> -->
+                        <WrapPanel VerticalAlignment="Center">
+                            <TextBlock VerticalAlignment="Center" Text="Theme: " />
+                            <ComboBox SelectedValue="{Binding Theme,Mode=TwoWay}">
+                                <sys:String>System</sys:String>
+                                <sys:String>Light</sys:String>
+                                <sys:String>Dark</sys:String>
+                            </ComboBox>
+                        </WrapPanel>
                         <CheckBox Margin="0,0,0,10" Padding="5,0" Content="Enable verbose logging (for debugging purpose only, may use a lot more disk space)" IsChecked="{Binding EnableVerboseLogging, Mode=TwoWay}" />
                         <TextBlock Margin="30,0,0,10" Text="Note: the log files can either be in the WFN installation directory or the current user's appdata folder." />
                         <TextBlock Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding Mode=OneTime, Source={x:Static logging:LogHelper.CurrentLogsPath}, StringFormat=Path for the current user: \{0\}}" Tag="{Binding Mode=OneTime, Source={x:Static logging:LogHelper.CurrentLogsPath}}" x:Name="txtCurrentLogPath" MouseDown="txtCurrentLogPath_MouseDown" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>

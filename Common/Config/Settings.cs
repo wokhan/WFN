@@ -27,7 +27,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Config
             PropertyChanged += Settings_PropertyChanged;
         }
 
-        private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Settings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
@@ -35,9 +35,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Config
                     NotifyPropertyChanged(nameof(ConfigurationPath));
                     break;
 
-                case nameof(AccentColor):
-                    Application.Current.Resources["AccentColorBrush"] = AccentColor;
-                    break;
+                //case nameof(AccentColor):
+                //    Application.Current.Resources["AccentColorBrush"] = AccentColor;
+                //    break;
 
                 default:
                     break;
@@ -76,6 +76,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Config
                                                .Where(property => property.GetCustomAttribute<UserScopedSettingAttribute>() != null)
                                                .ToDictionary(property => property.Name, property => property.GetValue(this));
 
+            // Not sure this is useful, as the file targeted by ConfigurationPath could as well just be overwritten when saving?
             if (this.IsPortable)
             {
                 File.Delete(userConfigPath);
@@ -84,6 +85,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Config
             {
                 File.Delete(applicationConfigPath);
             }
+
+            // Fix for issues #121 and #124
+            Directory.CreateDirectory(Path.GetDirectoryName(ConfigurationPath));
 
             File.WriteAllText(ConfigurationPath, JsonSerializer.Serialize(userSettings, new JsonSerializerOptions() { IgnoreReadOnlyProperties = true, WriteIndented = true }));
         }

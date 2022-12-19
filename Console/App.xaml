@@ -8,7 +8,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary x:Name="BaseTheme" Source="Themes/Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/Light.xaml" />
                 <ResourceDictionary Source="Resources/Images.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <BindingConverters:BooleanNegateConverter x:Key="booleanNegator" />
@@ -36,6 +36,7 @@
                 </Style.Triggers>
             </Style>
             <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                <Setter Property="Background" Value="Transparent" />
                 <Setter Property="MinHeight" Value="30" />
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
@@ -88,6 +89,7 @@
                 <Setter Property="Content" Value="{StaticResource Image_Help}" />
                 <Setter Property="Padding" Value="5" />
                 <Setter Property="Margin" Value="2" />
+                <Setter Property="Height" Value="25" />
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
                         <Setter Property="Background" Value="{DynamicResource ButtonOverBackground}" />
@@ -203,47 +205,16 @@
             </Style>
 
             <Style x:Key="ToolBarPanel" TargetType="ContentControl">
-                <!--<Setter Property="Background" Value="White" />-->
-                <!--<Setter Property="Panel.ZIndex" Value="100" />-->
-                <Setter Property="Margin" Value="0,0,0,2" />
                 <Setter Property="ContentTemplate">
                     <Setter.Value>
                         <DataTemplate>
-                            <Grid>
-                                <!--<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                    <Rectangle.Fill>
-                                        <LinearGradientBrush>
-                                            <GradientStop Color="Transparent" Offset="0" />
-                                            <GradientStop Color="LightGray" Offset="0.5" />
-                                            <GradientStop Color="Transparent" Offset="1" />
-                                        </LinearGradientBrush>
-                                    </Rectangle.Fill>
-                                    <Rectangle.Effect>
-                                        <DropShadowEffect Color="LightGray" ShadowDepth="3" Direction="0"/>
-                                    </Rectangle.Effect>
-                                </Rectangle>-->
-                                <Rectangle Fill="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                                <ContentControl Height="35" Content="{Binding}" />
+                            <Grid Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}">
+                                <ContentControl Margin="10,8" Content="{Binding}" />
                             </Grid>
                         </DataTemplate>
                     </Setter.Value>
                 </Setter>
-                <!--<Setter Property="BorderBrush">
-                    <Setter.Value>
-                        <VisualBrush Stretch="Fill">
-                            <VisualBrush.Visual>
-                                <Rectangle Fill="White" Height="100" Width="32">
-                                    <Rectangle.Effect>
-                                        <DropShadowEffect />
-                                    </Rectangle.Effect>
-                                </Rectangle>
-                            </VisualBrush.Visual>
-                        </VisualBrush>
-                    </Setter.Value>
-                </Setter>-->
                 <Setter Property="DockPanel.Dock" Value="Top" />
-                <Setter Property="Height" Value="35" />
-                <!--<Setter Property="Padding" Value="5" />-->
                 <Style.Resources>
                     <Style TargetType="StackPanel">
                         <Setter Property="Orientation" Value="Horizontal" />

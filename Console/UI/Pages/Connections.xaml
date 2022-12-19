@@ -87,7 +87,7 @@
                         </GroupStyle.ContainerStyle>
                         <GroupStyle.Panel>
                             <ItemsPanelTemplate>
-                                <DataGridRowsPresenter/>
+                                <DataGridRowsPresenter />
                             </ItemsPanelTemplate>
                         </GroupStyle.Panel>
                     </GroupStyle>

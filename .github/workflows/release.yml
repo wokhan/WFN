@@ -12,11 +12,11 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.100
+        dotnet-version: 7.0.100
     - name: Build and publish
       run: dotnet publish -c Release
     - name: Zip published files
-      run: compress-archive -path ./bin/net5.0-windows/publish/* -destinationpath ./bin/net5.0-windows/wfn.zip
+      run: compress-archive -path ./bin/net7.0-windows/publish/* -destinationpath ./bin/net7.0-windows/wfn.zip
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.2.2
@@ -29,7 +29,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./bin/net5.0-windows/wfn.zip 
+          asset_path: ./bin/net7.0-windows/wfn.zip 
           asset_name: wfn-${{ steps.get_release.outputs.tag_name }}.zip 
           asset_content_type: application/zip
   publish-x64:
@@ -39,11 +39,11 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.100
+        dotnet-version: 7.0.100
     - name: Build and publish
       run: dotnet publish -r win-x64 -c Release --self-contained true
     - name: Zip published files
-      run: compress-archive -path ./bin/net5.0-windows/win-x64/publish/* -destinationpath ./bin/net5.0-windows/wfn-x64.zip
+      run: compress-archive -path ./bin/net7.0-windows/win-x64/publish/* -destinationpath ./bin/net7.0-windows/wfn-x64.zip
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.2.2
@@ -56,7 +56,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./bin/net5.0-windows/wfn-x64.zip 
+          asset_path: ./bin/net7.0-windows/wfn-x64.zip 
           asset_name: wfn-x64-standalone-${{ steps.get_release.outputs.tag_name }}.zip 
           asset_content_type: application/zip 
   publish-x86:
@@ -66,11 +66,11 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.100
+        dotnet-version: 7.0.100
     - name: Build and publish
       run: dotnet publish -r win-x86 -c Release --self-contained true
     - name: Zip published files
-      run: compress-archive -path ./bin/net5.0-windows/win-x86/publish -destinationpath ./bin/net5.0-windows/wfn-x86.zip
+      run: compress-archive -path ./bin/net7.0-windows/win-x86/publish -destinationpath ./bin/net7.0-windows/wfn-x86.zip
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.2.2
@@ -83,7 +83,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./bin/net5.0-windows/wfn-x86.zip
+          asset_path: ./bin/net7.0-windows/wfn-x86.zip
           asset_name: wfn-x86-standalone-${{ steps.get_release.outputs.tag_name }}.zip 
           asset_content_type: application/zip 
       

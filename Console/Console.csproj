@@ -45,14 +45,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MaxMind.Db" Version="2.6.1" />
-    <PackageReference Include="MaxMind.GeoIP2" Version="3.3.0" />
+    <PackageReference Include="MaxMind.Db" Version="4.0.0" />
+    <PackageReference Include="MaxMind.GeoIP2" Version="5.1.0" />
     <!--<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>-->
     <PackageReference Include="Microsoft.Maps.MapControl.WPF" Version="1.0.0.3" />
-    <PackageReference Include="OxyPlot.Wpf" Version="2.0.0" />
+    <PackageReference Include="OxyPlot.Wpf" Version="2.1.2" />
     <PackageReference Include="Wokhan.Core" Version="0.9.2-alpha" />
     <PackageReference Include="Wokhan.UI" Version="0.9.2-alpha" />
   </ItemGroup>

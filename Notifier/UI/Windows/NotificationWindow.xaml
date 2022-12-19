@@ -34,7 +34,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Theme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/Light.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Storyboard x:Key="animate">
                 <ThicknessAnimation Storyboard.TargetProperty="Margin" From="250,0,-250,0" To="0,0,0,0" Duration="0:0:0.5" />
@@ -262,7 +262,7 @@
                             <CheckBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="3" IsChecked="{Binding OptionsView.IsPathChecked, ElementName=NotifWindow}">
                                 <TextBlock>
                                     <Run Text="Path: " />
-                                    <Hyperlink TextDecorations="" NavigateUri="{Binding Path,Mode=OneWay}" RequestNavigate="hlkPath_Navigate">
+                                    <Hyperlink TextDecorations="None" NavigateUri="{Binding Path,Mode=OneWay}" RequestNavigate="hlkPath_Navigate">
                                         <Run Text="{Binding Path,Mode=OneWay, FallbackValue='N/A'}" />
                                     </Hyperlink>
                                 </TextBlock>
