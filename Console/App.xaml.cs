@@ -39,10 +39,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            if (Settings.Default.AccentColor != null)
-            {
-                Resources["AccentColorBrush"] = Settings.Default.AccentColor;
-            }
+            //if (Settings.Default.AccentColor != null)
+            //{
+            //    Resources["AccentColorBrush"] = Settings.Default.AccentColor;
+            //}
 
             if (Settings.Default.ConsoleSizeWidth > 900)
             {

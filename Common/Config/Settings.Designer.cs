@@ -12,7 +12,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Config {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.4.0.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -146,18 +146,6 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Config {
             }
             set {
                 this["ConsoleSizeWidth"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FFC0C0C0")]
-        public global::System.Windows.Media.SolidColorBrush AccentColor {
-            get {
-                return ((global::System.Windows.Media.SolidColorBrush)(this["AccentColor"]));
-            }
-            set {
-                this["AccentColor"] = value;
             }
         }
         

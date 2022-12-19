@@ -262,7 +262,7 @@
                             <CheckBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="3" IsChecked="{Binding OptionsView.IsPathChecked, ElementName=NotifWindow}">
                                 <TextBlock>
                                     <Run Text="Path: " />
-                                    <Hyperlink TextDecorations="" NavigateUri="{Binding Path,Mode=OneWay}" RequestNavigate="hlkPath_Navigate">
+                                    <Hyperlink TextDecorations="None" NavigateUri="{Binding Path,Mode=OneWay}" RequestNavigate="hlkPath_Navigate">
                                         <Run Text="{Binding Path,Mode=OneWay, FallbackValue='N/A'}" />
                                     </Hyperlink>
                                 </TextBlock>

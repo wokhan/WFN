@@ -81,10 +81,10 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 
             isDetailsExpanded = expand.IsExpanded;
             
-            if (Settings.Default.AccentColor != null)
-            {
-                Resources["AccentColorBrush"] = Settings.Default.AccentColor;
-            }
+            //if (Settings.Default.AccentColor != null)
+            //{
+            //    Resources["AccentColorBrush"] = Settings.Default.AccentColor;
+            //}
 
             lstConnections.SelectionChanged += LstConnections_SelectionChanged;
             ((ObservableCollection<CurrentConn>)lstConnections.ItemsSource).CollectionChanged += NotificationWindow_CollectionChanged;

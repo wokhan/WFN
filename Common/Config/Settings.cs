@@ -35,9 +35,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Config
                     NotifyPropertyChanged(nameof(ConfigurationPath));
                     break;
 
-                case nameof(AccentColor):
-                    Application.Current.Resources["AccentColorBrush"] = AccentColor;
-                    break;
+                //case nameof(AccentColor):
+                //    Application.Current.Resources["AccentColorBrush"] = AccentColor;
+                //    break;
 
                 default:
                     break;

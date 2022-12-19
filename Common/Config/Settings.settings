@@ -35,9 +35,6 @@
     <Setting Name="ConsoleSizeWidth" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">900</Value>
     </Setting>
-    <Setting Name="AccentColor" Type="System.Windows.Media.SolidColorBrush" Scope="User">
-      <Value Profile="(Default)">#FFC0C0C0</Value>
-    </Setting>
     <Setting Name="EnableVerboseLogging" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
