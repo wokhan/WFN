@@ -8,7 +8,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Theme.xaml" />
+                <ResourceDictionary x:Name="BaseTheme" Source="Themes/Light.xaml" />
                 <ResourceDictionary Source="Resources/Images.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <BindingConverters:BooleanNegateConverter x:Key="booleanNegator" />
@@ -18,9 +18,8 @@
             <BindingConverters:ValueToVisibilityNegateConverter x:Key="valueToVisibilityNegate" />
             <system:Double x:Key="ConsoleSizeHeight">600</system:Double>
             <system:Double x:Key="ConsoleSizeWidth">900</system:Double>
-            <SolidColorBrush x:Key="AccentColorBrush" Color="Coral" />
             <Style TargetType="DataGridColumnHeader">
-                <Setter Property="Background" Value="WhiteSmoke" />
+                <!--<Setter Property="Background" Value="WhiteSmoke" />-->
                 <Setter Property="BorderThickness" Value="0,0,1,1" />
                 <Setter Property="BorderBrush" Value="LightGray" />
                 <Setter Property="Padding" Value="5" />
@@ -32,7 +31,7 @@
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
                         <Setter Property="Background" Value="Transparent" />
-                        <Setter Property="Foreground" Value="Black" />
+                        <Setter Property="Foreground" Value="{StaticResource DataGridCellSelectedForeground}" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -40,7 +39,7 @@
                 <Setter Property="MinHeight" Value="30" />
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="LightBlue" />
+                        <Setter Property="Background" Value="{StaticResource DataGridRowSelectedBackground}" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -91,7 +90,7 @@
                 <Setter Property="Margin" Value="2" />
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="WhiteSmoke" />
+                        <Setter Property="Background" Value="{DynamicResource ButtonOverBackground}" />
                     </Trigger>
                 </Style.Triggers>
                 <Style.Resources>
@@ -160,6 +159,7 @@
             </Style>
             <Style x:Key="AutoTrackButton" TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
                 <Setter Property="ext:CustomAdorner.Image" Value="{StaticResource Image_Start}"/>
+                <Setter Property="ext:CustomAdorner.PreserveTemplate" Value="False"/>
                 <Style.Triggers>
                     <Trigger Property="IsChecked" Value="True">
                         <Setter Property="ext:CustomAdorner.Image" Value="{StaticResource Image_Stop}"/>
@@ -178,8 +178,8 @@
                             <Grid>
                                 <ToggleButton ContentStringFormat="Update rate: {0}s &#9660;" Content="{Binding Text,RelativeSource={x:Static RelativeSource.TemplatedParent}}" ext:CustomAdorner.Image="{StaticResource Image_UpdateRate}" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={x:Static RelativeSource.TemplatedParent}}"/>
                                 <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" StaysOpen="False" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide" Margin="0">
-                                    <Grid Background="WhiteSmoke" MinWidth="{TemplateBinding FrameworkElement.ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}" Margin="4,0,4,4">
-                                        <Border Background="WhiteSmoke" CornerRadius="5">
+                                    <Grid Background="{DynamicResource ButtonBackground}" MinWidth="{TemplateBinding FrameworkElement.ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}" Margin="4,0,4,4">
+                                        <Border Background="{DynamicResource ButtonBackground}" CornerRadius="5">
                                             <Border.Effect>
                                                 <DropShadowEffect Color="LightGray" ShadowDepth="2" />
                                             </Border.Effect>
@@ -203,14 +203,14 @@
             </Style>
 
             <Style x:Key="ToolBarPanel" TargetType="ContentControl">
-                <Setter Property="Background" Value="White" />
+                <!--<Setter Property="Background" Value="White" />-->
                 <!--<Setter Property="Panel.ZIndex" Value="100" />-->
                 <Setter Property="Margin" Value="0,0,0,2" />
                 <Setter Property="ContentTemplate">
                     <Setter.Value>
                         <DataTemplate>
                             <Grid>
-                                <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <!--<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                     <Rectangle.Fill>
                                         <LinearGradientBrush>
                                             <GradientStop Color="Transparent" Offset="0" />
@@ -221,8 +221,8 @@
                                     <Rectangle.Effect>
                                         <DropShadowEffect Color="LightGray" ShadowDepth="3" Direction="0"/>
                                     </Rectangle.Effect>
-                                </Rectangle>
-                                <Rectangle Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                                </Rectangle>-->
+                                <Rectangle Fill="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                                 <ContentControl Height="35" Content="{Binding}" />
                             </Grid>
                         </DataTemplate>

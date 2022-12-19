@@ -10,7 +10,7 @@
       x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.Status" 
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="800"
-      Title="Status" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+      Title="Status">
     <DockPanel>
         <controls:AdminPanel Caption="Only an administrator can use this feature." />
         <ContentControl Style="{StaticResource ToolBarPanel}">
@@ -28,7 +28,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <StackPanel x:Name="stackOptions">
+        <StackPanel x:Name="stackOptions" TextElement.Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}">
             <TextBlock Margin="5" TextWrapping="Wrap" Text="{x:Static resx:Resources.Status_Heading1 }" />
             <TextBlock Margin="5" TextWrapping="Wrap" FontStyle="Italic" Text="{x:Static resx:Resources.Status_NoteAboutProfiles}" />
             <Grid IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}">
@@ -85,10 +85,10 @@
                     <RowDefinition Height="0*" />
                 </Grid.RowDefinitions>
                 <!-- -->
-                <Rectangle Grid.Column="1" Grid.Row="0" Grid.RowSpan="10" Fill="Lavender" />
-                <Rectangle Grid.Column="2" Grid.Row="0" Grid.RowSpan="10" Fill="#FFC5FFC5" />
-                <Rectangle Grid.Column="3" Grid.Row="0" Grid.RowSpan="10" Fill="#FFC1F4FF" />
-                <Border Grid.Column="4" Grid.Row="0" Grid.RowSpan="10" Background="LightGray" BorderThickness="4,0,0,0" BorderBrush="Gray" />
+                <Rectangle Grid.Column="1" Grid.Row="0" Grid.RowSpan="10" Fill="{DynamicResource StatusScreenPrivateBackgroundBrush}" />
+                <Rectangle Grid.Column="2" Grid.Row="0" Grid.RowSpan="10" Fill="{DynamicResource StatusScreenPublicBackgroundBrush}" />
+                <Rectangle Grid.Column="3" Grid.Row="0" Grid.RowSpan="10" Fill="{DynamicResource StatusScreenDomainBackgroundBrush}" />
+                <Border Grid.Column="4" Grid.Row="0" Grid.RowSpan="10" Background="{DynamicResource StatusScreenAllBackgroundBrush}" BorderThickness="4,0,0,0" BorderBrush="Gray" />
                 <!-- -->
                 <TextBlock Grid.Column="1" Padding="5" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold">
                     <Run Text="Private" />

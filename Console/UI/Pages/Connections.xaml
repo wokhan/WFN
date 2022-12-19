@@ -60,7 +60,7 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="GroupItem">
-                                            <Expander IsExpanded="True" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Background="White">
+                                            <Expander IsExpanded="True" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Background="Transparent">
                                                 <Expander.Resources>
                                                     <SolidColorBrush x:Key="color" Color="{Binding Color}" x:Shared="False"/>
                                                 </Expander.Resources>

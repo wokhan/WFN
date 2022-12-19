@@ -5,7 +5,7 @@
     <Setting Name="EnableServiceDetectionGlobal" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="ConsoleSizeHeight" Type="System.Int32" Scope="User">
+    <Setting Name="ConsoleSizeHeight" Type="System.Double" Scope="User">
       <Value Profile="(Default)">600</Value>
     </Setting>
     <Setting Name="ConsoleState" Type="System.Windows.WindowState" Scope="User">
@@ -32,11 +32,11 @@
     <Setting Name="MinimizeToTray" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="ConsoleSizeWidth" Type="System.Int32" Scope="User">
+    <Setting Name="ConsoleSizeWidth" Type="System.Double" Scope="User">
       <Value Profile="(Default)">900</Value>
     </Setting>
     <Setting Name="AccentColor" Type="System.Windows.Media.SolidColorBrush" Scope="User">
-      <Value Profile="(Default)">#FFC0C0C0</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="EnableVerboseLogging" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

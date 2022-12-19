@@ -14,7 +14,6 @@
         mc:Ignorable="d" 
         d:DesignHeight="460"
         d:DesignWidth="800" 
-        Background="WhiteSmoke"
         x:Name="me"
         Icon="/WFN;component/Resources/Images/WFN.ico" 
         ResizeMode="CanResizeWithGrip">
@@ -27,6 +26,11 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <uicontrols:CustomWindowChrome Height="38">
+            <uicontrols:CustomWindowChrome.MinimizeButtonStyle>
+                <Style TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+                    <Setter Property="Background" Value="Black" />
+                </Style>
+            </uicontrols:CustomWindowChrome.MinimizeButtonStyle>
             <Button Click="OpenOptions" ToolTip="settings">
                 <Button.Resources>
                     <pages:Options x:Key="page" />
@@ -45,17 +49,17 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Border Grid.Column="1" Background="White">
+            <Border Grid.Column="1" Background="{DynamicResource TabItemOverBackground}">
                 <Border.RenderTransform>
                     <TransformGroup>
                         <TranslateTransform X="{Binding ActualWidth,ElementName=widthIndicator}" />
                     </TransformGroup>
                 </Border.RenderTransform>
                 <Border.Effect>
-                    <DropShadowEffect Direction="180" Color="LightGray" ShadowDepth="1" />
+                    <DropShadowEffect Direction="180" Color="White" ShadowDepth="1" />
                 </Border.Effect>
             </Border>
-            <TabControl x:Name="menuGrid" Grid.ColumnSpan="2" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0" TabStripPlacement="Left" Grid.IsSharedSizeScope="True">
+            <TabControl x:Name="menuGrid" Background="Transparent" Grid.ColumnSpan="2" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0" TabStripPlacement="Left" Grid.IsSharedSizeScope="True">
                 <TabControl.Resources>
                     <Style x:Key="Separator" TargetType="TabItem">
                         <Setter Property="Height" Value="31" />
@@ -74,7 +78,7 @@
                                     </Grid>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="Label" Property="Background" Value="White" />
+                                            <Setter TargetName="Label" Property="Background" Value="{DynamicResource TabItemOverBackground}" />
                                             <Setter TargetName="Label" Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
                                             <Setter TargetName="Label" Property="ext:CustomAdorner.BackgroundEffect">
                                                 <Setter.Value>
@@ -83,7 +87,7 @@
                                             </Setter>
                                         </Trigger>
                                         <Trigger Property="IsSelected" Value="True">
-                                            <Setter TargetName="Label" Property="Background" Value="White" />
+                                            <Setter TargetName="Label" Property="Background" Value="{DynamicResource TabItemOverBackground}" />
                                             <Setter TargetName="Label" Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
                                             <Setter TargetName="Label" Property="ext:CustomAdorner.BackgroundEffect">
                                                 <Setter.Value>

@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-	<TargetFramework>net6.0-windows</TargetFramework>
+	<TargetFramework>net7.0-windows</TargetFramework>
     <AssemblyName>Wokhan.WindowsFirewallNotifier.Console.Tests</AssemblyName>
     <RootNamespace>Wokhan.WindowsFirewallNotifier.Console.Tests</RootNamespace>
     <Description>Windows Firewall Notifier - Common Tests</Description>

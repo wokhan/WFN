@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 
@@ -43,16 +45,18 @@ namespace Wokhan.WindowsFirewallNotifier.Console
             {
                 Resources["AccentColorBrush"] = Settings.Default.AccentColor;
             }
-
+            
             if (Settings.Default.ConsoleSizeWidth > 900)
             {
-                Resources["ConsoleSizeWidth"] = Convert.ToDouble(Settings.Default.ConsoleSizeWidth);
+                Resources["ConsoleSizeWidth"] = Settings.Default.ConsoleSizeWidth;
             }
 
             if (Settings.Default.ConsoleSizeHeight > 600)
             {
-                Resources["ConsoleSizeHeight"] = Convert.ToDouble(Settings.Default.ConsoleSizeHeight);
+                Resources["ConsoleSizeHeight"] = Settings.Default.ConsoleSizeHeight;
             }
+            
+            Resources.MergedDictionaries[0].Source = new Uri("Themes/Dark.xaml", UriKind.Relative);
         }
 
         internal void RestartAsAdmin()

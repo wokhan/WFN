@@ -3,7 +3,7 @@
              xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI">
     <Style TargetType="CheckBox">
         <Setter Property="OverridesDefaultStyle" Value="True"/>
-        <Setter Property="Background" Value="White"/>
+        <Setter Property="Background" Value="{DynamicResource ButtonBackground}"/>
         <Setter Property="BorderThickness" Value="2" />
         <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
         <Setter Property="Template">
@@ -41,7 +41,7 @@
 
     <Style TargetType="Button">
         <Setter Property="ext:CustomAdorner.CornerRadius" Value="4" />
-        <Setter Property="Background" Value="WhiteSmoke" />
+        <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Padding" Value="10,5" />
         <Setter Property="Margin" Value="2" />
@@ -50,15 +50,16 @@
                 <Setter Property="Opacity" Value="0.6" />
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="LightBlue" />
+                <Setter Property="Background" Value="{DynamicResource ButtonOverBackground}" />
             </Trigger>
         </Style.Triggers>
     </Style>
 
     <Style TargetType="ToggleButton">
         <Setter Property="ext:CustomAdorner.CornerRadius" Value="4" />
-        <Setter Property="Background" Value="WhiteSmoke" />
-        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
+        <Setter Property="BorderThickness" Value="0 0 0 3" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBackground}" />
         <Setter Property="Padding" Value="10,5" />
         <Setter Property="Margin" Value="2" />
         <Style.Triggers>
@@ -66,10 +67,10 @@
                 <Setter Property="Opacity" Value="0.6" />
             </Trigger>
             <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="LightBlue" />
+                <Setter Property="Background" Value="{DynamicResource ButtonOverBackground}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -77,7 +78,7 @@
     <Style TargetType="ComboBox">
         <Setter Property="ext:CustomAdorner.PreserveTemplate" Value="true" />
         <Setter Property="IsEditable" Value="False" />
-        <Setter Property="Background" Value="WhiteSmoke" />
+        <!--<Setter Property="Background" Value="{DynamicResource ButtonBackground}" />-->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ComboBox">
