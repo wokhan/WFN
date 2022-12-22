@@ -205,7 +205,7 @@
                         <Button Content="all pending notifications" Click="btnSkipAll_Click" />
                     </ComboBox>
                 </Grid>
-                <Grid Grid.Row="2" Background="WhiteSmoke" Visibility="{Binding HasItems,Mode=OneWay,ElementName=lstConnections,Converter={StaticResource valueToVisibility}}">
+                <Grid Grid.Row="2" Visibility="{Binding HasItems,Mode=OneWay,ElementName=lstConnections,Converter={StaticResource valueToVisibility}}">
                     <Expander Padding="5" Header="{x:Static resx:Resources.FW_RULE_ADVANCED}" SizeChanged="expand_SizeChanged" x:Name="expand" IsExpanded="{Binding AlwaysShowDetails,Source={x:Static settings:Settings.Default}}">
                         <Grid DataContext="{Binding SelectedItem, ElementName=lstConnections}">
                             <Grid.ColumnDefinitions>

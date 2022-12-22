@@ -75,9 +75,9 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         /// </summary>
         public NotificationWindow()
         {
-            this.Resources.MergedDictionaries[0].Source = new Uri("pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/Light.xaml");
-
             InitializeComponent();
+
+            this.Resources.MergedDictionaries[0].Source = new Uri($"pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/{Settings.Default.Theme}.xaml");
 
             notifierTrayIcon = NotifierTrayIcon.Init(this);
 

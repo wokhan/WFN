@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Navigation;
 
 using Wokhan.UI.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
@@ -26,6 +27,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
         private readonly EventsLogFilters eventsLogFilters;
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public int TCPOnlyOrAll
+        {
+            get => IsTCPOnlyEnabled ? 1 : 0;
+            set => IsTCPOnlyEnabled = (value == 1);
+        }
 
         public bool IsTCPOnlyEnabled
         {

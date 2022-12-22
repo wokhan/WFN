@@ -14,7 +14,7 @@
     <SolidColorBrush x:Key="StatusScreenPublicBackgroundBrush" Color="{x:Static SystemColors.ControlColor}" />
     <SolidColorBrush x:Key="StatusScreenDomainBackgroundBrush" Color="{x:Static SystemColors.ControlColor}" />
     <SolidColorBrush x:Key="StatusScreenAllBackgroundBrush" Color="{x:Static SystemColors.ControlColor}" />
-    
+
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="../Theme.xaml" />
     </ResourceDictionary.MergedDictionaries>

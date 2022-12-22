@@ -11,8 +11,8 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <oxy:PlotView x:Name="chart" BorderThickness="0" Model="{Binding Model}" DataContext="{Binding ElementName=me}" />
-        <oxy:PlotView x:Name="miniChart" Grid.Row="1" Background="WhiteSmoke" BorderThickness="0" Margin="0,0,5,0" Model="{Binding MiniModel}" DataContext="{Binding ElementName=me}" IsEnabled="False" />
+        <oxy:PlotView x:Name="chart" BorderThickness="0" Background="Transparent" Model="{Binding Model}" DataContext="{Binding ElementName=me}" />
+        <oxy:PlotView x:Name="miniChart" Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" BorderThickness="0" Margin="0,0,5,0" Model="{Binding MiniModel}" DataContext="{Binding ElementName=me}" IsEnabled="False" />
         <ScrollBar x:Name="scrollArea" Grid.Row="1" Opacity="0.3" Height="50" Margin="0" Padding="0" Orientation="Horizontal" Minimum="{Binding AbsoluteStart,ElementName=me,FallbackValue=0}" Value="{Binding CurrentStart,ElementName=me,FallbackValue=10,Mode=TwoWay}" Thumb.DragStarted="scrollArea_DragStarted" Maximum="{Binding AbsoluteEnd,ElementName=me,FallbackValue=10}">
             <ScrollBar.Template>
                 <ControlTemplate TargetType="ScrollBar">

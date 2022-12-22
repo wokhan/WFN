@@ -40,7 +40,7 @@
                 <Setter Property="MinHeight" Value="30" />
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="{StaticResource DataGridRowSelectedBackground}" />
+                        <Setter Property="Background" Value="{DynamicResource DataGridRowSelectedBackground}" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -49,7 +49,7 @@
             </Style>
             <Style TargetType="RadioButton" x:Key="RadioButtonSlide">
                 <Setter Property="OverridesDefaultStyle" Value="True"/>
-                <Setter Property="Background" Value="White"/>
+                <Setter Property="Background" Value="{DynamicResource ButtonBackground}"/>
                 <Setter Property="BorderThickness" Value="2" />
                 <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
                 <Setter Property="Template">
@@ -106,7 +106,7 @@
                             <Setter.Value>
                                 <ControlTemplate TargetType="ToolTip">
                                     <Grid MaxWidth="400">
-                                        <Border CornerRadius="5,0,5,5" BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                        <Border CornerRadius="5,0,5,5" BorderBrush="LightGray" BorderThickness="1" Background="{DynamicResource {x:Static SystemColors.InfoBrushKey}}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                             <Border.Effect>
                                                 <DropShadowEffect Color="LightGray"/>
                                             </Border.Effect>
@@ -172,6 +172,7 @@
             <Style TargetType="TextBox">
                 <Setter Property="ext:CustomAdorner.CornerRadius" Value="20" />
             </Style>
+            
             <Style x:Key="AutoTrackRefresh" TargetType="ComboBox">
                 <Setter Property="IsEditable" Value="False" />
                 <Setter Property="Template">
@@ -204,12 +205,44 @@
                 </Style.Triggers>
             </Style>
 
+            <Style x:Key="FilterComboStyle" TargetType="ComboBox">
+                <Setter Property="IsEditable" Value="False" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ComboBox">
+                            <Grid>
+                                <ToggleButton ContentStringFormat="Show: {0} &#9660;" Content="{Binding Text,RelativeSource={x:Static RelativeSource.TemplatedParent}}" ext:CustomAdorner.Image="{StaticResource Image_Show}" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={x:Static RelativeSource.TemplatedParent}}"/>
+                                <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" StaysOpen="False" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide" Margin="0">
+                                    <Grid Background="{DynamicResource ButtonBackground}" MinWidth="{TemplateBinding FrameworkElement.ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}" Margin="4,0,4,4">
+                                        <Border Background="{DynamicResource ButtonBackground}" CornerRadius="5">
+                                            <Border.Effect>
+                                                <DropShadowEffect Color="LightGray" ShadowDepth="2" />
+                                            </Border.Effect>
+                                        </Border>
+                                        <Border CornerRadius="5">
+                                            <ScrollViewer>
+                                                <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
+                                            </ScrollViewer>
+                                        </Border>
+                                    </Grid>
+                                </Popup>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="true">
+                        <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
             <Style x:Key="ToolBarPanel" TargetType="ContentControl">
                 <Setter Property="ContentTemplate">
                     <Setter.Value>
                         <DataTemplate>
                             <Grid Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}">
-                                <ContentControl Margin="10,8" Content="{Binding}" />
+                                <ContentControl Margin="10" Content="{Binding}" />
                             </Grid>
                         </DataTemplate>
                     </Setter.Value>
@@ -221,10 +254,8 @@
                     </Style>
                     <Style TargetType="TextBox">
                         <!--<Setter Property="ext:CustomAdorner.CornerRadius" Value="2" />-->
-                        <Setter Property="Background" Value="WhiteSmoke" />
+                        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
                         <Setter Property="BorderThickness" Value="1" />
-                        <Setter Property="Padding" Value="10,5" />
-                        <Setter Property="Margin" Value="4" />
                     </Style>
                     <Style TargetType="Label">
                         <Setter Property="VerticalAlignment" Value="Center" />

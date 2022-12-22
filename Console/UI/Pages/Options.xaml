@@ -43,26 +43,16 @@
                         <CheckBox Padding="3" Content="Enable services detection*" ToolTip="Additionally tries to detect the service making a connection in the notifier." IsChecked="{Binding EnableServiceDetection,Mode=TwoWay}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
                         <Button x:Name="btnTestNotif" Click="btnTestNotif_Click" HorizontalAlignment="Center" ext:CustomAdorner.Image="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Content="Start Notifier now" />
                     </StackPanel>
-                    <TextBlock Text="Miscellaneous options" Style="{StaticResource SectionHeader}" />
-                    <StackPanel Margin="10">
-                        <!-- TODO: not working  <CheckBox Margin="0,0,0,10"  Padding="5,0" Content="Minimize the console to the system tray instead of the taskbar." IsChecked="{Binding MinimizeToTray, Source={x:Static settings:Settings.Default}}" /> -->
-                        <WrapPanel VerticalAlignment="Center">
-                            <TextBlock VerticalAlignment="Center" Text="Theme: " />
-                            <ComboBox SelectedValue="{Binding Theme,Mode=TwoWay}">
-                                <sys:String>System</sys:String>
-                                <sys:String>Light</sys:String>
-                                <sys:String>Dark</sys:String>
-                            </ComboBox>
-                        </WrapPanel>
-                        <CheckBox Margin="0,0,0,10" Padding="5,0" Content="Enable verbose logging (for debugging purpose only, may use a lot more disk space)" IsChecked="{Binding EnableVerboseLogging, Mode=TwoWay}" />
-                        <TextBlock Margin="30,0,0,10" Text="Note: the log files can either be in the WFN installation directory or the current user's appdata folder." />
-                        <TextBlock Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding Mode=OneTime, Source={x:Static logging:LogHelper.CurrentLogsPath}, StringFormat=Path for the current user: \{0\}}" Tag="{Binding Mode=OneTime, Source={x:Static logging:LogHelper.CurrentLogsPath}}" x:Name="txtCurrentLogPath" MouseDown="txtCurrentLogPath_MouseDown" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
-                        <!--<CheckBox Margin="0,0,0,10" Padding="5,0" Content="Always run as admin*" ToolTip="Options marked with * need admin rights to change" IsChecked="{Binding AlwaysRunAs, Source={x:Static settings:Settings.Default}}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />-->
-                        <CheckBox Margin="0,0,0,10" Padding="5,0" Content="Enable DNS host name resolver in Security log (experimental)*" ToolTip="Enables host name resolver in Security Log" IsChecked="{Binding EnableDnsResolver,Mode=TwoWay}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
-                        <CheckBox Margin="0,0,0,10" Padding="5,0" Content="Enable successful connection events*" ToolTip="Enables logging of successful connection events in Security Log" IsChecked="{Binding AuditPolEnableSuccessEvent, Mode=TwoWay}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
-                    </StackPanel>
-                    <!--<Label Content="Appearance" Style="{StaticResource SectionHeader}" />
-                    <StackPanel Margin="10">
+                    <TextBlock Text="Appearance" Style="{StaticResource SectionHeader}" />
+                    <WrapPanel Margin="10"  VerticalAlignment="Center">
+                        <TextBlock VerticalAlignment="Center" Text="Theme: " />
+                        <ComboBox SelectedValue="{Binding Theme,Mode=TwoWay}">
+                            <sys:String>System</sys:String>
+                            <sys:String>Light</sys:String>
+                            <sys:String>Dark</sys:String>
+                        </ComboBox>
+                    </WrapPanel>
+                    <!--<StackPanel Margin="10">
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Accent color: " />
                             <ComboBox IsEditable="False" MinWidth="100" ItemsSource="{Binding Colors,ElementName=me,Mode=OneTime}" SelectedValuePath="Value" SelectedValue="{Binding AccentColor,Mode=TwoWay}" Height="20" Background="#00000000" BorderBrush="Coral" Width="207" Foreground="Black">
@@ -81,6 +71,16 @@
                             <TextBox Text="{Binding ConsoleSizeHeight, Mode=TwoWay}" ToolTip="Needs a restart to take effect." IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Width="50" Height="20" BorderBrush="{DynamicResource AccentColorBrush}" />
                         </StackPanel>
                     </StackPanel>-->
+                    <TextBlock Text="Miscellaneous options" Style="{StaticResource SectionHeader}" />
+                    <StackPanel Margin="10">
+                        <!-- TODO: not working  <CheckBox Margin="0,0,0,10"  Padding="5,0" Content="Minimize the console to the system tray instead of the taskbar." IsChecked="{Binding MinimizeToTray, Source={x:Static settings:Settings.Default}}" /> -->
+                        <CheckBox Margin="0,0,0,10" Padding="5,0" Content="Enable verbose logging (for debugging purpose only, may use a lot more disk space)" IsChecked="{Binding EnableVerboseLogging, Mode=TwoWay}" />
+                        <TextBlock Margin="30,0,0,10" Text="Note: the log files can either be in the WFN installation directory or the current user's appdata folder." />
+                        <TextBlock Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding Mode=OneTime, Source={x:Static logging:LogHelper.CurrentLogsPath}, StringFormat=Path for the current user: \{0\}}" Tag="{Binding Mode=OneTime, Source={x:Static logging:LogHelper.CurrentLogsPath}}" x:Name="txtCurrentLogPath" MouseDown="txtCurrentLogPath_MouseDown" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
+                        <!--<CheckBox Margin="0,0,0,10" Padding="5,0" Content="Always run as admin*" ToolTip="Options marked with * need admin rights to change" IsChecked="{Binding AlwaysRunAs, Source={x:Static settings:Settings.Default}}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />-->
+                        <CheckBox Margin="0,0,0,10" Padding="5,0" Content="Enable DNS host name resolver in Security log (experimental)*" ToolTip="Enables host name resolver in Security Log" IsChecked="{Binding EnableDnsResolver,Mode=TwoWay}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
+                        <CheckBox Margin="0,0,0,10" Padding="5,0" Content="Enable successful connection events*" ToolTip="Enables logging of successful connection events in Security Log" IsChecked="{Binding AuditPolEnableSuccessEvent, Mode=TwoWay}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
+                    </StackPanel>
                     <TextBlock Text="Portable mode" Style="{StaticResource SectionHeader}" />
                     <StackPanel Margin="10">
                         <Label Content="When portable mode is enabled, all users on this computer will share the same configuration, stored in the current application folder." />

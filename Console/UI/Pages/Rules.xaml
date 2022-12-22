@@ -30,15 +30,15 @@
                     <Button Content="Adv. console" ext:CustomAdorner.Image="/WFN;component/Resources/Images/btnOpenConsole.Image.png" x:Name="btnStartAdvConsole" Click="btnStartAdvConsole_Click" />
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Right">
-                    <TextBox ext:CustomAdorner.HeaderImage="{StaticResource Image_Filter}" ext:CustomAdorner.Header="Filter:" x:Name="txtFilter" Width="150" Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" />
-                    <ComboBox ext:CustomAdorner.PreserveTemplate="true" ext:CustomAdorner.Header="Show:" ext:CustomAdorner.HeaderImage="{StaticResource Image_Show}" SelectedValue="{Binding TypeFilter}" DisplayMemberPath="Value" SelectedValuePath="Key" ItemsSource="{Binding TypeFilters}" />
+                    <TextBox ext:CustomAdorner.Header="Filter:" x:Name="txtFilter" Width="150" Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" />
+                    <ComboBox Style="{StaticResource FilterComboStyle}" SelectedValue="{Binding TypeFilter}" DisplayMemberPath="Value" SelectedValuePath="Key" ItemsSource="{Binding TypeFilters}" />
                     <Button Content="Refresh" x:Name="btnRefresh" Click="btnRefresh_Click" ext:CustomAdorner.Image="{StaticResource Image_Refresh}"/>
                     <Label Style="{StaticResource HelpButtonStyle}" ToolTip="This screen displays all Windows firewall rules.&#10;The ones prefixed by 'Custom rules' have been created by Windows Firewall Notifier.&#10;You can not manually create rules, but you can remove useless ones if required." />
                 </StackPanel>
             </Grid>
         </ContentControl>
         <Grid>
-            <DataGrid AlternatingRowBackground="Gainsboro" BorderThickness="0" x:Name="gridRules" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Extended" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column">
+            <DataGrid AlternatingRowBackground="{DynamicResource DataGridRowAltBackground}" BorderThickness="0" x:Name="gridRules" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Extended" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column">
                 <DataGrid.CellStyle>
                     <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
                         <Setter Property="VerticalAlignment" Value="Center" />

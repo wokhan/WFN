@@ -19,7 +19,7 @@
                 <Button Content="Reload" x:Name="btnRevert" Click="btnRevert_Click" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" />
             </StackPanel>
         </ContentControl>
-        <ScrollViewer DockPanel.Dock="Bottom" Background="AliceBlue" Height="70">
+        <ScrollViewer DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static SystemColors.InfoBrushKey}}" Height="70">
             <ItemsControl x:Name="messsageInfoPanel" ItemsSource="{Binding Messages}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
