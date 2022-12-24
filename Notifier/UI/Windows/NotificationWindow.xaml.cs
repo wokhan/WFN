@@ -18,6 +18,7 @@ using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
+using Wokhan.WindowsFirewallNotifier.Common.UI.Themes;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
 {
@@ -77,7 +78,8 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             InitializeComponent();
 
-            this.Resources.MergedDictionaries[0].Source = new Uri($"pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/{Settings.Default.Theme}.xaml");
+            var theme = ThemeHelper.GetCurrentTheme();
+            this.Resources.MergedDictionaries[0].Source = new Uri($"pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/{theme}.xaml");
 
             notifierTrayIcon = NotifierTrayIcon.Init(this);
 

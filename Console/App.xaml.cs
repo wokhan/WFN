@@ -9,6 +9,7 @@ using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
+using Wokhan.WindowsFirewallNotifier.Common.UI.Themes;
 
 namespace Wokhan.WindowsFirewallNotifier.Console
 {
@@ -66,7 +67,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console
                 Resources["ConsoleSizeHeight"] = Settings.Default.ConsoleSizeHeight;
             }
 
-            Resources.MergedDictionaries[0].Source = new Uri($"pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/{Settings.Default.Theme}.xaml");
+            var theme = ThemeHelper.GetCurrentTheme();
+            Resources.MergedDictionaries[0].Source = new Uri($"pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/{theme}.xaml");
         }
 
         internal void RestartAsAdmin()
