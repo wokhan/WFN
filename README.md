@@ -1,5 +1,9 @@
 # WFN (Windows Firewall Notifier)
 
+[![Release](https://github.com/wokhan/WFN/actions/workflows/release.yml/badge.svg)](https://github.com/wokhan/WFN/actions/workflows/release.yml)
+
+[![Nightlies](https://github.com/wokhan/WFN/actions/workflows/nightly.yml/badge.svg)](https://github.com/wokhan/WFN/actions/workflows/nightly.yml)
+
 ## 🗃️ Project Description
 WFN started as a hobby around 2010 and is an "extension" to the embedded Windows firewall, offering real time connections monitoring, connections map, bandwidth usage monitoring...
 
