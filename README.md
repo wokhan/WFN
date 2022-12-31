@@ -1,7 +1,10 @@
 # WFN (Windows Firewall Notifier)
 
-[![Release](https://github.com/wokhan/WFN/actions/workflows/release.yml/badge.svg)](https://github.com/wokhan/WFN/actions/workflows/release.yml)
+![](https://img.shields.io/badge/.NET-6-blue)
+![](https://img.shields.io/badge/UI-WPF-green)
+![](https://img.shields.io/badge/Status-Active-green) 
 
+[![Release](https://github.com/wokhan/WFN/actions/workflows/release.yml/badge.svg)](https://github.com/wokhan/WFN/actions/workflows/release.yml)
 [![Nightlies](https://github.com/wokhan/WFN/actions/workflows/nightly.yml/badge.svg)](https://github.com/wokhan/WFN/actions/workflows/nightly.yml)
 
 ## 🗃️ Project Description
