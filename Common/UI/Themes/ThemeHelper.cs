@@ -3,6 +3,7 @@
 using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.UI.Themes
 {
@@ -19,6 +20,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.UI.Themes
             {
                 return (int?)key?.GetValue("AppsUseLightTheme") == 0 ? "Dark" : "Light";
             }
+        }
+        public static string GetURIForCurrentTheme()
+        {
+            return $"pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/{GetCurrentTheme()}.xaml";
         }
     }
 }

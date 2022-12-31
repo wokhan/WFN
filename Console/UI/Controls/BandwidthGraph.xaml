@@ -4,34 +4,37 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:oxy="http://oxyplot.org/wpf"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
              mc:Ignorable="d" x:Name="me"
              d:DesignHeight="450" d:DesignWidth="800" ClipToBounds="True">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="50"/>
-        </Grid.RowDefinitions>
-        <oxy:PlotView x:Name="chart" BorderThickness="0" Background="Transparent" Model="{Binding Model}" DataContext="{Binding ElementName=me}" />
-        <oxy:PlotView x:Name="miniChart" Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" BorderThickness="0" Margin="0,0,5,0" Model="{Binding MiniModel}" DataContext="{Binding ElementName=me}" IsEnabled="False" />
-        <ScrollBar x:Name="scrollArea" Grid.Row="1" Opacity="0.3" Height="50" Margin="0" Padding="0" Orientation="Horizontal" Minimum="{Binding AbsoluteStart,ElementName=me,FallbackValue=0}" Value="{Binding CurrentStart,ElementName=me,FallbackValue=10,Mode=TwoWay}" Thumb.DragStarted="scrollArea_DragStarted" Maximum="{Binding AbsoluteEnd,ElementName=me,FallbackValue=10}">
-            <ScrollBar.Template>
-                <ControlTemplate TargetType="ScrollBar">
-                    <Grid x:Name="GridRoot">
-                        <Track x:Name="PART_Track" ViewportSize="NaN" Margin="0" IsDirectionReversed="False" Focusable="False">
-                            <Track.Thumb>
-                                <Thumb x:Name="Thumb" Cursor="Hand" Focusable="False" OverridesDefaultStyle="True" IsTabStop="False" Width="{Binding ThumbSize,RelativeSource={RelativeSource AncestorType=UserControl}}">
-                                    <Thumb.Template>
-                                        <ControlTemplate TargetType="Thumb">
-                                            <Rectangle Fill="Gray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                                        </ControlTemplate>
-                                    </Thumb.Template>
-                                </Thumb>
-                            </Track.Thumb>
-                        </Track>
-                    </Grid>
-                </ControlTemplate>
-            </ScrollBar.Template>
-        </ScrollBar>
-        <Button Padding="10" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource RoundedButton}" ToolTip="Reset zoom / pan" Content="{StaticResource Image_Refresh}" Click="ResetZoom" />
-    </Grid>
+    <DockPanel>
+        <ContentControl Style="{StaticResource ToolBarPanel}">
+            <StackPanel>
+                <Button Content="Reset view" ToolTip="Reset zoom / pan" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" Click="ResetZoom" />
+            </StackPanel>
+        </ContentControl>
+        <Grid DockPanel.Dock="Bottom" Height="50">
+            <oxy:PlotView x:Name="miniChart" Background="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" BorderThickness="0" Margin="0,0,5,0" Model="{Binding MiniModel}" DataContext="{Binding ElementName=me}" IsEnabled="False" />
+            <ScrollBar x:Name="scrollArea" Grid.Row="2" Opacity="0.3" Height="50" Margin="0" Padding="0" Orientation="Horizontal" Minimum="{Binding AbsoluteStart,ElementName=me,FallbackValue=0}" Value="{Binding CurrentStart,ElementName=me,FallbackValue=10,Mode=TwoWay}" Thumb.DragStarted="scrollArea_DragStarted" Maximum="{Binding AbsoluteEnd,ElementName=me,FallbackValue=10}">
+                <ScrollBar.Template>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid x:Name="GridRoot">
+                            <Track x:Name="PART_Track" ViewportSize="NaN" Margin="0" IsDirectionReversed="False" Focusable="False">
+                                <Track.Thumb>
+                                    <Thumb x:Name="Thumb" Cursor="Hand" Focusable="False" OverridesDefaultStyle="True" IsTabStop="False" Width="{Binding ThumbSize,RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Rectangle Fill="Gray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </ScrollBar.Template>
+            </ScrollBar>
+        </Grid>
+        <oxy:PlotView x:Name="chart" BorderThickness="0" Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" Background="Transparent" Model="{Binding Model}" DataContext="{Binding ElementName=me}" />
+    </DockPanel>
 </UserControl>

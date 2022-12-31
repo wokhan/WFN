@@ -66,9 +66,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console
             {
                 Resources["ConsoleSizeHeight"] = Settings.Default.ConsoleSizeHeight;
             }
-
-            var theme = ThemeHelper.GetCurrentTheme();
-            Resources.MergedDictionaries[0].Source = new Uri($"pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/{theme}.xaml");
+                
+            var themeUri = ThemeHelper.GetURIForCurrentTheme();
+            Resources.MergedDictionaries[0].Source = new Uri(themeUri);
         }
 
         internal void RestartAsAdmin()

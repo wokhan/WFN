@@ -146,7 +146,7 @@
                 </DataGrid.Columns>
             </DataGrid>
             <GridSplitter Grid.Row="1" Grid.ColumnSpan="3" Height="4" Background="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
-            <controls:BandwidthGraph x:Name="graph" Connections="{Binding AllConnections}" Grid.Row="2" Visibility="{Binding IsChecked,ElementName=toggleShowGraph,Mode=OneWay,Converter={StaticResource valueToVisibility}}"  IsVisibleChanged="Components_VisibilityChanged" />
+            <controls:BandwidthGraph x:Name="graph" Background="Transparent" Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" Connections="{Binding AllConnections}" Grid.Row="2" Visibility="{Binding IsChecked,ElementName=toggleShowGraph,Mode=OneWay,Converter={StaticResource valueToVisibility}}"  IsVisibleChanged="Components_VisibilityChanged" />
             <GridSplitter Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="4" Background="LightGray"/>
             <controls:Map x:Name="map" Connections="{Binding AllConnections}" Grid.Row="2" Grid.Column="2" Visibility="{Binding IsChecked,ElementName=toggleShowMap,Mode=OneWay,Converter={StaticResource valueToVisibility}}"  IsVisibleChanged="Components_VisibilityChanged" />
         </Grid>

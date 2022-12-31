@@ -11,19 +11,23 @@
                 <ResourceDictionary Source="pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/Light.xaml" />
                 <ResourceDictionary Source="Resources/Images.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
             <BindingConverters:BooleanNegateConverter x:Key="booleanNegator" />
             <BindingConverters:UnitFormatConverter x:Key="unitFormatter" />
             <BindingConverters:ObjectToBoolConverter x:Key="objectToBool" />
             <BindingConverters:ValueToVisibilityConverter x:Key="valueToVisibility" />
             <BindingConverters:ValueToVisibilityNegateConverter x:Key="valueToVisibilityNegate" />
+            
             <system:Double x:Key="ConsoleSizeHeight">600</system:Double>
             <system:Double x:Key="ConsoleSizeWidth">900</system:Double>
+            
             <Style TargetType="DataGridColumnHeader">
                 <!--<Setter Property="Background" Value="WhiteSmoke" />-->
                 <Setter Property="BorderThickness" Value="0,0,1,1" />
                 <Setter Property="BorderBrush" Value="LightGray" />
                 <Setter Property="Padding" Value="5" />
             </Style>
+            
             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="Background" Value="Transparent" />
@@ -35,6 +39,7 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
+            
             <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="MinHeight" Value="30" />
@@ -44,9 +49,11 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
+            
             <Style TargetType="TextBlock" x:Key="SectionHeader">
                 <Setter Property="FontSize" Value="18" />
             </Style>
+            
             <Style TargetType="RadioButton" x:Key="RadioButtonSlide">
                 <Setter Property="OverridesDefaultStyle" Value="True"/>
                 <Setter Property="Background" Value="{DynamicResource ButtonBackground}"/>
@@ -84,17 +91,14 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            
             <Style x:Key="HelpButtonStyle" TargetType="Label">
                 <Setter Property="ext:CustomAdorner.CornerRadius" Value="2,2,0,0" />
                 <Setter Property="Content" Value="{StaticResource Image_Help}" />
                 <Setter Property="Padding" Value="5" />
                 <Setter Property="Margin" Value="2" />
                 <Setter Property="Height" Value="25" />
-                <Style.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="{DynamicResource ButtonOverBackground}" />
-                    </Trigger>
-                </Style.Triggers>
+                <Setter Property="Cursor" Value="Help" />
                 <Style.Resources>
                     <Style TargetType="ToolTip">
                         <Setter Property="ToolTipService.VerticalOffset" Value="-2" />
@@ -119,29 +123,7 @@
                     </Style>
                 </Style.Resources>
             </Style>
-            <Style x:Key="RoundedButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                <Setter Property="Width" Value="40" />
-                <Setter Property="Height" Value="40" />
-                <Setter Property="Margin" Value="0,10,10,0" />
-                <Setter Property="ext:CustomAdorner.CornerRadius" Value="20" />
-                <Setter Property="ext:CustomAdorner.BackgroundEffect">
-                    <Setter.Value>
-                        <DropShadowEffect Direction="-90" BlurRadius="10" ShadowDepth="0" Color="LightGray" />
-                    </Setter.Value>
-                </Setter>
-            </Style>
-            <Style x:Key="RoundedToggleButton" TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
-                <Setter Property="Width" Value="40" />
-                <Setter Property="Height" Value="40" />
-                <Setter Property="Margin" Value="0,10,10,0" />
-                <Setter Property="ext:CustomAdorner.CornerRadius" Value="20" />
-                <Setter Property="ext:CustomAdorner.BackgroundEffect">
-                    <Setter.Value>
-                        <DropShadowEffect Direction="-90" BlurRadius="10" ShadowDepth="0" Color="LightGray" />
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
+            
             <Style x:Key="InfoPanel" TargetType="Border">
                 <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.InfoBrushKey}}" />
                 <Style.Resources>
@@ -159,6 +141,7 @@
                     </Style>
                 </Style.Resources>
             </Style>
+
             <Style x:Key="AutoTrackButton" TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
                 <Setter Property="ext:CustomAdorner.Image" Value="{StaticResource Image_Start}"/>
                 <Setter Property="ext:CustomAdorner.PreserveTemplate" Value="False"/>
@@ -169,10 +152,6 @@
                 </Style.Triggers>
             </Style>
 
-            <Style TargetType="TextBox">
-                <Setter Property="ext:CustomAdorner.CornerRadius" Value="20" />
-            </Style>
-            
             <Style x:Key="AutoTrackRefresh" TargetType="ComboBox">
                 <Setter Property="IsEditable" Value="False" />
                 <Setter Property="Template">
@@ -203,6 +182,10 @@
                         <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
                     </Trigger>
                 </Style.Triggers>
+            </Style>
+
+            <Style TargetType="TextBox">
+                <Setter Property="ext:CustomAdorner.CornerRadius" Value="20" />
             </Style>
 
             <Style x:Key="FilterComboStyle" TargetType="ComboBox">
@@ -264,6 +247,7 @@
                     </Style>
                 </Style.Resources>
             </Style>
+            
             <Style x:Key="NonAdminPanel" TargetType="ContentControl" BasedOn="{StaticResource ToolBarPanel}">
                 <Setter Property="DockPanel.Dock" Value="Bottom" />
                 <Setter Property="Visibility" Value="{Binding IsElevated,Source={x:Static Application.Current},Converter={StaticResource valueToVisibilityNegate}}" />

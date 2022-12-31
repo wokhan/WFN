@@ -78,13 +78,13 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         {
             InitializeComponent();
 
-            var theme = ThemeHelper.GetCurrentTheme();
-            this.Resources.MergedDictionaries[0].Source = new Uri($"pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/{theme}.xaml");
+            var themeUri = ThemeHelper.GetURIForCurrentTheme();
+            this.Resources.MergedDictionaries[0].Source = new Uri(themeUri);
 
             notifierTrayIcon = NotifierTrayIcon.Init(this);
 
             isDetailsExpanded = expand.IsExpanded;
-            
+
             //if (Settings.Default.AccentColor != null)
             //{
             //    Resources["AccentColorBrush"] = Settings.Default.AccentColor;
@@ -100,7 +100,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             NotifyPropertyChanged(nameof(NbConnectionsAfter));
             NotifyPropertyChanged(nameof(NbConnectionsBefore));
         }
-       
+
         public new void Show()
         {
             Debug.WriteLine($"Show Top: {Top} ExpTop: {ExpectedTop}");
@@ -288,7 +288,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnBlock_Click(object sender, RoutedEventArgs e) 
+        private void btnBlock_Click(object sender, RoutedEventArgs e)
         {
             createRule(false);
         }
@@ -355,7 +355,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             }
         }
 
-        private void btnSkip_Click(object sender, RoutedEventArgs e)
+        private void SkipCurrent()
         {
             var tmpSelectedItem = (CurrentConn)lstConnections.SelectedItem;
             if (tmpSelectedItem != null && lstConnections.Items.Count > 0)
@@ -366,9 +366,17 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             //Console.WriteLine($"Skip_click: SelectedIndex={lstConnections.SelectedIndex}");
         }
 
-        private void btnSkipProgram_Click(object sender, RoutedEventArgs e)
+        private void SkipProgram()
         {
             SkipAllEntriesFromPath(((CurrentConn)lstConnections.SelectedItem).Path);
+        }
+
+
+        private void SkipAll()
+        {
+            lstConnections.SelectedIndex = -1;
+            ((App)Application.Current).Connections.Clear();
+            HideWindowState();
         }
 
         private void SkipAllEntriesFromPath(string path)
@@ -401,12 +409,6 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             base.Close();
         }
 
-        private void btnSkipAll_Click(object sender, RoutedEventArgs e)
-        {
-            lstConnections.SelectedIndex = -1;
-            ((App)Application.Current).Connections.Clear();
-            HideWindowState();
-        }
 
 
         // TODO: Replace with an handler on PropertyChanged event for Settings.Default.
@@ -652,6 +654,25 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
         private void NotifWindow_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
 
+        }
+
+        private void SkipButtonSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var cb = (ComboBox)sender;
+            switch (cb.SelectedIndex)
+            {
+                case 0:
+                    SkipCurrent();
+                    break;
+
+                case 1:
+                    SkipProgram();
+                    break;
+
+                case 2:
+                    SkipAll();
+                    break;
+            }
         }
     }
 }

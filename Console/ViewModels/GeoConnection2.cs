@@ -11,6 +11,8 @@ using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using System.ComponentModel;
 using Wokhan.WindowsFirewallNotifier.Common.Core;
 using System.Runtime.CompilerServices;
+using Wokhan.Core.Extensions;
+using Wokhan.ComponentModel.Extensions;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
 {
@@ -29,6 +31,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
 
         //TODO: CurrentIP shouldn't be handled in GeoConnection2 class (but in IPHelper or something alike)
         private static IPAddress _currentIP;
+
+        //TODO: should be set asynchronously!!!
         public static IPAddress CurrentIP => (_currentIP ?? (_currentIP = IPHelper.GetPublicIpAddress()));
 
         private static Location _currentCoordinates;

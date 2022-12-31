@@ -8,12 +8,13 @@
         xmlns:bindingconverters="clr-namespace:Wokhan.UI.BindingConverters;assembly=Wokhan.UI" 
         xmlns:controls="clr-namespace:Wokhan.UI.Xaml.Controls;assembly=Wokhan.UI" 
         xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime"
         Title="WFN - Notification" 
+        WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
         SizeToContent="Height"
         Width="500"
-        WindowStyle="None"
         Opacity="0.6"
         Icon="/Notifier;component/Resources/TrayIcon22.ico"
         Topmost="True"
@@ -27,7 +28,7 @@
         Initialized="NotificationWindow_Initialized" 
         MouseEnter="NotificationWindow_MouseEnter" 
         MouseLeave="NotifWindow_MouseLeave" 
-        WindowState="Normal" 
+        WindowState="Normal"
         StateChanged="NotificationWindow_StateChanged" 
         ResizeMode="CanMinimize" 
         d:DesignHeight="300">
@@ -40,8 +41,6 @@
                 <ThicknessAnimation Storyboard.TargetProperty="Margin" From="250,0,-250,0" To="0,0,0,0" Duration="0:0:0.5" />
                 <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5" />
             </Storyboard>
-            <SolidColorBrush x:Key="AccentColorBrush" Color="LightBlue" />
-            <SolidColorBrush x:Key="PressedColorBrush" Color="OrangeRed" />
             <bindingconverters:BooleanNegateConverter x:Key="booleanNegate" />
             <bindingconverters:ValueToVisibilityConverter x:Key="valueToVisibility" />
             <bindingconverters:ValueToVisibilityNegateConverter x:Key="valueToVisibilityNegate" />
@@ -50,7 +49,6 @@
             <Style x:Key="TitleBarButton" TargetType="Button">
                 <Setter Property="FontSize" Value="11" />
                 <Setter Property="OverridesDefaultStyle" Value="True" />
-                <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
@@ -72,19 +70,8 @@
             </Style>-->
         </ResourceDictionary>
     </Window.Resources>
-    <DockPanel Background="Transparent" x:Name="Main">
-        <Grid DockPanel.Dock="Top" Height="32" Background="{DynamicResource AccentColorBrush}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <Button Padding="0" Grid.Column="0" Margin="0" Click="btnOptions_Click">
-                <Image Source="/Notifier;component/Resources/WFN.ico" />
-            </Button>
-            <TextBlock Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Padding="8,0" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" FontWeight="Bold" Text="{Binding Title,Mode=OneTime}" />
+    <DockPanel Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" x:Name="Main">
+        <controls:CustomWindowChrome Height="28" DockPanel.Dock="Top" CanClose="False">
             <UniformGrid Grid.Column="2" Rows="1">
                 <Button Padding="10,0" Style="{StaticResource TitleBarButton}" IsEnabled="{Binding NbConnectionsBefore,Mode=OneWay,Converter={StaticResource objectToBoolean}}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" Click="btnPrev_Click">
                     <TextBlock Text="{Binding NbConnectionsBefore,Mode=OneWay,FallbackValue='&lt; Prev. (0)',StringFormat='&lt; Prev. ({0})'}" />
@@ -93,9 +80,8 @@
                     <TextBlock Text="{Binding NbConnectionsAfter,Mode=OneWay,FallbackValue='Next (0) &gt;',StringFormat='Next (\{0}) &gt;'}" />
                 </Button>
             </UniformGrid>
-            <Button Grid.Column="4" Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" Style="{StaticResource TitleBarButton}" Content="0" FontFamily="Marlett" FontSize="14" Width="28" Click="btnMin_Click" />
-        </Grid>
-        <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+        </controls:CustomWindowChrome>
+        <Border>
             <Grid x:Name="MainGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -196,13 +182,13 @@
                             </Button.Style>
                         </Button>
                     </UniformGrid>
-                    <ComboBox ext:CustomAdorner.PreserveTemplate="True" HorizontalAlignment="Right" Text="Skip...">
+                    <ComboBox ext:CustomAdorner.PreserveTemplate="True" HorizontalAlignment="Right" Text="Skip..." SelectionChanged="SkipButtonSelectionChanged">
                         <ext:CustomAdorner.Image>
                             <Path Height="18" Stretch="Uniform" Data="M3,8 H5V16H3V8 M7,8 H9V16H7V8 M11,8H13V16H11V8 M15,19.25V4.75 L22.25,12 L15,19.25Z" Fill="#FF599CEC" />
                         </ext:CustomAdorner.Image>
-                        <Button Content="this connection" Click="btnSkip_Click" />
-                        <Button Content="this program" Click="btnSkipProgram_Click" />
-                        <Button Content="all pending notifications" Click="btnSkipAll_Click" />
+                        <system:String>this connection</system:String>
+                        <system:String>this program</system:String>
+                        <system:String>all pending notifications</system:String>
                     </ComboBox>
                 </Grid>
                 <Grid Grid.Row="2" Visibility="{Binding HasItems,Mode=OneWay,ElementName=lstConnections,Converter={StaticResource valueToVisibility}}">
