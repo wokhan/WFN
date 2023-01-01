@@ -25,8 +25,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
       with:
-        upload_url: https://uploads.github.com/repos/wokhan/WFN/releases/36001851/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
-        release_id: 36001851 # same as above (id can just be taken out the upload_url, it's used to find old releases)
+        upload_url: https://uploads.github.com/repos/wokhan/WFN/releases/24573510/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
+        release_id: 24573510 # same as above (id can just be taken out the upload_url, it's used to find old releases)
         asset_path: ./bin/net7.0-windows/wfn.zip # path to archive to upload
         asset_name: wfn-nightly-no-test-$$.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
         asset_content_type: application/zip # required by GitHub API
@@ -48,8 +48,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
       with:
-        upload_url: https://uploads.github.com/repos/wokhan/WFN/releases/36001851/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
-        release_id: 36001851 # same as above (id can just be taken out the upload_url, it's used to find old releases)
+        upload_url: https://uploads.github.com/repos/wokhan/WFN/releases/24573510/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
+        release_id: 24573510 # same as above (id can just be taken out the upload_url, it's used to find old releases)
         asset_path: ./bin/net7.0-windows/wfn-x64.zip # path to archive to upload
         asset_name: wfn-x64-full-nightly-no-test-$$.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
         asset_content_type: application/zip # required by GitHub API
@@ -71,8 +71,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
       with:
-        upload_url: https://uploads.github.com/repos/wokhan/WFN/releases/36001851/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
-        release_id: 36001851 # same as above (id can just be taken out the upload_url, it's used to find old releases)
+        upload_url: https://uploads.github.com/repos/wokhan/WFN/releases/24573510/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
+        release_id: 24573510 # same as above (id can just be taken out the upload_url, it's used to find old releases)
         asset_path: ./bin/net7.0-windows/wfn-x86.zip # path to archive to upload
         asset_name: wfn-x86-full-nightly-no-test-$$.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
         asset_content_type: application/zip # required by GitHub API
