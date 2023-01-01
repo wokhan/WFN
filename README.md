@@ -1,6 +1,6 @@
 # WFN (Windows Firewall Notifier)
 
-![](https://img.shields.io/badge/.NET-6-blue)
+![](https://img.shields.io/badge/.NET-7.0-blue)
 ![](https://img.shields.io/badge/UI-WPF-green)
 ![](https://img.shields.io/badge/Status-Active-green) 
 
@@ -22,14 +22,20 @@ Especially note that WFN is **not** a firewall itself!
 
 All versions are available in the [releases](https://github.com/wokhansoft/WFN/releases) page. 
 
+**Nightly**
+
+This version is automatically built on each PR merge, meaning that you'll get the most recent build. With the most recent features... and bugs 😁
+
 **2018.05 - v2.5 beta**
-Version 2.5 should be used (and should have been since it's release, while a beta) as it fixes a lot of issues, has been modernized (both the code and the UI), is faster, more reliable... 
+
+Version 2.5 should be used (and should have been since its release, while a beta) as it fixes a lot of issues, has been modernized (both the code and the UI), is faster, more reliable... 
 I'm keeping v2.0 in this list though as it was the mainly used version for years. 
 
 **2018.03.03 - v2.0 beta 3**  
+
 The latest release for version 2.0, kept here if you encounter issues with 2.5.
 
-**keep in mind, beta versions are work in progress! Read the full description page before downloading!**  
+**Keep in mind, beta versions are work in progress! Read the full description page before downloading!**  
 
 ## 🧰 Requirements  
 WFN requires Windows 7 or later (with Microsoft .NET 4.5.2 or higher for version 2.0, version 2.5 comes as a standalone version which embeds the proper framework, i.e. .NET 6.0+). 
