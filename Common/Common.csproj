@@ -34,7 +34,7 @@
     <PackageReference Include="System.Runtime.Extensions" Version="4.3.1" />
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
     <PackageReference Include="Wokhan.Core" Version="0.9.4-beta" />
-    <PackageReference Include="Wokhan.UI" Version="0.9.6-beta" />
+    <PackageReference Include="Wokhan.UI" Version="0.9.8-beta" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Interop.NetFwTypeLib">

@@ -34,7 +34,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console
         {
             if (e.PropertyName == nameof(Settings.Theme))
             {
-                Resources.MergedDictionaries[0].Source = new Uri($"pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/{Settings.Default.Theme}.xaml");
+                Resources.MergedDictionaries[0].Source = new Uri(ThemeHelper.GetURIForCurrentTheme());
             }
         }
 

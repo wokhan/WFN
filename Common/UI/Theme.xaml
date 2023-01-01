@@ -116,10 +116,4 @@
     <SolidColorBrush x:Key="ControlBrushSaved" Color="{x:Static SystemColors.ControlColor}" />
     <SolidColorBrush x:Key="InfoBrushSaved" Color="{x:Static SystemColors.InfoColor}" />
 
-
-    <Style x:Key="SystemThemeStyle" TargetType="ContentControl">
-        <Style.Resources>
-            
-        </Style.Resources>
-    </Style>
 </ResourceDictionary>

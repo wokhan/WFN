@@ -5,25 +5,45 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 
+using Wokhan.WindowsFirewallNotifier.Common.Config;
+
 namespace Wokhan.WindowsFirewallNotifier.Common.UI.Themes
 {
     public static partial class ThemeHelper
     {
-        public static string GetCurrentTheme()
+        public static string GetActiveTheme()
         {
-            if (SystemParameters.HighContrast)
+            if (Settings.Default.Theme is null or "Automatic")
             {
-                return "System";
-            }
+                if (SystemParameters.HighContrast)
+                {
+                    return "System";
+                }
 
-            using (RegistryKey? key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"))
+                using (RegistryKey? key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"))
+                {
+                    return (int?)key?.GetValue("AppsUseLightTheme") == 0 ? "Dark" : "Light";
+                }
+            }
+            else
             {
-                return (int?)key?.GetValue("AppsUseLightTheme") == 0 ? "Dark" : "Light";
+                return Settings.Default.Theme;
             }
         }
+
         public static string GetURIForCurrentTheme()
         {
-            return $"pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/{GetCurrentTheme()}.xaml";
+            return $"pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/{GetActiveTheme()}.xaml";
+        }
+
+        public static string GetURIForTheme(string themeName)
+        {
+            if (themeName == "Automatic")
+            {
+                return GetURIForCurrentTheme();
+            }
+
+            return $"pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/{themeName}.xaml";
         }
     }
 }

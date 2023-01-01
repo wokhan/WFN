@@ -180,7 +180,7 @@ namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows
             {
                 ((Storyboard)this.Resources["animate"]).Stop(Main);
             }
-            this.Opacity = 1.0; //@
+            this.Opacity = 0.9;
         }
 
         private void NotificationWindow_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

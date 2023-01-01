@@ -10,6 +10,8 @@ using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
+using Wokhan.WindowsFirewallNotifier.Common.UI.Themes;
+using System.Windows.Controls.Primitives;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
 {
@@ -68,7 +70,15 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
 
         private void SelectTheme(object sender, RoutedEventArgs e)
         {
-            Settings.Default.Theme = (string)((Border)sender).Tag;
+            Settings.Default.Theme = (string)((ToggleButton)sender).CommandParameter;
+        }
+
+        private void ApplyButtonTheme(object sender, RoutedEventArgs e)
+        {
+            var button = (ToggleButton)sender;
+            var theme = (string)button.CommandParameter;
+
+            button.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri(ThemeHelper.GetURIForTheme(theme)) });
         }
     }
 }

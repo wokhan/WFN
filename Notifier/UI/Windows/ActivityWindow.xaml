@@ -10,16 +10,6 @@
         WindowStartupLocation="Manual" 
         ResizeMode="NoResize"
         ShowInTaskbar="False">
-    <Window.Resources>
-        <Style x:Key="BorderStyle" TargetType="Border">
-            <Setter Property="BorderBrush" Value="Black"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="VerticalAlignment" Value="Top"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="CornerRadius" Value="3" />
-        </Style>
-    </Window.Resources>
     <!-- Note: the orientation and window dimensions are set in code based on preference -->
     <Grid>
         <Border HorizontalAlignment="Left" Background="LightGray" VerticalAlignment="Top" BorderBrush="Gray" BorderThickness="1" CornerRadius="14">

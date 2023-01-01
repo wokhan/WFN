@@ -15,7 +15,6 @@
         Background="Transparent"
         SizeToContent="Height"
         Width="500"
-        Opacity="0.6"
         Icon="/Notifier;component/Resources/TrayIcon22.ico"
         Topmost="True"
         x:Name="NotifWindow"
@@ -39,7 +38,7 @@
             </ResourceDictionary.MergedDictionaries>
             <Storyboard x:Key="animate">
                 <ThicknessAnimation Storyboard.TargetProperty="Margin" From="250,0,-250,0" To="0,0,0,0" Duration="0:0:0.5" />
-                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5" />
+                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="0.9" Duration="0:0:0.5" FillBehavior="HoldEnd" />
             </Storyboard>
             <bindingconverters:BooleanNegateConverter x:Key="booleanNegate" />
             <bindingconverters:ValueToVisibilityConverter x:Key="valueToVisibility" />
@@ -61,17 +60,13 @@
                 <Style.Triggers>
                     <Trigger Property="IsEnabled" Value="False">
                         <Setter Property="Opacity" Value="0.5" />
-                        <Setter Property="Background" Value="LightGray" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
-            <!--<Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                <Setter Property="Background" Value="LightGray" />
-            </Style>-->
         </ResourceDictionary>
     </Window.Resources>
     <DockPanel Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" x:Name="Main">
-        <controls:CustomWindowChrome Height="28" DockPanel.Dock="Top" CanClose="False">
+        <controls:CustomWindowChrome Height="28" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" DockPanel.Dock="Top" CanClose="False">
             <UniformGrid Grid.Column="2" Rows="1">
                 <Button Padding="10,0" Style="{StaticResource TitleBarButton}" IsEnabled="{Binding NbConnectionsBefore,Mode=OneWay,Converter={StaticResource objectToBoolean}}" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" Click="btnPrev_Click">
                     <TextBlock Text="{Binding NbConnectionsBefore,Mode=OneWay,FallbackValue='&lt; Prev. (0)',StringFormat='&lt; Prev. ({0})'}" />
@@ -88,7 +83,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Grid x:Name="gridConnections" SizeChanged="expand_SizeChanged" Background="Transparent" Margin="0,0,0,5" >
+                <Grid x:Name="gridConnections" SizeChanged="expand_SizeChanged" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Margin="0,0,0,5" >
                     <ListView VirtualizingPanel.ScrollUnit="Item" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectedIndex="0" Visibility="{Binding HasItems,RelativeSource={RelativeSource Mode=self},Converter={StaticResource valueToVisibility}}"  SelectionMode="Single" x:Name="lstConnections" Background="Transparent" ItemsSource="{Binding Connections}" DataContext="{x:Static Application.Current}" d:DataContext="{d:DesignInstance Type=sampleApp:AppDataSample, IsDesignTimeCreatable=True}" MinHeight="41.6">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">

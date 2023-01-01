@@ -39,7 +39,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>-->
     <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
-    <PackageReference Include="Wokhan.UI" Version="0.9.6-beta" />
+    <PackageReference Include="Wokhan.UI" Version="0.9.8-beta" />
   </ItemGroup>
 
   <ItemGroup>

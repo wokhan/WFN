@@ -16,15 +16,55 @@
       Height="600" Width="600"
       Title="Settings" Margin="10" DataContext="{Binding Path=(settings:Settings.Default)}">
     <Window.Resources>
-        <Style x:Key="ThemeBoxStyle" TargetType="Border">
+        <Style x:Key="ThemeBoxStyle" TargetType="ToggleButton">
             <Setter Property="BorderBrush" Value="Gray" />
             <Setter Property="BorderThickness" Value="4" />
-            <Setter Property="Margin" Value="0,0,10,10" />
-            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Grid Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{Binding CommandParameter,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ToggleButton}}" FontWeight="Bold" Padding="5" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" />
+                            <UniformGrid Columns="2" Margin="10" Grid.Row="1" IsHitTestVisible="False">
+                                <UniformGrid.LayoutTransform>
+                                    <ScaleTransform ScaleX="0.7" ScaleY="0.7" />
+                                </UniformGrid.LayoutTransform>
+                                <TextBlock Text="Test" VerticalAlignment="Center" />
+                                <TextBox Text="Text content" />
+                                <Button Content="Button" />
+                                <Button Content="Button (over)" Background="{DynamicResource ButtonOverBackground}" />
+                                <ToggleButton Content="Toggle button (off)" />
+                                <ToggleButton Content="Toggle button (on)" IsChecked="True" />
+                                <CheckBox Content="Checkbox (off)" />
+                                <CheckBox Content="Checkbox (on)" IsChecked="True" />
+                                <RadioButton Style="{StaticResource RadioButtonSlide}" Content="Radio button (off)" />
+                                <RadioButton Style="{StaticResource RadioButtonSlide}" Content="Radio button (on)" IsChecked="True" />
+                            </UniformGrid>
+                        </Grid>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="DarkGray" />
+                </Trigger>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
+                </Trigger>
+                <DataTrigger Binding="{Binding Theme,Source=(settings:Settings.Default)}" Value="System">
+                    <Setter Property="IsChecked" Value="True" />
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
     <DockPanel>
-        <uicontrols:CustomWindowChrome Height="38" DockPanel.Dock="Top" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" />
+        <uicontrols:CustomWindowChrome CanClose="True" Height="38" DockPanel.Dock="Top" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" />
         <controls:AdminPanel Margin="-10" Caption="*Those options can only be modified by an administrator." />
         <ContentControl Height="50" DockPanel.Dock="Bottom" Style="{StaticResource ToolBarPanel}">
             <Grid>
@@ -48,112 +88,14 @@
                     <CheckBox Padding="3" Content="Enable services detection*" ToolTip="Additionally tries to detect the service making a connection in the notifier." IsChecked="{Binding EnableServiceDetection,Mode=TwoWay}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
                     <Button x:Name="btnTestNotif" Click="btnTestNotif_Click" HorizontalAlignment="Center" ext:CustomAdorner.Image="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Content="Start Notifier now" />
                 </StackPanel>
-                <TextBlock Text="Appearance" Style="{StaticResource SectionHeader}" />
-                <WrapPanel Margin="10" VerticalAlignment="Center">
-                    <WrapPanel.Resources>
-                        <DataTemplate x:Key="template">
-                            <Grid Width="240">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="{Binding}" FontWeight="Bold" Padding="5" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" />
-                                <WrapPanel Grid.Row="1" IsHitTestVisible="False" Margin="10">
-                                    <WrapPanel.LayoutTransform>
-                                        <ScaleTransform ScaleX="0.7" ScaleY="0.7" />
-                                    </WrapPanel.LayoutTransform>
-                                    <TextBlock Text="Test" VerticalAlignment="Center" />
-                                    <TextBox Text="Text content" />
-                                    <Button Content="Button" />
-                                    <ToggleButton Content="Toggle button (off)" />
-                                    <ToggleButton Content="Toggle button (on)" IsChecked="True" />
-                                </WrapPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </WrapPanel.Resources>
-
-                    <Border Tag="System" PreviewMouseLeftButtonDown="SelectTheme">
-                        <Border.Style>
-                            <Style TargetType="Border" BasedOn="{StaticResource ThemeBoxStyle}">
-                                <Setter Property="BorderBrush" Value="Gray" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Theme,Source={x:Static settings:Settings.Default}}" Value="System">
-                                        <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <ContentControl Content="System" ContentTemplate="{StaticResource template}" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-                            <ContentControl.Resources>
-                                <ResourceDictionary>
-                                    <ResourceDictionary.MergedDictionaries>
-                                        <ResourceDictionary Source="pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/System.xaml" />
-                                    </ResourceDictionary.MergedDictionaries>
-                                </ResourceDictionary>
-                            </ContentControl.Resources>
-                        </ContentControl>
-                    </Border>
-
-                    <Border Tag="Light" PreviewMouseLeftButtonDown="SelectTheme">
-                        <Border.Style>
-                            <Style TargetType="Border" BasedOn="{StaticResource ThemeBoxStyle}">
-                                <Setter Property="BorderBrush" Value="Gray" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Theme,Source={x:Static settings:Settings.Default}}" Value="Light">
-                                        <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <ContentControl Content="Light" ContentTemplate="{StaticResource template}" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-                            <ContentControl.Resources>
-                                <ResourceDictionary>
-                                    <ResourceDictionary.MergedDictionaries>
-                                        <ResourceDictionary Source="pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/Light.xaml" />
-                                    </ResourceDictionary.MergedDictionaries>
-                                    <Style TargetType="Border">
-                                        <Setter Property="BorderBrush" Value="Gray" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Theme,Source={x:Static settings:Settings.Default}}" Value="Light">
-                                                <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </ResourceDictionary>
-                            </ContentControl.Resources>
-                        </ContentControl>
-                    </Border>
-
-                    <Border Tag="Dark" PreviewMouseLeftButtonDown="SelectTheme">
-                        <Border.Style>
-                            <Style TargetType="Border" BasedOn="{StaticResource ThemeBoxStyle}">
-                                <Setter Property="BorderBrush" Value="Gray" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Theme,Source={x:Static settings:Settings.Default}}" Value="Dark">
-                                        <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <ContentControl Content="Dark" ContentTemplate="{StaticResource template}" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-                            <ContentControl.Resources>
-                                <ResourceDictionary>
-                                    <ResourceDictionary.MergedDictionaries>
-                                        <ResourceDictionary Source="pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/Dark.xaml" />
-                                    </ResourceDictionary.MergedDictionaries>
-                                    <Style TargetType="Border">
-                                        <Setter Property="BorderBrush" Value="Gray" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Theme,Source={x:Static settings:Settings.Default}}" Value="Dark">
-                                                <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </ResourceDictionary>
-                            </ContentControl.Resources>
-                        </ContentControl>
-                    </Border>
+                <TextBlock Text="Theme" Style="{StaticResource SectionHeader}" />
+                <WrapPanel>
+                    <ToggleButton CommandParameter="Dark" Click="SelectTheme" Style="{StaticResource ThemeBoxStyle}" Loaded="ApplyButtonTheme" />
+                    <ToggleButton CommandParameter="Light" Click="SelectTheme" Style="{StaticResource ThemeBoxStyle}" Loaded="ApplyButtonTheme" />
+                    <ToggleButton CommandParameter="Automatic" Click="SelectTheme" Style="{StaticResource ThemeBoxStyle}" Loaded="ApplyButtonTheme" />
+                    <ToggleButton CommandParameter="System" Click="SelectTheme" Style="{StaticResource ThemeBoxStyle}" Loaded="ApplyButtonTheme" />
                 </WrapPanel>
+
                 <!--<StackPanel Margin="10">
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Accent color: " />

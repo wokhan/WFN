@@ -6,7 +6,7 @@
         <ResourceDictionary Source="../Theme.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <SolidColorBrush x:Key="AccentColorBrush" Color="Coral" />
+    <SolidColorBrush x:Key="AccentColorBrush" Color="{x:Static SystemParameters.WindowGlassColor}" />
 
     <SolidColorBrush x:Key="DataGridCellSelectedForeground" Color="Black" />
     <SolidColorBrush x:Key="DataGridRowSelectedBackground" Color="LightBlue" />
