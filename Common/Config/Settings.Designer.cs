@@ -35,9 +35,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Config {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("600")]
-        public int ConsoleSizeHeight {
+        public double ConsoleSizeHeight {
             get {
-                return ((int)(this["ConsoleSizeHeight"]));
+                return ((double)(this["ConsoleSizeHeight"]));
             }
             set {
                 this["ConsoleSizeHeight"] = value;
@@ -140,9 +140,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Config {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("900")]
-        public int ConsoleSizeWidth {
+        public double ConsoleSizeWidth {
             get {
-                return ((int)(this["ConsoleSizeWidth"]));
+                return ((double)(this["ConsoleSizeWidth"]));
             }
             set {
                 this["ConsoleSizeWidth"] = value;
@@ -351,6 +351,18 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Config {
             }
             set {
                 this["ShowConnections"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Theme {
+            get {
+                return ((string)(this["Theme"]));
+            }
+            set {
+                this["Theme"] = value;
             }
         }
     }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 
@@ -7,6 +9,7 @@ using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
+using Wokhan.WindowsFirewallNotifier.Common.UI.Themes;
 
 namespace Wokhan.WindowsFirewallNotifier.Console
 {
@@ -22,6 +25,16 @@ namespace Wokhan.WindowsFirewallNotifier.Console
             if (Settings.Default.AlwaysRunAs && !UAC.CheckProcessElevated())
             {
                 RestartAsAdmin();
+            }
+
+            Settings.Default.PropertyChanged += SettingsChanged;
+        }
+
+        private void SettingsChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Settings.Theme))
+            {
+                Resources.MergedDictionaries[0].Source = new Uri(ThemeHelper.GetURIForCurrentTheme());
             }
         }
 
@@ -46,13 +59,16 @@ namespace Wokhan.WindowsFirewallNotifier.Console
 
             if (Settings.Default.ConsoleSizeWidth > 900)
             {
-                Resources["ConsoleSizeWidth"] = Convert.ToDouble(Settings.Default.ConsoleSizeWidth);
+                Resources["ConsoleSizeWidth"] = Settings.Default.ConsoleSizeWidth;
             }
 
             if (Settings.Default.ConsoleSizeHeight > 600)
             {
-                Resources["ConsoleSizeHeight"] = Convert.ToDouble(Settings.Default.ConsoleSizeHeight);
+                Resources["ConsoleSizeHeight"] = Settings.Default.ConsoleSizeHeight;
             }
+                
+            var themeUri = ThemeHelper.GetURIForCurrentTheme();
+            Resources.MergedDictionaries[0].Source = new Uri(themeUri);
         }
 
         internal void RestartAsAdmin()

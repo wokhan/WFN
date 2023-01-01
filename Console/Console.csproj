@@ -38,6 +38,8 @@
 
   <ItemGroup>
     <None Remove="Resources\Backgrounds\Blue-Abstract.jpg" />
+    <None Remove="Resources\Images\WFN-Logo-Transparent.ico" />
+    <None Remove="Resources\Images\WFN-Logo-Transparent.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,8 +55,8 @@
     </PackageReference>-->
     <PackageReference Include="Microsoft.Maps.MapControl.WPF" Version="1.0.0.3" />
     <PackageReference Include="OxyPlot.Wpf" Version="2.1.2" />
-    <PackageReference Include="Wokhan.Core" Version="0.9.2-alpha" />
-    <PackageReference Include="Wokhan.UI" Version="0.9.2-alpha" />
+    <PackageReference Include="Wokhan.Core" Version="0.9.4-beta" />
+    <PackageReference Include="Wokhan.UI" Version="0.9.8-beta" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\IPDatabase\GeoLite2-City.mmdb">
@@ -65,6 +67,8 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Backgrounds\Blue-Abstract.jpg" />
+    <Resource Include="Resources\Images\WFN-Logo-Transparent.ico" />
+    <Resource Include="Resources\Images\WFN-Logo-Transparent.png" />
     <Resource Include="Resources\Images\WFN Logo.png" />
     <Resource Include="Resources\Images\WFN.ico" />
     <Resource Include="Resources\Shield.ico" />

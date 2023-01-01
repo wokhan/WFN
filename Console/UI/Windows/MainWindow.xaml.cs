@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
+using Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
 {
@@ -82,31 +83,18 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
             ((App)Application.Current).RestartAsAdmin();
         }
 
-        private void btnMenu_Click(object sender, RoutedEventArgs e)
-        {
-            menuGrid.Width = (menuGrid.Width != 38 ? 38 : Double.NaN);
-        }
-
+        Options optionWindow = null;
         private void OpenOptions(object sender, RoutedEventArgs e)
         {
-            Page target = (Page)((FrameworkElement)sender).Resources["page"];
-            var win = new Window()
-            {
-                Content = target,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                MaxWidth = Math.Min(800, this.ActualWidth - 100),
-                MaxHeight = Math.Min(600, this.ActualHeight - 100),
-                WindowStyle = WindowStyle.None,
-                Owner = this,
-                ResizeMode = ResizeMode.NoResize,
-                BorderThickness = new Thickness(1),
-                AllowsTransparency = true,
-                Background = Brushes.Transparent,
-                ShowInTaskbar = false,
-                SizeToContent = SizeToContent.WidthAndHeight
-            };
+            (optionWindow ??= new Options() { Owner = this }).Show();
+            optionWindow.Closed += (_, _) => optionWindow = null;
+        }
 
-            win.ShowDialog();
+        About aboutWindow = null;
+        private void OpenAbout(object sender, RoutedEventArgs e)
+        {
+            (aboutWindow ??= new About() { Owner = this }).Show();
+            aboutWindow.Closed += (_, _) => aboutWindow = null;
         }
     }
 }

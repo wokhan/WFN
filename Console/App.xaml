@@ -8,23 +8,26 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Theme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Wokhan.WindowsFirewallNotifier.Common;component/UI/Themes/Light.xaml" />
                 <ResourceDictionary Source="Resources/Images.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
             <BindingConverters:BooleanNegateConverter x:Key="booleanNegator" />
             <BindingConverters:UnitFormatConverter x:Key="unitFormatter" />
             <BindingConverters:ObjectToBoolConverter x:Key="objectToBool" />
             <BindingConverters:ValueToVisibilityConverter x:Key="valueToVisibility" />
             <BindingConverters:ValueToVisibilityNegateConverter x:Key="valueToVisibilityNegate" />
+            
             <system:Double x:Key="ConsoleSizeHeight">600</system:Double>
             <system:Double x:Key="ConsoleSizeWidth">900</system:Double>
-            <SolidColorBrush x:Key="AccentColorBrush" Color="Coral" />
+            
             <Style TargetType="DataGridColumnHeader">
-                <Setter Property="Background" Value="WhiteSmoke" />
+                <!--<Setter Property="Background" Value="WhiteSmoke" />-->
                 <Setter Property="BorderThickness" Value="0,0,1,1" />
                 <Setter Property="BorderBrush" Value="LightGray" />
                 <Setter Property="Padding" Value="5" />
             </Style>
+            
             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="Background" Value="Transparent" />
@@ -32,24 +35,28 @@
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
                         <Setter Property="Background" Value="Transparent" />
-                        <Setter Property="Foreground" Value="Black" />
+                        <Setter Property="Foreground" Value="{StaticResource DataGridCellSelectedForeground}" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
+            
             <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                <Setter Property="Background" Value="Transparent" />
                 <Setter Property="MinHeight" Value="30" />
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="LightBlue" />
+                        <Setter Property="Background" Value="{DynamicResource DataGridRowSelectedBackground}" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
+            
             <Style TargetType="TextBlock" x:Key="SectionHeader">
                 <Setter Property="FontSize" Value="18" />
             </Style>
+            
             <Style TargetType="RadioButton" x:Key="RadioButtonSlide">
                 <Setter Property="OverridesDefaultStyle" Value="True"/>
-                <Setter Property="Background" Value="White"/>
+                <Setter Property="Background" Value="{DynamicResource ButtonBackground}"/>
                 <Setter Property="BorderThickness" Value="2" />
                 <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
                 <Setter Property="Template">
@@ -84,16 +91,14 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            
             <Style x:Key="HelpButtonStyle" TargetType="Label">
                 <Setter Property="ext:CustomAdorner.CornerRadius" Value="2,2,0,0" />
                 <Setter Property="Content" Value="{StaticResource Image_Help}" />
                 <Setter Property="Padding" Value="5" />
                 <Setter Property="Margin" Value="2" />
-                <Style.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="WhiteSmoke" />
-                    </Trigger>
-                </Style.Triggers>
+                <Setter Property="Height" Value="25" />
+                <Setter Property="Cursor" Value="Help" />
                 <Style.Resources>
                     <Style TargetType="ToolTip">
                         <Setter Property="ToolTipService.VerticalOffset" Value="-2" />
@@ -105,7 +110,7 @@
                             <Setter.Value>
                                 <ControlTemplate TargetType="ToolTip">
                                     <Grid MaxWidth="400">
-                                        <Border CornerRadius="5,0,5,5" BorderBrush="LightGray" BorderThickness="1" Background="WhiteSmoke" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                        <Border CornerRadius="5,0,5,5" BorderBrush="LightGray" BorderThickness="1" Background="{DynamicResource {x:Static SystemColors.InfoBrushKey}}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                             <Border.Effect>
                                                 <DropShadowEffect Color="LightGray"/>
                                             </Border.Effect>
@@ -118,29 +123,7 @@
                     </Style>
                 </Style.Resources>
             </Style>
-            <Style x:Key="RoundedButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                <Setter Property="Width" Value="40" />
-                <Setter Property="Height" Value="40" />
-                <Setter Property="Margin" Value="0,10,10,0" />
-                <Setter Property="ext:CustomAdorner.CornerRadius" Value="20" />
-                <Setter Property="ext:CustomAdorner.BackgroundEffect">
-                    <Setter.Value>
-                        <DropShadowEffect Direction="-90" BlurRadius="10" ShadowDepth="0" Color="LightGray" />
-                    </Setter.Value>
-                </Setter>
-            </Style>
-            <Style x:Key="RoundedToggleButton" TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
-                <Setter Property="Width" Value="40" />
-                <Setter Property="Height" Value="40" />
-                <Setter Property="Margin" Value="0,10,10,0" />
-                <Setter Property="ext:CustomAdorner.CornerRadius" Value="20" />
-                <Setter Property="ext:CustomAdorner.BackgroundEffect">
-                    <Setter.Value>
-                        <DropShadowEffect Direction="-90" BlurRadius="10" ShadowDepth="0" Color="LightGray" />
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
+            
             <Style x:Key="InfoPanel" TargetType="Border">
                 <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.InfoBrushKey}}" />
                 <Style.Resources>
@@ -158,8 +141,10 @@
                     </Style>
                 </Style.Resources>
             </Style>
+
             <Style x:Key="AutoTrackButton" TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
                 <Setter Property="ext:CustomAdorner.Image" Value="{StaticResource Image_Start}"/>
+                <Setter Property="ext:CustomAdorner.PreserveTemplate" Value="False"/>
                 <Style.Triggers>
                     <Trigger Property="IsChecked" Value="True">
                         <Setter Property="ext:CustomAdorner.Image" Value="{StaticResource Image_Stop}"/>
@@ -167,9 +152,6 @@
                 </Style.Triggers>
             </Style>
 
-            <Style TargetType="TextBox">
-                <Setter Property="ext:CustomAdorner.CornerRadius" Value="20" />
-            </Style>
             <Style x:Key="AutoTrackRefresh" TargetType="ComboBox">
                 <Setter Property="IsEditable" Value="False" />
                 <Setter Property="Template">
@@ -178,8 +160,44 @@
                             <Grid>
                                 <ToggleButton ContentStringFormat="Update rate: {0}s &#9660;" Content="{Binding Text,RelativeSource={x:Static RelativeSource.TemplatedParent}}" ext:CustomAdorner.Image="{StaticResource Image_UpdateRate}" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={x:Static RelativeSource.TemplatedParent}}"/>
                                 <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" StaysOpen="False" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide" Margin="0">
-                                    <Grid Background="WhiteSmoke" MinWidth="{TemplateBinding FrameworkElement.ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}" Margin="4,0,4,4">
-                                        <Border Background="WhiteSmoke" CornerRadius="5">
+                                    <Grid Background="{DynamicResource ButtonBackground}" MinWidth="{TemplateBinding FrameworkElement.ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}" Margin="4,0,4,4">
+                                        <Border Background="{DynamicResource ButtonBackground}" CornerRadius="5">
+                                            <Border.Effect>
+                                                <DropShadowEffect Color="LightGray" ShadowDepth="2" />
+                                            </Border.Effect>
+                                        </Border>
+                                        <Border CornerRadius="5">
+                                            <ScrollViewer>
+                                                <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
+                                            </ScrollViewer>
+                                        </Border>
+                                    </Grid>
+                                </Popup>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="true">
+                        <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style TargetType="TextBox">
+                <Setter Property="ext:CustomAdorner.CornerRadius" Value="20" />
+            </Style>
+
+            <Style x:Key="FilterComboStyle" TargetType="ComboBox">
+                <Setter Property="IsEditable" Value="False" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ComboBox">
+                            <Grid>
+                                <ToggleButton ContentStringFormat="Show: {0} &#9660;" Content="{Binding Text,RelativeSource={x:Static RelativeSource.TemplatedParent}}" ext:CustomAdorner.Image="{StaticResource Image_Show}" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={x:Static RelativeSource.TemplatedParent}}"/>
+                                <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" StaysOpen="False" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide" Margin="0">
+                                    <Grid Background="{DynamicResource ButtonBackground}" MinWidth="{TemplateBinding FrameworkElement.ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}" Margin="4,0,4,4">
+                                        <Border Background="{DynamicResource ButtonBackground}" CornerRadius="5">
                                             <Border.Effect>
                                                 <DropShadowEffect Color="LightGray" ShadowDepth="2" />
                                             </Border.Effect>
@@ -203,57 +221,24 @@
             </Style>
 
             <Style x:Key="ToolBarPanel" TargetType="ContentControl">
-                <Setter Property="Background" Value="White" />
-                <!--<Setter Property="Panel.ZIndex" Value="100" />-->
-                <Setter Property="Margin" Value="0,0,0,2" />
                 <Setter Property="ContentTemplate">
                     <Setter.Value>
                         <DataTemplate>
-                            <Grid>
-                                <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                    <Rectangle.Fill>
-                                        <LinearGradientBrush>
-                                            <GradientStop Color="Transparent" Offset="0" />
-                                            <GradientStop Color="LightGray" Offset="0.5" />
-                                            <GradientStop Color="Transparent" Offset="1" />
-                                        </LinearGradientBrush>
-                                    </Rectangle.Fill>
-                                    <Rectangle.Effect>
-                                        <DropShadowEffect Color="LightGray" ShadowDepth="3" Direction="0"/>
-                                    </Rectangle.Effect>
-                                </Rectangle>
-                                <Rectangle Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                                <ContentControl Height="35" Content="{Binding}" />
+                            <Grid Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}">
+                                <ContentControl Margin="10" Content="{Binding}" />
                             </Grid>
                         </DataTemplate>
                     </Setter.Value>
                 </Setter>
-                <!--<Setter Property="BorderBrush">
-                    <Setter.Value>
-                        <VisualBrush Stretch="Fill">
-                            <VisualBrush.Visual>
-                                <Rectangle Fill="White" Height="100" Width="32">
-                                    <Rectangle.Effect>
-                                        <DropShadowEffect />
-                                    </Rectangle.Effect>
-                                </Rectangle>
-                            </VisualBrush.Visual>
-                        </VisualBrush>
-                    </Setter.Value>
-                </Setter>-->
                 <Setter Property="DockPanel.Dock" Value="Top" />
-                <Setter Property="Height" Value="35" />
-                <!--<Setter Property="Padding" Value="5" />-->
                 <Style.Resources>
                     <Style TargetType="StackPanel">
                         <Setter Property="Orientation" Value="Horizontal" />
                     </Style>
                     <Style TargetType="TextBox">
                         <!--<Setter Property="ext:CustomAdorner.CornerRadius" Value="2" />-->
-                        <Setter Property="Background" Value="WhiteSmoke" />
+                        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
                         <Setter Property="BorderThickness" Value="1" />
-                        <Setter Property="Padding" Value="10,5" />
-                        <Setter Property="Margin" Value="4" />
                     </Style>
                     <Style TargetType="Label">
                         <Setter Property="VerticalAlignment" Value="Center" />
@@ -262,6 +247,7 @@
                     </Style>
                 </Style.Resources>
             </Style>
+            
             <Style x:Key="NonAdminPanel" TargetType="ContentControl" BasedOn="{StaticResource ToolBarPanel}">
                 <Setter Property="DockPanel.Dock" Value="Bottom" />
                 <Setter Property="Visibility" Value="{Binding IsElevated,Source={x:Static Application.Current},Converter={StaticResource valueToVisibilityNegate}}" />

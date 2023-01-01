@@ -1,0 +1,138 @@
+﻿<Window x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Windows.Options"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:settings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Config;assembly=Wokhan.WindowsFirewallNotifier.Common"
+      xmlns:logging="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Logging;assembly=Wokhan.WindowsFirewallNotifier.Common" 
+      xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
+      xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
+      xmlns:uicontrols="clr-namespace:Wokhan.UI.Xaml.Controls;assembly=Wokhan.UI"
+      mc:Ignorable="d" 
+      x:Name="me"
+      ShowInTaskbar="False"
+      ResizeMode="NoResize"
+      WindowStartupLocation="CenterOwner"
+      Height="600" Width="600"
+      Title="Settings" Margin="10" DataContext="{Binding Path=(settings:Settings.Default)}">
+    <Window.Resources>
+        <Style x:Key="ThemeBoxStyle" TargetType="ToggleButton">
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="BorderThickness" Value="4" />
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Grid Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{Binding CommandParameter,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ToggleButton}}" FontWeight="Bold" Padding="5" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" />
+                            <UniformGrid Columns="2" Margin="10" Grid.Row="1" IsHitTestVisible="False">
+                                <UniformGrid.LayoutTransform>
+                                    <ScaleTransform ScaleX="0.7" ScaleY="0.7" />
+                                </UniformGrid.LayoutTransform>
+                                <TextBlock Text="Test" VerticalAlignment="Center" />
+                                <TextBox Text="Text content" />
+                                <Button Content="Button" />
+                                <Button Content="Button (over)" Background="{DynamicResource ButtonOverBackground}" />
+                                <ToggleButton Content="Toggle button (off)" />
+                                <ToggleButton Content="Toggle button (on)" IsChecked="True" />
+                                <CheckBox Content="Checkbox (off)" />
+                                <CheckBox Content="Checkbox (on)" IsChecked="True" />
+                                <RadioButton Style="{StaticResource RadioButtonSlide}" Content="Radio button (off)" />
+                                <RadioButton Style="{StaticResource RadioButtonSlide}" Content="Radio button (on)" IsChecked="True" />
+                            </UniformGrid>
+                        </Grid>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="DarkGray" />
+                </Trigger>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
+                </Trigger>
+                <DataTrigger Binding="{Binding Theme,Source=(settings:Settings.Default)}" Value="System">
+                    <Setter Property="IsChecked" Value="True" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <DockPanel>
+        <uicontrols:CustomWindowChrome CanClose="True" Height="38" DockPanel.Dock="Top" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" />
+        <controls:AdminPanel Margin="-10" Caption="*Those options can only be modified by an administrator." />
+        <ContentControl Height="50" DockPanel.Dock="Bottom" Style="{StaticResource ToolBarPanel}">
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Button x:Name="btnSave" Click="btnOK_Click" ext:CustomAdorner.Image="{StaticResource Image_Shield}" Content="Save" />
+                    <Button x:Name="btnRevert" Click="btnCancel_Click" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" Content="Cancel" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="btnResetDefault" Click="btnResetDefault_Click" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" Content="Reset to defaults" />
+                </StackPanel>
+            </Grid>
+        </ContentControl>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
+            <StackPanel>
+                <TextBlock Text="Notifier settings" Style="{StaticResource SectionHeader}" />
+                <StackPanel Margin="10">
+                    <TextBlock Margin="0,0,0,10" TextWrapping="Wrap" Text="The following options only apply if you chose 'Block and prompt' for the outgoing connections in the Firewall settings page, as they target the WFN notification window." />
+                    <CheckBox Padding="3" Content="Always run as an admin" IsChecked="{Binding AlwaysRunAs,Mode=TwoWay}" />
+                    <CheckBox Padding="3" Content="Start minimized" IsChecked="{Binding StartNotifierMinimized,Mode=TwoWay}" />
+                    <CheckBox Padding="3" Content="Use an animated notification" IsChecked="{Binding UseAnimation,Mode=TwoWay}" />
+                    <CheckBox Padding="3" Content="Enable services detection*" ToolTip="Additionally tries to detect the service making a connection in the notifier." IsChecked="{Binding EnableServiceDetection,Mode=TwoWay}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
+                    <Button x:Name="btnTestNotif" Click="btnTestNotif_Click" HorizontalAlignment="Center" ext:CustomAdorner.Image="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Content="Start Notifier now" />
+                </StackPanel>
+                <TextBlock Text="Theme" Style="{StaticResource SectionHeader}" />
+                <WrapPanel>
+                    <ToggleButton CommandParameter="Dark" Click="SelectTheme" Style="{StaticResource ThemeBoxStyle}" Loaded="ApplyButtonTheme" />
+                    <ToggleButton CommandParameter="Light" Click="SelectTheme" Style="{StaticResource ThemeBoxStyle}" Loaded="ApplyButtonTheme" />
+                    <ToggleButton CommandParameter="Automatic" Click="SelectTheme" Style="{StaticResource ThemeBoxStyle}" Loaded="ApplyButtonTheme" />
+                    <ToggleButton CommandParameter="System" Click="SelectTheme" Style="{StaticResource ThemeBoxStyle}" Loaded="ApplyButtonTheme" />
+                </WrapPanel>
+
+                <!--<StackPanel Margin="10">
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Accent color: " />
+                            <ComboBox IsEditable="False" MinWidth="100" ItemsSource="{Binding Colors,ElementName=me,Mode=OneTime}" SelectedValuePath="Value" SelectedValue="{Binding AccentColor,Mode=TwoWay}" Height="20" Background="#00000000" BorderBrush="Coral" Width="207" Foreground="Black">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <WrapPanel>
+                                            <Rectangle Width="30" Height="10" Fill="{Binding Value,Mode=OneTime}" Stroke="Black" />
+                                            <Label Content="{Binding Key,Mode=OneTime}" Foreground="Black" Background="Transparent" />
+                                        </WrapPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <Label Content="Console Width" Margin="20,0,0,0"/>
+                            <TextBox Text="{Binding ConsoleSizeWidth, Mode=TwoWay}"  ToolTip="Needs a restart to take effect." IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Width="50" Height="20" Margin="5,0,0,0" BorderBrush="{DynamicResource AccentColorBrush}" />
+                            <Label Content="Height" Margin="3,0,0,0"/>
+                            <TextBox Text="{Binding ConsoleSizeHeight, Mode=TwoWay}" ToolTip="Needs a restart to take effect." IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Width="50" Height="20" BorderBrush="{DynamicResource AccentColorBrush}" />
+                        </StackPanel>
+                    </StackPanel>-->
+                <TextBlock Text="Miscellaneous options" Style="{StaticResource SectionHeader}" />
+                <StackPanel Margin="10">
+                    <!-- TODO: not working  <CheckBox Margin="0,0,0,10"  Padding="5,0" Content="Minimize the console to the system tray instead of the taskbar." IsChecked="{Binding MinimizeToTray, Source={x:Static settings:Settings.Default}}" /> -->
+                    <CheckBox Margin="0,0,0,10" Padding="5,0" Content="Enable verbose logging (for debugging purpose only, may use a lot more disk space)" IsChecked="{Binding EnableVerboseLogging, Mode=TwoWay}" />
+                    <TextBlock Margin="30,0,0,10" Text="Note: the log files can either be in the WFN installation directory or the current user's appdata folder." />
+                    <TextBlock Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding Mode=OneTime, Source={x:Static logging:LogHelper.CurrentLogsPath}, StringFormat=Path for the current user: \{0\}}" Tag="{Binding Mode=OneTime, Source={x:Static logging:LogHelper.CurrentLogsPath}}" x:Name="txtCurrentLogPath" MouseDown="txtCurrentLogPath_MouseDown" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
+                    <!--<CheckBox Margin="0,0,0,10" Padding="5,0" Content="Always run as admin*" ToolTip="Options marked with * need admin rights to change" IsChecked="{Binding AlwaysRunAs, Source={x:Static settings:Settings.Default}}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />-->
+                    <CheckBox Margin="0,0,0,10" Padding="5,0" Content="Enable DNS host name resolver in Security log (experimental)*" ToolTip="Enables host name resolver in Security Log" IsChecked="{Binding EnableDnsResolver,Mode=TwoWay}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
+                    <CheckBox Margin="0,0,0,10" Padding="5,0" Content="Enable successful connection events*" ToolTip="Enables logging of successful connection events in Security Log" IsChecked="{Binding AuditPolEnableSuccessEvent, Mode=TwoWay}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
+                </StackPanel>
+                <TextBlock Text="Portable mode" Style="{StaticResource SectionHeader}" />
+                <StackPanel Margin="10">
+                    <Label Content="When portable mode is enabled, all users on this computer will share the same configuration, stored in the current application folder." />
+                    <CheckBox Margin="0,0,0,10" Padding="5,0" Content="Enable" IsChecked="{Binding IsPortable,Mode=TwoWay}" />
+                    <Label Content="Settings file location (click to open in explorer)" />
+                    <TextBlock MouseDown="txtUserConfigurationPath_MouseDown" Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding ConfigurationPath,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

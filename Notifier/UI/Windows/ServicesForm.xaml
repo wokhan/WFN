@@ -14,7 +14,7 @@
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TextBlock Background="LightYellow" Padding="10" TextWrapping="Wrap" Grid.Row="0">
+            <TextBlock Background="{DynamicResource {x:Static SystemColors.InfoBrushKey}}" Padding="10" TextWrapping="Wrap" Grid.Row="0">
             Windows Firewall Notifier was not able to determine which service actually attempted to create an outgoing connection.
 <LineBreak />Please pick up the service(s) you would like to allow.
             </TextBlock>

@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:uicontrols="clr-namespace:Wokhan.UI.Xaml.Controls;assembly=Wokhan.UI" 
         xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
-        xmlns:pages="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Pages"
         Title="{Binding MainWindowTitle}"
         Height="{DynamicResource ConsoleSizeHeight}" 
         Width="{DynamicResource ConsoleSizeWidth}"
@@ -14,9 +13,8 @@
         mc:Ignorable="d" 
         d:DesignHeight="460"
         d:DesignWidth="800" 
-        Background="WhiteSmoke"
         x:Name="me"
-        Icon="/WFN;component/Resources/Images/WFN.ico" 
+        Icon="/WFN;component/Resources/Images/WFN-Logo-Transparent.ico" 
         ResizeMode="CanResizeWithGrip">
     <Grid>
         <Grid.Background>
@@ -26,18 +24,12 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition />
         </Grid.RowDefinitions>
-        <uicontrols:CustomWindowChrome Height="38">
+        <uicontrols:CustomWindowChrome CanClose="True"  Height="{DynamicResource {x:Static SystemParameters.CaptionHeightKey}}" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}">
             <Button Click="OpenOptions" ToolTip="settings">
-                <Button.Resources>
-                    <pages:Options x:Key="page" />
-                </Button.Resources>
-                <Path Height="18" Stretch="Uniform" Fill="#FFF12EA1" Data="F1 M 38,23.5C 38.8643,23.5 39.7109,23.5756 40.5337,23.7206L 42.6275,18.5381L 48.1901,20.787L 46.0964,25.9692C 47.6473,27.0149 48.9851,28.3527 50.0308,29.9036L 55.213,27.8099L 57.4619,33.3725L 52.2794,35.4664C 52.4244,36.2891 52.5,37.1357 52.5,38C 52.5,38.8643 52.4244,39.7109 52.2794,40.5337L 57.4619,42.6275L 55.213,48.1901L 50.0308,46.0964C 49.0795,47.5073 47.8865,48.7418 46.5112,49.7405L 48.7844,54.8462L 43.3041,57.2891L 41.0307,52.1828C 40.0533,52.3906 39.0394,52.5 38,52.5C 37.1357,52.5 36.2891,52.4244 35.4664,52.2794L 33.3725,57.462L 27.8099,55.213L 29.9036,50.0309C 28.3527,48.9851 27.0149,47.6473 25.9691,46.0964L 20.787,48.1901L 18.538,42.6275L 23.7206,40.5336C 23.5756,39.7109 23.5,38.8643 23.5,38C 23.5,37.1357 23.5756,36.2891 23.7206,35.4664L 18.538,33.3725L 20.787,27.8099L 25.9691,29.9036C 26.9205,28.4927 28.1135,27.2582 29.4889,26.2594L 27.2157,21.1537L 32.6959,18.7109L 34.9694,23.8172C 35.9468,23.6094 36.9606,23.5 38,23.5 Z M 38,28C 32.4771,28 28,32.4772 28,38C 28,43.5229 32.4771,48 38,48C 43.5228,48 48,43.5229 48,38C 48,32.4772 43.5228,28 38,28 Z " />
+                <Path VerticalAlignment="Stretch" MaxHeight="18" Stretch="Uniform" Fill="#FFF12EA1" Data="F1 M 38,23.5C 38.8643,23.5 39.7109,23.5756 40.5337,23.7206L 42.6275,18.5381L 48.1901,20.787L 46.0964,25.9692C 47.6473,27.0149 48.9851,28.3527 50.0308,29.9036L 55.213,27.8099L 57.4619,33.3725L 52.2794,35.4664C 52.4244,36.2891 52.5,37.1357 52.5,38C 52.5,38.8643 52.4244,39.7109 52.2794,40.5337L 57.4619,42.6275L 55.213,48.1901L 50.0308,46.0964C 49.0795,47.5073 47.8865,48.7418 46.5112,49.7405L 48.7844,54.8462L 43.3041,57.2891L 41.0307,52.1828C 40.0533,52.3906 39.0394,52.5 38,52.5C 37.1357,52.5 36.2891,52.4244 35.4664,52.2794L 33.3725,57.462L 27.8099,55.213L 29.9036,50.0309C 28.3527,48.9851 27.0149,47.6473 25.9691,46.0964L 20.787,48.1901L 18.538,42.6275L 23.7206,40.5336C 23.5756,39.7109 23.5,38.8643 23.5,38C 23.5,37.1357 23.5756,36.2891 23.7206,35.4664L 18.538,33.3725L 20.787,27.8099L 25.9691,29.9036C 26.9205,28.4927 28.1135,27.2582 29.4889,26.2594L 27.2157,21.1537L 32.6959,18.7109L 34.9694,23.8172C 35.9468,23.6094 36.9606,23.5 38,23.5 Z M 38,28C 32.4771,28 28,32.4772 28,38C 28,43.5229 32.4771,48 38,48C 43.5228,48 48,43.5229 48,38C 48,32.4772 43.5228,28 38,28 Z " />
             </Button>
-            <Button Click="OpenOptions" ToolTip="about">
-                <Button.Resources>
-                    <pages:About x:Key="page" />
-                </Button.Resources>
-                <Path Height="16" Stretch="Uniform" Fill="#FFF79E1D" Data="F1 M 31.6666,30.0834L 42.7499,30.0834L 42.7499,33.2501L 42.7499,52.2501L 45.9165,52.2501L 45.9165,57.0001L 31.6666,57.0001L 31.6666,52.2501L 34.8332,52.2501L 34.8332,34.8335L 31.6666,34.8335L 31.6666,30.0834 Z M 38.7917,19C 40.9778,19 42.75,20.7722 42.75,22.9583C 42.75,25.1445 40.9778,26.9167 38.7917,26.9167C 36.6055,26.9167 34.8333,25.1445 34.8333,22.9583C 34.8333,20.7722 36.6055,19 38.7917,19 Z "/>
+            <Button Click="OpenAbout" ToolTip="about">
+                <Path VerticalAlignment="Stretch" MaxHeight="16" Stretch="Uniform" Fill="#FFF79E1D" Data="F1 M 31.6666,30.0834L 42.7499,30.0834L 42.7499,33.2501L 42.7499,52.2501L 45.9165,52.2501L 45.9165,57.0001L 31.6666,57.0001L 31.6666,52.2501L 34.8332,52.2501L 34.8332,34.8335L 31.6666,34.8335L 31.6666,30.0834 Z M 38.7917,19C 40.9778,19 42.75,20.7722 42.75,22.9583C 42.75,25.1445 40.9778,26.9167 38.7917,26.9167C 36.6055,26.9167 34.8333,25.1445 34.8333,22.9583C 34.8333,20.7722 36.6055,19 38.7917,19 Z "/>
             </Button>
         </uicontrols:CustomWindowChrome>
         <Grid x:Name="mainGrid" Grid.Row="1" ClipToBounds="True">
@@ -45,17 +37,17 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Border Grid.Column="1" Background="White">
+            <Border Grid.Column="1" Background="{DynamicResource TabItemOverBackground}">
                 <Border.RenderTransform>
                     <TransformGroup>
                         <TranslateTransform X="{Binding ActualWidth,ElementName=widthIndicator}" />
                     </TransformGroup>
                 </Border.RenderTransform>
                 <Border.Effect>
-                    <DropShadowEffect Direction="180" Color="LightGray" ShadowDepth="1" />
+                    <DropShadowEffect Direction="180" Color="White" ShadowDepth="1" />
                 </Border.Effect>
             </Border>
-            <TabControl x:Name="menuGrid" Grid.ColumnSpan="2" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0" TabStripPlacement="Left" Grid.IsSharedSizeScope="True">
+            <TabControl x:Name="menuGrid" Background="Transparent" Grid.ColumnSpan="2" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0" TabStripPlacement="Left" Grid.IsSharedSizeScope="True">
                 <TabControl.Resources>
                     <Style x:Key="Separator" TargetType="TabItem">
                         <Setter Property="Height" Value="31" />
@@ -74,7 +66,7 @@
                                     </Grid>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="Label" Property="Background" Value="White" />
+                                            <Setter TargetName="Label" Property="Background" Value="{DynamicResource TabItemOverBackground}" />
                                             <Setter TargetName="Label" Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
                                             <Setter TargetName="Label" Property="ext:CustomAdorner.BackgroundEffect">
                                                 <Setter.Value>
@@ -83,7 +75,7 @@
                                             </Setter>
                                         </Trigger>
                                         <Trigger Property="IsSelected" Value="True">
-                                            <Setter TargetName="Label" Property="Background" Value="White" />
+                                            <Setter TargetName="Label" Property="Background" Value="{DynamicResource TabItemOverBackground}" />
                                             <Setter TargetName="Label" Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
                                             <Setter TargetName="Label" Property="ext:CustomAdorner.BackgroundEffect">
                                                 <Setter.Value>

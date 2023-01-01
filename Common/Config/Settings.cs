@@ -27,7 +27,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Config
             PropertyChanged += Settings_PropertyChanged;
         }
 
-        private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Settings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
