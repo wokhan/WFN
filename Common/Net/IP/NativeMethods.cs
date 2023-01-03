@@ -5,10 +5,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP
 {
     public partial class IPHelper
     {
-        protected static class NativeMethods
+        protected static partial class NativeMethods
         {
-            [DllImport("kernel32.dll", EntryPoint = "RtlZeroMemory", SetLastError = false)]
-            internal static extern void ZeroMemory(IntPtr dest, uint size);
+            [LibraryImport("kernel32.dll", SetLastError = false)]
+            internal static partial void RtlZeroMemory(IntPtr dest, uint size);
         }
     }
 }

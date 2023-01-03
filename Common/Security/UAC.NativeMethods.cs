@@ -10,7 +10,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     public static partial class UAC
     {
-        protected static class NativeMethods
+        protected static partial class NativeMethods
         {
             internal const string UAC_REGISTRY_KEY = "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System";
             internal const string UAC_REGISTRY_VALUE = "EnableLUA";
@@ -19,17 +19,17 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
             internal const uint TOKEN_QUERY = 0x0008;
             //internal const uint TOKEN_READ = (STANDARD_RIGHTS_READ | TOKEN_QUERY);
 
-            [DllImport("advapi32.dll", SetLastError = true)]
+            [LibraryImport("advapi32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            internal static extern bool OpenProcessToken(IntPtr ProcessHandle, uint DesiredAccess, out IntPtr TokenHandle);
+            internal static partial bool OpenProcessToken(IntPtr ProcessHandle, uint DesiredAccess, out IntPtr TokenHandle);
 
-            [DllImport("kernel32.dll", SetLastError = true)]
+            [LibraryImport("kernel32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            internal static extern bool CloseHandle(IntPtr hObject);
+            internal static partial bool CloseHandle(IntPtr hObject);
 
-            [DllImport("advapi32.dll", SetLastError = true)]
+            [LibraryImport("advapi32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            internal static extern bool GetTokenInformation(IntPtr TokenHandle, TOKEN_INFORMATION_CLASS TokenInformationClass, IntPtr TokenInformation, uint TokenInformationLength, out uint ReturnLength);
+            internal static partial bool GetTokenInformation(IntPtr TokenHandle, TOKEN_INFORMATION_CLASS TokenInformationClass, IntPtr TokenInformation, uint TokenInformationLength, out uint ReturnLength);
 
             internal enum TOKEN_INFORMATION_CLASS
             {

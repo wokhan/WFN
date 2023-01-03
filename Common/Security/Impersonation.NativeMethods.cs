@@ -5,7 +5,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
 {
     public static partial class Impersonation
     {
-        protected static class NativeMethods
+        protected static partial class NativeMethods
         {
             [StructLayout(LayoutKind.Sequential)]
             internal struct PROCESS_INFORMATION
@@ -38,16 +38,16 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 TokenImpersonation
             }
 
-            [DllImport("userenv.dll", SetLastError = true)]
+            [LibraryImport("userenv.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            internal static extern bool CreateEnvironmentBlock(
+            internal static partial bool CreateEnvironmentBlock(
                 out IntPtr lpEnvironment,
                 IntPtr hToken,
                 [MarshalAs(UnmanagedType.Bool)] bool bInherit);
 
-            [DllImport("userenv.dll", SetLastError = true)]
+            [LibraryImport("userenv.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            internal static extern bool DestroyEnvironmentBlock(
+            internal static partial bool DestroyEnvironmentBlock(
                 IntPtr lpEnvironment);
 
             [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
@@ -98,9 +98,9 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
                 Int32 dwTokenType,
                 ref IntPtr phNewToken);
 
-            [DllImport("kernel32.dll", SetLastError = true)]
+            [LibraryImport("kernel32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            internal static extern bool CloseHandle(IntPtr hObject);
+            internal static partial bool CloseHandle(IntPtr hObject);
 
             //[DllImport("kernel32.dll", EntryPoint = "RtlZeroMemory", SetLastError = false)]
             //public static extern void ZeroMemory(IntPtr dest, uint size);

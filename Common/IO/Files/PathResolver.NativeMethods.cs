@@ -5,10 +5,10 @@ namespace Wokhan.WindowsFirewallNotifier.Common.IO.Files
 {
     public static partial class PathResolver
     {
-        protected static class NativeMethods
+        protected static partial class NativeMethods
         {
-            [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-            internal static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTargetPath, uint ucchMax);
+            [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+            internal static unsafe partial uint QueryDosDevice(string lpDeviceName, char* lpTargetPath, uint ucchMax);
         }
     }
 }

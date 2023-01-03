@@ -92,7 +92,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP.UDP6
                 buffer = Marshal.AllocHGlobal((int)buffSize);
 
                 //GetOwnerModuleFromUdp6Entry might want the fields of TCPIP_OWNER_MODULE_INFO_BASIC to be NULL
-                IPHelper.NativeMethods.ZeroMemory(buffer, buffSize);
+                IPHelper.NativeMethods.RtlZeroMemory(buffer, buffSize);
 
                 var resp = NativeMethods.GetOwnerModuleFromUdp6Entry(ref row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, buffer, ref buffSize);
                 if (resp == 0)
