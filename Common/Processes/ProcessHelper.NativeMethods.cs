@@ -6,7 +6,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Processes
 {
     public static partial class ProcessHelper
     {
-        protected static class NativeMethods
+        protected static partial class NativeMethods
         {
             [Flags]
             internal enum ProcessAccessFlags : uint
@@ -84,19 +84,19 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Processes
                 public int Attributes;
             }
 
-            [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-            internal static extern IntPtr OpenSCManager(string? machineName, string? databaseName, uint dwAccess);
+            [LibraryImport("advapi32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+            internal static partial IntPtr OpenSCManager(string? machineName, string? databaseName, uint dwAccess);
 
-            [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-            internal static extern uint EnumServicesStatusEx(IntPtr hSCManager,
+            [LibraryImport("advapi32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+            internal static partial uint EnumServicesStatusEx(IntPtr hSCManager,
                    int infoLevel, uint dwServiceType,
                    uint dwServiceState, IntPtr lpServices, uint cbBufSize,
                    out uint pcbBytesNeeded, out uint lpServicesReturned,
                    ref uint lpResumeHandle, string? pszGroupName);
 
-            [DllImport("advapi32.dll", SetLastError = true)]
+            [LibraryImport("advapi32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            internal static extern bool CloseServiceHandle(IntPtr hSCObject);
+            internal static partial bool CloseServiceHandle(IntPtr hSCObject);
 
             [Flags]
             internal enum ACCESS_MASK : uint { DELETE = 0x00010000, READ_CONTROL = 0x00020000, WRITE_DAC = 0x00040000, WRITE_OWNER = 0x00080000, SYNCHRONIZE = 0x00100000, STANDARD_RIGHTS_REQUIRED = 0x000f0000, STANDARD_RIGHTS_READ = 0x00020000, STANDARD_RIGHTS_WRITE = 0x00020000, STANDARD_RIGHTS_EXECUTE = 0x00020000, STANDARD_RIGHTS_ALL = 0x001f0000, SPECIFIC_RIGHTS_ALL = 0x0000ffff, ACCESS_SYSTEM_SECURITY = 0x01000000, MAXIMUM_ALLOWED = 0x02000000, GENERIC_READ = 0x80000000, GENERIC_WRITE = 0x40000000, GENERIC_EXECUTE = 0x20000000, GENERIC_ALL = 0x10000000, DESKTOP_READOBJECTS = 0x00000001, DESKTOP_CREATEWINDOW = 0x00000002, DESKTOP_CREATEMENU = 0x00000004, DESKTOP_HOOKCONTROL = 0x00000008, DESKTOP_JOURNALRECORD = 0x00000010, DESKTOP_JOURNALPLAYBACK = 0x00000020, DESKTOP_ENUMERATE = 0x00000040, DESKTOP_WRITEOBJECTS = 0x00000080, DESKTOP_SWITCHDESKTOP = 0x00000100, WINSTA_ENUMDESKTOPS = 0x00000001, WINSTA_READATTRIBUTES = 0x00000002, WINSTA_ACCESSCLIPBOARD = 0x00000004, WINSTA_CREATEDESKTOP = 0x00000008, WINSTA_WRITEATTRIBUTES = 0x00000010, WINSTA_ACCESSGLOBALATOMS = 0x00000020, WINSTA_EXITWINDOWS = 0x00000040, WINSTA_ENUMERATE = 0x00000100, WINSTA_READSCREEN = 0x00000200, WINSTA_ALL_ACCESS = 0x0000037f }
@@ -165,47 +165,47 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Processes
             internal static extern uint GetPackageFullName(IntPtr hProcess, ref uint packageFullNameLength, StringBuilder packageFullName);*/
 
             //Note: Only exists on Windows 8 and higher
-            [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-            internal static extern uint GetPackageFamilyName(IntPtr hProcess, ref uint packageFamilyNameLength, StringBuilder packageFamilyName);
+            [LibraryImport("kernel32.dll")]
+            internal static unsafe partial uint GetPackageFamilyName(IntPtr hProcess, ref uint packageFamilyNameLength, char* packageFamilyName);
 
             //Note: Only exists on Windows 8 and higher
-            [DllImport("userenv.dll", CharSet = CharSet.Unicode)]
-            internal static extern uint DeriveAppContainerSidFromAppContainerName(string pszAppContainerName, out IntPtr ppsidAppContainerSid);
+            [LibraryImport("userenv.dll", StringMarshalling = StringMarshalling.Utf16)]
+            internal static partial uint DeriveAppContainerSidFromAppContainerName(string pszAppContainerName, out IntPtr ppsidAppContainerSid);
 
             internal const uint ERROR_SUCCESS = 0;
             internal const uint APPMODEL_ERROR_NO_PACKAGE = 15700;
             internal const uint S_OK = 0x00000000;
 
-            [DllImport("kernel32.dll", SetLastError = true)]
-            internal static extern IntPtr OpenProcess(ProcessAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, uint dwProcessId);
+            [LibraryImport("kernel32.dll", SetLastError = true)]
+            internal static partial IntPtr OpenProcess(ProcessAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, uint dwProcessId);
 
             internal const int TOKEN_QUERY = 0X00000008;
 
-            [DllImport("kernel32.dll", SetLastError = true)]
+            [LibraryImport("kernel32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            internal static extern bool OpenProcessToken(IntPtr ProcessHandle, uint DesiredAccess, out IntPtr TokenHandle);
+            internal static partial bool OpenProcessToken(IntPtr ProcessHandle, uint DesiredAccess, out IntPtr TokenHandle);
 
-            [DllImport("advapi32", SetLastError = true, CharSet = CharSet.Auto)]
+            [LibraryImport("advapi32", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            internal static extern bool GetTokenInformation(IntPtr hToken, TOKEN_INFORMATION_CLASS TokenInformationClass, IntPtr TokenInformation, uint dwTokenInfoLength, ref uint dwReturnLength);
+            internal static partial bool GetTokenInformation(IntPtr hToken, TOKEN_INFORMATION_CLASS TokenInformationClass, IntPtr TokenInformation, uint dwTokenInfoLength, ref uint dwReturnLength);
 
-            [DllImport("advapi32", SetLastError = true, CharSet = CharSet.Auto)]
+            [LibraryImport("advapi32", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            internal static extern bool ConvertSidToStringSid(IntPtr pSID, [MarshalAs(UnmanagedType.LPTStr)] out string pStringSid);
+            internal static partial bool ConvertSidToStringSid(IntPtr pSID, [MarshalAs(UnmanagedType.LPTStr)] out string pStringSid);
 
-            [DllImport("advapi32", CharSet = CharSet.Auto)]
-            internal static extern IntPtr FreeSid(IntPtr pSid);
+            [LibraryImport("advapi32")]
+            internal static partial IntPtr FreeSid(IntPtr pSid);
 
-            [DllImport("kernel32.dll", SetLastError = true)]
+            [LibraryImport("kernel32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            internal static extern bool CloseHandle(IntPtr hObject);
+            internal static partial bool CloseHandle(IntPtr hObject);
 
-            [DllImport("user32.dll")]
+            [LibraryImport("user32.dll")]
             [return: MarshalAs(UnmanagedType.Bool)]
-            internal static extern bool ShowWindow(IntPtr hWnd, ShowWindowEnum flags);
+            internal static partial bool ShowWindow(IntPtr hWnd, ShowWindowEnum flags);
 
-            [DllImport("user32.dll")]
-            internal static extern int SetForegroundWindow(IntPtr hwnd);
+            [LibraryImport("user32.dll")]
+            internal static partial int SetForegroundWindow(IntPtr hwnd);
 
             internal enum ShowWindowEnum
             {

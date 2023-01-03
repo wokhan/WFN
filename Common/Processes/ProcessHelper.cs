@@ -344,26 +344,30 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Processes
             {
                 //Based on: https://github.com/jimschubert/clr-profiler/blob/master/src/CLRProfiler45Source/WindowsStoreAppHelper/WindowsStoreAppHelper.cs
                 uint packageFamilyNameLength = 0;
-                StringBuilder packageFamilyNameBld = new StringBuilder();
-
-                uint ret = NativeMethods.GetPackageFamilyName(hProcess, ref packageFamilyNameLength, packageFamilyNameBld);
-                if ((ret == NativeMethods.APPMODEL_ERROR_NO_PACKAGE) || (packageFamilyNameLength == 0))
+                string packageFamilyName;
+                unsafe
                 {
-                    // Not a WindowsStoreApp process
-                    return String.Empty;
-                }
+                    uint retGetPFName = NativeMethods.GetPackageFamilyName(hProcess, ref packageFamilyNameLength, null);
+                    if ((retGetPFName == NativeMethods.APPMODEL_ERROR_NO_PACKAGE) || (packageFamilyNameLength == 0))
+                    {
+                        // Not a WindowsStoreApp process
+                        return String.Empty;
+                    }
 
-                // Call again, now that we know the size
-                packageFamilyNameBld = new StringBuilder((int)packageFamilyNameLength);
-                ret = NativeMethods.GetPackageFamilyName(hProcess, ref packageFamilyNameLength, packageFamilyNameBld);
-                if (ret != NativeMethods.ERROR_SUCCESS)
-                {
-                    LogHelper.Warning("Unable to retrieve process package id: failed to retrieve family package name!");
-                    return String.Empty;
+                    // Call again, now that we know the size
+                    char* packageFamilyNameBld = stackalloc char[(int)packageFamilyNameLength];
+                    retGetPFName = NativeMethods.GetPackageFamilyName(hProcess, ref packageFamilyNameLength, packageFamilyNameBld);
+                    if (retGetPFName != NativeMethods.ERROR_SUCCESS)
+                    {
+                        LogHelper.Warning("Unable to retrieve process package id: failed to retrieve family package name!");
+                        return String.Empty;
+                    }
+
+                    packageFamilyName = new String(packageFamilyNameBld);
                 }
 
                 IntPtr pSID;
-                ret = NativeMethods.DeriveAppContainerSidFromAppContainerName(packageFamilyNameBld.ToString(), out pSID);
+                uint ret = NativeMethods.DeriveAppContainerSidFromAppContainerName(packageFamilyName, out pSID);
                 if (ret != NativeMethods.S_OK)
                 {
                     LogHelper.Warning("Unable to retrieve process package id: failed to retrieve package SID!");

@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct MIB_TCPROW_OWNER_MODULE : IConnectionOwnerInfo
+    public class MIB_TCPROW_OWNER_MODULE : IConnectionOwnerInfo
     {
         internal ConnectionStatus _state;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]

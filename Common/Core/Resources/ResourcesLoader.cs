@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Core.Resources
 {
@@ -9,10 +8,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Core.Resources
         {
             if (src?.StartsWith("@") ?? false)
             {
-                var sb = new StringBuilder(1024); //FIXME: Hardcoded maximum string size!
-                if (0 == NativeMethods.SHLoadIndirectString(Environment.ExpandEnvironmentVariables(src), sb, (uint)sb.Capacity, IntPtr.Zero))
+                unsafe
                 {
-                    src = sb.ToString();
+                    char* sb = stackalloc char[1024]; //FIXME: Hardcoded maximum string size!
+                    if (0 == NativeMethods.SHLoadIndirectString(Environment.ExpandEnvironmentVariables(src), sb, (uint)1024, IntPtr.Zero))
+                    {
+                        src = new String(sb);
+                    }
                 }
 
             }

@@ -5,7 +5,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP
     public partial class TCPHelper
     {
         [StructLayout(LayoutKind.Sequential)]
-        public struct MIB_TCPROW
+        public class MIB_TCPROW
         {
             public ConnectionStatus State;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]

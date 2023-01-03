@@ -25,17 +25,21 @@ namespace Wokhan.WindowsFirewallNotifier.Common.IO.Files
             {
                 var drives = Directory.GetLogicalDrives();
                 deviceNameMap = new Dictionary<string, string>(drives.Length);
-                var sb = new StringBuilder(MAX_PATH + 1);
                 string trimmedDrive;
+                var len = MAX_PATH + 1;
 
-                foreach (var drive in drives)
+                unsafe
                 {
-                    trimmedDrive = drive.TrimEnd('\\');
-                    if (NativeMethods.QueryDosDevice(trimmedDrive, sb, (uint)sb.Capacity) == 0)
+                    char* sb = stackalloc char[len];
+                    foreach (var drive in drives)
                     {
-                        throw new Win32Exception(Marshal.GetLastWin32Error(), "Call to QueryDosDevice failed!");
+                        trimmedDrive = drive.TrimEnd('\\');
+                        if (NativeMethods.QueryDosDevice(trimmedDrive, sb, (uint)len) == 0)
+                        {
+                            throw new Win32Exception(Marshal.GetLastWin32Error(), "Call to QueryDosDevice failed!");
+                        }
+                        deviceNameMap.Add(new String(sb).ToLower() + "\\", trimmedDrive); //FIXME: Switch to ToUpper?
                     }
-                    deviceNameMap.Add(sb.ToString().ToLower() + "\\", trimmedDrive); //FIXME: Switch to ToUpper?
                 }
             }
             catch (Exception e)
