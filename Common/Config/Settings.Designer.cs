@@ -356,7 +356,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Config {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Automatic")]
         public string Theme {
             get {
                 return ((string)(this["Theme"]));

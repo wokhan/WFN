@@ -156,7 +156,7 @@
                     <RadioButton GroupName="rdbOutAll" Padding="0,0,0,10" IsChecked="{Binding AllIsOutAllowed}" Content="Allow" />
                     <RadioButton GroupName="rdbOutAll" IsChecked="{Binding AllIsOutBlocked}" Style="{StaticResource BlockPromptContentStyle}" />
                 </StackPanel>
-                <Rectangle Height="35" Fill="LightGray" Opacity="0.6" Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="7" />
+                <Rectangle Height="35" Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Opacity="0.6" Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="7" />
                 <CheckBox x:Name="tgStartNotifier" IsEnabled="{Binding OneIsOutBlocked}" Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="7" HorizontalAlignment="Center" Content="Enable notifications (applies for all profiles)*">
                     <CheckBox.Style>
                         <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
