@@ -80,5 +80,10 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows
 
             button.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri(ThemeHelper.GetURIForTheme(theme)) });
         }
+
+        private void SelectTheme(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+
+        }
     }
 }

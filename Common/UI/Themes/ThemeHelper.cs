@@ -3,26 +3,30 @@
 using System;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls.Primitives;
 
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.UI.Themes
 {
-    public static partial class ThemeHelper
+    public static class ThemeHelper
     {
+        public const string THEME_LIGHT = "Light";
+        public const string THEME_DARK = "Dark";
+        public const string THEME_SYSTEM = "System";
+        public const string THEME_AUTO = "Automatic";
+
         public static string GetActiveTheme()
         {
-            if (Settings.Default.Theme is null or "Automatic")
+            if (Settings.Default.Theme is null or "" or THEME_AUTO)
             {
                 if (SystemParameters.HighContrast)
                 {
-                    return "System";
+                    return THEME_SYSTEM;
                 }
 
                 using (RegistryKey? key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"))
                 {
-                    return (int?)key?.GetValue("AppsUseLightTheme") == 0 ? "Dark" : "Light";
+                    return (int?)key?.GetValue("AppsUseLightTheme") == 0 ? THEME_DARK : THEME_LIGHT;
                 }
             }
             else
@@ -38,7 +42,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.UI.Themes
 
         public static string GetURIForTheme(string themeName)
         {
-            if (themeName == "Automatic")
+            if (themeName == THEME_AUTO)
             {
                 return GetURIForCurrentTheme();
             }

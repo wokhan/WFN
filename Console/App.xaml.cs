@@ -30,10 +30,12 @@ namespace Wokhan.WindowsFirewallNotifier.Console
             Settings.Default.PropertyChanged += SettingsChanged;
         }
 
+        private string currentTheme = "Automatic";
         private void SettingsChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(Settings.Theme))
+            if (e.PropertyName == nameof(Settings.Theme) && currentTheme != Settings.Default.Theme)
             {
+                currentTheme = Settings.Default.Theme;
                 Resources.MergedDictionaries[0].Source = new Uri(ThemeHelper.GetURIForCurrentTheme());
             }
         }
