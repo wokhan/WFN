@@ -6,70 +6,69 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
+namespace Wokhan.WindowsFirewallNotifier.Common.Helpers;
+
+public static partial class UAC
 {
-    public static partial class UAC
+    protected static partial class NativeMethods
     {
-        protected static partial class NativeMethods
+        internal const string UAC_REGISTRY_KEY = "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System";
+        internal const string UAC_REGISTRY_VALUE = "EnableLUA";
+        
+        internal const uint STANDARD_RIGHTS_READ = 0x00020000;
+        internal const uint TOKEN_QUERY = 0x0008;
+        //internal const uint TOKEN_READ = (STANDARD_RIGHTS_READ | TOKEN_QUERY);
+
+        [LibraryImport("advapi32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static partial bool OpenProcessToken(IntPtr ProcessHandle, uint DesiredAccess, out IntPtr TokenHandle);
+
+        [LibraryImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static partial bool CloseHandle(IntPtr hObject);
+
+        [LibraryImport("advapi32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static partial bool GetTokenInformation(IntPtr TokenHandle, TOKEN_INFORMATION_CLASS TokenInformationClass, IntPtr TokenInformation, uint TokenInformationLength, out uint ReturnLength);
+
+        internal enum TOKEN_INFORMATION_CLASS
         {
-            internal const string UAC_REGISTRY_KEY = "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System";
-            internal const string UAC_REGISTRY_VALUE = "EnableLUA";
-            
-            internal const uint STANDARD_RIGHTS_READ = 0x00020000;
-            internal const uint TOKEN_QUERY = 0x0008;
-            //internal const uint TOKEN_READ = (STANDARD_RIGHTS_READ | TOKEN_QUERY);
+            TokenUser = 1,
+            TokenGroups,
+            TokenPrivileges,
+            TokenOwner,
+            TokenPrimaryGroup,
+            TokenDefaultDacl,
+            TokenSource,
+            TokenType,
+            TokenImpersonationLevel,
+            TokenStatistics,
+            TokenRestrictedSids,
+            TokenSessionId,
+            TokenGroupsAndPrivileges,
+            TokenSessionReference,
+            TokenSandBoxInert,
+            TokenAuditPolicy,
+            TokenOrigin,
+            TokenElevationType,
+            TokenLinkedToken,
+            TokenElevation,
+            TokenHasRestrictions,
+            TokenAccessInformation,
+            TokenVirtualizationAllowed,
+            TokenVirtualizationEnabled,
+            TokenIntegrityLevel,
+            TokenUIAccess,
+            TokenMandatoryPolicy,
+            TokenLogonSid,
+            MaxTokenInfoClass
+        }
 
-            [LibraryImport("advapi32.dll", SetLastError = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            internal static partial bool OpenProcessToken(IntPtr ProcessHandle, uint DesiredAccess, out IntPtr TokenHandle);
-
-            [LibraryImport("kernel32.dll", SetLastError = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            internal static partial bool CloseHandle(IntPtr hObject);
-
-            [LibraryImport("advapi32.dll", SetLastError = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            internal static partial bool GetTokenInformation(IntPtr TokenHandle, TOKEN_INFORMATION_CLASS TokenInformationClass, IntPtr TokenInformation, uint TokenInformationLength, out uint ReturnLength);
-
-            internal enum TOKEN_INFORMATION_CLASS
-            {
-                TokenUser = 1,
-                TokenGroups,
-                TokenPrivileges,
-                TokenOwner,
-                TokenPrimaryGroup,
-                TokenDefaultDacl,
-                TokenSource,
-                TokenType,
-                TokenImpersonationLevel,
-                TokenStatistics,
-                TokenRestrictedSids,
-                TokenSessionId,
-                TokenGroupsAndPrivileges,
-                TokenSessionReference,
-                TokenSandBoxInert,
-                TokenAuditPolicy,
-                TokenOrigin,
-                TokenElevationType,
-                TokenLinkedToken,
-                TokenElevation,
-                TokenHasRestrictions,
-                TokenAccessInformation,
-                TokenVirtualizationAllowed,
-                TokenVirtualizationEnabled,
-                TokenIntegrityLevel,
-                TokenUIAccess,
-                TokenMandatoryPolicy,
-                TokenLogonSid,
-                MaxTokenInfoClass
-            }
-
-            internal enum TOKEN_ELEVATION_TYPE
-            {
-                TokenElevationTypeDefault = 1,
-                TokenElevationTypeFull,
-                TokenElevationTypeLimited
-            }
+        internal enum TOKEN_ELEVATION_TYPE
+        {
+            TokenElevationTypeDefault = 1,
+            TokenElevationTypeFull,
+            TokenElevationTypeLimited
         }
     }
 }

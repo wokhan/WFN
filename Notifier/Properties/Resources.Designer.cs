@@ -8,186 +8,185 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Wokhan.WindowsFirewallNotifier.Notifier.Properties {
-    using System;
+namespace Wokhan.WindowsFirewallNotifier.Notifier.Properties; 
+using System;
+
+
+/// <summary>
+///   Une classe de ressource fortement typée destinée, entre autres, à la consultation des chaînes localisées.
+/// </summary>
+// Cette classe a été générée automatiquement par la classe StronglyTypedResourceBuilder
+// à l'aide d'un outil, tel que ResGen ou Visual Studio.
+// Pour ajouter ou supprimer un membre, modifiez votre fichier .ResX, puis réexécutez ResGen
+// avec l'option /str ou régénérez votre projet VS.
+[global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+internal class Resources {
     
+    private static global::System.Resources.ResourceManager resourceMan;
+    
+    private static global::System.Globalization.CultureInfo resourceCulture;
+    
+    [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+    internal Resources() {
+    }
     
     /// <summary>
-    ///   Une classe de ressource fortement typée destinée, entre autres, à la consultation des chaînes localisées.
+    ///   Retourne l'instance ResourceManager mise en cache utilisée par cette classe.
     /// </summary>
-    // Cette classe a été générée automatiquement par la classe StronglyTypedResourceBuilder
-    // à l'aide d'un outil, tel que ResGen ou Visual Studio.
-    // Pour ajouter ou supprimer un membre, modifiez votre fichier .ResX, puis réexécutez ResGen
-    // avec l'option /str ou régénérez votre projet VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
-        
-        private static global::System.Resources.ResourceManager resourceMan;
-        
-        private static global::System.Globalization.CultureInfo resourceCulture;
-        
-        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources() {
+    [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+    internal static global::System.Resources.ResourceManager ResourceManager {
+        get {
+            if (object.ReferenceEquals(resourceMan, null)) {
+                global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Wokhan.WindowsFirewallNotifier.Notifier.Properties.Resources", typeof(Resources).Assembly);
+                resourceMan = temp;
+            }
+            return resourceMan;
         }
-        
-        /// <summary>
-        ///   Retourne l'instance ResourceManager mise en cache utilisée par cette classe.
-        /// </summary>
-        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
-            get {
-                if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Wokhan.WindowsFirewallNotifier.Notifier.Properties.Resources", typeof(Resources).Assembly);
-                    resourceMan = temp;
-                }
-                return resourceMan;
-            }
+    }
+    
+    /// <summary>
+    ///   Remplace la propriété CurrentUICulture du thread actuel pour toutes
+    ///   les recherches de ressources à l'aide de cette classe de ressource fortement typée.
+    /// </summary>
+    [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+    internal static global::System.Globalization.CultureInfo Culture {
+        get {
+            return resourceCulture;
         }
-        
-        /// <summary>
-        ///   Remplace la propriété CurrentUICulture du thread actuel pour toutes
-        ///   les recherches de ressources à l'aide de cette classe de ressource fortement typée.
-        /// </summary>
-        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
-            get {
-                return resourceCulture;
-            }
-            set {
-                resourceCulture = value;
-            }
+        set {
+            resourceCulture = value;
         }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
-        /// </summary>
-        internal static System.Drawing.Icon AppIcon {
-            get {
-                object obj = ResourceManager.GetObject("AppIcon", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
+    }
+    
+    /// <summary>
+    ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+    /// </summary>
+    internal static System.Drawing.Icon AppIcon {
+        get {
+            object obj = ResourceManager.GetObject("AppIcon", resourceCulture);
+            return ((System.Drawing.Icon)(obj));
         }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
-        /// </summary>
-        internal static System.Drawing.Icon TrayIcon {
-            get {
-                object obj = ResourceManager.GetObject("TrayIcon", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
+    }
+    
+    /// <summary>
+    ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+    /// </summary>
+    internal static System.Drawing.Icon TrayIcon {
+        get {
+            object obj = ResourceManager.GetObject("TrayIcon", resourceCulture);
+            return ((System.Drawing.Icon)(obj));
         }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
-        /// </summary>
-        internal static System.Drawing.Icon TrayIcon1 {
-            get {
-                object obj = ResourceManager.GetObject("TrayIcon1", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
+    }
+    
+    /// <summary>
+    ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+    /// </summary>
+    internal static System.Drawing.Icon TrayIcon1 {
+        get {
+            object obj = ResourceManager.GetObject("TrayIcon1", resourceCulture);
+            return ((System.Drawing.Icon)(obj));
         }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
-        /// </summary>
-        internal static System.Drawing.Icon TrayIcon2 {
-            get {
-                object obj = ResourceManager.GetObject("TrayIcon2", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
+    }
+    
+    /// <summary>
+    ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+    /// </summary>
+    internal static System.Drawing.Icon TrayIcon2 {
+        get {
+            object obj = ResourceManager.GetObject("TrayIcon2", resourceCulture);
+            return ((System.Drawing.Icon)(obj));
         }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
-        /// </summary>
-        internal static System.Drawing.Icon TrayIcon21 {
-            get {
-                object obj = ResourceManager.GetObject("TrayIcon21", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
+    }
+    
+    /// <summary>
+    ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+    /// </summary>
+    internal static System.Drawing.Icon TrayIcon21 {
+        get {
+            object obj = ResourceManager.GetObject("TrayIcon21", resourceCulture);
+            return ((System.Drawing.Icon)(obj));
         }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
-        /// </summary>
-        internal static System.Drawing.Icon TrayIcon22 {
-            get {
-                object obj = ResourceManager.GetObject("TrayIcon22", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
+    }
+    
+    /// <summary>
+    ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+    /// </summary>
+    internal static System.Drawing.Icon TrayIcon22 {
+        get {
+            object obj = ResourceManager.GetObject("TrayIcon22", resourceCulture);
+            return ((System.Drawing.Icon)(obj));
         }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
-        /// </summary>
-        internal static System.Drawing.Icon TrayIcon23 {
-            get {
-                object obj = ResourceManager.GetObject("TrayIcon23", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
+    }
+    
+    /// <summary>
+    ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+    /// </summary>
+    internal static System.Drawing.Icon TrayIcon23 {
+        get {
+            object obj = ResourceManager.GetObject("TrayIcon23", resourceCulture);
+            return ((System.Drawing.Icon)(obj));
         }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
-        /// </summary>
-        internal static System.Drawing.Icon TrayIcon24 {
-            get {
-                object obj = ResourceManager.GetObject("TrayIcon24", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
+    }
+    
+    /// <summary>
+    ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+    /// </summary>
+    internal static System.Drawing.Icon TrayIcon24 {
+        get {
+            object obj = ResourceManager.GetObject("TrayIcon24", resourceCulture);
+            return ((System.Drawing.Icon)(obj));
         }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
-        /// </summary>
-        internal static System.Drawing.Icon TrayIcon2off {
-            get {
-                object obj = ResourceManager.GetObject("TrayIcon2off", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
+    }
+    
+    /// <summary>
+    ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+    /// </summary>
+    internal static System.Drawing.Icon TrayIcon2off {
+        get {
+            object obj = ResourceManager.GetObject("TrayIcon2off", resourceCulture);
+            return ((System.Drawing.Icon)(obj));
         }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
-        /// </summary>
-        internal static System.Drawing.Icon TrayIcon3 {
-            get {
-                object obj = ResourceManager.GetObject("TrayIcon3", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
+    }
+    
+    /// <summary>
+    ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+    /// </summary>
+    internal static System.Drawing.Icon TrayIcon3 {
+        get {
+            object obj = ResourceManager.GetObject("TrayIcon3", resourceCulture);
+            return ((System.Drawing.Icon)(obj));
         }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
-        /// </summary>
-        internal static System.Drawing.Icon TrayIconBlocked2 {
-            get {
-                object obj = ResourceManager.GetObject("TrayIconBlocked2", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
+    }
+    
+    /// <summary>
+    ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+    /// </summary>
+    internal static System.Drawing.Icon TrayIconBlocked2 {
+        get {
+            object obj = ResourceManager.GetObject("TrayIconBlocked2", resourceCulture);
+            return ((System.Drawing.Icon)(obj));
         }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
-        /// </summary>
-        internal static System.Drawing.Icon TrayIconBlocked3 {
-            get {
-                object obj = ResourceManager.GetObject("TrayIconBlocked3", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
+    }
+    
+    /// <summary>
+    ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+    /// </summary>
+    internal static System.Drawing.Icon TrayIconBlocked3 {
+        get {
+            object obj = ResourceManager.GetObject("TrayIconBlocked3", resourceCulture);
+            return ((System.Drawing.Icon)(obj));
         }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
-        /// </summary>
-        internal static System.Drawing.Icon TrayIconPending {
-            get {
-                object obj = ResourceManager.GetObject("TrayIconPending", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
+    }
+    
+    /// <summary>
+    ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+    /// </summary>
+    internal static System.Drawing.Icon TrayIconPending {
+        get {
+            object obj = ResourceManager.GetObject("TrayIconPending", resourceCulture);
+            return ((System.Drawing.Icon)(obj));
         }
     }
 }

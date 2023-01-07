@@ -6,33 +6,32 @@ using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
-namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
+namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
+
+/// <summary>
+/// Interaction logic for AdapterInfo.xaml
+/// </summary>
+public partial class AdapterInfo : TimerBasedPage, INotifyPropertyChanged
 {
-    /// <summary>
-    /// Interaction logic for AdapterInfo.xaml
-    /// </summary>
-    public partial class AdapterInfo : TimerBasedPage, INotifyPropertyChanged
+
+    private List<ExposedInterfaceView> interfacesCollection = NetworkInterface.GetAllNetworkInterfaces().Select(n => new ExposedInterfaceView(n)).OrderByDescending(n => n.Information.OperationalStatus.ToString()).ToList();
+
+    public IEnumerable<ExposedInterfaceView> AllInterfaces => interfacesCollection;
+
+    public AdapterInfo()
     {
-    
-        private List<ExposedInterfaceView> interfacesCollection = NetworkInterface.GetAllNetworkInterfaces().Select(n => new ExposedInterfaceView(n)).OrderByDescending(n => n.Information.OperationalStatus.ToString()).ToList();
+        InitializeComponent();
+    }
 
-        public IEnumerable<ExposedInterfaceView> AllInterfaces => interfacesCollection;
-
-        public AdapterInfo()
+    protected override async Task OnTimerTick(object sender, EventArgs e)
+    {
+        var allnet = NetworkInterface.GetAllNetworkInterfaces();
+        foreach (var i in allnet)
         {
-            InitializeComponent();
-        }
-
-        protected override async Task OnTimerTick(object sender, EventArgs e)
-        {
-            var allnet = NetworkInterface.GetAllNetworkInterfaces();
-            foreach (var i in allnet)
+            var existing = interfacesCollection.SingleOrDefault(c => c.Information.Id == i.Id);
+            if (existing != null)
             {
-                var existing = interfacesCollection.SingleOrDefault(c => c.Information.Id == i.Id);
-                if (existing != null)
-                {
-                    existing.UpdateInner(i);
-                }
+                existing.UpdateInner(i);
             }
         }
     }

@@ -11,126 +11,125 @@ using System.Windows.Media;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
-namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages
+namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
+
+/// <summary>
+/// Interaction logic for Connections.xaml
+/// </summary>
+public partial class Connections : TimerBasedPage
 {
-    /// <summary>
-    /// Interaction logic for Connections.xaml
-    /// </summary>
-    public partial class Connections : TimerBasedPage
+    private const double ConnectionTimeoutRemove = 5.0; //seconds
+    private const double ConnectionTimeoutDying = 2.0; //seconds
+    private const double ConnectionTimeoutNew = 1000.0; //milliseconds
+
+    private readonly object locker = new object();
+    private readonly object uisynclocker = new object();
+
+    public ObservableCollection<Connection> AllConnections { get; } = new ObservableCollection<Connection>();
+
+    public Connections()
     {
-        private const double ConnectionTimeoutRemove = 5.0; //seconds
-        private const double ConnectionTimeoutDying = 2.0; //seconds
-        private const double ConnectionTimeoutNew = 1000.0; //milliseconds
+        BindingOperations.EnableCollectionSynchronization(AllConnections, uisynclocker);
 
-        private readonly object locker = new object();
-        private readonly object uisynclocker = new object();
+        InitializeComponent();
+    }
 
-        public ObservableCollection<Connection> AllConnections { get; } = new ObservableCollection<Connection>();
+    private void Components_VisibilityChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        firstRow.MaxHeight = connections.IsVisible ? double.PositiveInfinity : 1;
+        separatorRow.MaxHeight = connections.IsVisible ? double.PositiveInfinity : 0;
 
-        public Connections()
+        switch ((map.IsVisible, graph.IsVisible))
         {
-            BindingOperations.EnableCollectionSynchronization(AllConnections, uisynclocker);
+            // All hidden
+            case (false, false):
+                secondRow.MaxHeight = 0;
+                separatorRow.MaxHeight = 0;
+                graphColumn.MaxWidth = double.PositiveInfinity;
+                separatorColumn.MaxWidth = 0;
+                mapColumn.MaxWidth = 0;
+                break;
 
-            InitializeComponent();
+            // Map is visible
+            case (true, false):
+                secondRow.MaxHeight = double.PositiveInfinity;
+                // Workaround: if set to 0, total width will be wrongly set
+                graphColumn.MaxWidth = 1;
+                separatorColumn.MaxWidth = 0;
+                mapColumn.MaxWidth = double.PositiveInfinity;
+                break;
+
+            // Graph is visible
+            case (false, true):
+                secondRow.MaxHeight = double.PositiveInfinity;
+                graphColumn.MaxWidth = double.PositiveInfinity;
+                separatorColumn.MaxWidth = 0;
+                mapColumn.MaxWidth = 0;
+                break;
+
+            // Both are visible
+            case (true, true):
+                secondRow.MaxHeight = double.PositiveInfinity;
+                graphColumn.MaxWidth = double.PositiveInfinity;
+                separatorColumn.MaxWidth = double.PositiveInfinity;
+                mapColumn.MaxWidth = double.PositiveInfinity;
+                break;
         }
+    }
 
-        private void Components_VisibilityChanged(object sender, DependencyPropertyChangedEventArgs e)
+    protected override async Task OnTimerTick(object sender, EventArgs e)
+    {
+        await Task.Run(() =>
         {
-            firstRow.MaxHeight = connections.IsVisible ? double.PositiveInfinity : 1;
-            separatorRow.MaxHeight = connections.IsVisible ? double.PositiveInfinity : 0;
-
-            switch ((map.IsVisible, graph.IsVisible))
+            foreach (var c in IPHelper.GetAllConnections())
             {
-                // All hidden
-                case (false, false):
-                    secondRow.MaxHeight = 0;
-                    separatorRow.MaxHeight = 0;
-                    graphColumn.MaxWidth = double.PositiveInfinity;
-                    separatorColumn.MaxWidth = 0;
-                    mapColumn.MaxWidth = 0;
-                    break;
-
-                // Map is visible
-                case (true, false):
-                    secondRow.MaxHeight = double.PositiveInfinity;
-                    // Workaround: if set to 0, total width will be wrongly set
-                    graphColumn.MaxWidth = 1;
-                    separatorColumn.MaxWidth = 0;
-                    mapColumn.MaxWidth = double.PositiveInfinity;
-                    break;
-
-                // Graph is visible
-                case (false, true):
-                    secondRow.MaxHeight = double.PositiveInfinity;
-                    graphColumn.MaxWidth = double.PositiveInfinity;
-                    separatorColumn.MaxWidth = 0;
-                    mapColumn.MaxWidth = 0;
-                    break;
-
-                // Both are visible
-                case (true, true):
-                    secondRow.MaxHeight = double.PositiveInfinity;
-                    graphColumn.MaxWidth = double.PositiveInfinity;
-                    separatorColumn.MaxWidth = double.PositiveInfinity;
-                    mapColumn.MaxWidth = double.PositiveInfinity;
-                    break;
+                AddOrUpdateConnection(c);
             }
-        }
 
-        protected override async Task OnTimerTick(object sender, EventArgs e)
-        {
-            await Task.Run(() =>
+            for (int i = AllConnections.Count - 1; i >= 0; i--)
             {
-                foreach (var c in IPHelper.GetAllConnections())
+                var item = AllConnections[i];
+                double elapsed = DateTime.Now.Subtract(item.LastSeen).TotalSeconds;
+                if (elapsed > ConnectionTimeoutRemove)
                 {
-                    AddOrUpdateConnection(c);
+                    lock (locker)
+                        AllConnections.Remove(item);
                 }
-
-                for (int i = AllConnections.Count - 1; i >= 0; i--)
+                else if (elapsed > ConnectionTimeoutDying)
                 {
-                    var item = AllConnections[i];
-                    double elapsed = DateTime.Now.Subtract(item.LastSeen).TotalSeconds;
-                    if (elapsed > ConnectionTimeoutRemove)
-                    {
-                        lock (locker)
-                            AllConnections.Remove(item);
-                    }
-                    else if (elapsed > ConnectionTimeoutDying)
-                    {
-                        item.IsDying = true;
-                    }
+                    item.IsDying = true;
                 }
+            }
 
-                if (graph.IsVisible) graph.UpdateGraph();
-                if (map.IsVisible) map.UpdateMap();
-            }).ConfigureAwait(false);
-        }
+            if (graph.IsVisible) graph.UpdateGraph();
+            if (map.IsVisible) map.UpdateMap();
+        }).ConfigureAwait(false);
+    }
 
 
-        //TODO: let the user pick a color palette for the bandwidth graph & connection
-        private static List<Color> Colors = OxyPlot.OxyPalettes.Rainbow(64).Colors.Select(c => Color.FromArgb(c.A, c.R, c.G, c.B)).ToList();
+    //TODO: let the user pick a color palette for the bandwidth graph & connection
+    private static List<Color> Colors = OxyPlot.OxyPalettes.Rainbow(64).Colors.Select(c => Color.FromArgb(c.A, c.R, c.G, c.B)).ToList();
 
-        private void AddOrUpdateConnection(IConnectionOwnerInfo connectionInfo)
+    private void AddOrUpdateConnection(IConnectionOwnerInfo connectionInfo)
+    {
+        Connection lvi;
+        // TEMP: test to avoid enumerating while modifying (might result in a deadlock, to test carefully!)
+        lock (locker)
+            lvi = AllConnections.FirstOrDefault(l => l.Pid == connectionInfo.OwningPid && l.Protocol == connectionInfo.Protocol && l.SourcePort == connectionInfo.LocalPort.ToString());
+
+        if (lvi != null)
         {
-            Connection lvi;
-            // TEMP: test to avoid enumerating while modifying (might result in a deadlock, to test carefully!)
+            if (DateTime.Now.Subtract(lvi.LastSeen).TotalMilliseconds > ConnectionTimeoutNew)
+            {
+                lvi.IsNew = false;
+            }
+
+            lvi.UpdateValues(connectionInfo);
+        }
+        else
+        {
             lock (locker)
-                lvi = AllConnections.FirstOrDefault(l => l.Pid == connectionInfo.OwningPid && l.Protocol == connectionInfo.Protocol && l.SourcePort == connectionInfo.LocalPort.ToString());
-
-            if (lvi != null)
-            {
-                if (DateTime.Now.Subtract(lvi.LastSeen).TotalMilliseconds > ConnectionTimeoutNew)
-                {
-                    lvi.IsNew = false;
-                }
-
-                lvi.UpdateValues(connectionInfo);
-            }
-            else
-            {
-                lock (locker)
-                    AllConnections.Add(new Connection(connectionInfo) { Color = Colors[AllConnections.Count % Colors.Count] });
-            }
+                AllConnections.Add(new Connection(connectionInfo) { Color = Colors[AllConnections.Count % Colors.Count] });
         }
     }
 }

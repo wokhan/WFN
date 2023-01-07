@@ -10,82 +10,81 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 
-namespace Wokhan.WindowsFirewallNotifier.Common.Helpers
+namespace Wokhan.WindowsFirewallNotifier.Common.Helpers;
+
+public static partial class UAC
 {
-    public static partial class UAC
+    public static bool CheckUAC()
     {
-        public static bool CheckUAC()
-        {
-            using RegistryKey uacKey = Registry.LocalMachine.OpenSubKey(NativeMethods.UAC_REGISTRY_KEY, false);
-            
-            return uacKey.GetValue(NativeMethods.UAC_REGISTRY_VALUE).Equals(1);
-        }
+        using RegistryKey uacKey = Registry.LocalMachine.OpenSubKey(NativeMethods.UAC_REGISTRY_KEY, false);
+        
+        return uacKey.GetValue(NativeMethods.UAC_REGISTRY_VALUE).Equals(1);
+    }
 
-        public static bool CheckProcessElevated()
+    public static bool CheckProcessElevated()
+    {
+        if (CheckUAC())
         {
-            if (CheckUAC())
+            IntPtr tokenHandle = IntPtr.Zero;
+            if (!NativeMethods.OpenProcessToken(Process.GetCurrentProcess().Handle, NativeMethods.TOKEN_QUERY, out tokenHandle))
             {
-                IntPtr tokenHandle = IntPtr.Zero;
-                if (!NativeMethods.OpenProcessToken(Process.GetCurrentProcess().Handle, NativeMethods.TOKEN_QUERY, out tokenHandle))
-                {
-                    throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not get process token.");
-                }
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not get process token.");
+            }
 
+            try
+            {
+                uint returnedSize = sizeof(NativeMethods.TOKEN_ELEVATION_TYPE);
+
+                IntPtr elevationTypePtr = Marshal.AllocHGlobal((int)returnedSize);
                 try
                 {
-                    uint returnedSize = sizeof(NativeMethods.TOKEN_ELEVATION_TYPE);
-
-                    IntPtr elevationTypePtr = Marshal.AllocHGlobal((int)returnedSize);
-                    try
+                    if (NativeMethods.GetTokenInformation(tokenHandle, NativeMethods.TOKEN_INFORMATION_CLASS.TokenElevationType, elevationTypePtr, returnedSize, out returnedSize))
                     {
-                        if (NativeMethods.GetTokenInformation(tokenHandle, NativeMethods.TOKEN_INFORMATION_CLASS.TokenElevationType, elevationTypePtr, returnedSize, out returnedSize))
+                        NativeMethods.TOKEN_ELEVATION_TYPE elevationResult = (NativeMethods.TOKEN_ELEVATION_TYPE)Marshal.ReadInt32(elevationTypePtr);
+                        switch (elevationResult)
                         {
-                            NativeMethods.TOKEN_ELEVATION_TYPE elevationResult = (NativeMethods.TOKEN_ELEVATION_TYPE)Marshal.ReadInt32(elevationTypePtr);
-                            switch (elevationResult)
-                            {
-                                case NativeMethods.TOKEN_ELEVATION_TYPE.TokenElevationTypeDefault:
-                                    //Token is not split; if user is admin, we're admin.
-                                    WindowsPrincipal principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
-                                    return principal.IsInRole(WindowsBuiltInRole.Administrator) || principal.IsInRole(0x200); //Domain Administrator
+                            case NativeMethods.TOKEN_ELEVATION_TYPE.TokenElevationTypeDefault:
+                                //Token is not split; if user is admin, we're admin.
+                                WindowsPrincipal principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
+                                return principal.IsInRole(WindowsBuiltInRole.Administrator) || principal.IsInRole(0x200); //Domain Administrator
 
-                                case NativeMethods.TOKEN_ELEVATION_TYPE.TokenElevationTypeFull:
-                                    //Token is split, but we're admin.
-                                    return true;
+                            case NativeMethods.TOKEN_ELEVATION_TYPE.TokenElevationTypeFull:
+                                //Token is split, but we're admin.
+                                return true;
 
-                                case NativeMethods.TOKEN_ELEVATION_TYPE.TokenElevationTypeLimited:
-                                    //Token is split, and we're limited.
-                                    return false;
+                            case NativeMethods.TOKEN_ELEVATION_TYPE.TokenElevationTypeLimited:
+                                //Token is split, and we're limited.
+                                return false;
 
-                                default:
-                                    throw new Exception("Unknown elevation type!");
-                            }
-                        }
-                        else
-                        {
-                            throw new ApplicationException("Unable to determine the current elevation.");
+                            default:
+                                throw new Exception("Unknown elevation type!");
                         }
                     }
-                    finally
+                    else
                     {
-                        if (elevationTypePtr != IntPtr.Zero)
-                        {
-                            Marshal.FreeHGlobal(elevationTypePtr);
-                        }
+                        throw new ApplicationException("Unable to determine the current elevation.");
                     }
                 }
                 finally
                 {
-                    if (tokenHandle != IntPtr.Zero)
+                    if (elevationTypePtr != IntPtr.Zero)
                     {
-                        NativeMethods.CloseHandle(tokenHandle);
+                        Marshal.FreeHGlobal(elevationTypePtr);
                     }
                 }
             }
-            else
+            finally
             {
-                WindowsPrincipal principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
-                return principal.IsInRole(WindowsBuiltInRole.Administrator) || principal.IsInRole(0x200); //Domain Administrator
+                if (tokenHandle != IntPtr.Zero)
+                {
+                    NativeMethods.CloseHandle(tokenHandle);
+                }
             }
+        }
+        else
+        {
+            WindowsPrincipal principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
+            return principal.IsInRole(WindowsBuiltInRole.Administrator) || principal.IsInRole(0x200); //Domain Administrator
         }
     }
 }

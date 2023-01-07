@@ -2,10 +2,13 @@
 using System.Net;
 using System.Runtime.InteropServices;
 
-namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP
+namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP.TCP;
+
+public partial class TCPHelper
 {
+
     [StructLayout(LayoutKind.Sequential)]
-    public class MIB_TCPROW_OWNER_MODULE : IConnectionOwnerInfo
+    public struct MIB_TCPROW_OWNER_MODULE : IConnectionOwnerInfo
     {
         internal ConnectionStatus _state;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
@@ -28,13 +31,13 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP
         public string LocalAddress => IPHelper.GetAddressAsString(_localAddr);
         public int RemotePort => IPHelper.GetRealPort(_remotePort);
         public int LocalPort => IPHelper.GetRealPort(_localPort);
-        public Owner? OwnerModule => TCPHelper.GetOwningModuleTCP(this);
+        public Owner? OwnerModule => GetOwningModuleTCPInternal(NativeMethods.GetOwnerModuleFromTcpEntry, this);
         public string Protocol => "TCP";
         public uint OwningPid => _owningPid;
         public DateTime? CreationTime => _creationTime == 0 ? (DateTime?)null : DateTime.FromFileTime(_creationTime);
         public bool IsLoopback => IPAddress.IsLoopback(IPAddress.Parse(RemoteAddress));
 
-        public TCPHelper.MIB_TCPROW ToTCPRow()
+        public ITcpRow ToTcpRow()
         {
             return new TCPHelper.MIB_TCPROW() { dwLocalAddr = _localAddr, dwRemoteAddr = _remoteAddr, dwLocalPort = _localPort, dwRemotePort = _remotePort, State = _state };
         }
