@@ -2,40 +2,39 @@
 
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
-namespace Wokhan.WindowsFirewallNotifier.Common.Processes
+namespace Wokhan.WindowsFirewallNotifier.Common.Processes;
+
+public static class ServiceNameResolver
 {
-    public static class ServiceNameResolver
+    internal static Dictionary<uint, ServiceInfoResult> services = ProcessHelper.GetAllServicesByPidWMI();
+
+    private static void Reload()
     {
-        internal static Dictionary<uint, ServiceInfoResult> services = ProcessHelper.GetAllServicesByPidWMI();
+        services = ProcessHelper.GetAllServicesByPidWMI();
+    }
 
-        private static void Reload()
+    public static string GetServicName(uint pid)
+    {
+        if (!services.ContainsKey(pid))
         {
-            services = ProcessHelper.GetAllServicesByPidWMI();
+            //Reload();
         }
 
-        public static string GetServicName(uint pid)
-        {
-            if (!services.ContainsKey(pid))
-            {
-                //Reload();
-            }
+        return services.TryGetValue(pid, out ServiceInfoResult? service) ? service.Name : "-";
+    }
 
-            return services.TryGetValue(pid, out ServiceInfoResult? service) ? service.Name : "-";
+    public static ServiceInfoResult? GetServiceInfo(uint pid, string fileName)
+    {
+        if (services.TryGetValue(pid, out ServiceInfoResult? svcInfo))
+        {
+            LogHelper.Debug($"Service detected for '{fileName}': '{svcInfo.Name}'");
+            return svcInfo;
         }
-
-        public static ServiceInfoResult? GetServiceInfo(uint pid, string fileName)
+        else
         {
-            if (services.TryGetValue(pid, out ServiceInfoResult? svcInfo))
-            {
-                LogHelper.Debug($"Service detected for '{fileName}': '{svcInfo.Name}'");
-                return svcInfo;
-            }
-            else
-            {
-                //ProcessHelper.GetService(pid, threadid, path, protocol, localPort, target, targetPort, out svc, out svcdsc, out unsure);
-                LogHelper.Debug($"No service detected for '{fileName}'");
-                return null;
-            }
+            //ProcessHelper.GetService(pid, threadid, path, protocol, localPort, target, targetPort, out svc, out svcdsc, out unsure);
+            LogHelper.Debug($"No service detected for '{fileName}'");
+            return null;
         }
     }
 }

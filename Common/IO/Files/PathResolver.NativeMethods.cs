@@ -1,14 +1,13 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Wokhan.WindowsFirewallNotifier.Common.IO.Files
+namespace Wokhan.WindowsFirewallNotifier.Common.IO.Files;
+
+public static partial class PathResolver
 {
-    public static partial class PathResolver
+    protected static partial class NativeMethods
     {
-        protected static partial class NativeMethods
-        {
-            [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
-            internal static unsafe partial uint QueryDosDevice(string lpDeviceName, char* lpTargetPath, uint ucchMax);
-        }
+        [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        internal static unsafe partial uint QueryDosDevice(string lpDeviceName, char* lpTargetPath, uint ucchMax);
     }
 }

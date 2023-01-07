@@ -2,8 +2,11 @@
 using System.Net;
 using System.Runtime.InteropServices;
 
-namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP
+namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP.TCP.TCP6;
+
+public partial class TCP6Helper
 {
+
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct MIB_TCP6ROW_OWNER_MODULE : IConnectionOwnerInfo
     {
@@ -30,15 +33,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP
         public int LocalPort => IPHelper.GetRealPort(_localPort);
         public string RemoteAddress => IPHelper.GetRealAddress(_remoteAddress);
         public int RemotePort => IPHelper.GetRealPort(_remotePort);
-        public Owner? OwnerModule => TCP6Helper.GetOwningModuleTCP6(this);
+        public Owner? OwnerModule => GetOwningModuleTCPInternal(NativeMethods.GetOwnerModuleFromTcp6Entry, this);
         public string Protocol => "TCP";
         public ConnectionStatus State => _state;
-        public DateTime? CreationTime => _creationTime == 0 ? (DateTime?)null : DateTime.FromFileTime(_creationTime);
+        public DateTime? CreationTime => _creationTime == 0 ? null : DateTime.FromFileTime(_creationTime);
         public bool IsLoopback => IPAddress.IsLoopback(IPAddress.Parse(RemoteAddress));
 
-        public TCP6Helper.MIB_TCP6ROW ToTCPRow()
+        public ITcpRow ToTcpRow()
         {
-            return new TCP6Helper.MIB_TCP6ROW() { _localAddress = _localAddress, _remoteAddress = _remoteAddress, _localPort = _localPort, _remotePort = _remotePort, State = _state };
+            return new MIB_TCP6ROW() { _localAddress = _localAddress, _remoteAddress = _remoteAddress, _localPort = _localPort, _remotePort = _remotePort, State = _state };
         }
     }
 

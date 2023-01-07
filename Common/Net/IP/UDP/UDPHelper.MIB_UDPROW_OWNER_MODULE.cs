@@ -2,10 +2,11 @@
 using System.Net;
 using System.Runtime.InteropServices;
 
-using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
-using Wokhan.WindowsFirewallNotifier.Common.Net.IP.UDP;
+using Wokhan.WindowsFirewallNotifier.Common.Net.IP.TCP;
 
-namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
+namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP.UDP;
+
+public partial class UDPHelper
 {
     [StructLayout(LayoutKind.Sequential)]
     internal struct MIB_UDPROW_OWNER_MODULE : IConnectionOwnerInfo
@@ -28,13 +29,18 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Helpers.IPHelpers
         public byte[] RemoteAddrBytes => Array.Empty<byte>();
         public ConnectionStatus State => ConnectionStatus.NOT_APPLICABLE;
         public uint OwningPid => _owningPid;
-        public string LocalAddress => IPHelper.GetAddressAsString(_localAddr);
-        public int LocalPort => IPHelper.GetRealPort(_localPort);
-        public Owner? OwnerModule => UDPHelper.GetOwningModuleUDP(this);
+        public string LocalAddress => GetAddressAsString(_localAddr);
+        public int LocalPort => GetRealPort(_localPort);
+        public Owner? OwnerModule => GetOwningModuleUDP(this);
         public string Protocol => "UDP";
-        public DateTime? CreationTime => _creationTime == 0 ? (DateTime?)null : DateTime.FromFileTime(_creationTime);
+        public DateTime? CreationTime => _creationTime == 0 ? null : DateTime.FromFileTime(_creationTime);
         public string RemoteAddress => string.Empty;
         public int RemotePort => -1;
         public bool IsLoopback => IPAddress.IsLoopback(IPAddress.Parse(RemoteAddress));
+
+        public ITcpRow ToTcpRow()
+        {
+            throw new NotImplementedException("UDP connections owner details cannot be mapped to TCP connections rows.");
+        }
     }
 }

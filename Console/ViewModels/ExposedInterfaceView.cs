@@ -3,42 +3,41 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net.NetworkInformation;
 
-namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels
+namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels;
+
+public partial class ExposedInterfaceView : INotifyPropertyChanged
 {
-    public partial class ExposedInterfaceView : INotifyPropertyChanged
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    public void NotifyPropertyChanged(string propertyName)
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 
-        public void NotifyPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+    public string MAC => String.Join(":", Information.GetPhysicalAddress().GetAddressBytes().Select(b => b.ToString("X2")));
 
-        public string MAC => String.Join(":", Information.GetPhysicalAddress().GetAddressBytes().Select(b => b.ToString("X2")));
+    public NetworkInterface Information { get; private set; }
+    
+    public IPInterfaceStatistics Statistics => Information.GetIPStatistics();
 
-        public NetworkInterface Information { get; private set; }
+    public IPInterfaceProperties Properties => Information.GetIPProperties();
+
+    public ExposedInterfaceView(NetworkInterface inter)
+    {
+        this.Information = inter;
+    }
+
+    internal ExposedInterfaceView()
+    {
         
-        public IPInterfaceStatistics Statistics => Information.GetIPStatistics();
+    }
 
-        public IPInterfaceProperties Properties => Information.GetIPProperties();
-
-        public ExposedInterfaceView(NetworkInterface inter)
-        {
-            this.Information = inter;
-        }
-
-        internal ExposedInterfaceView()
-        {
-            
-        }
-
-        internal void UpdateInner(NetworkInterface inter)
-        {
-            this.Information = inter;
-            NotifyPropertyChanged(nameof(Information));
-            NotifyPropertyChanged(nameof(Statistics));
-            NotifyPropertyChanged(nameof(Properties));
-            NotifyPropertyChanged(nameof(MAC));
-        }
+    internal void UpdateInner(NetworkInterface inter)
+    {
+        this.Information = inter;
+        NotifyPropertyChanged(nameof(Information));
+        NotifyPropertyChanged(nameof(Statistics));
+        NotifyPropertyChanged(nameof(Properties));
+        NotifyPropertyChanged(nameof(MAC));
     }
 }
