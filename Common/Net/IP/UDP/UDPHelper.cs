@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-using Wokhan.WindowsFirewallNotifier.Common.Net.IP.UDP.UDP6;
-
 using static Wokhan.WindowsFirewallNotifier.Common.Net.IP.IPHelper;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP.UDP;
@@ -53,6 +51,6 @@ public class UDPHelper
     }
 
     public static IEnumerable<IConnectionOwnerInfo> GetAllUDPConnections() => GetAllUDPConnections<UDP4.MIB_UDPTABLE_OWNER_MODULE, UDP4.MIB_UDPROW_OWNER_MODULE>(AF_INET.IP4);
-    public static IEnumerable<IConnectionOwnerInfo> GetAllUDP6Connections() => GetAllUDPConnections<MIB_UDP6TABLE_OWNER_MODULE, MIB_UDP6ROW_OWNER_MODULE>(AF_INET.IP6);
+    public static IEnumerable<IConnectionOwnerInfo> GetAllUDP6Connections() => GetAllUDPConnections<UDP6.MIB_UDP6TABLE_OWNER_MODULE, UDP6.MIB_UDP6ROW_OWNER_MODULE>(AF_INET.IP6);
 
 }
