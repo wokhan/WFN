@@ -2,19 +2,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Wokhan.WindowsFirewallNotifier.Common.IO.Streams;
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP.TCP;
-using Wokhan.WindowsFirewallNotifier.Common.Net.IP.TCP.TCP6;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP.UDP;
-using Wokhan.WindowsFirewallNotifier.Common.Net.IP.UDP6;
+
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 
@@ -114,6 +116,66 @@ public abstract partial class IPHelper
         return Convert.ToInt32(maxUserPortValue);
     }
 
+
+    internal delegate uint GetOwnerModuleDelegate<T>(T pTcpEntry, TCPIP_OWNER_MODULE_INFO_CLASS Class, IntPtr Buffer, ref uint pdwSize);
+
+    internal static Owner? GetOwningModuleInternal<TRow>(GetOwnerModuleDelegate<TRow> getOwnerModule, TRow row) where TRow : IConnectionOwnerInfo
+    {
+        Owner? ret = null;
+        /*if (ownerCache.TryGetValue(row, out ret))
+        {
+            return ret;
+        }*/
+
+        if (row.OwningPid == 0)
+        {
+            return Owner.System;
+        }
+
+        IntPtr buffer = IntPtr.Zero;
+        try
+        {
+            uint buffSize = 0;
+            var retn = getOwnerModule(row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
+            if (retn != NO_ERROR && retn != ERROR_INSUFFICIENT_BUFFER)
+            {
+                //Cannot get owning module for this connection
+                LogHelper.Info("Unable to get the connection owner: ownerPid=" + row.OwningPid + " remoteAdr=" + row.RemoteAddress + ":" + row.RemotePort);
+                return ret;
+            }
+            if (buffSize == 0)
+            {
+                //No buffer? Probably means we can't retrieve any information about this connection; skip it
+                LogHelper.Info("Unable to get the connection owner (no buffer).");
+                return ret;
+            }
+            buffer = Marshal.AllocHGlobal((int)buffSize);
+
+            //GetOwnerModuleFromTcpEntry needs the fields of TCPIP_OWNER_MODULE_INFO_BASIC to be NULL
+            NativeMethods.RtlZeroMemory(buffer, buffSize);
+
+            var resp = getOwnerModule(row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, buffer, ref buffSize);
+            if (resp == 0)
+            {
+                ret = new Owner(Marshal.PtrToStructure<TCPIP_OWNER_MODULE_BASIC_INFO>(buffer));
+            }
+            else if (resp != ERROR_NOT_FOUND) // Ignore closed connections
+            {
+                LogHelper.Error("Unable to get the connection owner.", new Win32Exception((int)resp));
+            }
+
+            //ownerCache.Add(row, ret);
+
+            return ret;
+        }
+        finally
+        {
+            if (buffer != IntPtr.Zero)
+            {
+                Marshal.FreeHGlobal(buffer);
+            }
+        }
+    }
     /// <summary>
     /// Returns details about connection of localPort by process identified by pid.
     /// </summary>
@@ -136,10 +198,10 @@ public abstract partial class IPHelper
 
         if (Socket.OSSupportsIPv6)
         {
-            ret = ret.Concat(TCP6Helper.GetAllTCP6Connections());
+            ret = ret.Concat(TCPHelper.GetAllTCP6Connections());
             if (!tcpOnly)
             {
-                ret = ret.Concat(UDP6Helper.GetAllUDP6Connections());
+                ret = ret.Concat(UDPHelper.GetAllUDP6Connections());
             }
         }
 

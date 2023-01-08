@@ -1,7 +1,6 @@
 ﻿
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
-
-using static Wokhan.WindowsFirewallNotifier.Common.Net.IP.TCP.TCPHelper;
+using Wokhan.WindowsFirewallNotifier.Common.Net.IP.TCP.TCP4;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
