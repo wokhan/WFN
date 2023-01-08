@@ -47,7 +47,7 @@ public abstract partial class IPHelper
     public static string MergePorts(IEnumerable<int> ports)
     {
         var result = "";
-        var BeginRange = -2; //-2 to make sure it never matches any starting port (0 or larger).
+        var BeginRange = -2; // -2 to make sure it never matches any starting port (0 or larger).
         var EndRange = -2; //Initialization strictly speaking not necessary, but it shuts up a compiler warning.
         foreach (var port in ports)
         {
