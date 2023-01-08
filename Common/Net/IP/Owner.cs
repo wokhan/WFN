@@ -10,7 +10,7 @@ public class Owner
     public string ModuleName { get; private set; }
     public string ModulePath { get; private set; }
 
-    internal Owner(IPHelper.TCPIP_OWNER_MODULE_BASIC_INFO inf)
+    internal Owner(TCPIP_OWNER_MODULE_BASIC_INFO inf)
     {
         ModuleName = Marshal.PtrToStringAuto(inf.p1) ?? String.Empty;
         ModulePath = Marshal.PtrToStringAuto(inf.p2) ?? String.Empty;
