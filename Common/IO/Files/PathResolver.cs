@@ -34,7 +34,7 @@ public static partial class PathResolver
                 foreach (var drive in drives)
                 {
                     trimmedDrive = drive.TrimEnd('\\');
-                    if (NativeMethods.QueryDosDevice(trimmedDrive, sb, (uint)len) == 0)
+                    if (NativeMethods.QueryDosDeviceW(trimmedDrive, sb, (uint)len) == 0)
                     {
                         throw new Win32Exception(Marshal.GetLastWin32Error(), "Call to QueryDosDevice failed!");
                     }

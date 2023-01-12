@@ -85,10 +85,10 @@ public static partial class ProcessHelper
         }
 
         [LibraryImport("advapi32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
-        internal static partial IntPtr OpenSCManager(string? machineName, string? databaseName, uint dwAccess);
+        internal static partial IntPtr OpenSCManagerW(string? machineName, string? databaseName, uint dwAccess);
 
         [LibraryImport("advapi32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
-        internal static partial uint EnumServicesStatusEx(IntPtr hSCManager,
+        internal static partial uint EnumServicesStatusExW(IntPtr hSCManager,
                int infoLevel, uint dwServiceType,
                uint dwServiceState, IntPtr lpServices, uint cbBufSize,
                out uint pcbBytesNeeded, out uint lpServicesReturned,
@@ -115,10 +115,10 @@ public static partial class ProcessHelper
         {
             public static readonly int SizeOf = Marshal.SizeOf(typeof(ENUM_SERVICE_STATUS_PROCESS));
 
-            [MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPTStr)]
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string lpServiceName;
 
-            [MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPTStr)]
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string lpDisplayName;
 
             public SERVICE_STATUS_PROCESS ServiceStatus;
@@ -191,7 +191,7 @@ public static partial class ProcessHelper
 
         [LibraryImport("advapi32", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static partial bool ConvertSidToStringSid(IntPtr pSID, [MarshalAs(UnmanagedType.LPTStr)] out string pStringSid);
+        internal static partial bool ConvertSidToStringSidW(IntPtr pSID, [MarshalAs(UnmanagedType.LPTStr)] out string pStringSid);
 
         [LibraryImport("advapi32")]
         internal static partial IntPtr FreeSid(IntPtr pSid);

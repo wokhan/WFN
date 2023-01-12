@@ -51,7 +51,7 @@ public static partial class ProcessHelper
 
     public static IEnumerable<string>? GetAllServices(uint pid)
     {
-        IntPtr hServiceManager = NativeMethods.OpenSCManager(null, null, (uint)(NativeMethods.SCM_ACCESS.SC_MANAGER_CONNECT | NativeMethods.SCM_ACCESS.SC_MANAGER_ENUMERATE_SERVICE));
+        IntPtr hServiceManager = NativeMethods.OpenSCManagerW(null, null, (uint)(NativeMethods.SCM_ACCESS.SC_MANAGER_CONNECT | NativeMethods.SCM_ACCESS.SC_MANAGER_ENUMERATE_SERVICE));
         if (hServiceManager == IntPtr.Zero)
         {
             LogHelper.Warning("Unable to open SCManager.");
@@ -64,7 +64,7 @@ public static partial class ProcessHelper
             uint ServicesReturned = 0;
             uint ResumeHandle = 0;
 
-            var resp = NativeMethods.EnumServicesStatusEx(hServiceManager, (int)NativeMethods.SC_ENUM_TYPE.SC_ENUM_PROCESS_INFO, (int)NativeMethods.SERVICE_TYPES.SERVICE_WIN32, (int)NativeMethods.SERVICE_STATE.SERVICE_ACTIVE, IntPtr.Zero, dwBufSize, out dwBufNeed, out ServicesReturned, ref ResumeHandle, null);
+            var resp = NativeMethods.EnumServicesStatusExW(hServiceManager, (int)NativeMethods.SC_ENUM_TYPE.SC_ENUM_PROCESS_INFO, (int)NativeMethods.SERVICE_TYPES.SERVICE_WIN32, (int)NativeMethods.SERVICE_STATE.SERVICE_ACTIVE, IntPtr.Zero, dwBufSize, out dwBufNeed, out ServicesReturned, ref ResumeHandle, null);
             if (resp != 0)
             {
                 LogHelper.Warning("Unexpected result from call to EnumServicesStatusEx.");
@@ -88,7 +88,7 @@ public static partial class ProcessHelper
                 IntPtr buffer = Marshal.AllocHGlobal((int)dwBufSize);
                 try
                 {
-                    resp = NativeMethods.EnumServicesStatusEx(hServiceManager, (int)NativeMethods.SC_ENUM_TYPE.SC_ENUM_PROCESS_INFO, (int)NativeMethods.SERVICE_TYPES.SERVICE_WIN32, (int)NativeMethods.SERVICE_STATE.SERVICE_ACTIVE, buffer, dwBufSize, out dwBufNeed, out ServicesReturned, ref ResumeHandle, null);
+                    resp = NativeMethods.EnumServicesStatusExW(hServiceManager, (int)NativeMethods.SC_ENUM_TYPE.SC_ENUM_PROCESS_INFO, (int)NativeMethods.SERVICE_TYPES.SERVICE_WIN32, (int)NativeMethods.SERVICE_STATE.SERVICE_ACTIVE, buffer, dwBufSize, out dwBufNeed, out ServicesReturned, ref ResumeHandle, null);
                     if (resp == 0)
                     {
                         uint resp2 = (uint)Marshal.GetLastWin32Error();
@@ -376,7 +376,7 @@ public static partial class ProcessHelper
             try
             {
                 string SID;
-                if (NativeMethods.ConvertSidToStringSid(pSID, out SID) == false)
+                if (NativeMethods.ConvertSidToStringSidW(pSID, out SID) == false)
                 {
                     LogHelper.Warning("Unable to retrieve process package id: SID cannot be converted!");
                     return String.Empty;
@@ -432,7 +432,7 @@ public static partial class ProcessHelper
                     }
 
                     string SID;
-                    if (!NativeMethods.ConvertSidToStringSid(Marshal.PtrToStructure<NativeMethods.TOKEN_USER>(hTokenInformation).User.Sid, out SID))
+                    if (!NativeMethods.ConvertSidToStringSidW(Marshal.PtrToStructure<NativeMethods.TOKEN_USER>(hTokenInformation).User.Sid, out SID))
                     {
                         LogHelper.Warning("Unable to retrieve process local user owner: SID cannot be converted!");
                         return String.Empty;

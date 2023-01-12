@@ -31,7 +31,7 @@ public sealed class App : Application, IDisposable
     private static App APP_INSTANCE;
     private static NotificationWindow notifierWindow;
     private static ActivityWindow activityWindow;
-    private EventLogAsyncReader<LogEntryViewModel> eventLogListener;
+    private EventLog eventLog;
 
     public ObservableCollection<CurrentConn> Connections { get; } = new ObservableCollection<CurrentConn>();
 
@@ -85,6 +85,8 @@ public sealed class App : Application, IDisposable
 
 #if DEBUG
         this.Connections.Add(AppDataSample.DemoConnection);
+        this.Connections.Add(AppDataSample.DemoConnection);
+        this.Connections.Add(AppDataSample.DemoConnection);
 #endif
 
         LogHelper.Info("Init notification window...");
@@ -97,9 +99,9 @@ public sealed class App : Application, IDisposable
 
         try
         {
-            eventLogListener = new EventLogAsyncReader<LogEntryViewModel>(EventLogAsyncReader.EVENTLOG_SECURITY, LogEntryViewModel.CreateFromEventLogEntry);
-            eventLogListener.FilterPredicate = EventLogAsyncReader.IsFirewallEventSimple;
-            eventLogListener.EntryWritten += HandleEventLogNotification;
+            eventLog = new EventLog(EventLogAsyncReader.EVENTLOG_SECURITY);
+            eventLog.EnableRaisingEvents = true;
+            eventLog.EntryWritten += HandleEventLogNotification;
         }
         catch (SecurityException se)
         {
@@ -149,6 +151,11 @@ public sealed class App : Application, IDisposable
     internal void HandleEventLogNotification(object sender, EntryWrittenEventArgs eventArgs)
     {
         var entry = eventArgs.Entry;
+        if (!EventLogAsyncReader.IsFirewallEventSimple(entry))
+        {
+            return;
+        }
+
         bool allowed = EventLogAsyncReader.IsFirewallEventAllowed(entry.InstanceId);
         activityWindow.ShowActivity(allowed ? ActivityWindow.ActivityEnum.Allowed : ActivityWindow.ActivityEnum.Blocked);
         if (allowed || !LogEntryViewModel.TryCreateFromEventLogEntry(entry, 0, out CurrentConn view))
@@ -242,6 +249,6 @@ public sealed class App : Application, IDisposable
 
     public void Dispose()
     {
-        eventLogListener?.Dispose();
+        eventLog?.Dispose();
     }
 }
