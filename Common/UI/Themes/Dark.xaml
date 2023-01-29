@@ -36,5 +36,5 @@
     <!--<SolidColorBrush x:Key="{x:Static SystemColors.ButtonHighlightBrushKey}" Color="#202020" />-->
 
     <SolidColorBrush x:Key="{x:Static SystemColors.ControlLightBrushKey}" Color="Black" />
-
+    
 </ResourceDictionary>

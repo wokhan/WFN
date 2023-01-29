@@ -1,6 +1,7 @@
 ﻿using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
+using OxyPlot.Wpf;
 
 using System;
 using System.Collections.Concurrent;
@@ -113,8 +114,7 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
 
             if (!allSeries.TryGetValue(connectionGroup.Key, out var seriesValues))
             {
-                var color = connectionGroup.First().Color;
-                var seriesColor = OxyColor.FromArgb(color.A, color.R, color.G, color.B);
+                var seriesColor = connectionGroup.First().Color.ToOxyColor();
                 Model.Series.Add(new LineSeries() { Title = $"{connectionGroup.Key}#In", Color = seriesColor, ItemsSource = seriesInValues = new ObservableCollection<DataPoint>(), CanTrackerInterpolatePoints = false });
                 Model.Series.Add(new LineSeries() { Title = $"{connectionGroup.Key}#Out", Color = seriesColor, LineStyle = LineStyle.Dash, ItemsSource = seriesOutValues = new ObservableCollection<DataPoint>(), CanTrackerInterpolatePoints = false });
 

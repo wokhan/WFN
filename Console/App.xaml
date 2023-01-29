@@ -242,6 +242,9 @@
                         <Setter Property="VerticalContentAlignment" Value="Center" />
                         <Setter Property="Padding" Value="0" />
                     </Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Foreground"  Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
+                    </Style>
                 </Style.Resources>
             </Style>
             

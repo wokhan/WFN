@@ -1,4 +1,7 @@
-﻿using System;
+﻿using OxyPlot;
+using OxyPlot.Wpf;
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -8,7 +11,9 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
+using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
+using Wokhan.WindowsFirewallNotifier.Common.UI.Themes;
 using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
@@ -29,9 +34,21 @@ public partial class Connections : TimerBasedPage
 
     public Connections()
     {
+        UpdateConnectionsColors();
+
         BindingOperations.EnableCollectionSynchronization(AllConnections, uisynclocker);
 
+        Settings.Default.PropertyChanged += SettingsChanged;
+
         InitializeComponent();
+    }
+
+    private void SettingsChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(Settings.Theme))
+        {
+            UpdateConnectionsColors();
+        }
     }
 
     private void Components_VisibilityChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -108,7 +125,7 @@ public partial class Connections : TimerBasedPage
 
 
     //TODO: let the user pick a color palette for the bandwidth graph & connection
-    private static List<Color> Colors = OxyPlot.OxyPalettes.Rainbow(64).Colors.Select(c => Color.FromArgb(c.A, c.R, c.G, c.B)).ToList();
+    private List<Color> Colors;
 
     private void AddOrUpdateConnection(IConnectionOwnerInfo connectionInfo)
     {
@@ -131,5 +148,34 @@ public partial class Connections : TimerBasedPage
             lock (locker)
                 AllConnections.Add(new Connection(connectionInfo) { Color = Colors[AllConnections.Count % Colors.Count] });
         }
+    }
+
+    internal void UpdateConnectionsColors()
+    {
+        // TODO: temporary improvement for dark themes colors. I'll have to rework this anyway.
+        switch (Settings.Default.Theme)
+        {
+            case ThemeHelper.THEME_LIGHT:
+                Colors = OxyPlot.OxyPalettes.Rainbow(64).Colors.Select(c => c.ToColor()).ToList();
+                break;
+
+            case ThemeHelper.THEME_DARK:
+                Colors = OxyPlot.OxyPalettes.Rainbow(64).Colors.Select(c => c.ChangeSaturation(0.5).ChangeIntensity(3).ToColor()).ToList();
+                break;
+                
+            case ThemeHelper.THEME_SYSTEM:
+                Colors = new List<Color> { SystemColors.WindowTextColor };
+                break;
+
+            default:
+                Colors = OxyPlot.OxyPalettes.Rainbow(64).Colors.Select(c => c.ToColor()).ToList();
+                break;
+        }
+
+        lock (locker)
+            for (var i = 0; i < AllConnections.Count; i++)
+            {
+                AllConnections[i].Color = Colors[i % Colors.Count];
+            }
     }
 }
