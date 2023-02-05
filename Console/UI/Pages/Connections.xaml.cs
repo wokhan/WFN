@@ -1,5 +1,6 @@
-﻿using OxyPlot;
-using OxyPlot.Wpf;
+﻿using LiveChartsCore.SkiaSharpView;
+
+using SkiaSharp.Views.WPF;
 
 using System;
 using System.Collections.Generic;
@@ -156,11 +157,11 @@ public partial class Connections : TimerBasedPage
         switch (Settings.Default.Theme)
         {
             case ThemeHelper.THEME_LIGHT:
-                Colors = OxyPlot.OxyPalettes.Rainbow(64).Colors.Select(c => c.ToColor()).ToList();
+                Colors = LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList();
                 break;
 
             case ThemeHelper.THEME_DARK:
-                Colors = OxyPlot.OxyPalettes.Rainbow(64).Colors.Select(c => c.ChangeSaturation(0.5).ChangeIntensity(3).ToColor()).ToList();
+                Colors = LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList();
                 break;
                 
             case ThemeHelper.THEME_SYSTEM:
@@ -168,7 +169,7 @@ public partial class Connections : TimerBasedPage
                 break;
 
             default:
-                Colors = OxyPlot.OxyPalettes.Rainbow(64).Colors.Select(c => c.ToColor()).ToList();
+                Colors = LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList();
                 break;
         }
 
