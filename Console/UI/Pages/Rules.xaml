@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI" 
+      xmlns:rules="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;assembly=Wokhan.WindowsFirewallNotifier.Common"
       DataContext="{Binding RelativeSource={x:Static RelativeSource.Self}}"
       mc:Ignorable="d"
       d:DesignHeight="400" d:DesignWidth="800"
@@ -48,10 +49,10 @@
                     <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=OneTime}" SortDirection="Ascending"/>
                     <DataGridTemplateColumn Header="Path" SortMemberPath="ApplicationShortName">
                         <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
+                            <DataTemplate DataType="rules:Rule">
                                 <Grid>
-                                    <Image Source="{Binding Icon, Mode=OneTime}" Width="16" HorizontalAlignment="Left"/>
-                                    <Label Content="{Binding ApplicationShortName, Mode=OneWay}" Margin="20,0,0,0" ToolTip="{Binding ApplicationName}" />
+                                    <Image Source="{Binding Icon,Mode=OneWay}" Width="16" Height="16" HorizontalAlignment="Left" />
+                                    <Label Content="{Binding ApplicationShortName,Mode=OneWay}" Margin="20,0,0,0" ToolTip="{Binding ApplicationName,Mode=OneWay}" />
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

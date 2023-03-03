@@ -1,144 +1,93 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-
-using Wokhan.ComponentModel.Extensions;
-using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
-public class FirewallStatusWrapper : INotifyPropertyChanged
+public partial class FirewallStatusWrapper : ObservableObject
 {
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AllIsEnabled))]
+    private bool _privateIsEnabled;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AllIsInBlocked))]
     private bool _privateIsInBlocked;
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AllIsOutBlocked))] 
     private bool _privateIsOutBlocked;
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AllIsOutAllowed))]
     private bool _privateIsOutAllowed;
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AllIsInAllowed))] 
     private bool _privateIsInAllowed;
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AllIsInBlockedNotif))] 
     private bool _privateIsInBlockedNotif;
+    
+
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AllIsEnabled))]
     private bool _publicIsEnabled;
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AllIsInBlocked))]
     private bool _publicIsInBlocked;
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AllIsOutBlocked))]
     private bool _publicIsOutBlocked;
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AllIsOutAllowed))]
     private bool _publicIsOutAllowed;
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AllIsInAllowed))]
     private bool _publicIsInAllowed;
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AllIsInBlockedNotif))]
     private bool _publicIsInBlockedNotif;
+    
+    
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AllIsEnabled))]
     private bool _domainIsEnabled;
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AllIsInBlocked))]
     private bool _domainIsInBlocked;
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AllIsOutBlocked))]
     private bool _domainIsOutBlocked;
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AllIsOutAllowed))]
     private bool _domainIsOutAllowed;
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AllIsInAllowed))]
     private bool _domainIsInAllowed;
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AllIsInBlockedNotif))]
     private bool _domainIsInBlockedNotif;
 
-    private bool _privateIsEnabled;
-    public bool PrivateIsEnabled
-    {
-        get => _privateIsEnabled;
-        set => this.SetValue(ref _privateIsEnabled, value, OnSettingChanged);
-    }
-
-    public bool PrivateIsInBlocked
-    {
-        get => _privateIsInBlocked;
-        set => this.SetValue(ref _privateIsInBlocked, value, OnSettingChanged);
-    }
-
-    public bool PrivateIsOutBlocked
-    {
-        get => _privateIsOutBlocked;
-        set => this.SetValue(ref _privateIsOutBlocked, value, OnSettingChanged);
-    }
-
-    public bool PrivateIsOutAllowed
-    {
-        get => _privateIsOutAllowed;
-        set => this.SetValue(ref _privateIsOutAllowed, value, OnSettingChanged);
-    }
-
-    public bool PrivateIsInAllowed
-    {
-        get => _privateIsInAllowed;
-        set => this.SetValue(ref _privateIsInAllowed, value, OnSettingChanged);
-    }
-
-    public bool PrivateIsInBlockedNotif
-    {
-        get => _privateIsInBlockedNotif;
-        set => this.SetValue(ref _privateIsInBlockedNotif, value, OnSettingChanged);
-    }
-
-    public bool PublicIsEnabled
-    {
-        get => _publicIsEnabled;
-        set => this.SetValue(ref _publicIsEnabled, value, OnSettingChanged);
-    }
-
-    public bool PublicIsInBlocked
-    {
-        get => _publicIsInBlocked;
-        set => this.SetValue(ref _publicIsInBlocked, value, OnSettingChanged);
-    }
-
-    public bool PublicIsOutBlocked
-    {
-        get => _publicIsOutBlocked;
-        set => this.SetValue(ref _publicIsOutBlocked, value, OnSettingChanged);
-    }
-
-    public bool PublicIsOutAllowed
-    {
-        get => _publicIsOutAllowed;
-        set => this.SetValue(ref _publicIsOutAllowed, value, OnSettingChanged);
-    }
-
-    public bool PublicIsInAllowed
-    {
-        get => _publicIsInAllowed;
-        set => this.SetValue(ref _publicIsInAllowed, value, OnSettingChanged);
-    }
-
-    public bool PublicIsInBlockedNotif
-    {
-        get => _publicIsInBlockedNotif;
-        set => this.SetValue(ref _publicIsInBlockedNotif, value, OnSettingChanged);
-    }
-
-    public bool DomainIsEnabled
-    {
-        get => _domainIsEnabled;
-        set => this.SetValue(ref _domainIsEnabled, value, OnSettingChanged);
-    }
-
-    public bool DomainIsInBlocked
-    {
-        get => _domainIsInBlocked;
-        set => this.SetValue(ref _domainIsInBlocked, value, OnSettingChanged);
-    }
-
-    public bool DomainIsOutBlocked
-    {
-        get => _domainIsOutBlocked;
-        set => this.SetValue(ref _domainIsOutBlocked, value, OnSettingChanged);
-    }
-
-    public bool DomainIsOutAllowed
-    {
-        get => _domainIsOutAllowed;
-        set => this.SetValue(ref _domainIsOutAllowed, value, OnSettingChanged);
-    }
-
-    public bool DomainIsInAllowed
-    {
-        get => _domainIsInAllowed;
-        set => this.SetValue(ref _domainIsInAllowed, value, OnSettingChanged);
-    }
-
-    public bool DomainIsInBlockedNotif
-    {
-        get => _domainIsInBlockedNotif;
-        set => this.SetValue(ref _domainIsInBlockedNotif, value, OnSettingChanged);
-    }
-
+    
     public bool AllIsEnabled
     {
         get => PublicIsEnabled && PrivateIsEnabled && DomainIsEnabled;
@@ -230,19 +179,5 @@ public class FirewallStatusWrapper : INotifyPropertyChanged
         FirewallHelper.UpdateDomainPolicy(DomainIsEnabled, DomainIsInBlockedNotif || DomainIsInBlocked, DomainIsOutBlocked, !DomainIsInBlockedNotif);
 
         return true;
-    }
-
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    private void OnSettingChanged([CallerMemberName] string propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AllIsEnabled)));
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AllIsInAllowed)));
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AllIsInBlocked)));
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AllIsInBlockedNotif)));
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AllIsOutAllowed)));
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AllIsOutBlocked)));
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OneIsOutBlocked)));
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

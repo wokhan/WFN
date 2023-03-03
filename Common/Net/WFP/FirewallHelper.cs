@@ -215,7 +215,7 @@ public static partial class FirewallHelper
         var appPkgId = pid > 0 ? ProcessHelper.GetAppPkgId(pid) : string.Empty;
         var currentProfile = GetCurrentProfile();
         var svcName = "*";
-        path = path ?? "";
+        path ??= "";
         if (pid > 0 && path.EndsWith("svchost.exe", StringComparison.OrdinalIgnoreCase))
         {
             // get the scvName associated with svchost.exe

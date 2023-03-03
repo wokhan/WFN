@@ -15,6 +15,7 @@
     <Nullable>Enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
     <PackageReference Include="log4net" Version="2.0.15" />
     <!--<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.1">
       <PrivateAssets>all</PrivateAssets>
@@ -33,7 +34,7 @@
     <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Extensions" Version="4.3.1" />
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
-    <PackageReference Include="Wokhan.Core" Version="0.9.4-beta" />
+    <PackageReference Include="Wokhan.Core" Version="0.9.5-beta" />
     <PackageReference Include="Wokhan.UI" Version="0.9.8-beta" />
   </ItemGroup>
   <ItemGroup>

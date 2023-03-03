@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Navigation;
 
 using Wokhan.UI.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
@@ -16,9 +15,6 @@ using Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 
-/// <summary>
-/// Interaction logic for EventLog.xaml
-/// </summary>
 public sealed partial class EventsLog : Page, INotifyPropertyChanged, IDisposable
 {
     public EventLogAsyncReader<LogEntryViewModel> EventsReader { get; set; }

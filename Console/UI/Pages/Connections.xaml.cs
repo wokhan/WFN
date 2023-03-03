@@ -19,9 +19,6 @@ using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 
-/// <summary>
-/// Interaction logic for Connections.xaml
-/// </summary>
 public partial class Connections : TimerBasedPage
 {
     private const double ConnectionTimeoutRemove = 5.0; //seconds

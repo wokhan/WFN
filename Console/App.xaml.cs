@@ -10,7 +10,6 @@ using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
 using Wokhan.WindowsFirewallNotifier.Common.UI.Themes;
-using Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 
 namespace Wokhan.WindowsFirewallNotifier.Console;
 

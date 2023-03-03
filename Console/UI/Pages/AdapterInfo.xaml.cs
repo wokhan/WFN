@@ -8,10 +8,7 @@ using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 
-/// <summary>
-/// Interaction logic for AdapterInfo.xaml
-/// </summary>
-public partial class AdapterInfo : TimerBasedPage, INotifyPropertyChanged
+public partial class AdapterInfo : TimerBasedPage
 {
 
     private List<ExposedInterfaceView> interfacesCollection = NetworkInterface.GetAllNetworkInterfaces().Select(n => new ExposedInterfaceView(n)).OrderByDescending(n => n.Information.OperationalStatus.ToString()).ToList();

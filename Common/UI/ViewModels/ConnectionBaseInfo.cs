@@ -1,37 +1,32 @@
-﻿using System;
-using System.Windows.Media;
-using System.ComponentModel;
-using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
-using Wokhan.WindowsFirewallNotifier.Common.Net.DNS;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+using System;
 using System.Diagnostics;
-using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using System.IO;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+
 using Wokhan.ComponentModel.Extensions;
-using System.Runtime.CompilerServices;
 using Wokhan.WindowsFirewallNotifier.Common.Core;
+using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
+using Wokhan.WindowsFirewallNotifier.Common.Net.DNS;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 
-public class ConnectionBaseInfo : INotifyPropertyChanged
+public class ConnectionBaseInfo : ObservableObject
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected void NotifyPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
     public DateTime? CreationTime { get; protected set; }
 
     public uint Pid { get; protected set; }
 
     public string? IconPath { get; protected set; }
 
-    protected ImageSource? _icon;
-    public ImageSource? Icon
+    protected BitmapSource? _icon;
+    public BitmapSource? Icon
     {
-        get => this.GetOrSetValueAsync(() => IconHelper.GetIconAsync(IconPath ?? Path), NotifyPropertyChanged, nameof(_icon));
-        set => this.SetValue(ref _icon, value, NotifyPropertyChanged);
+        get => this.GetOrSetValueAsync(() => IconHelper.GetIconAsync(IconPath ?? Path), ref _icon, OnPropertyChanged);
+        set => this.SetValue(ref _icon, value, OnPropertyChanged);
     }
 
     public string? Path { get; protected set; }
@@ -41,22 +36,22 @@ public class ConnectionBaseInfo : INotifyPropertyChanged
     protected string? description;
     public string? Description
     {
-        get => this.GetOrSetAsyncValue(() => SetFileInformation(nameof(description)), NotifyPropertyChanged, backingFieldName: nameof(description));
-        protected set => this.SetValue(ref description, value, NotifyPropertyChanged);
+        get => this.GetOrSetValueAsync(() => SetFileInformation(nameof(description)), ref description, OnPropertyChanged);
+        protected set => this.SetValue(ref description, value, OnPropertyChanged);
     }
 
     protected string? productName;
     public string? ProductName
     {
-        get => this.GetOrSetAsyncValue(() => SetFileInformation(nameof(productName)), NotifyPropertyChanged, backingFieldName: nameof(productName));
-        protected set => this.SetValue(ref productName, value, NotifyPropertyChanged);
+        get => this.GetOrSetValueAsync(() => SetFileInformation(nameof(productName)), ref productName, OnPropertyChanged);
+        protected set => this.SetValue(ref productName, value, OnPropertyChanged);
     }
 
     protected string? company;
     public string? Company
     {
-        get => this.GetOrSetAsyncValue(() => SetFileInformation(nameof(company)), NotifyPropertyChanged, backingFieldName: nameof(company));
-        protected set => this.SetValue(ref company, value, NotifyPropertyChanged);
+        get => this.GetOrSetValueAsync(() => SetFileInformation(nameof(company)), ref company, OnPropertyChanged);
+        protected set => this.SetValue(ref company, value, OnPropertyChanged);
     }
 
     public string? ServiceName { get; protected set; }
@@ -76,7 +71,7 @@ public class ConnectionBaseInfo : INotifyPropertyChanged
             }
             return _targetHostName;
         }
-        protected set => this.SetValue(ref _targetHostName, value, NotifyPropertyChanged);
+        protected set => this.SetValue(ref _targetHostName, value, OnPropertyChanged);
     }
 
     public int RawProtocol { get; protected set; }

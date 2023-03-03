@@ -35,7 +35,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Wokhan.Core" Version="0.9.4-beta" />
+    <PackageReference Include="Wokhan.Core" Version="0.9.5-beta" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

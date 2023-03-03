@@ -23,7 +23,7 @@ public static class IconHelper
     /// <returns></returns>
     private static BitmapSource GetIconFromPath(string? path)
     {
-        path = path ?? string.Empty;
+        path ??= string.Empty;
 
         BitmapSource? bitmap;
         // need to lock before trying to get the value else we get duplicates because of concurrency
@@ -49,7 +49,7 @@ public static class IconHelper
                             break;
 
                         default:
-                            if (!path.Contains(@"\", StringComparison.Ordinal))
+                            if (!path.Contains('\\', StringComparison.Ordinal))
                             {
                                 LogHelper.Debug($"Skipped extract icon: '{path}' because path has no directory info.");
                                 ic = SystemIcons.Application;
@@ -72,7 +72,7 @@ public static class IconHelper
                             break;
                     }
 
-                    ic = ic ?? SystemIcons.Application;
+                    ic ??= SystemIcons.Application;
 
                     //FIXME: Resize the icon to save some memory?
                     bitmap = Imaging.CreateBitmapSourceFromHIcon(ic.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
@@ -88,7 +88,7 @@ public static class IconHelper
         return bitmap;
     }
 
-    public static async Task<BitmapSource> GetIconAsync(string? path = "")
+    public static async Task<BitmapSource?> GetIconAsync(string? path = "")
     {
         return await Task.Run(() => GetIconFromPath(path)).ConfigureAwait(false);
     }

@@ -89,7 +89,7 @@ public class GeoConnection2 : INotifyPropertyChanged
 
     //TODO: should be defined on the Map side, not GeoConnection, as it relies on Bing Maps control
     private LocationCollection _fullRoute;
-    public LocationCollection FullRoute => this.GetOrSetValueAsync(ComputeRoute, NotifyPropertyChanged, nameof(_fullRoute));
+    public LocationCollection FullRoute => this.GetOrSetValueAsync(() => ComputeRoute(), ref _fullRoute, NotifyPropertyChanged);
 
     public static bool Initialized { get; private set; }
 

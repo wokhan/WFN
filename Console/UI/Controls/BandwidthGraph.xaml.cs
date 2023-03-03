@@ -1,13 +1,9 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
-
-using Newtonsoft.Json.Linq;
 
 using SkiaSharp;
 using SkiaSharp.Views.WPF;
@@ -21,12 +17,9 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Ink;
 using System.Windows.Media;
 
 using Wokhan.Collections;
-using Wokhan.Core.Core;
-using Wokhan.UI.BindingConverters;
 using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls;
@@ -96,6 +89,7 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
 
         var miniYAxis = miniChart.YAxes.First();
         miniYAxis.MinLimit = 0;
+        miniYAxis.TextSize = 10;
         miniYAxis.Padding = new LiveChartsCore.Drawing.Padding(0);
         miniYAxis.ShowSeparatorLines = false;
         miniYAxis.Labeler = (value) => Math.Pow(10, value).ToString();

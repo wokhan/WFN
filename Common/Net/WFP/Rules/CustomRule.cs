@@ -42,23 +42,17 @@ public class CustomRule : Rule
     {
         INetFwRule firewallRule;
 
-#pragma warning disable CS8600 // Ignore possible null value returned from CreateInstance
-#pragma warning disable CS8604 // Ignore possible null argument for CreateInstance
         if (!string.IsNullOrEmpty(AppPkgId))
         {
             //Need INetFwRule3
-            firewallRule = (INetFwRule3)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule"));
+            firewallRule = (INetFwRule3)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule")!)!;
         }
         else
         {
-            firewallRule = (INetFwRule)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule"));
+            firewallRule = (INetFwRule)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule")!)!;
         }
-#pragma warning restore CS8600
-#pragma warning restore CS8604
 
-#pragma warning disable CS8602 // Don't get why it considers firewallRule as potentially null while it's not a nullable (and it doesn't right after anymore...)
         firewallRule.Action = Action;
-#pragma warning restore CS8602 
         firewallRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
         firewallRule.Enabled = true;
         firewallRule.Profiles = Profiles;

@@ -1,12 +1,15 @@
 ﻿using NetFwTypeLib;
-using System.ComponentModel;
-using System.Windows.Media;
-using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
-using Wokhan.WindowsFirewallNotifier.Common.Properties;
-using System.Collections.Generic;
-using System.Linq;
+
 using System;
+using System.ComponentModel;
+using System.Linq;
+
+using System.Windows.Media.Imaging;
+
+using Wokhan.ComponentModel.Extensions;
+using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
+using Wokhan.WindowsFirewallNotifier.Common.Properties;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 
@@ -32,7 +35,7 @@ public abstract class Rule : INotifyPropertyChanged
     public abstract bool Enabled { get; } //Flags & FW_RULE_FLAGS_ACTIVE
     public abstract bool EdgeTraversal { get; } //Flags & FW_RULE_FLAGS_ROUTEABLE_ADDRS_TRAVERSE
     public abstract string? Grouping { get; } //Really: EmbeddedContext
-
+    public virtual bool IsStoreApp => false;
     //v2.10:
     public abstract int EdgeTraversalOptions { get; } //EdgeTraversal, Flags & FW_RULE_FLAGS_ROUTEABLE_ADDRS_TRAVERSE_DEFER_APP, Flags & FW_RULE_FLAGS_ROUTEABLE_ADDRS_TRAVERSE_DEFER_USER
 
@@ -46,35 +49,22 @@ public abstract class Rule : INotifyPropertyChanged
 
     //FIXME: Need to parse: (RA42=) RmtIntrAnet
 
-    private ImageSource? _icon = null;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public ImageSource? Icon
+    protected void OnPropertyChanged(string propertyName)
     {
-        get
-        {
-            if (_icon is null)
-            {
-                UpdateIcon();
-            }
-
-            return _icon;
-        }
-        private set
-        {
-            if (_icon != value)
-            {
-                _icon = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Icon)));
-            }
-        }
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private async void UpdateIcon()
+
+    protected BitmapSource? _icon = null;
+    public virtual BitmapSource? Icon
     {
-        Icon = await IconHelper.GetIconAsync(ApplicationName).ConfigureAwait(false); //FIXME: This is now expanded... Is that a problem?!?
+        get => this.GetOrSetValueAsync(() => IconHelper.GetIconAsync(ApplicationName), ref _icon, OnPropertyChanged);
+        set => this.SetValue(ref _icon, value, OnPropertyChanged);
     }
+
 
     public string ProfilesStr => GetProfileAsText(Profiles);
 

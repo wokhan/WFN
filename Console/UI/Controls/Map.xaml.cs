@@ -1,25 +1,24 @@
-﻿using Microsoft.Maps.MapControl.WPF;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+using Microsoft.Maps.MapControl.WPF;
 
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.Device.Location;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Device.Location;
 
-using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
+using System.Windows.Data;
+
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
-using Wokhan.ComponentModel.Extensions;
+using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls;
 
-public partial class Map : UserControl, INotifyPropertyChanged, IDisposable
+[ObservableObject]
+public partial class Map : UserControl, IDisposable
 {
-    public event PropertyChangedEventHandler PropertyChanged;
-
     private GeoCoordinateWatcher geoWatcher;
 
     private object locker = new object();
@@ -34,38 +33,21 @@ public partial class Map : UserControl, INotifyPropertyChanged, IDisposable
 
     public string CurrentIP => GeoConnection2.CurrentIP.ToString();
 
+    [ObservableProperty]
     private Location _currentCoordinates;
-    public Location CurrentCoordinates
-    {
-        get => _currentCoordinates;
-        private set => this.SetValue(ref _currentCoordinates, value, NotifyPropertyChanged);
-    }
 
+    [ObservableProperty]
     private bool _isFullRouteDisplayed;
-    public bool IsFullRouteDisplayed
-    {
-        get => _isFullRouteDisplayed;
-        set => this.SetValue(ref _isFullRouteDisplayed, value, NotifyPropertyChanged);
-    }
-
-    private void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
+    
     public bool IsAerial
     {
         get => _mode is AerialMode;
-        set { Mode = (value ? new AerialMode(true) : (MapMode)new RoadMode()); NotifyPropertyChanged(); }
+        set { Mode = (value ? new AerialMode(true) : (MapMode)new RoadMode()); }
     }
 
-
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsAerial))]
     private MapMode _mode = new RoadMode();
-    public MapMode Mode
-    {
-        get => _mode;
-        set => this.SetValue(ref _mode, value, NotifyPropertyChanged);
-    }
 
     public ObservableCollection<GeoConnection2> ConnectionsRoutes { get; } = new ObservableCollection<GeoConnection2>();
 

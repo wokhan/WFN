@@ -1,16 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.ServiceProcess;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Reflection;
-using System.Text;
 using System.Management;
+using System.Runtime.InteropServices;
+using System.ServiceProcess;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.IO;
+
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Processes;

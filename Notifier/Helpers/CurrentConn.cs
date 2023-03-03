@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Wokhan.ComponentModel.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
-using Wokhan.WindowsFirewallNotifier.Common.Core;
-using Wokhan.WindowsFirewallNotifier.Common.Processes;
 using Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
 
-public class CurrentConn : LogEntryViewModel, INotifyPropertyChanged
+public partial class CurrentConn : LogEntryViewModel, INotifyPropertyChanged
 {
     //private string _currentAppPkgId;
     //TODO: rename as it's not something "current"
@@ -33,7 +33,7 @@ public class CurrentConn : LogEntryViewModel, INotifyPropertyChanged
     public string ResolvedHost
     {
         get => _resolvedHost;
-        set => this.SetValue(ref _resolvedHost, value, NotifyPropertyChanged);
+        set => this.SetValue(ref _resolvedHost, value, OnPropertyChanged);
     }
 
     //TODO: remove since it's now useless
@@ -41,10 +41,6 @@ public class CurrentConn : LogEntryViewModel, INotifyPropertyChanged
     //TODO: remove since it's now useless
     public string[] PossibleServicesDesc { get; set; }
 
+    [ObservableProperty]
     private int _tentativesCounter = 1;
-    public int TentativesCounter
-    {
-        get => _tentativesCounter;
-        set => this.SetValue(ref _tentativesCounter, value, NotifyPropertyChanged);
-    }
 }

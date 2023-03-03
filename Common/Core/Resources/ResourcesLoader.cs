@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.Win32;
+
+using System;
+using System.Linq;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Core.Resources;
 
@@ -6,6 +9,11 @@ public static partial class ResourcesLoader
 {
     public static string GetMSResourceString(string src)
     {
+        if (String.IsNullOrEmpty(src))
+        {
+            return String.Empty;
+        }
+
         if (src?.StartsWith("@") ?? false)
         {
             unsafe
@@ -18,7 +26,7 @@ public static partial class ResourcesLoader
             }
 
         }
-        return src ?? String.Empty;
 
+        return src ?? String.Empty;
     }
 }

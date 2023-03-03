@@ -9,6 +9,7 @@ using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using System.Linq;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Common.Core;
+using Wokhan.ComponentModel.Extensions;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 
@@ -19,7 +20,7 @@ public class LogEntryViewModel : ConnectionBaseInfo
     public string? FilterId { get; protected set; }
 
     private FilterResult? _matchingFilter;
-    public FilterResult? MatchingFilter => this.GetOrSetAsyncValue(() => NetshHelper.FindMatchingFilterInfo(int.Parse(FilterId)), NotifyPropertyChanged, nameof(_matchingFilter));
+    public FilterResult? MatchingFilter => this.GetOrSetValueAsync(() => NetshHelper.FindMatchingFilterInfo(int.Parse(FilterId)), ref _matchingFilter, OnPropertyChanged);
     public string? Reason { get; protected set; }
     public string? Message { get; protected set; }
 

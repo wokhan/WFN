@@ -47,6 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-beta.701" />
     <PackageReference Include="MaxMind.Db" Version="4.0.0" />
     <PackageReference Include="MaxMind.GeoIP2" Version="5.1.0" />
@@ -55,7 +56,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>-->
     <PackageReference Include="Microsoft.Maps.MapControl.WPF" Version="1.0.0.3" />
-    <PackageReference Include="Wokhan.Core" Version="0.9.4-beta" />
+    <PackageReference Include="Wokhan.Core" Version="0.9.5-beta" />
     <PackageReference Include="Wokhan.UI" Version="0.9.8-beta" />
   </ItemGroup>
   <ItemGroup>

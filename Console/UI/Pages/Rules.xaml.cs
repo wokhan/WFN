@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -14,9 +16,8 @@ using WFPRules = Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 
-/// <summary>
-/// Interaction logic for Rules.xaml
-/// </summary>
+
+[ObservableObject]
 public partial class Rules : Page
 {
     FirewallStatusWrapper status = new FirewallStatusWrapper();
@@ -38,12 +39,9 @@ public partial class Rules : Page
 
     private List<WFPRules::Rule> allRules;
 
+    [ObservableProperty]
     private string _filter = String.Empty;
-    public string Filter
-    {
-        get { return _filter; }
-        set { _filter = value; filterRules(); }
-    }
+    partial void OnFilterChanged(string value) => filterRules();
 
     public enum TypeFilterEnum
     {
@@ -56,12 +54,11 @@ public partial class Rules : Page
                                                  { TypeFilterEnum.WSH, "WSH rules (Windows hidden rules)" }
             };
 
+
+    [ObservableProperty]
     private TypeFilterEnum _typeFilter = TypeFilterEnum.WFN;
-    public TypeFilterEnum TypeFilter
-    {
-        get { return _typeFilter; }
-        set { _typeFilter = value; filterRules(); }
-    }
+
+    partial void OnTypeFilterChanged(TypeFilterEnum value) => filterRules();
 
     private void initRules()
     {

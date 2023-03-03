@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -11,8 +13,7 @@ using Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
-// TODO: Inherit from LogEntryViewModel?
-public class Connection : ConnectionBaseInfo
+public partial class Connection : ConnectionBaseInfo
 {
     public string Owner { get; private set; }
 
@@ -97,33 +98,37 @@ public class Connection : ConnectionBaseInfo
         return false;
     }
 
+    [ObservableProperty]
     private bool _isAccessDenied;
-    public bool IsAccessDenied
-    {
-        get => _isAccessDenied;
-        set => this.SetValue(ref _isAccessDenied, value, NotifyPropertyChanged);
-    }
 
+    [ObservableProperty]
     private bool _isSelected;
-    public bool IsSelected
-    {
-        get => _isSelected;
-        set => this.SetValue(ref _isSelected, value, NotifyPropertyChanged);
-    }
-
+    
+    [ObservableProperty]
     private bool _isDead;
-    public bool IsDead
-    {
-        get => _isDead;
-        set => this.SetValue(ref _isDead, value, NotifyPropertyChanged);
-    }
-
+    
+    [ObservableProperty]
     private string _lastError;
-    public string LastError
-    {
-        get => _lastError;
-        set => this.SetValue(ref _lastError, value, NotifyPropertyChanged);
-    }
+
+    [ObservableProperty]
+    private string _state;
+
+    [ObservableProperty]
+    private bool _isDying;
+
+    [ObservableProperty]
+    private bool _isNew;
+
+    [ObservableProperty]
+    private Color _color = Colors.Black;
+
+    [ObservableProperty]
+    private ulong _inboundBandwidth;
+
+    [ObservableProperty]
+    private ulong _outboundBandwidth;
+
+    public DateTime LastSeen { get; set; }
 
     private readonly IConnectionOwnerInfo rawConnection;
     private ITcpRow rawrow;
@@ -158,51 +163,7 @@ public class Connection : ConnectionBaseInfo
         LastSeen = DateTime.Now;
     }
 
-    private string _state;
-    public string State
-    {
-        get => _state;
-        set => this.SetValue(ref _state, value, NotifyPropertyChanged);
-    }
-
-
-    public DateTime LastSeen { get; set; }
-
-    private bool _isDying;
-    public bool IsDying
-    {
-        get => _isDying;
-        set => this.SetValue(ref _isDying, value, NotifyPropertyChanged);
-    }
-
-    private bool _isNew;
-    public bool IsNew
-    {
-        get => _isNew;
-        set => this.SetValue(ref _isNew, value, NotifyPropertyChanged);
-    }
-
-    private Color _color = Colors.Black;
-    public Color Color
-    {
-        get => _color;
-        set => this.SetValue(ref _color, value, NotifyPropertyChanged);
-    }
-
-    private ulong _inboundBandwidth;
-    public ulong InboundBandwidth
-    {
-        get => _inboundBandwidth;
-        private set => this.SetValue(ref _inboundBandwidth, value, NotifyPropertyChanged);
-    }
-
-    private ulong _outboundBandwidth;
-    public ulong OutboundBandwidth
-    {
-        get => _outboundBandwidth;
-        private set => this.SetValue(ref _outboundBandwidth, value, NotifyPropertyChanged);
-    }
-
+    
     private ulong _lastInboundReadValue;
     private ulong _lastOutboundReadValue;
 
