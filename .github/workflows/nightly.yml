@@ -6,8 +6,15 @@ on:
         - master
   #schedule: # to be enabled to have real nightlies
     #- cron: 0 0 * * *
-
+  
 jobs:
+  update-tag:
+    runs-on: windows-latest
+    steps:
+    - uses: EndBug/latest-tag@v1.5.1
+      with:
+        ref: master
+        tag-name: nightlies
   publish-nightly:
     runs-on: windows-latest
     steps:
@@ -21,7 +28,7 @@ jobs:
     - name: Zip published files
       run: compress-archive -path ./bin/net7.0-windows/publish/* -destinationpath ./bin/net7.0-windows/wfn.zip
     - name: Deploy nightly
-      uses: WebFreak001/deploy-nightly@v1.0.1
+      uses: WebFreak001/deploy-nightly@v2.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
       with:
@@ -44,7 +51,7 @@ jobs:
     - name: Zip published files
       run: compress-archive -path ./bin/net7.0-windows/win-x64/publish/* -destinationpath ./bin/net7.0-windows/wfn-x64.zip
     - name: Deploy nightly
-      uses: WebFreak001/deploy-nightly@v1.0.1
+      uses: WebFreak001/deploy-nightly@v2.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
       with:
@@ -67,7 +74,7 @@ jobs:
     - name: Zip published files
       run: compress-archive -path ./bin/net7.0-windows/win-x86/publish -destinationpath ./bin/net7.0-windows/wfn-x86.zip
     - name: Deploy nightly
-      uses: WebFreak001/deploy-nightly@v1.0.1
+      uses: WebFreak001/deploy-nightly@v2.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
       with:
