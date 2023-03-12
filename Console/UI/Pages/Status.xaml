@@ -16,8 +16,8 @@
         <controls:AdminPanel Caption="Only an administrator can use this feature." />
         <ContentControl Style="{StaticResource ToolBarPanel}">
             <StackPanel HorizontalAlignment="Left">
-                <Button Content="Apply" x:Name="btnSave" Command="{Binding SaveCommand}" IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}" ext:CustomAdorner.Image="{StaticResource Image_Save}" />
-                <Button Content="Reload" x:Name="btnRevert" Command="{Binding RevertCommand}" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" />
+                <Button Content="Apply" x:Name="btnSave" Command="{Binding SaveCommand, ElementName=me}" IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}" ext:CustomAdorner.Image="{StaticResource Image_Save}" />
+                <Button Content="Reload" x:Name="btnRevert" Command="{Binding RevertCommand, ElementName=me}" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" />
             </StackPanel>
         </ContentControl>
         <ScrollViewer DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static SystemColors.InfoBrushKey}}" Height="70">
