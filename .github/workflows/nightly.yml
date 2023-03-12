@@ -2,7 +2,7 @@ name: Nightlies
 
 on: 
   push:
-    branches: 
+    branches:
         - master
   #schedule: # to be enabled to have real nightlies
     #- cron: 0 0 * * *
@@ -24,17 +24,16 @@ jobs:
         include:
           - release-name: anycpu
             prefix: wfn
-            self-contained: false
           - release-name: win-x64
             release: -r win-x64
             pub-folder: win-x64/
             prefix: wfn-x64-standalone
-            self-contained: true
+            self-contained: --self-contained true
           - release-name: win-x86
             release: -r win-x86
             pub-folder: win-x86/
             prefix: wfn-x86-standalone
-            self-contained: true
+            self-contained: --self-contained true
     steps:
     - uses: actions/checkout@v3.3.0
     - name: Setup .NET Core
@@ -42,7 +41,7 @@ jobs:
       with:
         dotnet-version: 7.0.100
     - name: Build and publish
-      run: dotnet publish ${{ matrix.release }} -c Release --self-contained ${{ matrix.self-contained }}
+      run: dotnet publish ${{ matrix.release }} -c Release ${{ matrix.self-contained }}
     - name: Zip published files
       run: compress-archive -path ./bin/net7.0-windows/${{ matrix.pub-folder }}publish/* -destinationpath ./bin/net7.0-windows/${{ matrix.release-name }}.zip
     - name: Deploy nightly
