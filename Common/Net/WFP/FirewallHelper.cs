@@ -11,9 +11,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 
 public static partial class FirewallHelper
 {
-#pragma warning disable CS8600,CS8601,CS8604 // Ignore possible null value.
-    private static INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
-#pragma warning restore CS8600,CS8601,CS8604
+    private static INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2")!)!;
 
     public static bool AddRule(INetFwRule rule)
     {

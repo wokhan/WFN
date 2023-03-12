@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,10 @@ public partial class Rules : Page
     FirewallStatusWrapper status = new FirewallStatusWrapper();
 
     public bool IsFirewallEnabled => status.PrivateIsEnabled || status.PublicIsEnabled || status.DomainIsEnabled;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(LocateCommand), nameof(RemoveRuleCommand))]
+    private WFPRules::Rule selectedItem;
 
     public Rules()
     {
@@ -56,7 +61,7 @@ public partial class Rules : Page
 
 
     [ObservableProperty]
-    private TypeFilterEnum _typeFilter = TypeFilterEnum.WFN;
+    private TypeFilterEnum _typeFilter = TypeFilterEnum.ACTIVE;
 
     partial void OnTypeFilterChanged(TypeFilterEnum value) => filterRules();
 
@@ -104,6 +109,7 @@ public partial class Rules : Page
             }
 
             //This code is messy, but the WPF DataGrid forgets the sorting when you change the ItemsSource, and you have to restore it in TWO places.
+            //TODO: clean up / improve
             System.ComponentModel.SortDescription oldSorting = gridRules.Items.SortDescriptions.FirstOrDefault();
             String oldSortingPropertyName = oldSorting.PropertyName ?? gridRules.Columns.FirstOrDefault().Header.ToString();
             System.ComponentModel.ListSortDirection oldSortingDirection = oldSorting.Direction;
@@ -151,13 +157,15 @@ public partial class Rules : Page
         return (r.Name.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) > -1 || (r.ApplicationName != null && r.ApplicationName.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) > -1));
     }
 
-    private void btnRemoveRule_Click(object sender, RoutedEventArgs e)
+    [RelayCommand(CanExecute = nameof(RemoveRuleCanExecute))]
+    private void RemoveRule()
     {
         System.Collections.IList selectedRules = gridRules.SelectedItems;
         if (selectedRules is null || selectedRules.Count == 0)
         {
             return;
         }
+
         if (MessageBox.Show(Common.Properties.Resources.MSG_RULE_DELETE, Common.Properties.Resources.MSG_DLG_TITLE, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
         {
             foreach (WFPRules::Rule selectedRule in selectedRules)
@@ -166,7 +174,7 @@ public partial class Rules : Page
                if (!FirewallHelper.RemoveRule(selectedRule.Name))
                {
                    MessageBox.Show(Common.Properties.Resources.MSG_RULE_DELETE_FAILED, Common.Properties.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
-                   return;
+                   continue;
                }
                allRules.Remove(selectedRule);
             }
@@ -174,23 +182,25 @@ public partial class Rules : Page
         }
     }
 
-    private void btnLocate_Click(object sender, RoutedEventArgs e)
+    public bool RemoveRuleCanExecute => SelectedItem is not null;
+
+    [RelayCommand(CanExecute = nameof(LocateCanExecute))]
+    private void Locate()
     {
-        var selectedRule = (WFPRules::Rule)gridRules.SelectedItem;
-        if (selectedRule is null)
-        {
-            //@
-            return;
-        }
-        ProcessHelper.StartShellExecutable("explorer.exe", "/select," + selectedRule.ApplicationName, true);
+        ProcessHelper.BrowseToFile(SelectedItem.ApplicationName);
     }
 
-    private void btnStartAdvConsole_Click(object sender, RoutedEventArgs e)
+    public bool LocateCanExecute => SelectedItem is not null;
+
+
+    [RelayCommand]
+    private void StartAdvConsole()
     {
         ProcessHelper.StartShellExecutable("WF.msc", null, true);
     }
 
-    private void btnRefresh_Click(object sender, RoutedEventArgs e)
+    [RelayCommand]
+    private void Refresh()
     {
         initRules();
         filterRules();

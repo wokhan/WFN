@@ -8,6 +8,7 @@ public class ProcessNames
 {
     public static readonly ProcessNames WFN = new ProcessNames("WFN", "WFN.exe");
     public static readonly ProcessNames Notifier = new ProcessNames("Notifier", "Notifier.exe");
+    public static readonly ProcessNames Explorer = new ProcessNames("Explorer", "explorer.exe");
 
     private ProcessNames(string processName, string exeName)
     {

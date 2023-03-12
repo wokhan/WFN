@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -28,18 +29,32 @@ namespace Wokhan.WindowsFirewallNotifier.Common.UAP
         {
             return Task.Run(() =>
             {
-                var path = (string?)Registry.ClassesRoot.OpenSubKey($"Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppModel\\Repository\\Packages\\{packageName}")?.GetValue("PackageRootFolder");
-                string? logo = null;
-                string? executable = null;
-                string? name = null;
-                string? description = null;
+            var path = (string?)Registry.ClassesRoot.OpenSubKey($"Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppModel\\Repository\\Packages\\{packageName}")?.GetValue("PackageRootFolder");
+            string? logo = null;
+            string? executable = null;
+            string? name = null;
+            string? description = null;
 
                 if (path is not null)
                 {
                     var xdoc = XDocument.Load(Path.Combine(path, "AppxManifest.xml"));
 
-                    logo = xdoc?.XPathSelectElement("x:Package/x:Properties/x:Logo", xmlnsm)?.Value;
                     executable = xdoc?.XPathSelectElement("x:Package/x:Applications/x:Application", xmlnsm)?.Attribute("Executable")?.Value;
+
+                    var logoAsset = xdoc?.XPathSelectElement("x:Package/x:Properties/x:Logo", xmlnsm)?.Value;
+                    if (logoAsset is not null)
+                    {
+                        var assumedLogo = Path.Combine(path, logoAsset);
+                        if (!File.Exists(assumedLogo))
+                        {
+                            var ext = assumedLogo.Split('.').Last();
+                            assumedLogo = $"{assumedLogo[..^ext.Length]}scale-100.{ext}";
+                        }
+                        if (File.Exists(assumedLogo))
+                        {
+                            logo = assumedLogo;
+                        }
+                    }
                 }
 
                 return (name, path, executable, description, logo);

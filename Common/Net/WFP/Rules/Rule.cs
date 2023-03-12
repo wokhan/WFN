@@ -2,6 +2,7 @@
 
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 
 using System.Windows.Media.Imaging;
@@ -29,7 +30,8 @@ public abstract class Rule : INotifyPropertyChanged
     public abstract object? Interfaces { get; }
     public abstract string? InterfaceTypes { get; }
     public abstract string? ApplicationName { get; }
-    public abstract string? ApplicationShortName { get; }
+    public virtual string ApplicationShortName => !String.IsNullOrEmpty(ApplicationName) ? Path.GetFileName(ApplicationName) : string.Empty;
+    public virtual string? ApplicationPath => !String.IsNullOrEmpty(ApplicationName) ? Path.GetDirectoryName(ApplicationName) : string.Empty;
     public abstract string? ServiceName { get; }
     public abstract NET_FW_ACTION_ Action { get; }
     public abstract bool Enabled { get; } //Flags & FW_RULE_FLAGS_ACTIVE

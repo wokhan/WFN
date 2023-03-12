@@ -9,14 +9,15 @@
       xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls" 
       x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.Status" 
       mc:Ignorable="d" 
+      x:Name="me"
       d:DesignHeight="600" d:DesignWidth="800"
       Title="Status">
     <DockPanel>
         <controls:AdminPanel Caption="Only an administrator can use this feature." />
         <ContentControl Style="{StaticResource ToolBarPanel}">
             <StackPanel HorizontalAlignment="Left">
-                <Button Content="Apply" x:Name="btnSave" Click="btnSave_Click" IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}" ext:CustomAdorner.Image="{StaticResource Image_Save}" />
-                <Button Content="Reload" x:Name="btnRevert" Click="btnRevert_Click" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" />
+                <Button Content="Apply" x:Name="btnSave" Command="{Binding SaveCommand}" IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}" ext:CustomAdorner.Image="{StaticResource Image_Save}" />
+                <Button Content="Reload" x:Name="btnRevert" Command="{Binding RevertCommand}" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" />
             </StackPanel>
         </ContentControl>
         <ScrollViewer DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static SystemColors.InfoBrushKey}}" Height="70">
@@ -177,7 +178,7 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel>
                 </StackPanel>
-                <Button Grid.Column="1" Margin="50,10" x:Name="btnTestNotif" Click="btnTestNotif_Click" Height="Auto" HorizontalAlignment="Center" ext:CustomAdorner.Image="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Content="Start Notifier now" />
+                <Button Grid.Column="1" Margin="50,10" x:Name="btnTestNotif" Command="{Binding TestNotifCommand,ElementName=me}" Height="Auto" HorizontalAlignment="Center" ext:CustomAdorner.Image="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Content="Start Notifier now" />
             </Grid>
         </StackPanel>
     </DockPanel>

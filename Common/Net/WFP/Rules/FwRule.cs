@@ -30,7 +30,7 @@ public class FwRule : Rule
 
     private string? _applicationName = null;
     public override string? ApplicationName => this.GetOrSetValueAsync(() => SetAppNameAndLogoAsync(), ref _applicationName, OnAppNamePropertyChanged);
-    public override string ApplicationShortName => !String.IsNullOrEmpty(ApplicationName) ? Path.GetFileName(ApplicationName) : string.Empty;
+    
     private void OnAppNamePropertyChanged(string _)
     {
         OnPropertyChanged(nameof(ApplicationName));
@@ -83,26 +83,14 @@ public class FwRule : Rule
             var packageName = InnerRule.Name.Split('?')[0][2..];
             var res = await StorePackageHelper.GetPackageBasicInfoAsync(packageName);
 
-            if (res.RootFolder is not null)
+            if (res.LogoPath is not null)
             {
-                if (res.LogoPath is not null)
-                {
-                    var logoPath = Path.Combine(res.RootFolder, res.LogoPath);
-                    if (!File.Exists(logoPath))
-                    {
-                        var ext = logoPath.Split('.').Last();
-                        logoPath = $"{logoPath[..^ext.Length]}scale-100.{ext}";
-                    }
-                    if (File.Exists(logoPath))
-                    {
-                        Icon = new BitmapImage(new Uri(logoPath));
-                    }
-                }
+                Icon = new BitmapImage(new Uri(res.LogoPath));
+            }
 
-                if (res.Executable is not null)
-                {
-                    return Path.Combine(res.RootFolder, res.Executable);
-                }
+            if (res.Executable is not null)
+            {
+                return Path.Combine(res.RootFolder!, res.Executable);
             }
         }
 

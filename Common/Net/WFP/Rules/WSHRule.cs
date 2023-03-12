@@ -33,8 +33,6 @@ public class WSHRule : Rule
 
     public override string ApplicationName => PathResolver.ResolvePath(parsed["app"].FirstOrDefault());
 
-    public override string? ApplicationShortName => System.IO.Path.GetFileName(ApplicationName);
-
     public override string? AppPkgId => parsed["apppkgid"].FirstOrDefault();
 
     public override string? Description => parsed["desc"].FirstOrDefault();

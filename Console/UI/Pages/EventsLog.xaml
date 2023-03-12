@@ -16,9 +16,9 @@
         <ContentControl Style="{StaticResource ToolBarPanel}">
             <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
                 <StackPanel>
-                    <Button ext:CustomAdorner.Image="{StaticResource Image_Refresh}" Content="Refresh" ToolTip="Reload to show the newest events" IsEnabled="{Binding EventsReader.NewMatchingEntriesCount,Converter={StaticResource objectToBool}}" Click="Refresh_Click" />
-                    <Button Content="Locate" ext:CustomAdorner.Image="{StaticResource Image_Locate}" Click="btnLocate_Click" ToolTip="Locate the selected item" IsEnabled="{Binding SelectedItem,ElementName=gridLog,Converter={StaticResource objectToBool}}" />
-                    <Button x:Name="btnEventLogVwr" ext:CustomAdorner.Image="/WFN;component/Resources/Images/btnLEvents.Image.png" Content="Events log viewer" Click="btnEventLogVwr_Click" />
+                    <Button ext:CustomAdorner.Image="{StaticResource Image_Refresh}" Content="Refresh" ToolTip="Reload to show the newest events" IsEnabled="{Binding EventsReader.NewMatchingEntriesCount,Converter={StaticResource objectToBool}}" Command="{Binding RefreshCommand}" />
+                    <Button Content="Locate" ext:CustomAdorner.Image="{StaticResource Image_Locate}" Command="{Binding LocateCommand}" ToolTip="Locate the selected item" IsEnabled="{Binding SelectedItem,ElementName=gridLog,Converter={StaticResource objectToBool}}" />
+                    <Button x:Name="btnEventLogVwr" ext:CustomAdorner.Image="/WFN;component/Resources/Images/btnLEvents.Image.png" Content="Events log viewer" Command="{Binding OpenEventsLogViewerCommand}" />
                     <TextBlock VerticalAlignment="Center" Text="{Binding EventsReader.NewMatchingEntriesCount, StringFormat='{}{0} new event(s)', FallbackValue='',TargetNullValue=''}" />
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Right" Margin="3,0,3,0">
@@ -37,7 +37,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="0.3*" />
             </Grid.RowDefinitions>
-            <DataGrid VirtualizingPanel.VirtualizationMode="Recycling" BorderThickness="0" x:Name="gridLog" IsReadOnly="True" ColumnWidth="*" AutoGenerateColumns="False" HeadersVisibility="Column" GridLinesVisibility="None" Grid.ColumnSpan="3">
+            <DataGrid VirtualizingPanel.VirtualizationMode="Recycling" BorderThickness="0" x:Name="gridLog" IsReadOnly="True" ColumnWidth="*" AutoGenerateColumns="False" HeadersVisibility="Column" GridLinesVisibility="None" Grid.ColumnSpan="3" SelectedItem="{Binding SelectedItem,Mode=TwoWay}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Index" Binding="{Binding Index,Mode=OneTime}" Width="Auto">
                         <DataGridTextColumn.CellStyle>

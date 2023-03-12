@@ -619,10 +619,9 @@ public static partial class ProcessHelper
     /// <param name="processName">Known process from enum</param>
     public static void StartOrRestoreToForeground(ProcessNames processName)
     {
-        // TODO: check NullPointerRef
-        Process bProcess = Process.GetProcessesByName(processName.ProcessName).FirstOrDefault();
+        var bProcess = Process.GetProcessesByName(processName.ProcessName).FirstOrDefault();
         // check if the process is running
-        if (bProcess != null)
+        if (bProcess is not null)
         {
             // check if the window is hidden / minimized
             if (bProcess.MainWindowHandle == IntPtr.Zero)
@@ -640,10 +639,32 @@ public static partial class ProcessHelper
         }
     }
 
-    /**
-     * Starts a default shell executable (netcore31) with arguments and optional message box.
-     * 
-     */
+
+    /// <summary>
+    /// Opens Windows explorer and selects the file targeted by "flepath"
+    /// </summary>
+    /// <param name="filepath">Full path to the file to select</param>
+    public static void BrowseToFile(string filepath)
+    {
+        StartShellExecutable(ProcessNames.Explorer.FileName, $"/select,{filepath}", true);
+    }
+
+    /// <summary>
+    /// Opens a folder in Windows explorer.
+    /// </summary>
+    /// <param name="folderPath">Path to the folder</param>
+    public static void OpenFolder(string folderPath)
+    {
+        StartShellExecutable(ProcessNames.Explorer.FileName, folderPath, true);
+    }
+
+
+    /// <summary>
+    /// Starts a default shell executable with arguments and optional message box in case of failure.
+    /// </summary>
+    /// <param name="executable">Path to the executable to launche</param>
+    /// <param name="args">Arguments to pass to the executable</param>
+    /// <param name="showMessageBox">Shows a message box if an error occurs. Not really user friendly but straightforward</param>
     public static void StartShellExecutable(string executable, string args, bool showMessageBox)
     {
         try

@@ -1,17 +1,19 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.Input;
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
-using System.Linq;
-using Wokhan.WindowsFirewallNotifier.Console.Helpers;
+
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
 using Wokhan.WindowsFirewallNotifier.Common.UI.Themes;
-using System.Windows.Controls.Primitives;
+using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows;
 
@@ -27,7 +29,8 @@ public partial class Options : Window
         InitializeComponent();
     }
 
-    private void btnOK_Click(object sender, RoutedEventArgs e)
+    [RelayCommand]
+    private void OK()
     {
         Settings.Default.FirstRun = true;   // reset the flag to log os info again once
         Settings.Default.Save();
@@ -35,7 +38,8 @@ public partial class Options : Window
         Close();
     }
 
-    private void btnCancel_Click(object sender, RoutedEventArgs e)
+    [RelayCommand]
+    private void Cancel()
     {
         Settings.Default.Reload();
         Close();
@@ -46,17 +50,19 @@ public partial class Options : Window
         Window.GetWindow(this).Close();
     }
 
-    private void btnTestNotif_Click(object sender, RoutedEventArgs e)
+    [RelayCommand]
+    private void TestNotif()
     {
-        Process.Start(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe"));
+        Process.Start(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ProcessNames.Notifier.FileName));
     }
 
     private void txtCurrentLogPath_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        ProcessHelper.StartShellExecutable("explorer.exe", LogHelper.CurrentLogsPath, true);
+        ProcessHelper.OpenFolder(LogHelper.CurrentLogsPath);
     }
 
-    private void btnResetDefault_Click(object sender, RoutedEventArgs e)
+    [RelayCommand]
+    private void ResetDefault()
     {
         Settings.Default.Reset();
         Settings.Default.FirstRun = true;
@@ -65,7 +71,7 @@ public partial class Options : Window
 
     private void txtUserConfigurationPath_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        ProcessHelper.StartShellExecutable("explorer.exe", $"\"{Settings.Default.ConfigurationPath}\"", true);
+        ProcessHelper.BrowseToFile($"\"{Settings.Default.ConfigurationPath}\"");
     }
 
     private void SelectTheme(object sender, RoutedEventArgs e)

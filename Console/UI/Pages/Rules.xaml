@@ -7,6 +7,7 @@
       xmlns:rules="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;assembly=Wokhan.WindowsFirewallNotifier.Common"
       DataContext="{Binding RelativeSource={x:Static RelativeSource.Self}}"
       mc:Ignorable="d"
+      x:Name="thisPage"
       d:DesignHeight="400" d:DesignWidth="800"
       Title="Firewall rules">
     <DockPanel>
@@ -26,20 +27,20 @@
         <ContentControl Style="{StaticResource ToolBarPanel}">
             <Grid>
                 <StackPanel>
-                    <Button Content="Remove" x:Name="btnRemoveRule" Click="btnRemoveRule_Click" ext:CustomAdorner.Image="{StaticResource Image_Delete}"/>
-                    <Button Content="Locate" x:Name="btnLocate" Click="btnLocate_Click" ext:CustomAdorner.Image="{StaticResource Image_Locate}"/>
-                    <Button Content="Adv. console" ext:CustomAdorner.Image="/WFN;component/Resources/Images/btnOpenConsole.Image.png" x:Name="btnStartAdvConsole" Click="btnStartAdvConsole_Click" />
+                    <Button Content="Remove" x:Name="btnRemoveRule" Command="{Binding RemoveRuleCommand}" ext:CustomAdorner.Image="{StaticResource Image_Delete}"/>
+                    <Button Content="Locate" x:Name="btnLocate" Command="{Binding LocateCommand}" ext:CustomAdorner.Image="{StaticResource Image_Locate}"/>
+                    <Button Content="Adv. console" ext:CustomAdorner.Image="/WFN;component/Resources/Images/btnOpenConsole.Image.png" x:Name="btnStartAdvConsole" Command="{Binding StartAdvConsoleCommand}" />
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Right">
                     <TextBox ext:CustomAdorner.Header="Filter:" x:Name="txtFilter" Width="150" Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" />
                     <ComboBox Style="{StaticResource FilterComboStyle}" SelectedValue="{Binding TypeFilter}" DisplayMemberPath="Value" SelectedValuePath="Key" ItemsSource="{Binding TypeFilters}" />
-                    <Button Content="Refresh" x:Name="btnRefresh" Click="btnRefresh_Click" ext:CustomAdorner.Image="{StaticResource Image_Refresh}"/>
+                    <Button Content="Refresh" x:Name="btnRefresh" Command="{Binding RefreshCommand}" ext:CustomAdorner.Image="{StaticResource Image_Refresh}"/>
                     <Label Style="{StaticResource HelpButtonStyle}" ToolTip="This screen displays all Windows firewall rules.&#10;The ones prefixed by 'Custom rules' have been created by Windows Firewall Notifier.&#10;You can not manually create rules, but you can remove useless ones if required." />
                 </StackPanel>
             </Grid>
         </ContentControl>
         <Grid>
-            <DataGrid AlternatingRowBackground="{DynamicResource DataGridRowAltBackground}" BorderThickness="0" x:Name="gridRules" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Extended" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column">
+            <DataGrid BorderThickness="0" x:Name="gridRules" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Extended" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column" SelectedItem="{Binding SelectedItem,Mode=TwoWay}">
                 <DataGrid.CellStyle>
                     <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
                         <Setter Property="VerticalAlignment" Value="Center" />
@@ -52,7 +53,7 @@
                             <DataTemplate DataType="rules:Rule">
                                 <Grid>
                                     <Image Source="{Binding Icon,Mode=OneWay}" Width="16" Height="16" HorizontalAlignment="Left" />
-                                    <Label Content="{Binding ApplicationShortName,Mode=OneWay}" Margin="20,0,0,0" ToolTip="{Binding ApplicationName,Mode=OneWay}" />
+                                    <TextBlock Margin="20,0,0,0" ToolTip="{Binding ApplicationName,Mode=OneWay}" Text="{Binding ApplicationShortName,Mode=OneWay}" />
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

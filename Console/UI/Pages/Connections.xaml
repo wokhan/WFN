@@ -65,7 +65,7 @@
                                                     <SolidColorBrush x:Key="color" Color="{Binding Color}" x:Shared="False"/>
                                                 </Expander.Resources>
                                                 <Expander.Header>
-                                                    <Grid DataContext="{Binding Items[0]}" Width="{Binding Path=ActualWidth,RelativeSource={RelativeSource FindAncestor,AncestorType=Expander}}">
+                                                    <Grid DataContext="{Binding Items[0]}" Margin="10" Width="{Binding Path=ActualWidth,RelativeSource={RelativeSource FindAncestor,AncestorType=Expander}}">
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="15" />
                                                             <ColumnDefinition Width="Auto" />
@@ -73,8 +73,8 @@
                                                             <ColumnDefinition />
                                                         </Grid.ColumnDefinitions>
                                                         <Ellipse Width="10" Height="10" Fill="{StaticResource color}" />
-                                                        <TextBlock Grid.Column="1" FontWeight="Bold" Text="{Binding FileName}" ToolTip="{Binding Path}" Foreground="{StaticResource color}" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                                                        <TextBlock Grid.Column="2" FontWeight="Bold" Text="{Binding ProductName,StringFormat=' ({0})'}" Foreground="{StaticResource color}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                                        <TextBlock Grid.Column="1" FontWeight="Bold" Text="{Binding FileName}" ToolTip="{Binding Path}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                                        <TextBlock Grid.Column="2" FontWeight="Bold" Text="{Binding ProductName,StringFormat=' ({0})'}" HorizontalAlignment="Left" VerticalAlignment="Center" />
                                                         <Rectangle Grid.Column="3" Margin="10,0,0,0" HorizontalAlignment="Stretch" Height="2" Fill="{StaticResource color}" />
                                                     </Grid>
                                                 </Expander.Header>

@@ -79,11 +79,11 @@
         <ContentControl Height="50" DockPanel.Dock="Bottom" Style="{StaticResource ToolBarPanel}">
             <Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                    <Button x:Name="btnSave" Click="btnOK_Click" ext:CustomAdorner.Image="{StaticResource Image_Shield}" Content="Save" />
-                    <Button x:Name="btnRevert" Click="btnCancel_Click" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" Content="Cancel" />
+                    <Button x:Name="btnSave" Command="{Binding OKCommand,ElementName=me}" ext:CustomAdorner.Image="{StaticResource Image_Shield}" Content="Save" />
+                    <Button x:Name="btnRevert" Command="{Binding CancelCommand,ElementName=me}" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" Content="Cancel" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button x:Name="btnResetDefault" Click="btnResetDefault_Click" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" Content="Reset to defaults" />
+                    <Button x:Name="btnResetDefault" Command="{Binding ResetDefaultCommand,ElementName=me}" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" Content="Reset to defaults" />
                 </StackPanel>
             </Grid>
         </ContentControl>
@@ -96,7 +96,7 @@
                     <CheckBox Padding="3" Content="Start minimized" IsChecked="{Binding StartNotifierMinimized,Mode=TwoWay}" />
                     <CheckBox Padding="3" Content="Use an animated notification" IsChecked="{Binding UseAnimation,Mode=TwoWay}" />
                     <CheckBox Padding="3" Content="Enable services detection*" ToolTip="Additionally tries to detect the service making a connection in the notifier." IsChecked="{Binding EnableServiceDetection,Mode=TwoWay}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
-                    <Button x:Name="btnTestNotif" Click="btnTestNotif_Click" HorizontalAlignment="Center" ext:CustomAdorner.Image="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Content="Start Notifier now" />
+                    <Button x:Name="btnTestNotif" Command="{Binding TestNotifCommand,ElementName=me}" HorizontalAlignment="Center" ext:CustomAdorner.Image="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Content="Start Notifier now" />
                 </StackPanel>
                 <TextBlock Text="Theme" Style="{StaticResource SectionHeader}" />
                 <WrapPanel>

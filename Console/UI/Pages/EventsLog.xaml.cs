@@ -1,4 +1,7 @@
 ﻿
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+
 using System;
 using System.ComponentModel;
 using System.Windows;
@@ -15,14 +18,14 @@ using Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 
-public sealed partial class EventsLog : Page, INotifyPropertyChanged, IDisposable
+[ObservableObject]
+public sealed partial class EventsLog : Page, IDisposable
 {
     public EventLogAsyncReader<LogEntryViewModel> EventsReader { get; set; }
 
     public ICollectionView dataView;
-    private readonly EventsLogFilters eventsLogFilters;
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    private readonly EventsLogFilters eventsLogFilters;
 
     public int TCPOnlyOrAll
     {
@@ -53,6 +56,10 @@ public sealed partial class EventsLog : Page, INotifyPropertyChanged, IDisposabl
             eventsLogFilters.ResetTextfilter();
         }
     }
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(LocateCommand))]
+    private LogEntryViewModel selectedItem;
 
     public EventsLog()
     {
@@ -85,8 +92,8 @@ public sealed partial class EventsLog : Page, INotifyPropertyChanged, IDisposabl
                 {
                     FilterPredicate = EventLogAsyncReader.IsFirewallEvent
                 };
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EventsReader)));
-               
+                OnPropertyChanged(nameof(EventsReader));
+
                 dataView = CollectionViewSource.GetDefaultView(EventsReader.Entries);
                 gridLog.ItemsSource = dataView;
             }
@@ -105,31 +112,31 @@ public sealed partial class EventsLog : Page, INotifyPropertyChanged, IDisposabl
         EventsReader?.Dispose();
         EventsReader = null;
     }
-   
-    private void btnLocate_Click(object sender, RoutedEventArgs e)
-    {
-        var selectedLog = (LogEntryViewModel)gridLog.SelectedItem;
-        if (selectedLog is null)
-        {
-            //@
-            return;
-        }
-        ProcessHelper.StartShellExecutable("explorer.exe", "/select," + selectedLog.Path, true);
-    }
-
-    private void btnEventLogVwr_Click(object sender, RoutedEventArgs e)
-    {
-        ProcessHelper.StartShellExecutable("eventvwr.msc", null, true);
-    }
-
 
     public void Dispose()
     {
         EventsReader?.Dispose();
     }
 
-    private void Refresh_Click(object sender, RoutedEventArgs e)
+    [RelayCommand(CanExecute = nameof(LocateCanExecute))]
+    private void Locate()
+    {
+        ProcessHelper.StartShellExecutable("explorer.exe", "/select," + SelectedItem.Path, true);
+    }
+
+    public bool LocateCanExecute => SelectedItem is not null;
+
+    [RelayCommand]
+    private void OpenEventsLogViewer()
+    {
+        ProcessHelper.StartShellExecutable("eventvwr.msc", null, true);
+    }
+
+    [RelayCommand]
+    private void Refresh()
     {
         StartHandlingSecurityLogEvents(true);
     }
+
+
 }
