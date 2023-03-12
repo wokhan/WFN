@@ -25,14 +25,14 @@ jobs:
           - release: any
             prefix: wfn
             self-contained: false
-          - relaase: win-x64
+          - release: win-x64
             pub-folder: win-x64/
-            prefix: wfn-x64-full
-            self-contained: false
+            prefix: wfn-x64-standalone
+            self-contained: true
           - release: win-x86
             pub-folder: win-x86/
-            prefix: wfn-x86-full
-            self-contained: false
+            prefix: wfn-x86-standalone
+            self-contained: true
     steps:
     - uses: actions/checkout@v3.3.0
     - name: Setup .NET Core
