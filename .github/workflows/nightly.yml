@@ -8,7 +8,16 @@ on:
     #- cron: 0 0 * * *
   
 jobs:
-  publish-nightly:
+  update-tag:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Update nightly tag
+      uses: richardsimko/update-tag@v1.0.7
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: nightlies
+  publish:
     runs-on: windows-latest
     strategy:
       matrix:
@@ -25,11 +34,7 @@ jobs:
             prefix: wfn-x86-full
             self-contained: false
     steps:
-    - uses: actions/checkout@v2
-    - name: Update nightly tag
-      uses: richardsimko/update-tag@v1.0.7
-      with:
-        tag_name: nightlies
+    - uses: actions/checkout@v3.3.0
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
