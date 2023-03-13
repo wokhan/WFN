@@ -54,7 +54,7 @@ public partial class App : Application
 
     private void Application_Startup(object sender, StartupEventArgs e)
     {
-        //if (Settings.Default.AccentColor != null)
+        //if (Settings.Default.AccentColor is not null)
         //{
         //    Resources["AccentColorBrush"] = Settings.Default.AccentColor;
         //}

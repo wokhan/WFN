@@ -21,7 +21,7 @@ public partial class Map : UserControl, IDisposable
 {
     private GeoCoordinateWatcher geoWatcher;
 
-    private object locker = new object();
+    private object locker = new();
 
 
     public static readonly DependencyProperty ConnectionsProperty = DependencyProperty.Register(nameof(Connections), typeof(ObservableCollection<Connection>), typeof(Map));
@@ -90,10 +90,7 @@ public partial class Map : UserControl, IDisposable
 
         try
         {
-            if (CurrentCoordinates is null)
-            {
-                CurrentCoordinates = GeoConnection2.CurrentCoordinates;
-            }
+            CurrentCoordinates ??= GeoConnection2.CurrentCoordinates;
         }
         catch (Exception exc)
         {
@@ -129,16 +126,16 @@ public partial class Map : UserControl, IDisposable
         {
             Dispatcher.Invoke(() =>
             {
-                foreach (var c in Connections.Where(co => (co.Protocol == "UDP" || co.State == "ESTABLISHED") && IsValid(co.TargetIP) && co.Owner != null))
+                foreach (var c in Connections.Where(co => (co.Protocol == "UDP" || co.State == "ESTABLISHED") && IsValid(co.TargetIP) && co.Owner is not null))
                 {
                     AddOrUpdateConnection(c);
                 }
 
-                //TODO: there has to be a better way
+                //TODO: there has to be a better way (using a weak CollectionChanged event listener maybe?)
                 ConnectionsRoutes.Where(route => !Connections.Contains(route.Connection))
                                  .ToList()
                                  .ForEach(route => ConnectionsRoutes.Remove(route));
-
+                
                 CurrentMap.UpdateLayout();
             });
         }
@@ -155,8 +152,7 @@ public partial class Map : UserControl, IDisposable
 
     private void AddOrUpdateConnection(Connection b)
     {
-        GeoConnection2 existingRoute = ConnectionsRoutes.FirstOrDefault(l => l.Connection.TargetIP.Equals(b.TargetIP));
-        if (existingRoute is null)
+        if (!ConnectionsRoutes.Any(route => route.Connection.TargetIP.Equals(b.TargetIP)))
         {
             ConnectionsRoutes.Add(new GeoConnection2(b));
         }

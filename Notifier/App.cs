@@ -194,7 +194,7 @@ public sealed class App : Application, IDisposable
         {
             var sourcePortAsInt = int.Parse(conn.SourcePort);
             var existing = Dispatcher.Invoke(() => this.Connections.FirstOrDefault(c => StringComparer.InvariantCultureIgnoreCase.Equals(c.Path, conn.Path) && c.TargetIP == conn.TargetIP && c.TargetPort == conn.TargetPort && (sourcePortAsInt >= IPHelper.GetMaxUserPort() || c.SourcePort == conn.SourcePort) && c.RawProtocol == conn.RawProtocol));
-            if (existing != null)
+            if (existing is not null)
             {
                 LogHelper.Debug("Connection matches an already existing connection request.");
                 if (!existing.LocalPortArray.Contains(sourcePortAsInt))

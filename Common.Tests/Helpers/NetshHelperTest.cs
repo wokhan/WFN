@@ -1,5 +1,7 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+
+using System;
+
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Console.Tests.NUnit;
 
@@ -32,7 +34,7 @@ public class NetshHelperTest : NUnitTestBase
         Assert.False(result.HasErrors);
         WriteDebugOutput($"name ={result.Name}, description={result.Description}");
         Assert.AreEqual("Default Outbound", result.Name);
-        Assert.True(result.Description != null);
+        Assert.True(result.Description is not null);
         Assert.AreEqual(FiltersContextEnum.FILTERS, result.FoundIn);
     }
 
@@ -48,7 +50,7 @@ public class NetshHelperTest : NUnitTestBase
         Assert.False(result.HasErrors);
         Log($"name={result.Name}, description={result.Description}");
         Assert.AreEqual("Boot Time Filter", result.Name, true);
-        Assert.True(result.Description != null);
+        Assert.True(result.Description is not null);
     }*/
 
     //TODO: Commented out by @wokhan since test result depends on OS language and will fail on non-english ones
@@ -63,7 +65,7 @@ public class NetshHelperTest : NUnitTestBase
         Assert.False(result.HasErrors);
         Log($"name={result.Name}, description={result.Description}");
         Assert.AreEqual("Boot Time Filter", result.Name, true);
-        Assert.True(result.Description != null);
+        Assert.True(result.Description is not null);
     }
     */
 
@@ -77,7 +79,7 @@ public class NetshHelperTest : NUnitTestBase
         Assert.False(result.HasErrors);
         WriteDebugOutput($"name={result.Name}, description={result.Description}");
         Assert.AreEqual("Boot Time Filter", result.Name);
-        Assert.True(result.Description != null);
+        Assert.True(result.Description is not null);
         Assert.AreEqual(result.FoundIn, FiltersContextEnum.WFPSTATE);
     }
 
@@ -93,7 +95,7 @@ public class NetshHelperTest : NUnitTestBase
         Assert.NotNull(result);
         Log($"name={result.Name}, description={result.Description}");
         Assert.AreEqual("Boot Time Filter", result.Name, true);
-        Assert.True(result.Description != null);
+        Assert.True(result.Description is not null);
     }
     */
 
@@ -107,7 +109,7 @@ public class NetshHelperTest : NUnitTestBase
         Assert.False(result.HasErrors);
         WriteDebugOutput($"name={result.Name}, description={result.Description}");
         Assert.AreEqual("Port Scanning Prevention Filter", result.Name);
-        Assert.True(result.Description != null);
+        Assert.True(result.Description is not null);
     }
     [Test, ManualTestCategory]
     public void TestGetMatchingFilterInfo_notfound()

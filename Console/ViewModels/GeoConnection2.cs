@@ -154,7 +154,7 @@ public class GeoConnection2 : INotifyPropertyChanged
             this.FullRoute.RemoveAt(0);
         }
 
-        if (this.FullRoute != null)
+        if (this.FullRoute is not null)
         {
             startingPointAddedFull = true;
             this.FullRoute.Insert(0, currentCoordinates);

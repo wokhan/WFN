@@ -2,10 +2,12 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Messages = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
 using System.Windows.Media.Imaging;
-using Wokhan.WindowsFirewallNotifier.Common.Config;
 using System.Windows.Threading;
+
+using Wokhan.WindowsFirewallNotifier.Common.Config;
+
+using Messages = Wokhan.WindowsFirewallNotifier.Common.Properties.Resources;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows;
 
@@ -129,7 +131,7 @@ public partial class ActivityWindow : Window
         // initial position needs to be calculated after Show()
 
         Point defaultPos = Settings.Default.ActivityWindow_Position;
-        if (defaultPos == new Point(0d, 0d) || defaultPos == null)
+        if (defaultPos is { X: 0d, Y: 0d })
         {
             defaultPos.X = SystemParameters.WorkArea.Width - this.ActualWidth;
             defaultPos.Y = SystemParameters.WorkArea.Height / 2;

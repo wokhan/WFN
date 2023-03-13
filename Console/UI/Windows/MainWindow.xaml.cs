@@ -42,7 +42,7 @@ public partial class MainWindow
 
     void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
     {
-        if (e.Exception is InvalidOperationException && e.Exception.InnerException != null && e.Exception.InnerException is Win32Exception && ((Win32Exception)e.Exception.InnerException).NativeErrorCode == ERROR_PRIVILEGE_NOT_HELD)
+        if (e.Exception is InvalidOperationException && e.Exception.InnerException is not null && e.Exception.InnerException is Win32Exception win32exception && win32exception.NativeErrorCode == ERROR_PRIVILEGE_NOT_HELD)
         {
             ForceDialog("You must run the Windows Firewall Notifier console as an administrator to be able to use this feature.", "Insufficient privileges");
         }
@@ -59,7 +59,7 @@ public partial class MainWindow
         //MessageBox.Show(p1, p2);
         /*var dial = await this.GetCurrentDialogAsync<BaseMetroDialog>();
 
-        if (dial != null)
+        if (dial is not null)
         {
             dial.Title = p2;
             dial.Content = p1;

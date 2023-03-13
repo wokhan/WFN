@@ -142,7 +142,7 @@ public static partial class ProcessHelper
         //@wokhan: how is this supposed to work since connection is blocked by firewall??
         LogHelper.Info("Trying to retrieve service name through connection information.");
         var ret = IPHelper.GetOwner(pid, localport);
-        if (ret != null && !String.IsNullOrEmpty(ret.ModuleName))
+        if (ret is not null && !String.IsNullOrEmpty(ret.ModuleName))
         {
             // Returns the owner only if it's indeed a service.
             string ServiceDesc = GetServiceDesc(ret.ModuleName);
@@ -177,7 +177,7 @@ public static partial class ProcessHelper
             {
                 p = null;
             }
-            if (p != null)
+            if (p is not null)
             {
                 var thread = p.Threads.Cast<ProcessThread>().SingleOrDefault(t => t.Id == threadid);
                 if (thread is null)

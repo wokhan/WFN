@@ -1,8 +1,8 @@
-﻿using System;
+﻿using log4net;
+using log4net.Config;
+using System;
 using System.IO;
 using System.Reflection;
-using log4net;
-using log4net.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Helpers;
 
 #if DEBUG
@@ -127,9 +127,9 @@ public static class LogHelper
 #endif
     {
 #if DEBUG
-        WriteLog(LogLevel.ERROR, msg + Environment.NewLine + (e != null ? e.GetType().ToString() + ": " + e.Message + Environment.NewLine + e.StackTrace : ""), memberName, filePath, lineNumber);
+        WriteLog(LogLevel.ERROR, msg + Environment.NewLine + (e is not null ? e.GetType().ToString() + ": " + e.Message + Environment.NewLine + e.StackTrace : ""), memberName, filePath, lineNumber);
 #else
-        WriteLog(LogLevel.ERROR, msg + Environment.NewLine + (e != null ? e.GetType().ToString() + ": " + e.Message + Environment.NewLine + e.StackTrace : ""));
+        WriteLog(LogLevel.ERROR, msg + Environment.NewLine + (e is not null ? e.GetType().ToString() + ": " + e.Message + Environment.NewLine + e.StackTrace : ""));
 #endif
     }
 

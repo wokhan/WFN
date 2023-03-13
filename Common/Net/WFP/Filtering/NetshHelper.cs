@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Xml;
 using System.Diagnostics;
-using System.Text;
 using System.IO;
-using Wokhan.WindowsFirewallNotifier.Common.Logging;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
 /// <summary>
 /// NetshHelper executes netsh commands and parses the resulting xml content.
@@ -48,10 +49,10 @@ public static class NetshHelper
     public static FilterResult FindMatchingFilterInfo(int filterId, bool refreshData = false)
     {
         Init(refreshData);
-        if (FiltersXmlDoc != null)
+        if (FiltersXmlDoc is not null)
         {
             FilterResult? fr = FindFilterId(filterId);
-            if (fr is null && WFPStateXmlDoc != null)
+            if (fr is null && WFPStateXmlDoc is not null)
             {
                 fr = FindWfpStateFilterId(filterId);
             }
@@ -64,10 +65,10 @@ public static class NetshHelper
     public static FilterResult FindMatchingFilterByKey(string filterKey, bool refreshData = false)
     {
         Init(refreshData);
-        if (FiltersXmlDoc != null)
+        if (FiltersXmlDoc is not null)
         {
             FilterResult? fr = FindFilterKey(filterKey);
-            if (fr is null && WFPStateXmlDoc != null)
+            if (fr is null && WFPStateXmlDoc is not null)
             {
                 fr = FindWfpStateFilterKey(filterKey);
             }
@@ -120,7 +121,7 @@ public static class NetshHelper
             XmlNode filtersNode = root.FirstChild;
             XmlNode filter = filtersNode.SelectSingleNode("item[filterId=" + filterId + "]", nsmgr);
             FilterResult? fr = null;
-            if (filter != null)
+            if (filter is not null)
             {
                 fr = new FilterResult();
                 XmlNode displayData = filter["displayData"];
@@ -151,7 +152,7 @@ public static class NetshHelper
             XmlNode filtersNode = root.FirstChild;
             XmlNode filter = filtersNode.SelectSingleNode("item[filterKey='" + filterKey + "']", nsmgr);
             FilterResult? fr = null;
-            if (filter != null)
+            if (filter is not null)
             {
                 XmlNode displayData = filter["displayData"];
                 fr = new FilterResult
@@ -184,7 +185,7 @@ public static class NetshHelper
             XmlNode filtersNode = root.SelectSingleNode("layers");
             XmlNode filter = filtersNode.SelectSingleNode("//filters/item[filterKey='" + filterKey + "']", nsmgr);
             FilterResult? fr = null;
-            if (filter != null)
+            if (filter is not null)
             {
                 XmlNode displayData = filter["displayData"];
                 fr = new FilterResult
@@ -217,7 +218,7 @@ public static class NetshHelper
             XmlNode filtersNode = root.SelectSingleNode("layers");
             XmlNode filter = filtersNode.SelectSingleNode("//filters/item[filterId=" + filterId + "]", nsmgr);
             FilterResult? fr = null;
-            if (filter != null)
+            if (filter is not null)
             {
                 XmlNode displayData = filter["displayData"];
                 fr = new FilterResult

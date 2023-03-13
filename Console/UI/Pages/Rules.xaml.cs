@@ -2,8 +2,8 @@
 using CommunityToolkit.Mvvm.Input;
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -42,6 +42,7 @@ public partial class Rules : Page
         filterRules();
     }
 
+    [ObservableProperty]
     private List<WFPRules::Rule> allRules;
 
     [ObservableProperty]
@@ -70,7 +71,7 @@ public partial class Rules : Page
         LogHelper.Debug("Retrieving all rules...");
         try
         {
-            allRules = FirewallHelper.GetRules(AlsoGetInactive: true).ToList();
+            AllRules = FirewallHelper.GetRules(AlsoGetInactive: true).ToList();
         }
         catch (Exception e)
         {
@@ -83,44 +84,35 @@ public partial class Rules : Page
         LogHelper.Debug("Filtering rules...");
         try
         {
-            Predicate<WFPRules::Rule> pred = null;
+            Predicate<WFPRules::Rule>? predType = null;
             switch (TypeFilter)
             {
                 case TypeFilterEnum.ACTIVE:
-                    pred += activeRulesPredicate;
+                    predType = activeRulesPredicate;
                     break;
 
                 case TypeFilterEnum.WFN:
-                    pred += WFNRulesPredicate;
+                    predType = WFNRulesPredicate;
                     break;
 
                 case TypeFilterEnum.WSH:
-                    pred += WSHRulesPredicate;
+                    predType = WSHRulesPredicate;
                     break;
 
-                case TypeFilterEnum.ALL: 
+                case TypeFilterEnum.ALL:
                 default:
                     break;
             }
 
+            Predicate<WFPRules::Rule>? predText = null;
             if (Filter.Length > 0)
             {
-                pred += filteredRulesPredicate;  // text filter
+                predText = filteredRulesPredicate;  // text filter
             }
 
-            //This code is messy, but the WPF DataGrid forgets the sorting when you change the ItemsSource, and you have to restore it in TWO places.
-            //TODO: clean up / improve
-            System.ComponentModel.SortDescription oldSorting = gridRules.Items.SortDescriptions.FirstOrDefault();
-            String oldSortingPropertyName = oldSorting.PropertyName ?? gridRules.Columns.FirstOrDefault().Header.ToString();
-            System.ComponentModel.ListSortDirection oldSortingDirection = oldSorting.Direction;
-            gridRules.ItemsSource = (pred is null ? allRules : allRules.Where(r => pred.GetInvocationList().All(p => ((Predicate<WFPRules::Rule>)p)(r)))).ToList();
-            gridRules.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription(oldSortingPropertyName, oldSortingDirection));
-            foreach (var column in gridRules.Columns)
+            if (predText is not null || predType is not null)
             {
-                if (column.Header.ToString() == oldSortingPropertyName)
-                {
-                    column.SortDirection = oldSortingDirection;
-                }
+                gridRules.Items.Filter = item => (predText?.Invoke((WFPRules::Rule)item) ?? true) && (predType?.Invoke((WFPRules::Rule)item) ?? true);
             }
             gridRules.Items.Refresh();
         }
@@ -134,33 +126,33 @@ public partial class Rules : Page
     private static readonly string oldRulePrefix = Common.Properties.Resources.RULE_NAME_FILTER_PREFIX2;
     private static readonly string rulePrefixAlt2 = Common.Properties.Resources.RULE_NAME_FILTER_PREFIX3;
     private static readonly string tempRulePrefix = Common.Properties.Resources.RULE_TEMP_PREFIX;
-    private bool WFNRulesPredicate(WFPRules::Rule r)
+    private bool WFNRulesPredicate(WFPRules::Rule rule)
     {
-        return r.Name.StartsWith(rulePrefix, StringComparison.Ordinal) 
-            || r.Name.StartsWith(oldRulePrefix, StringComparison.Ordinal) 
-            || r.Name.StartsWith(rulePrefixAlt2, StringComparison.Ordinal) 
-            || r.Name.StartsWith(tempRulePrefix, StringComparison.Ordinal);
+        return rule.Name.StartsWith(rulePrefix, StringComparison.Ordinal)
+            || rule.Name.StartsWith(oldRulePrefix, StringComparison.Ordinal)
+            || rule.Name.StartsWith(rulePrefixAlt2, StringComparison.Ordinal)
+            || rule.Name.StartsWith(tempRulePrefix, StringComparison.Ordinal);
     }
 
-    private bool WSHRulesPredicate(WFPRules::Rule r)
+    private bool WSHRulesPredicate(WFPRules::Rule rule)
     {
-        return r.Name.StartsWith(Common.Properties.Resources.RULE_WSH_PREFIX, StringComparison.Ordinal);
+        return rule.Name.StartsWith(Common.Properties.Resources.RULE_WSH_PREFIX, StringComparison.Ordinal);
     }
 
-    private bool activeRulesPredicate(WFPRules::Rule r)
+    private bool activeRulesPredicate(WFPRules::Rule rule)
     {
-        return r.Enabled;
+        return rule.Enabled;
     }
 
-    private bool filteredRulesPredicate(WFPRules::Rule r)
+    private bool filteredRulesPredicate(WFPRules::Rule rule)
     {
-        return (r.Name.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) > -1 || (r.ApplicationName != null && r.ApplicationName.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) > -1));
+        return (rule.Name.IndexOf(Filter, StringComparison.OrdinalIgnoreCase) > -1 || (rule.ApplicationName is not null && rule.ApplicationName.IndexOf(Filter, StringComparison.CurrentCultureIgnoreCase) > -1));
     }
 
     [RelayCommand(CanExecute = nameof(RemoveRuleCanExecute))]
     private void RemoveRule()
     {
-        System.Collections.IList selectedRules = gridRules.SelectedItems;
+        IList selectedRules = gridRules.SelectedItems;
         if (selectedRules is null || selectedRules.Count == 0)
         {
             return;
@@ -171,12 +163,12 @@ public partial class Rules : Page
             foreach (WFPRules::Rule selectedRule in selectedRules)
             {
 
-               if (!FirewallHelper.RemoveRule(selectedRule.Name))
-               {
-                   MessageBox.Show(Common.Properties.Resources.MSG_RULE_DELETE_FAILED, Common.Properties.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
-                   continue;
-               }
-               allRules.Remove(selectedRule);
+                if (!FirewallHelper.RemoveRule(selectedRule.Name))
+                {
+                    MessageBox.Show(Common.Properties.Resources.MSG_RULE_DELETE_FAILED, Common.Properties.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+                    continue;
+                }
+                allRules.Remove(selectedRule);
             }
             filterRules();
         }

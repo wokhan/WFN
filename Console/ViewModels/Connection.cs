@@ -179,7 +179,7 @@ public partial class Connection : ConnectionBaseInfo
         {
             try
             {
-                if (rawrow != null && !IsAccessDenied)
+                if (rawrow is not null && !IsAccessDenied)
                 {
                     var bandwidth = rawrow.GetTCPBandwidth();
                     // Fix according to https://docs.microsoft.com/en-us/windows/win32/api/iphlpapi/nf-iphlpapi-setpertcpconnectionestats

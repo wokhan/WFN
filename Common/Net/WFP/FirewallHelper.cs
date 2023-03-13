@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Microsoft.Win32;
+
 using NetFwTypeLib;
-using System.Linq;
-using Microsoft.Win32;
+
+using System;
 using System.Collections.Generic;
-using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
+using System.Linq;
+
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
+using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
@@ -142,25 +145,19 @@ public static partial class FirewallHelper
             var keyConfig = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\RestrictedServices\Configurable\System");
 
             IEnumerable<string> allkeyvalues = Enumerable.Empty<string>();
-            if (keyStatic != null)
+            if (keyStatic is not null)
             {
                 allkeyvalues = allkeyvalues.Concat(keyStatic.GetValueNames().Select(s => (string)keyStatic.GetValue(s)));
             }
-            if (keyConfig != null)
+            if (keyConfig is not null)
             {
                 allkeyvalues = allkeyvalues.Concat(keyConfig.GetValueNames().Select(s => (string)keyConfig.GetValue(s)));
             }
 
             wshRulesCache = allkeyvalues.Select(s => new WSHRule(s)).ToArray();
 
-            if (keyStatic != null)
-            {
-                keyStatic.Close();
-            }
-            if (keyConfig != null)
-            {
-                keyConfig.Close();
-            }
+            keyStatic?.Close();
+            keyConfig?.Close();
         }
 
         var ret = firewallPolicy.Rules.Cast<INetFwRule>()
@@ -218,7 +215,7 @@ public static partial class FirewallHelper
         {
             // get the scvName associated with svchost.exe
             var cLine = ProcessHelper.GetCommandLineFromProcessWMI(pid);
-            if (cLine != null)
+            if (cLine is not null)
             {
                 svcName = cLine.Split(new string[] { " -s " }, StringSplitOptions.None).Last().Split(' ').First();
             }

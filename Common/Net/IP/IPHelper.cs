@@ -246,7 +246,7 @@ public abstract partial class IPHelper
             }
             for (var i = 1; i < max_hops; i++)
             {
-                if (r != null && r.Status != IPStatus.TimedOut)
+                if (r is not null && r.Status != IPStatus.TimedOut)
                 {
                     po.Ttl = i;
                 }

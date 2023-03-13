@@ -5,11 +5,19 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI" 
       xmlns:rules="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;assembly=Wokhan.WindowsFirewallNotifier.Common"
+      xmlns:componentmodel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
       DataContext="{Binding RelativeSource={x:Static RelativeSource.Self}}"
       mc:Ignorable="d"
       x:Name="thisPage"
       d:DesignHeight="400" d:DesignWidth="800"
       Title="Firewall rules">
+    <Page.Resources>
+        <CollectionViewSource x:Key="AllRulesCvs" Source="{Binding AllRules,Mode=OneWay}">
+            <CollectionViewSource.SortDescriptions>
+                <componentmodel:SortDescription PropertyName="Name"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </Page.Resources>
     <DockPanel>
         <Border DockPanel.Dock="Top">
             <Border.Style>
@@ -40,7 +48,7 @@
             </Grid>
         </ContentControl>
         <Grid>
-            <DataGrid BorderThickness="0" x:Name="gridRules" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Extended" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column" SelectedItem="{Binding SelectedItem,Mode=TwoWay}">
+            <DataGrid BorderThickness="0" x:Name="gridRules" ItemsSource="{Binding Source={StaticResource AllRulesCvs}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Extended" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column" SelectedItem="{Binding SelectedItem,Mode=TwoWay}">
                 <DataGrid.CellStyle>
                     <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
                         <Setter Property="VerticalAlignment" Value="Center" />

@@ -132,7 +132,7 @@ public partial class Connections : TimerBasedPage
         lock (locker)
             lvi = AllConnections.FirstOrDefault(l => l.Pid == connectionInfo.OwningPid && l.Protocol == connectionInfo.Protocol && l.SourcePort == connectionInfo.LocalPort.ToString());
 
-        if (lvi != null)
+        if (lvi is not null)
         {
             if (DateTime.Now.Subtract(lvi.LastSeen).TotalMilliseconds > ConnectionTimeoutNew)
             {

@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
-using System.Windows;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Config;
 
@@ -73,7 +72,7 @@ public sealed partial class Settings : ApplicationSettingsBase
     public override void Save()
     {
         var userSettings = typeof(Settings).GetProperties()
-                                           .Where(property => property.GetCustomAttribute<UserScopedSettingAttribute>() != null)
+                                           .Where(property => property.GetCustomAttribute<UserScopedSettingAttribute>() is not null)
                                            .ToDictionary(property => property.Name, property => property.GetValue(this));
 
         // Not sure this is useful, as the file targeted by ConfigurationPath could as well just be overwritten when saving?

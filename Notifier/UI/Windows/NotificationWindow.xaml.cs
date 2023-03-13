@@ -85,7 +85,7 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
 
         isDetailsExpanded = expand.IsExpanded;
 
-        //if (Settings.Default.AccentColor != null)
+        //if (Settings.Default.AccentColor is not null)
         //{
         //    Resources["AccentColorBrush"] = Settings.Default.AccentColor;
         //}
@@ -245,7 +245,7 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
             OptionsView.IsServiceRuleChecked = true;
             OptionsView.SingleServiceName = activeConn.CurrentServiceDesc;
         }
-        else if (activeConn.PossibleServices != null && activeConn.PossibleServices.Length > 0)
+        else if (activeConn.PossibleServices is not null && activeConn.PossibleServices.Length > 0)
         {
             OptionsView.IsService = true;
             if (activeConn.PossibleServices.Length > 1)
@@ -301,7 +301,7 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
     private void btnNext_Click(object sender, RoutedEventArgs e)
     {
         lstConnections.SelectedIndex = Math.Min(lstConnections.Items.Count - 1, lstConnections.SelectedIndex + 1);
-        if (lstConnections.SelectedItem != null)
+        if (lstConnections.SelectedItem is not null)
         {
             lstConnections.ScrollIntoView(lstConnections.SelectedItem);
         }
@@ -316,7 +316,7 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
     private void btnPrev_Click(object sender, RoutedEventArgs e)
     {
         lstConnections.SelectedIndex = lstConnections.SelectedIndex >= 0 ? lstConnections.SelectedIndex - 1 : -1;
-        if (lstConnections.SelectedItem != null)
+        if (lstConnections.SelectedItem is not null)
         {
             lstConnections.ScrollIntoView(lstConnections.SelectedItem);
         }
@@ -358,7 +358,7 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
     private void SkipCurrent()
     {
         var tmpSelectedItem = (CurrentConn)lstConnections.SelectedItem;
-        if (tmpSelectedItem != null && lstConnections.Items.Count > 0)
+        if (tmpSelectedItem is not null && lstConnections.Items.Count > 0)
         {
             lstConnections.SelectedIndex = Math.Max(-1, lstConnections.SelectedIndex);
             ((App)Application.Current).Connections.Remove(tmpSelectedItem);
@@ -452,7 +452,7 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
         string[] services = null;
         if (OptionsView.IsServiceRuleChecked)
         {
-            if (activeConn.PossibleServices != null && activeConn.PossibleServices.Length > 0)
+            if (activeConn.PossibleServices is not null && activeConn.PossibleServices.Length > 0)
             {
                 ServicesForm sf = new ServicesForm(activeConn);
                 if (!(bool)sf.ShowDialog())
@@ -632,7 +632,7 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
             LogHelper.Info("Now going to remove temporary rule(s)...");
             success = tempRules_.TrueForAll(r => FirewallHelper.RemoveRule(r.Name));
         }
-        if (tempNotifyIcon_ != null)
+        if (tempNotifyIcon_ is not null)
         {
             tempNotifyIcon_.Dispose();
             tempNotifyIcon_ = null;

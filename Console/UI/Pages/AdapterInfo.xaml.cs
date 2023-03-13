@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
+
 using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
@@ -25,10 +26,7 @@ public partial class AdapterInfo : TimerBasedPage
         foreach (var i in allnet)
         {
             var existing = interfacesCollection.SingleOrDefault(c => c.Information.Id == i.Id);
-            if (existing != null)
-            {
-                existing.UpdateInner(i);
-            }
+            existing?.UpdateInner(i);
         }
     }
 }

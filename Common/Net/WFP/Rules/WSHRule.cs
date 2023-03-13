@@ -1,8 +1,10 @@
-﻿using System;
-using NetFwTypeLib;
+﻿using NetFwTypeLib;
+
+using System;
 using System.Linq;
-using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
+
 using Wokhan.WindowsFirewallNotifier.Common.Core.Resources;
+using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
@@ -130,7 +132,7 @@ public class WSHRule : Rule
 
     //private string resolveString(string p)
     //{
-    //    if (p != null && p.StartsWith("@"))
+    //    if (p is not null && p.StartsWith("@"))
     //    {
     //        string[] res = p.Substring(1).Split(',');
 

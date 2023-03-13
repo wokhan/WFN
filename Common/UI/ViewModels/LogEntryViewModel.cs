@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Windows.Media;
-using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
 using System.Diagnostics;
+using System.Linq;
+using System.Windows.Media;
+
+using Wokhan.ComponentModel.Extensions;
+using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
+using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
 using Wokhan.WindowsFirewallNotifier.Common.Security;
+
 using WFP = Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
-using Wokhan.WindowsFirewallNotifier.Common.Logging;
-using System.Linq;
-using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
-using Wokhan.WindowsFirewallNotifier.Common.Core;
-using Wokhan.ComponentModel.Extensions;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 
@@ -31,7 +32,7 @@ public class LogEntryViewModel : ConnectionBaseInfo
 
     public static bool TryCreateFromEventLogEntry<T>(EventLogEntry entry, int index, out T? view) where T : LogEntryViewModel, new()
     {
-        if (entry == null)
+        if (entry is null)
         {
             view = null;
             return false;
