@@ -5,18 +5,30 @@ on:
     types: [created]
     
 jobs:
-  publish-anycpu:
+  publish:
     runs-on: windows-latest
+    strategy:
+      matrix:
+        include:
+          - release-name: anycpu
+          - release-name: x64-standalone
+            release: -r win-x64
+            pub-folder: win-x64/
+            self-contained: --self-contained true
+          - release-name: x86-standalone
+            release: -r win-x86
+            pub-folder: win-x86/
+            self-contained: --self-contained true
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3.3.0
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 7.0.100
     - name: Build and publish
-      run: dotnet publish -c Release
+      run: dotnet publish ${{ matrix.release }} -c Release ${{ matrix.self-contained }}
     - name: Zip published files
-      run: compress-archive -path ./bin/net7.0-windows/publish/* -destinationpath ./bin/net7.0-windows/wfn.zip
+      run: compress-archive -path ./bin/net7.0-windows/${{ matrix.pub-folder }}publish/* -destinationpath ./bin/net7.0-windows/wfn-${{ matrix.release-name }}.zip
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.2.2
@@ -29,61 +41,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./bin/net7.0-windows/wfn.zip 
-          asset_name: wfn-${{ steps.get_release.outputs.tag_name }}.zip 
-          asset_content_type: application/zip
-  publish-x64:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 7.0.100
-    - name: Build and publish
-      run: dotnet publish -r win-x64 -c Release --self-contained true
-    - name: Zip published files
-      run: compress-archive -path ./bin/net7.0-windows/win-x64/publish/* -destinationpath ./bin/net7.0-windows/wfn-x64.zip
-    - name: Get release
-      id: get_release
-      uses: bruceadams/get-release@v1.2.2
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload asset
-      id: upload-release-asset 
-      uses: actions/upload-release-asset@v1
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-          upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./bin/net7.0-windows/wfn-x64.zip 
-          asset_name: wfn-x64-standalone-${{ steps.get_release.outputs.tag_name }}.zip 
-          asset_content_type: application/zip 
-  publish-x86:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 7.0.100
-    - name: Build and publish
-      run: dotnet publish -r win-x86 -c Release --self-contained true
-    - name: Zip published files
-      run: compress-archive -path ./bin/net7.0-windows/win-x86/publish -destinationpath ./bin/net7.0-windows/wfn-x86.zip
-    - name: Get release
-      id: get_release
-      uses: bruceadams/get-release@v1.2.2
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload asset
-      id: upload-release-asset 
-      uses: actions/upload-release-asset@v1
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-          upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./bin/net7.0-windows/wfn-x86.zip
-          asset_name: wfn-x86-standalone-${{ steps.get_release.outputs.tag_name }}.zip 
+          asset_path: ./bin/net7.0-windows/wfn-${{ matrix.release-name }}.zip
+          asset_name: wfn-${{ steps.get_release.outputs.tag_name }}-${{ matrix.release-name }}.zip 
           asset_content_type: application/zip 
       
