@@ -2,78 +2,53 @@ name: Nightlies
 
 on: 
   push:
-    branches: 
+    branches:
         - master
   #schedule: # to be enabled to have real nightlies
     #- cron: 0 0 * * *
-
+  
 jobs:
-  publish-nightly:
-    runs-on: windows-latest
+  update-tag:
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Update nightly tag
+      uses: richardsimko/update-tag@v1.0.7
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: nightlies
+  publish:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        include:
+          - release-name: anycpu
+          - release-name: x64-standalone
+            release: -r win-x64
+            pub-folder: win-x64/
+            self-contained: --self-contained true
+          - release-name: x86-standalone
+            release: -r win-x86
+            pub-folder: win-x86/
+            self-contained: --self-contained true
+    steps:
+    - uses: actions/checkout@v3.3.0
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 7.0.100
     - name: Build and publish
-      run: dotnet publish -c Release
+      run: dotnet publish ${{ matrix.release }} -c Release ${{ matrix.self-contained }}
     - name: Zip published files
-      run: compress-archive -path ./bin/net7.0-windows/publish/* -destinationpath ./bin/net7.0-windows/wfn.zip
+      run: compress-archive -path ./bin/net7.0-windows/${{ matrix.pub-folder }}publish/* -destinationpath ./bin/net7.0-windows/wfn-${{ matrix.release-name }}.zip
     - name: Deploy nightly
-      uses: WebFreak001/deploy-nightly@v1.0.1
+      uses: WebFreak001/deploy-nightly@v2.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
       with:
         upload_url: https://uploads.github.com/repos/wokhan/WFN/releases/24573510/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
         release_id: 24573510 # same as above (id can just be taken out the upload_url, it's used to find old releases)
-        asset_path: ./bin/net7.0-windows/wfn.zip # path to archive to upload
-        asset_name: wfn-nightly-no-test-$$.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
+        asset_path: ./bin/net7.0-windows/wfn-${{ matrix.release-name }}.zip # path to archive to upload
+        asset_name: wfn-$$-${{ matrix.release-name }}.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
         asset_content_type: application/zip # required by GitHub API
-        #max_releases: 7 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
-  publish-nightly-x64:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 7.0.100
-    - name: Build and publish
-      run: dotnet publish -r win-x64 -c Release --self-contained true
-    - name: Zip published files
-      run: compress-archive -path ./bin/net7.0-windows/win-x64/publish/* -destinationpath ./bin/net7.0-windows/wfn-x64.zip
-    - name: Deploy nightly
-      uses: WebFreak001/deploy-nightly@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
-      with:
-        upload_url: https://uploads.github.com/repos/wokhan/WFN/releases/24573510/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
-        release_id: 24573510 # same as above (id can just be taken out the upload_url, it's used to find old releases)
-        asset_path: ./bin/net7.0-windows/wfn-x64.zip # path to archive to upload
-        asset_name: wfn-x64-full-nightly-no-test-$$.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
-        asset_content_type: application/zip # required by GitHub API
-        #max_releases: 7 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
-  publish-nightly-x86:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 7.0.100
-    - name: Build and publish
-      run: dotnet publish -r win-x86 -c Release --self-contained true
-    - name: Zip published files
-      run: compress-archive -path ./bin/net7.0-windows/win-x86/publish -destinationpath ./bin/net7.0-windows/wfn-x86.zip
-    - name: Deploy nightly
-      uses: WebFreak001/deploy-nightly@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
-      with:
-        upload_url: https://uploads.github.com/repos/wokhan/WFN/releases/24573510/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
-        release_id: 24573510 # same as above (id can just be taken out the upload_url, it's used to find old releases)
-        asset_path: ./bin/net7.0-windows/wfn-x86.zip # path to archive to upload
-        asset_name: wfn-x86-full-nightly-no-test-$$.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
-        asset_content_type: application/zip # required by GitHub API
-        #max_releases: 7 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
+        max_releases: 5 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
