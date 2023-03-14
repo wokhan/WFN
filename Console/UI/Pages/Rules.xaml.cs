@@ -27,13 +27,27 @@ public partial class Rules : Page
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(LocateCommand), nameof(RemoveRuleCommand))]
-    private WFPRules::Rule selectedItem;
+    private WFPRules::Rule? selectedItem;
+
+
+    [ObservableProperty]
+    private List<WFPRules::Rule> allRules;
+
+    [ObservableProperty]
+    private string _textFilter = String.Empty;
+    partial void OnTextFilterChanged(string _) => filterRules();
+
+    [ObservableProperty]
+    private TypeFilterEnum _typeFilter = TypeFilterEnum.ACTIVE;
+    partial void OnTypeFilterChanged(TypeFilterEnum _) => filterRules();
 
     public Rules()
     {
         this.Loaded += Rules_Loaded;
 
         InitializeComponent();
+
+        gridRules.Items.Filter = filteredRulesPredicate;
     }
 
     private void Rules_Loaded(object sender, RoutedEventArgs e)
@@ -42,29 +56,17 @@ public partial class Rules : Page
         filterRules();
     }
 
-    [ObservableProperty]
-    private List<WFPRules::Rule> allRules;
-
-    [ObservableProperty]
-    private string _filter = String.Empty;
-    partial void OnFilterChanged(string value) => filterRules();
-
     public enum TypeFilterEnum
     {
         ALL, ACTIVE, WFN, WSH
     }
-    public static Dictionary<TypeFilterEnum, string> TypeFilters => new Dictionary<TypeFilterEnum, string> {
-                                                 { TypeFilterEnum.WFN, "WFN rules" },
-                                                 { TypeFilterEnum.ACTIVE, "Active rules" },
-                                                 { TypeFilterEnum.ALL, "Show all" },
-                                                 { TypeFilterEnum.WSH, "WSH rules (Windows hidden rules)" }
-            };
-
-
-    [ObservableProperty]
-    private TypeFilterEnum _typeFilter = TypeFilterEnum.ACTIVE;
-
-    partial void OnTypeFilterChanged(TypeFilterEnum value) => filterRules();
+    public static Dictionary<TypeFilterEnum, string> TypeFilters => new()
+    {
+        { TypeFilterEnum.WFN, "WFN rules" },
+        { TypeFilterEnum.ACTIVE, "Active rules" },
+        { TypeFilterEnum.ALL, "Show all" },
+        { TypeFilterEnum.WSH, "WSH rules (Windows hidden rules)" }
+    };
 
     private void initRules()
     {
@@ -79,24 +81,27 @@ public partial class Rules : Page
         }
     }
 
+    Predicate<object>? predType = null;
     private void filterRules()
     {
+        gridRules.Items.Filter -= predType;
+        gridRules.Items.Filter -= filteredRulesPredicate;
+
         LogHelper.Debug("Filtering rules...");
         try
         {
-            Predicate<WFPRules::Rule>? predType = null;
             switch (TypeFilter)
             {
                 case TypeFilterEnum.ACTIVE:
-                    predType = activeRulesPredicate;
+                    gridRules.Items.Filter += predType = activeRulesPredicate;
                     break;
 
                 case TypeFilterEnum.WFN:
-                    predType = WFNRulesPredicate;
+                    gridRules.Items.Filter += predType = WFNRulesPredicate;
                     break;
 
                 case TypeFilterEnum.WSH:
-                    predType = WSHRulesPredicate;
+                    gridRules.Items.Filter += predType = WSHRulesPredicate;
                     break;
 
                 case TypeFilterEnum.ALL:
@@ -104,15 +109,10 @@ public partial class Rules : Page
                     break;
             }
 
-            Predicate<WFPRules::Rule>? predText = null;
-            if (Filter.Length > 0)
+            // We want the text filter to be applied *after* the rule type filter for performance reason, hence the Predicate being added again.
+            if (!String.IsNullOrEmpty(TextFilter))
             {
-                predText = filteredRulesPredicate;  // text filter
-            }
-
-            if (predText is not null || predType is not null)
-            {
-                gridRules.Items.Filter = item => (predText?.Invoke((WFPRules::Rule)item) ?? true) && (predType?.Invoke((WFPRules::Rule)item) ?? true);
+                gridRules.Items.Filter += filteredRulesPredicate;
             }
             gridRules.Items.Refresh();
         }
@@ -126,27 +126,30 @@ public partial class Rules : Page
     private static readonly string oldRulePrefix = Common.Properties.Resources.RULE_NAME_FILTER_PREFIX2;
     private static readonly string rulePrefixAlt2 = Common.Properties.Resources.RULE_NAME_FILTER_PREFIX3;
     private static readonly string tempRulePrefix = Common.Properties.Resources.RULE_TEMP_PREFIX;
-    private bool WFNRulesPredicate(WFPRules::Rule rule)
+    private bool WFNRulesPredicate(object ruleAsObject)
     {
+        var rule = (WFPRules::Rule)ruleAsObject;
+
         return rule.Name.StartsWith(rulePrefix, StringComparison.Ordinal)
             || rule.Name.StartsWith(oldRulePrefix, StringComparison.Ordinal)
             || rule.Name.StartsWith(rulePrefixAlt2, StringComparison.Ordinal)
             || rule.Name.StartsWith(tempRulePrefix, StringComparison.Ordinal);
     }
 
-    private bool WSHRulesPredicate(WFPRules::Rule rule)
+    private bool WSHRulesPredicate(object ruleAsObject)
     {
-        return rule.Name.StartsWith(Common.Properties.Resources.RULE_WSH_PREFIX, StringComparison.Ordinal);
+        return ((WFPRules::Rule)ruleAsObject).Name.StartsWith(Common.Properties.Resources.RULE_WSH_PREFIX, StringComparison.Ordinal);
     }
 
-    private bool activeRulesPredicate(WFPRules::Rule rule)
+    private bool activeRulesPredicate(object ruleAsObject)
     {
-        return rule.Enabled;
+        return ((WFPRules::Rule)ruleAsObject).Enabled;
     }
 
-    private bool filteredRulesPredicate(WFPRules::Rule rule)
+    private bool filteredRulesPredicate(object ruleAsObject)
     {
-        return (rule.Name.IndexOf(Filter, StringComparison.OrdinalIgnoreCase) > -1 || (rule.ApplicationName is not null && rule.ApplicationName.IndexOf(Filter, StringComparison.CurrentCultureIgnoreCase) > -1));
+        var rule = (WFPRules::Rule)ruleAsObject;
+        return (rule.Name.IndexOf(TextFilter, StringComparison.OrdinalIgnoreCase) > -1 || (rule.ApplicationName?.IndexOf(TextFilter, StringComparison.CurrentCultureIgnoreCase) > -1));
     }
 
     [RelayCommand(CanExecute = nameof(RemoveRuleCanExecute))]
@@ -168,7 +171,7 @@ public partial class Rules : Page
                     MessageBox.Show(Common.Properties.Resources.MSG_RULE_DELETE_FAILED, Common.Properties.Resources.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
                     continue;
                 }
-                allRules.Remove(selectedRule);
+                AllRules.Remove(selectedRule);
             }
             filterRules();
         }
@@ -188,7 +191,7 @@ public partial class Rules : Page
     [RelayCommand]
     private void StartAdvConsole()
     {
-        ProcessHelper.StartShellExecutable("WF.msc", null, true);
+        ProcessHelper.StartShellExecutable("WF.msc", showMessageBox: true);
     }
 
     [RelayCommand]

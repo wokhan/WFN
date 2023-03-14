@@ -21,14 +21,17 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 
 public partial class Connections : TimerBasedPage
 {
-    private const double ConnectionTimeoutRemove = 5.0; //seconds
-    private const double ConnectionTimeoutDying = 2.0; //seconds
+    private const double ConnectionTimeoutRemove = 5000.0; //milliseconds
+    private const double ConnectionTimeoutDying = 2000.0; //milliseconds
     private const double ConnectionTimeoutNew = 1000.0; //milliseconds
 
-    private readonly object locker = new object();
-    private readonly object uisynclocker = new object();
+    private readonly object locker = new();
+    private readonly object uisynclocker = new();
 
-    public ObservableCollection<Connection> AllConnections { get; } = new ObservableCollection<Connection>();
+    //TODO: let the user pick a color palette for the bandwidth graph & connection
+    private List<Color> Colors;
+
+    public ObservableCollection<Connection> AllConnections { get; } = new();
 
     public Connections()
     {
@@ -41,9 +44,9 @@ public partial class Connections : TimerBasedPage
         InitializeComponent();
     }
 
-    private void SettingsChanged(object sender, PropertyChangedEventArgs e)
+    private void SettingsChanged(object? sender, PropertyChangedEventArgs? e)
     {
-        if (e.PropertyName == nameof(Settings.Theme))
+        if (e?.PropertyName == nameof(Settings.Theme))
         {
             UpdateConnectionsColors();
         }
@@ -101,10 +104,11 @@ public partial class Connections : TimerBasedPage
                 AddOrUpdateConnection(c);
             }
 
+            // Start from the end as it's easier to handle removal from a collection when what you removed doesn't impact the actual index / count
             for (int i = AllConnections.Count - 1; i >= 0; i--)
             {
                 var item = AllConnections[i];
-                double elapsed = DateTime.Now.Subtract(item.LastSeen).TotalSeconds;
+                var elapsed = DateTime.Now.Subtract(item.LastSeen).TotalMilliseconds;
                 if (elapsed > ConnectionTimeoutRemove)
                 {
                     lock (locker)
@@ -114,6 +118,10 @@ public partial class Connections : TimerBasedPage
                 {
                     item.IsDying = true;
                 }
+                else if (DateTime.Now.Subtract(item.CreationTime).TotalMilliseconds > ConnectionTimeoutNew)
+                {
+                    item.IsNew = false;
+                }
             }
 
             if (graph.IsVisible) graph.UpdateGraph();
@@ -122,23 +130,15 @@ public partial class Connections : TimerBasedPage
     }
 
 
-    //TODO: let the user pick a color palette for the bandwidth graph & connection
-    private List<Color> Colors;
-
     private void AddOrUpdateConnection(IConnectionOwnerInfo connectionInfo)
     {
-        Connection lvi;
+        Connection? lvi;
         // TEMP: test to avoid enumerating while modifying (might result in a deadlock, to test carefully!)
         lock (locker)
             lvi = AllConnections.FirstOrDefault(l => l.Pid == connectionInfo.OwningPid && l.Protocol == connectionInfo.Protocol && l.SourcePort == connectionInfo.LocalPort.ToString());
 
         if (lvi is not null)
         {
-            if (DateTime.Now.Subtract(lvi.LastSeen).TotalMilliseconds > ConnectionTimeoutNew)
-            {
-                lvi.IsNew = false;
-            }
-
             lvi.UpdateValues(connectionInfo);
         }
         else
@@ -151,24 +151,13 @@ public partial class Connections : TimerBasedPage
     internal void UpdateConnectionsColors()
     {
         // TODO: temporary improvement for dark themes colors. I'll have to rework this anyway.
-        switch (Settings.Default.Theme)
+        Colors = Settings.Default.Theme switch
         {
-            case ThemeHelper.THEME_LIGHT:
-                Colors = LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList();
-                break;
-
-            case ThemeHelper.THEME_DARK:
-                Colors = LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList();
-                break;
-                
-            case ThemeHelper.THEME_SYSTEM:
-                Colors = new List<Color> { SystemColors.WindowTextColor };
-                break;
-
-            default:
-                Colors = LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList();
-                break;
-        }
+            ThemeHelper.THEME_LIGHT => LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList(),
+            ThemeHelper.THEME_DARK => LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList(),
+            ThemeHelper.THEME_SYSTEM => new List<Color> { SystemColors.WindowTextColor },
+            _ => LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList(),
+        };
 
         lock (locker)
             for (var i = 0; i < AllConnections.Count; i++)

@@ -222,13 +222,13 @@ public sealed class EventLogAsyncReader<T> : IPagedSourceProviderAsync<T>, INoti
                     continue;
                 }
             }
-            catch// (IndexOutOfRangeException)
+            catch (IndexOutOfRangeException)
             {
                 // Ignore
                 continue;
             }
 
-            if (ret is object)
+            if (ret is not null)
             {
                 yield return ret;
             }

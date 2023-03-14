@@ -8,11 +8,11 @@ public static class StreamExtensions
 {
     public static IEnumerable<string> ReadLines(this StreamReader src)
     {
-        Contract.Requires(src is object);
+        Contract.Requires(src is not null);
 
-        while (!src.EndOfStream)
+        while (!src!.EndOfStream)
         {
-            yield return src.ReadLine();
+            yield return src.ReadLine()!;
         }
     }
 }

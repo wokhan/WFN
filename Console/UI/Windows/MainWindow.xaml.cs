@@ -1,20 +1,27 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
+using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
-public partial class MainWindow
+[ObservableObject]
+public partial class MainWindow 
 {
+    [ObservableProperty]
+    private int connectionsCount;
+
     private const uint ERROR_PRIVILEGE_NOT_HELD = 1314;
 
     /// <summary>
@@ -36,8 +43,16 @@ public partial class MainWindow
     {
         InitializeComponent();
 
+        var timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1), IsEnabled = true };
+        timer.Tick += Timer_Tick;
+
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+    }
+
+    private void Timer_Tick(object? sender, EventArgs e)
+    {
+        ConnectionsCount = IPHelper.GetAllConnections().Count();
     }
 
     void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

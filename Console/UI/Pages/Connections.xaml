@@ -133,7 +133,11 @@
                     <DataGridTextColumn Header="Remote address" Binding="{Binding TargetIP, Mode=OneTime}">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
-                                <Setter Property="ToolTip" Value="{Binding TargetHostName}" />
+                                <Setter Property="ToolTip">
+                                    <Setter.Value>
+                                        <TextBlock Text="{Binding TargetHostName,StringFormat='Host: {0}',TargetNullValue='...'}" />
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>

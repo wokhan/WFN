@@ -26,7 +26,6 @@ public class LogHelperTest : NUnitTestBase
 
     // See testoutput for result (test method doesn't write to output window)
     [Test, IntegrationTestCategory]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
     public void TestLogHelper()
     {
         // test log4net ouput capturing (see Debug output window)

@@ -3,11 +3,9 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using Wokhan.ComponentModel.Extensions;
-using Wokhan.WindowsFirewallNotifier.Common.Core;
 using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Net.DNS;
@@ -16,7 +14,7 @@ namespace Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 
 public class ConnectionBaseInfo : ObservableObject
 {
-    public DateTime? CreationTime { get; protected set; }
+    public DateTime CreationTime { get; init; }
 
     public uint Pid { get; protected set; }
 
@@ -63,14 +61,7 @@ public class ConnectionBaseInfo : ObservableObject
     private string? _targetHostName;
     public string? TargetHostName
     {
-        get
-        {
-            if (_targetHostName is null)
-            {
-                _ = DnsResolver.ResolveIpAddressAsync(TargetIP, entry => TargetHostName = entry.DisplayText);
-            }
-            return _targetHostName;
-        }
+        get => this.GetOrSetValueAsync(() => ResolvedIPInformation.ResolveIpAddressAsync(TargetIP), ref _targetHostName, OnPropertyChanged);
         protected set => this.SetValue(ref _targetHostName, value, OnPropertyChanged);
     }
 
@@ -130,19 +121,12 @@ public class ConnectionBaseInfo : ObservableObject
             company = "?";
         }
 
-        switch (fieldName)
+        return fieldName switch
         {
-            case nameof(description):
-                return description;
-
-            case nameof(productName):
-                return productName;
-
-            case nameof(company):
-                return company;
-
-            default:
-                return String.Empty;
-        }
+            nameof(description) => description,
+            nameof(productName) => productName,
+            nameof(company) => company,
+            _ => String.Empty,
+        };
     }
 }

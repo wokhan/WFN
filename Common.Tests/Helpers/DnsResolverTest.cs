@@ -24,15 +24,15 @@ public class DnsResolverTest : NUnitTestBase
         };
 
         WriteDebugOutput("Resolve first 3 entries:");
-        _ = DnsResolver.ResolveIpAddressAsync(ipList[0]).ConfigureAwait(true);
-        _ = DnsResolver.ResolveIpAddressAsync(ipList[1]).ConfigureAwait(true);
-        _ = DnsResolver.ResolveIpAddressAsync(ipList[2]).ConfigureAwait(false);
+        _ = ResolvedIPInformation.ResolveIpAddressAsync(ipList[0]).ConfigureAwait(true);
+        _ = ResolvedIPInformation.ResolveIpAddressAsync(ipList[1]).ConfigureAwait(true);
+        _ = ResolvedIPInformation.ResolveIpAddressAsync(ipList[2]).ConfigureAwait(false);
 
         Task.WaitAll();
 
         LogDictEntries();
-        Assert.AreEqual("dns.google", DnsResolver.CachedIPHostEntryDict[IPAddress.Parse("8.8.8.8")].HostEntry.HostName);
-        Assert.True(DnsResolver.CachedIPHostEntryDict.Values.Count == 4);
+        Assert.AreEqual("dns.google", ResolvedIPInformation.CachedIPHostEntryDict[IPAddress.Parse("8.8.8.8")].HostEntry.HostName);
+        Assert.True(ResolvedIPInformation.CachedIPHostEntryDict.Values.Count == 4);
 
         ipList = new List<string>
         {
@@ -42,13 +42,13 @@ public class DnsResolverTest : NUnitTestBase
             "1.78.64.10", // sp1-78-64-10.msa.spmode.ne.jp
         };
         WriteDebugOutput("Resolve next 3 entries:");
-        _ = DnsResolver.ResolveIpAddressAsync(ipList[0]).ConfigureAwait(false);
-        _ = DnsResolver.ResolveIpAddressAsync(ipList[1]).ConfigureAwait(false);
-        _ = DnsResolver.ResolveIpAddressAsync(ipList[2]).ConfigureAwait(false);
-        _ = DnsResolver.ResolveIpAddressAsync(ipList[3]).ConfigureAwait(false);
+        _ = ResolvedIPInformation.ResolveIpAddressAsync(ipList[0]).ConfigureAwait(false);
+        _ = ResolvedIPInformation.ResolveIpAddressAsync(ipList[1]).ConfigureAwait(false);
+        _ = ResolvedIPInformation.ResolveIpAddressAsync(ipList[2]).ConfigureAwait(false);
+        _ = ResolvedIPInformation.ResolveIpAddressAsync(ipList[3]).ConfigureAwait(false);
         
         LogDictEntries();
-        Assert.True(DnsResolver.CachedIPHostEntryDict.Values.Count == 7);
+        Assert.True(ResolvedIPInformation.CachedIPHostEntryDict.Values.Count == 7);
         //Wrong test, at least on my computer. This is not one of google's dns (which is 8.8.8.8), probably something true in Switzerland but not here :-/
         //Assert.AreEqual("dns.google", DnsResolver.CachedIPHostEntryDict[IPAddress.Parse("2001:4860:4860::8888")].HostEntry.HostName);
 
@@ -64,17 +64,17 @@ public class DnsResolverTest : NUnitTestBase
         };
         WriteDebugOutput("Unresolvabe IPs:");
 
-        _ = DnsResolver.ResolveIpAddressAsync("1.9.1.9").ConfigureAwait(false);
+        _ = ResolvedIPInformation.ResolveIpAddressAsync("1.9.1.9").ConfigureAwait(false);
         
         LogDictEntries();
 
-        Assert.True(DnsResolver.CachedIPHostEntryDict.ContainsKey(IPAddress.Parse("1.9.1.9")));
-        Assert.False(DnsResolver.CachedIPHostEntryDict[IPAddress.Parse("1.9.1.9")].IsResolved);
+        Assert.True(ResolvedIPInformation.CachedIPHostEntryDict.ContainsKey(IPAddress.Parse("1.9.1.9")));
+        Assert.False(ResolvedIPInformation.CachedIPHostEntryDict[IPAddress.Parse("1.9.1.9")].IsResolved);
     }
 
     private static void LogDictEntries()
     {
-        foreach (var entry in DnsResolver.CachedIPHostEntryDict)
+        foreach (var entry in ResolvedIPInformation.CachedIPHostEntryDict)
         {
             WriteDebugOutput($"{ entry.Key }: isResolved={entry.Value.IsResolved} hostName={entry.Value.HostEntry.HostName}, tooltipText={entry.Value.DisplayText}\n");
         }

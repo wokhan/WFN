@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 
 using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -21,11 +22,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 [ObservableObject]
 public sealed partial class EventsLog : Page, IDisposable
 {
-    public EventLogAsyncReader<LogEntryViewModel> EventsReader { get; set; }
+    public EventLogAsyncReader<LogEntryViewModel>? EventsReader { get; set; }
 
-    public ICollectionView dataView;
-
-    private readonly EventsLogFilters eventsLogFilters;
+    public ICollectionView? dataView;
 
     public int TCPOnlyOrAll
     {
@@ -42,24 +41,18 @@ public sealed partial class EventsLog : Page, IDisposable
             {
                 Settings.Default.FilterTcpOnlyEvents = value;
                 Settings.Default.Save();
-                eventsLogFilters.ResetTcpFilter();
+                ResetTcpFilter();
             }
         }
     }
 
-    public string FilterText
-    {
-        get => eventsLogFilters.FilterText;
-        set
-        {
-            eventsLogFilters.FilterText = value;
-            eventsLogFilters.ResetTextfilter();
-        }
-    }
+    [ObservableProperty]
+    private string _textFilter = String.Empty;
+    partial void OnTextFilterChanged(string _) => ResetTextFilter();
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(LocateCommand))]
-    private LogEntryViewModel selectedItem;
+    private LogEntryViewModel? selectedItem;
 
     public EventsLog()
     {
@@ -70,8 +63,6 @@ public sealed partial class EventsLog : Page, IDisposable
             Loaded += (s, e) => StartHandlingSecurityLogEvents();
             Unloaded += (s, e) => StopHandlingSecurityLogEvents();
         }
-
-        eventsLogFilters = new EventsLogFilters(this);
 
         InitializeComponent();
 
@@ -129,13 +120,61 @@ public sealed partial class EventsLog : Page, IDisposable
     [RelayCommand]
     private void OpenEventsLogViewer()
     {
-        ProcessHelper.StartShellExecutable("eventvwr.msc", null, true);
+        ProcessHelper.StartShellExecutable("eventvwr.msc", showMessageBox: true);
     }
 
     [RelayCommand]
     private void Refresh()
     {
         StartHandlingSecurityLogEvents(true);
+    }
+
+
+    private bool TcpFilterPredicate(object entryAsObject) => ((LogEntryViewModel)entryAsObject).Protocol == "TCP";
+    private bool FilterTextPredicate(object entryAsObject)
+    {
+        var le = (LogEntryViewModel)entryAsObject;
+
+        // Note: do not use Remote Host, because this will trigger dns resolution over all entries
+        return (le.TargetIP is not null && le.TargetIP.StartsWith(TextFilter, StringComparison.Ordinal))
+            || (le.ServiceName is not null && le.ServiceName.Contains(TextFilter, StringComparison.OrdinalIgnoreCase))
+            || (le.FileName is not null && le.FileName.Contains(TextFilter, StringComparison.OrdinalIgnoreCase));
+    }
+
+    internal void ResetTcpFilter()
+    {
+        if (dataView is null)
+        {
+            return;
+        }
+
+        dataView.Filter -= TcpFilterPredicate;
+        if (IsTCPOnlyEnabled)
+        {
+            dataView.Filter += TcpFilterPredicate;
+        }
+    }
+
+
+
+    private bool _isResetTextFilterPending;
+    internal async void ResetTextFilter()
+    {
+        if (!_isResetTextFilterPending)
+        {
+            _isResetTextFilterPending = true;
+            await Task.Delay(500).ConfigureAwait(true);
+            if (!string.IsNullOrWhiteSpace(TextFilter))
+            {
+                dataView!.Filter -= FilterTextPredicate;
+                dataView.Filter += FilterTextPredicate;
+            }
+            else
+            {
+                dataView!.Filter -= FilterTextPredicate;
+            }
+            _isResetTextFilterPending = false;
+        }
     }
 
 

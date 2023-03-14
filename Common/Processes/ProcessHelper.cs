@@ -665,7 +665,7 @@ public static partial class ProcessHelper
     /// <param name="executable">Path to the executable to launche</param>
     /// <param name="args">Arguments to pass to the executable</param>
     /// <param name="showMessageBox">Shows a message box if an error occurs. Not really user friendly but straightforward</param>
-    public static void StartShellExecutable(string executable, string args, bool showMessageBox)
+    public static void StartShellExecutable(string executable, string args = "", bool showMessageBox = false)
     {
         try
         {

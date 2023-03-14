@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Media;
-
-using Wokhan.ComponentModel.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP.TCP;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
@@ -32,7 +30,7 @@ public partial class Connection : ConnectionBaseInfo
         Pid = ownerMod.OwningPid;
         SourceIP = ownerMod.LocalAddress;
         SourcePort = ownerMod.LocalPort.ToString();
-        CreationTime = ownerMod.CreationTime;
+        CreationTime = ownerMod.CreationTime ?? DateTime.Now;
         Protocol = ownerMod.Protocol;
         TargetIP = ownerMod.RemoteAddress;
         TargetPort = (ownerMod.RemotePort == -1 ? String.Empty : ownerMod.RemotePort.ToString());
@@ -128,7 +126,7 @@ public partial class Connection : ConnectionBaseInfo
     [ObservableProperty]
     private ulong _outboundBandwidth;
 
-    public DateTime LastSeen { get; set; }
+    public DateTime LastSeen { get; private set; }
 
     private readonly IConnectionOwnerInfo rawConnection;
     private ITcpRow rawrow;

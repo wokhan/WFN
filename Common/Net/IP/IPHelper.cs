@@ -106,7 +106,7 @@ public abstract partial class IPHelper
     public static int GetMaxUserPort()
     {
         using var maxUserPortKey = Registry.LocalMachine.OpenSubKey(MAX_USER_PORT_REGISTRY_KEY, false);
-        var maxUserPortValue = maxUserPortKey.GetValue(MAX_USER_PORT_REGISTRY_VALUE);
+        var maxUserPortValue = maxUserPortKey?.GetValue(MAX_USER_PORT_REGISTRY_VALUE);
         if (maxUserPortValue is null)
         {
             //Default from Windows Vista and up
@@ -219,7 +219,7 @@ public abstract partial class IPHelper
             using var reader = new StreamReader(response.GetResponseStream());
 
             var ans = reader.ReadLines().Skip(2).First();
-            var adr = Regex.Match(ans, "Current IP Address: (.*)", RegexOptions.Singleline);
+            var adr = CurrentIPAddressRegEx().Match(ans);
 
             return IPAddress.Parse(adr.Groups[1].Value.Trim());
         }
@@ -265,4 +265,7 @@ public abstract partial class IPHelper
         ret.Add(IPAddress.Parse(adr));
         return ret;
     }
+
+    [GeneratedRegex("Current IP Address: (.*)", RegexOptions.Singleline)]
+    private static partial Regex CurrentIPAddressRegEx();
 }
