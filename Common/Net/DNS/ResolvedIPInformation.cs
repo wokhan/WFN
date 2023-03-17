@@ -6,38 +6,19 @@ using System.Threading.Tasks;
 
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
-/// <summary>
-/// DnsResolver resolves IP addesses to IPHostEntry records asynchronously and caches them in a dictionary.
-/// Author (initial version): harrwiss / Nov 2019
-/// Rewritten by wokhan
-/// </summary>
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.DNS;
 
 public class ResolvedIPInformation
 {
-    
-    private SemaphoreSlim semaphore = new(1);
-    private IPAddress ip;
-    private bool isResolving = false;
+    internal static readonly ConcurrentDictionary<string, ResolvedIPInformation> CachedIPHostEntryDict = new();
 
-    public IPHostEntry? HostEntry { get; private set; }
+    private readonly ManualResetEventSlim _eventSlim = new ManualResetEventSlim(true);
 
-    /// <summary>
-    /// Gets the resolved status of an ip address - a resolved entry can have <see cref="HasErrors"/>
-    /// </summary>
-    public bool IsResolved { get; private set; } = false;
+    private readonly string ip;
 
-    /// <summary>
-    /// Returns true if an ip address could not be resolved to a host name.
-    /// </summary>
-    public bool HasErrors { get; private set; } = false;
+    internal bool handled;
 
-    /// <summary>
-    /// Text displayed on the ui - may also return an error message.
-    /// </summary>
-    public string DisplayText { get; private set; } = "...";
-
-    public static readonly ConcurrentDictionary<IPAddress, ResolvedIPInformation> CachedIPHostEntryDict = new();
+    internal string resolvedHost = "N/A";
 
     public static async Task<string?> ResolveIpAddressAsync(string ip)
     {
@@ -46,62 +27,40 @@ public class ResolvedIPInformation
             return String.Empty;
         }
 
-        if (!IPAddress.TryParse(ip, out var ipa))
-        {
-            return "N/A";
-        }
-
-        var entry = CachedIPHostEntryDict.GetOrAdd(ipa, sourceIp => new ResolvedIPInformation(sourceIp));
+        var entry = CachedIPHostEntryDict.GetOrAdd(ip, sourceIp => new ResolvedIPInformation(sourceIp));
 
         // Ensure that it has been resolved
-        await entry.WaitForResolution();
-
-        return entry.DisplayText;
+        return await entry.WaitOrResolveHostAsync();
     }
 
-    public ResolvedIPInformation(IPAddress ip)
+    public ResolvedIPInformation(string ip)
     {
         this.ip = ip;
     }
 
-    private async Task WaitForResolution()
+    private async Task<string> WaitOrResolveHostAsync()
     {
-        if (isResolving)
-        {
-            await semaphore.WaitAsync();
-        }
-        
-        if (IsResolved || HasErrors)
-        {
-            return;
-        }
+        _eventSlim.Wait();
 
-        isResolving = true;
-        
-        try
+        if (!handled)
         {
-            HostEntry = await Dns.GetHostEntryAsync(ip);
+            _eventSlim.Reset();
 
-            IsResolved = true;
-            DisplayText = HostEntry.HostName;
-        }
-        catch (Exception e)
-        {
-            LogHelper.Debug($"Unable to resolve {ip}, message was {e.Message}");
-
-            HostEntry = new IPHostEntry
+            try
             {
-                HostName = "unknown",
-                AddressList = ip != IPAddress.None ? new[] { ip } : Array.Empty<IPAddress>()
-            };
-            IsResolved = false;
-            HasErrors = true;
-            DisplayText = "N/A";
+                resolvedHost = (await Dns.GetHostEntryAsync(ip)).HostName;
+            }
+            catch (Exception e)
+            {
+                LogHelper.Debug($"Unable to resolve {ip}, message was {e.Message}");
+            }
+
+            handled = true;
+
+            // Releases all pending entry resolutions in other threads for this entry
+            _eventSlim.Set();
         }
 
-        // Releases all waiting entry resolutions
-        while (semaphore.Release() > 1);
-
-        isResolving = false;
+        return resolvedHost;
     }
 }

@@ -436,7 +436,7 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
     {
         var createTempRule = (bool)togTempRule.IsChecked;
         var createWithAdvancedOptions = !expand.IsExpanded;
-        bool success;
+        
         var activeConn = (CurrentConn)lstConnections.SelectedItem;
         if (activeConn is null)
         {
@@ -468,14 +468,8 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
         }
 
         var ruleName = String.Format(Messages.RULE_NAME_FORMAT, activeConn.CurrentServiceDesc ?? activeConn.Description);
-        if (doAllow)
-        {
-            success = createAllowRule(activeConn, services, createWithAdvancedOptions, createTempRule, ruleName);
-        }
-        else
-        {
-            success = createBlockRule(activeConn, services, createWithAdvancedOptions, createTempRule, ruleName);
-        }
+        
+        var success = createRule(activeConn, services, createWithAdvancedOptions, createTempRule, ruleName, doAllow);
 
         if (success)
         {
@@ -514,58 +508,11 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
         }
     }
 
-    private bool createBlockRule(CurrentConn activeConn, string[] services, bool createWithAdvancedOptions, bool createTempRule, string ruleName)
+    private bool createRule(CurrentConn activeConn, string[] services, bool createWithAdvancedOptions, bool createTempRule, string ruleName, bool doAllow)
     {
         bool success;
-        if (Settings.Default.UseBlockRules)
-        {
-            int Profiles = OptionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
-            string finalRuleName = (createTempRule) ? Messages.RULE_TEMP_PREFIX + ruleName : ruleName;
-            var newRule = new CustomRule(finalRuleName,
-                                         createWithAdvancedOptions || OptionsView.IsPathChecked ? activeConn.Path : null,
-                                         !createWithAdvancedOptions && OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null,
-                                         activeConn.CurrentLocalUserOwner,
-                                         services,
-                                         !createWithAdvancedOptions && OptionsView.IsProtocolChecked ? activeConn.RawProtocol : -1,
-                                         !createWithAdvancedOptions && OptionsView.IsTargetIPChecked ? activeConn.TargetIP : null,
-                                         !createWithAdvancedOptions && OptionsView.IsTargetPortChecked ? activeConn.TargetPort : null,
-                                         !createWithAdvancedOptions && OptionsView.IsLocalPortChecked ? activeConn.SourcePort : null,
-                                         Profiles,
-                                         CustomRule.CustomRuleAction.Block);
-            success = FirewallHelper.AddRule(newRule.GetPreparedRule(createTempRule)); // does not use RuleManager
-            if (success && createTempRule)
-            {
-                CreateTempRuleNotifyIcon(newRule);
-            }
-            if (!success)
-            {
-                MessageBox.Show(Messages.MSG_RULE_FAILED, Messages.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-        else
-        {
-            // FIXME: Remove and always use Global Rules?
-            throw new ArgumentException("Only global block rules can be used - check options");
-
-            string entry = (!OptionsView.IsServiceRuleChecked || String.IsNullOrEmpty(activeConn.CurrentService) ? activeConn.Path : activeConn.CurrentService) +
-                           (OptionsView.IsLocalPortChecked ? ";" + activeConn.SourcePort : ";") +
-                           (OptionsView.IsTargetIPChecked ? ";" + activeConn.TargetIP : ";") +
-                           (OptionsView.IsTargetPortChecked ? ";" + activeConn.TargetPort : ";"); //FIXME: Need to add more?
-            using (StreamWriter sw = new StreamWriter(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exclusions.set"), true))
-            {
-                sw.WriteLine(entry);
-            }
-
-            success = true;
-        }
-
-        return success;
-    }
-
-    private bool createAllowRule(CurrentConn activeConn, string[] services, bool createWithAdvancedOptions, bool createTempRule, string ruleName)
-    {
         int Profiles = OptionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
-        string finalRuleName = createTempRule ? Messages.RULE_TEMP_PREFIX + ruleName : ruleName;
+        string finalRuleName = (createTempRule) ? Messages.RULE_TEMP_PREFIX + ruleName : ruleName;
         var newRule = new CustomRule(finalRuleName,
                                      createWithAdvancedOptions || OptionsView.IsPathChecked ? activeConn.Path : null,
                                      !createWithAdvancedOptions && OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null,
@@ -576,13 +523,16 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
                                      !createWithAdvancedOptions && OptionsView.IsTargetPortChecked ? activeConn.TargetPort : null,
                                      !createWithAdvancedOptions && OptionsView.IsLocalPortChecked ? activeConn.SourcePort : null,
                                      Profiles,
-                                     CustomRule.CustomRuleAction.Allow);
-
-        bool success = FirewallHelper.AddRule(newRule.GetPreparedRule(createTempRule)); // does not use RuleManager
-
+                                     doAllow ? CustomRule.CustomRuleAction.Allow : CustomRule.CustomRuleAction.Block);
+        success = FirewallHelper.AddRule(newRule.GetPreparedRule(createTempRule)); // does not use RuleManager
         if (success && createTempRule)
         {
             CreateTempRuleNotifyIcon(newRule);
+        }
+
+        if (!success)
+        {
+            MessageBox.Show(Messages.MSG_RULE_FAILED, Messages.MSG_DLG_ERR_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         return success;

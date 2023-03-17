@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
-using System.Threading.Tasks;
+using System.Timers;
 
 using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
@@ -20,7 +20,7 @@ public partial class AdapterInfo : TimerBasedPage
         InitializeComponent();
     }
 
-    protected override async Task OnTimerTick(object sender, EventArgs e)
+    protected override void OnTimerTick(object? state, ElapsedEventArgs e)
     {
         var allnet = NetworkInterface.GetAllNetworkInterfaces();
         foreach (var i in allnet)

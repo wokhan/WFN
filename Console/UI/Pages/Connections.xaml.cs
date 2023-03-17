@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -95,38 +95,35 @@ public partial class Connections : TimerBasedPage
         }
     }
 
-    protected override async Task OnTimerTick(object sender, EventArgs e)
+    protected override void OnTimerTick(object? state, ElapsedEventArgs e)
     {
-        await Task.Run(() =>
+        foreach (var c in IPHelper.GetAllConnections())
         {
-            foreach (var c in IPHelper.GetAllConnections())
-            {
-                AddOrUpdateConnection(c);
-            }
+            AddOrUpdateConnection(c);
+        }
 
-            // Start from the end as it's easier to handle removal from a collection when what you removed doesn't impact the actual index / count
-            for (int i = AllConnections.Count - 1; i >= 0; i--)
+        // Start from the end as it's easier to handle removal from a collection when what you removed doesn't impact the actual index / count
+        for (int i = AllConnections.Count - 1; i >= 0; i--)
+        {
+            var item = AllConnections[i];
+            var elapsed = DateTime.Now.Subtract(item.LastSeen).TotalMilliseconds;
+            if (elapsed > ConnectionTimeoutRemove)
             {
-                var item = AllConnections[i];
-                var elapsed = DateTime.Now.Subtract(item.LastSeen).TotalMilliseconds;
-                if (elapsed > ConnectionTimeoutRemove)
-                {
-                    lock (locker)
-                        AllConnections.Remove(item);
-                }
-                else if (elapsed > ConnectionTimeoutDying)
-                {
-                    item.IsDying = true;
-                }
-                else if (DateTime.Now.Subtract(item.CreationTime).TotalMilliseconds > ConnectionTimeoutNew)
-                {
-                    item.IsNew = false;
-                }
+                lock (locker)
+                    AllConnections.Remove(item);
             }
+            else if (elapsed > ConnectionTimeoutDying)
+            {
+                item.IsDying = true;
+            }
+            else if (DateTime.Now.Subtract(item.CreationTime).TotalMilliseconds > ConnectionTimeoutNew)
+            {
+                item.IsNew = false;
+            }
+        }
 
-            if (graph.IsVisible) graph.UpdateGraph();
-            if (map.IsVisible) map.UpdateMap();
-        }).ConfigureAwait(false);
+        if (graph.IsVisible) graph.UpdateGraph();
+        if (map.IsVisible) map.UpdateMap();
     }
 
 

@@ -31,7 +31,7 @@ public class DnsResolverTest : NUnitTestBase
         Task.WaitAll();
 
         LogDictEntries();
-        Assert.AreEqual("dns.google", ResolvedIPInformation.CachedIPHostEntryDict[IPAddress.Parse("8.8.8.8")].HostEntry.HostName);
+        Assert.AreEqual("dns.google", ResolvedIPInformation.CachedIPHostEntryDict["8.8.8.8"].resolvedHost);
         Assert.True(ResolvedIPInformation.CachedIPHostEntryDict.Values.Count == 4);
 
         ipList = new List<string>
@@ -68,15 +68,15 @@ public class DnsResolverTest : NUnitTestBase
         
         LogDictEntries();
 
-        Assert.True(ResolvedIPInformation.CachedIPHostEntryDict.ContainsKey(IPAddress.Parse("1.9.1.9")));
-        Assert.False(ResolvedIPInformation.CachedIPHostEntryDict[IPAddress.Parse("1.9.1.9")].IsResolved);
+        Assert.True(ResolvedIPInformation.CachedIPHostEntryDict.ContainsKey("1.9.1.9"));
+        Assert.False(ResolvedIPInformation.CachedIPHostEntryDict["1.9.1.9"].handled);
     }
 
     private static void LogDictEntries()
     {
         foreach (var entry in ResolvedIPInformation.CachedIPHostEntryDict)
         {
-            WriteDebugOutput($"{ entry.Key }: isResolved={entry.Value.IsResolved} hostName={entry.Value.HostEntry.HostName}, tooltipText={entry.Value.DisplayText}\n");
+            WriteDebugOutput($"{ entry.Key }: isResolved={entry.Value.handled} hostName={entry.Value.resolvedHost}\n");
         }
     }
 }

@@ -1,17 +1,18 @@
 ﻿using System;
-using System.IO;
-using System.Security.Principal;
-using System.Text;
-using Wokhan.WindowsFirewallNotifier.Common.Properties;
-using System.Reflection;
-using System.ServiceProcess;
-using System.Linq;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Security.Principal;
+using System.ServiceProcess;
+using System.Text;
+
 using Wokhan.WindowsFirewallNotifier.Common.Config;
+using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
-using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
+using Wokhan.WindowsFirewallNotifier.Common.Properties;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.Helpers;
 
@@ -166,7 +167,7 @@ public static class InstallHelper
         string newtask;
         using (var taskStr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Wokhan.WindowsFirewallNotifier.Console.Resources.TaskTemplate.xml")))
         {
-            string principle = "<UserId><![CDATA[" + WindowsIdentity.GetCurrent().Name + "]]></UserId>";
+            string principle = $"<UserId><![CDATA[{WindowsIdentity.GetCurrent().Name}]]></UserId>";
             string command = "\"" + Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe") + "\"";
             string arguments = Settings.Default.StartNotifierMinimized ? "-minimized " + Settings.Default.StartNotifierMinimized : ""; // TODO: To be implemented
             string dateTime = DateTime.Now.ToString("s");

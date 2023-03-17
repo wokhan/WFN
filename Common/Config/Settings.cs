@@ -63,11 +63,6 @@ public sealed partial class Settings : ApplicationSettingsBase
         set { this[nameof(EnableServiceDetectionGlobal)] = value; }
     }
 
-    public bool UseBlockRules
-    {
-        get { return (bool)this[nameof(UseBlockRulesGlobal)]; }
-        set { this[nameof(UseBlockRulesGlobal)] = value; }
-    }
 
     public override void Save()
     {

@@ -41,7 +41,7 @@ public partial class Map : UserControl, IDisposable
     
     public bool IsAerial
     {
-        get => _mode is AerialMode;
+        get => Mode is AerialMode;
         set { Mode = (value ? new AerialMode(true) : (MapMode)new RoadMode()); }
     }
 

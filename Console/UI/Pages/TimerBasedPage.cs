@@ -2,36 +2,42 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 
 public class TimerBasedPage : Page, INotifyPropertyChanged
 {
-    private DispatcherTimer timer = new DispatcherTimer();
+    private Timer timer;
 
     public virtual List<double> Intervals { get; } = new List<double> { 0.5, 1, 5, 10 };
 
     public virtual bool IsTrackingEnabled
     {
-        get { return timer.IsEnabled; }
-        set { timer.IsEnabled = value; NotifyPropertyChanged(); }
+        get => timer.Enabled;
+        set
+        {
+            if (timer.Enabled != value)
+            {
+                timer.Enabled = value;
+                NotifyPropertyChanged();
+            }
+        }
     }
 
-    private double _interval = 1;
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     private bool? wasRunningWhenUnloaded;
     private bool isCurrentlyRunning;
 
+    private double _interval = 1;
     public virtual double Interval
     {
         get { return _interval; }
-        set { _interval = value; timer.Interval = TimeSpan.FromSeconds(value); }
+        set { _interval = value; timer.Interval = Interval * 1000; }
     }
 
     public TimerBasedPage()
@@ -39,36 +45,28 @@ public class TimerBasedPage : Page, INotifyPropertyChanged
         this.Loaded += Page_Loaded;
         this.Unloaded += Page_Unloaded;
 
-        timer.Interval = TimeSpan.FromSeconds(Interval);
-        timer.Tick += Timer_Tick; 
+        timer = new(Interval * 1000);
+        timer.Elapsed += Timer_Tick;
     }
 
-    private async void Timer_Tick(object sender, EventArgs e)
+    private void Timer_Tick(object? sender, ElapsedEventArgs e)
     {
         if (!isCurrentlyRunning)
         {
             isCurrentlyRunning = true;
-            await OnTimerTick(sender, e).ConfigureAwait(false);
+            OnTimerTick(sender, e);
+            isCurrentlyRunning = false;
         }
-
-        isCurrentlyRunning = false;
     }
 
-    protected void NotifyPropertyChanged([CallerMemberName] string caller = null)
+    protected void NotifyPropertyChanged([CallerMemberName] string? caller = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(caller));
     }
 
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
-        if (wasRunningWhenUnloaded.HasValue)
-        {
-            IsTrackingEnabled = (bool)wasRunningWhenUnloaded;
-        }
-        else
-        {
-            IsTrackingEnabled = true;
-        }
+        IsTrackingEnabled = wasRunningWhenUnloaded ?? true;
     }
 
     private void Page_Unloaded(object sender, RoutedEventArgs e)
@@ -78,7 +76,7 @@ public class TimerBasedPage : Page, INotifyPropertyChanged
     }
 
 #pragma warning disable CS1998 // Async warning suppression
-    protected virtual async Task OnTimerTick(object sender, EventArgs e) { }
+    protected virtual void OnTimerTick(object? sender, ElapsedEventArgs e) { }
     protected virtual void OnTimerStart() { }
     protected virtual void OnTimerStop() { }
 #pragma warning restore CS1998 // Async warning suppression
