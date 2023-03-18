@@ -109,8 +109,8 @@
                 </TabItem>
             </TabControl>
         </Grid>
-        <StatusBar Grid.Row="2" Height="30" Background="Transparent">
-            <TextBlock Text="{Binding ConnectionsCount,StringFormat='{}{0} active connections'}" />
+        <StatusBar Margin="10,0"  Grid.Row="2" Height="30" Background="Transparent">
+            <TextBlock Text="{Binding ConnectionsCount,StringFormat='{}{0} active connection(s)'}" />
         </StatusBar>
     </Grid>
 </Window>

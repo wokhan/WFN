@@ -62,7 +62,7 @@ public class GeoConnection2 : INotifyPropertyChanged
     /// <returns></returns>
     private static Location IPToLocation(string address)
     {
-        if (IPAddress.TryParse(address, out IPAddress adr))
+        if (IPAddress.TryParse(address, out IPAddress? adr))
         {
             return IPToLocation(adr);
         }
@@ -72,9 +72,9 @@ public class GeoConnection2 : INotifyPropertyChanged
 
     private static Location IPToLocation(IPAddress address)
     {
-        if (_databaseReader.TryCity(address, out CityResponse cr))
+        if (_databaseReader.TryCity(address, out CityResponse? cr))
         {
-            return new Location(cr.Location.Latitude.GetValueOrDefault(), cr.Location.Longitude.GetValueOrDefault());
+            return new Location(cr!.Location.Latitude.GetValueOrDefault(), cr.Location.Longitude.GetValueOrDefault());
         }
         return new Location();
     }
@@ -110,33 +110,30 @@ public class GeoConnection2 : INotifyPropertyChanged
         return File.Exists(_DB_PATH);
     }
 
-    private static DatabaseReader _databaseReader;
+    private static DatabaseReader? _databaseReader;
     private static bool initPending;
 
     // Indicates whether the actual location has been injected
     private bool startingPointAddedSingle;
     private bool startingPointAddedFull;
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-    public static async Task<bool> InitCache()
+    public static async Task InitCache()
     {
         if (initPending)
         {
-            return true;
+            return;
         }
 
-        return await Task.Run(() =>
-            {
-                initPending = true;
-                if (_databaseReader is null)
-                {
-                    _databaseReader = new DatabaseReader(_DB_PATH);
-                }
-                initPending = false;
-                Initialized = true;
-                return true;
-            }).ConfigureAwait(false);
+        await Task.Run(() =>
+        {
+            initPending = true;
+            _databaseReader ??= new DatabaseReader(_DB_PATH);
+            initPending = false;
+
+            Initialized = true;
+        }).ConfigureAwait(false);
     }
 
     internal void UpdateStartingPoint(Location currentCoordinates)

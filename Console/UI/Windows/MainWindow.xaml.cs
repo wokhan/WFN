@@ -1,24 +1,25 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
+using Microsoft.Win32;
+
 using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Timers;
+using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Threading;
 
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
-using Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows;
 
 [ObservableObject]
-public partial class MainWindow 
+public partial class MainWindow : Window
 {
+    private Timer timer;
+
     [ObservableProperty]
     private int connectionsCount;
 
@@ -43,19 +44,18 @@ public partial class MainWindow
     {
         InitializeComponent();
 
-        var timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1), IsEnabled = true };
-        timer.Tick += Timer_Tick;
+        timer = new Timer(Timer_Tick, null, 1000, 1000);
 
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
     }
 
-    private void Timer_Tick(object? sender, EventArgs e)
+    private void Timer_Tick(object? _)
     {
         ConnectionsCount = IPHelper.GetAllConnections().Count();
     }
 
-    void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+    void Current_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
         if (e.Exception is InvalidOperationException && e.Exception.InnerException is not null && e.Exception.InnerException is Win32Exception win32exception && win32exception.NativeErrorCode == ERROR_PRIVILEGE_NOT_HELD)
         {
@@ -69,9 +69,9 @@ public partial class MainWindow
         e.Handled = true;
     }
 
-    private async void ForceDialog(string p1, string p2)
+    private void ForceDialog(string p1, string p2)
     {
-        //MessageBox.Show(p1, p2);
+        MessageBox.Show(p1, p2);
         /*var dial = await this.GetCurrentDialogAsync<BaseMetroDialog>();
 
         if (dial is not null)

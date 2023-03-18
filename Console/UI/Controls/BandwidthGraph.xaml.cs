@@ -107,7 +107,7 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
 
     public double CurrentStart
     {
-        get => (double)(xAxis is not null ? xAxis.MinLimit + (xAxis.MaxLimit - xAxis.MinLimit) / 2 : 0);
+        get => (xAxis is not null ? xAxis.MinLimit + (xAxis.MaxLimit - xAxis.MinLimit) / 2 : 0) ?? 0;
         set
         {
             if (isXPanned)

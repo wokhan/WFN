@@ -68,7 +68,6 @@ public class ConnectionBaseInfo : ObservableObject
     public int RawProtocol { get; protected set; }
     public string? Protocol { get; protected set; }
     public string? Direction { get; protected set; }
-    public string? FilterId { get; protected set; }
 
     private bool fileInfoResolutionTriggered;
 

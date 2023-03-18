@@ -96,9 +96,9 @@
                                             <TextBlock Grid.Row="1" Text="Interface type" />
                                             <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Information.NetworkInterfaceType}" />
                                             <TextBlock Grid.Row="2" Text="Speed" />
-                                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Information.Speed}" />
+                                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Information.Speed,Converter={StaticResource unitFormatter},ConverterParameter='ps'}" />
                                             <TextBlock Grid.Row="3" Text="MAC address" />
-                                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding MAC}" />
+                                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding MAC,Mode=OneTime}" />
                                         </Grid>
                                     </Border>
                                     <Border Style="{StaticResource Card}">
@@ -141,7 +141,7 @@
                                 <Border Style="{StaticResource Card}">
                                     <StackPanel>
                                         <Label FontWeight="Bold" Content="IP addresses" />
-                                        <DataGrid GridLinesVisibility="None" Background="Transparent" AutoGenerateColumns="False" BorderThickness="0" HeadersVisibility="Column" ColumnWidth="*" IsReadOnly="True" ItemsSource="{Binding Properties.UnicastAddresses,Mode=OneWay}">
+                                        <DataGrid IsHitTestVisible="False" GridLinesVisibility="None" Background="Transparent" AutoGenerateColumns="False" BorderThickness="0" HeadersVisibility="Column" ColumnWidth="*" IsReadOnly="True" ItemsSource="{Binding Properties.UnicastAddresses,Mode=OneWay}">
                                             <DataGrid.CellStyle>
                                                 <Style TargetType="DataGridCell">
                                                     <Setter Property="VerticalAlignment" Value="Center" />
@@ -149,7 +149,7 @@
                                                 </Style>
                                             </DataGrid.CellStyle>
                                             <DataGrid.Columns>
-                                                <DataGridTextColumn Header="Address" Binding="{Binding Address,Mode=OneWay}" />
+                                                <DataGridTextColumn Header="Address" Binding="{Binding Address,Mode=OneTime}" />
                                                 <DataGridTextColumn Header="Preferred lifetime" Binding="{Binding AddressPreferredLifetime,Mode=OneWay,Converter={StaticResource secondsConverter}}" />
                                                 <DataGridTextColumn Header="Valid lifetime" Binding="{Binding AddressValidLifetime,Mode=OneWay,Converter={StaticResource secondsConverter}}" />
                                                 <DataGridTextColumn Header="DHCP lease" Binding="{Binding DhcpLeaseLifetime,Mode=OneWay,Converter={StaticResource secondsConverter}}" />

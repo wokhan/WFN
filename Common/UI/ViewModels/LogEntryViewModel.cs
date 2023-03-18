@@ -97,7 +97,7 @@ public class LogEntryViewModel : ConnectionBaseInfo
         return false;
     }
 
-    private static string GetReplacementString(EventLogEntry entry, int i)
+    private static string? GetReplacementString(EventLogEntry entry, int i)
     {
         return entry.ReplacementStrings.DefaultIfEmpty(string.Empty).ElementAtOrDefault(i);
     }

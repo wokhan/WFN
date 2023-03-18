@@ -7,7 +7,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 public partial class ExposedInterfaceView : INotifyPropertyChanged
 {
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public void NotifyPropertyChanged(string propertyName)
     {
@@ -16,7 +16,7 @@ public partial class ExposedInterfaceView : INotifyPropertyChanged
 
     public string MAC => String.Join(":", Information.GetPhysicalAddress().GetAddressBytes().Select(b => b.ToString("X2")));
 
-    public NetworkInterface Information { get; private set; }
+    public NetworkInterface? Information { get; private set; }
     
     public IPInterfaceStatistics Statistics => Information.GetIPStatistics();
 

@@ -7,7 +7,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls"
     xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
-    xmlns:vm="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;assembly=Wokhan.WindowsFirewallNotifier.Common"
     xmlns:settings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Config;assembly=Wokhan.WindowsFirewallNotifier.Common"
     DataContext="{Binding RelativeSource={x:Static RelativeSource.Self}}"
     xmlns:dummydata="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.ViewModels" xmlns:componentmodel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
@@ -144,8 +143,46 @@
                     <DataGridTextColumn Header="Remote port" Binding="{Binding TargetPort, Mode=OneTime}" />
                     <DataGridTextColumn Header="State" Binding="{Binding State, Mode=OneWay}" />
                     <DataGridTextColumn Header="Creation" Binding="{Binding CreationTime, Mode=OneTime}" />
-                    <DataGridTextColumn Header="Up" Binding="{Binding OutboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='ps'}" />
-                    <DataGridTextColumn Header="Down" Binding="{Binding InboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='ps'}" />
+                    <DataGridTemplateColumn Header="Up">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <ContentControl Content="{StaticResource Image_DataUp}">
+                                        <ContentControl.Resources>
+                                            <Style TargetType="Path">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding OutboundBandwidth}" Value="0">
+                                                        <Setter Property="Fill" Value="Gray" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Resources>
+                                    </ContentControl>
+                                    <TextBlock Text="{Binding OutboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='ps'}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Down">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <ContentControl Content="{StaticResource Image_DataDown}">
+                                        <ContentControl.Resources>
+                                            <Style TargetType="Path">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding InboundBandwidth}" Value="0">
+                                                        <Setter Property="Fill" Value="Gray" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Resources>
+                                    </ContentControl>
+                                    <TextBlock Text="{Binding InboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='ps'}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <!--<DataGridTextColumn Header="FirewallRule" Binding="{Binding FirewallRule.Count, Mode=OneWay}" />-->
                 </DataGrid.Columns>
             </DataGrid>

@@ -182,7 +182,7 @@ public partial class Rules : Page
     [RelayCommand(CanExecute = nameof(LocateCanExecute))]
     private void Locate()
     {
-        ProcessHelper.BrowseToFile(SelectedItem.ApplicationName);
+        ProcessHelper.BrowseToFile(SelectedItem!.ApplicationName);
     }
 
     public bool LocateCanExecute => SelectedItem is not null;

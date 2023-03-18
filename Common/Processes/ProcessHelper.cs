@@ -644,8 +644,13 @@ public static partial class ProcessHelper
     /// Opens Windows explorer and selects the file targeted by "flepath"
     /// </summary>
     /// <param name="filepath">Full path to the file to select</param>
-    public static void BrowseToFile(string filepath)
+    public static void BrowseToFile(string? filepath)
     {
+        if (filepath is null)
+        {
+            return;
+        }
+
         StartShellExecutable(ProcessNames.Explorer.FileName, $"/select,{filepath}", true);
     }
 
@@ -653,8 +658,13 @@ public static partial class ProcessHelper
     /// Opens a folder in Windows explorer.
     /// </summary>
     /// <param name="folderPath">Path to the folder</param>
-    public static void OpenFolder(string folderPath)
+    public static void OpenFolder(string? folderPath)
     {
+        if (folderPath is null)
+        {
+            return;
+        }
+
         StartShellExecutable(ProcessNames.Explorer.FileName, folderPath, true);
     }
 

@@ -42,14 +42,14 @@ public partial class Map : UserControl, IDisposable
     public bool IsAerial
     {
         get => Mode is AerialMode;
-        set { Mode = (value ? new AerialMode(true) : (MapMode)new RoadMode()); }
+        set { Mode = (value ? new AerialMode(true) : new RoadMode()); }
     }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsAerial))]
     private MapMode _mode = new RoadMode();
 
-    public ObservableCollection<GeoConnection2> ConnectionsRoutes { get; } = new ObservableCollection<GeoConnection2>();
+    public ObservableCollection<GeoConnection2> ConnectionsRoutes { get; } = new();
 
     public Map()
     {
@@ -102,7 +102,7 @@ public partial class Map : UserControl, IDisposable
         ProgressStack.Visibility = Visibility.Collapsed;
     }
 
-    private void GeoWatcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
+    private void GeoWatcher_PositionChanged(object? sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
     {
         if (!geoWatcher.Position.Location.IsUnknown)
         {
@@ -142,7 +142,7 @@ public partial class Map : UserControl, IDisposable
     }
 
     //TODO: Temporary check for addresses validity (for mapping purpose only). Doesn't look like the right way to do this.
-    private bool IsValid(string remoteAddress)
+    private bool IsValid(string? remoteAddress)
     {
         return (!String.IsNullOrEmpty(remoteAddress)
             && remoteAddress != "127.0.0.1"

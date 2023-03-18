@@ -10,7 +10,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 
 public class TimerBasedPage : Page, INotifyPropertyChanged
 {
-    private Timer timer;
+    private readonly Timer timer;
 
     public virtual List<double> Intervals { get; } = new List<double> { 0.5, 1, 5, 10 };
 

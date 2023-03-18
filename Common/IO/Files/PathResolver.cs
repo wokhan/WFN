@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.IO.Files;
