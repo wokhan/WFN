@@ -110,7 +110,7 @@
             </TabControl>
         </Grid>
         <StatusBar Margin="10,0"  Grid.Row="2" Height="30" Background="Transparent">
-            <TextBlock Text="{Binding ConnectionsCount,StringFormat='{}{0} active connection(s)'}" />
+            <TextBlock Text="{Binding ConnectionsCount,StringFormat='{}{0} monitored connection(s)'}" />
         </StatusBar>
     </Grid>
 </Window>

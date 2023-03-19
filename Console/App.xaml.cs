@@ -31,7 +31,7 @@ public partial class App : Application
     }
 
     private string currentTheme = "Automatic";
-    private void SettingsChanged(object sender, PropertyChangedEventArgs e)
+    private void SettingsChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(Settings.Theme) && currentTheme != Settings.Default.Theme)
         {
@@ -80,7 +80,7 @@ public partial class App : Application
             MessageBox.Show("WFN is currently being debugged with a non-admin Visual Studio instance.\r\nDebugger will be detached if you want to use admin-only features as it requires launching a new WFN instance.\r\nTo avoid this, please run Visual Studio with admin privileges.", "Non-admin debugger detected", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        ProcessHelper.RunElevated(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ProcessNames.WFN.FileName));
+        ProcessHelper.RunElevated(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, ProcessNames.WFN.FileName));
         Environment.Exit(0);
     }
 }

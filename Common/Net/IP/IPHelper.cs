@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ public abstract partial class IPHelper
 {
     private const string MAX_USER_PORT_REGISTRY_KEY = "SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters";
     private const string MAX_USER_PORT_REGISTRY_VALUE = "MaxUserPort";
-    
+
     protected const uint NO_ERROR = 0;
     protected const uint ERROR_INSUFFICIENT_BUFFER = 122;
     protected const uint ERROR_NOT_FOUND = 1168;
@@ -208,6 +209,13 @@ public abstract partial class IPHelper
         return ret;
     }
 
+
+    private static IPAddress? _currentIP;
+    public static IPAddress CurrentIP
+    {
+        get => _currentIP ??= GetPublicIpAddress();
+    }
+
     public static IPAddress GetPublicIpAddress()
     {
         var request = (HttpWebRequest)WebRequest.Create(new Uri("http://checkip.eurodyndns.org/"));
@@ -235,33 +243,32 @@ public abstract partial class IPHelper
     public static async Task<IEnumerable<IPAddress>> GetFullRoute(string adr)
     {
         var ret = new List<IPAddress>();
-        using (var pong = new Ping())
-        {
-            var po = new PingOptions(1, true);
-            PingReply? r = null;
-            var buffer = new byte[buffer_size];
-            for (var i = 0; i < buffer.Length; i++)
-            {
-                buffer[i] = 0;
-            }
-            for (var i = 1; i < max_hops; i++)
-            {
-                if (r is not null && r.Status != IPStatus.TimedOut)
-                {
-                    po.Ttl = i;
-                }
-                r = await pong.SendPingAsync(adr, ping_timeout, buffer, po).ConfigureAwait(false);
+        
+        using var pong = new Ping();
 
-                if (r.Status == IPStatus.TtlExpired)
-                {
-                    ret.Add(r.Address);
-                }
-                else
-                {
-                    break;
-                }
+        var po = new PingOptions(1, true);
+        PingReply? r = null;
+        var buffer = new byte[buffer_size];
+        Array.Fill(buffer, (byte)0);
+        
+        for (var i = 1; i < max_hops; i++)
+        {
+            if (r is not null && r.Status != IPStatus.TimedOut)
+            {
+                po.Ttl = i;
+            }
+            r = await pong.SendPingAsync(adr, ping_timeout, buffer, po).ConfigureAwait(false);
+
+            if (r.Status == IPStatus.TtlExpired)
+            {
+                ret.Add(r.Address);
+            }
+            else
+            {
+                break;
             }
         }
+
         ret.Add(IPAddress.Parse(adr));
         return ret;
     }

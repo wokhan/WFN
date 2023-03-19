@@ -1,19 +1,97 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
+using LiveChartsCore.Kernel;
+
+using Microsoft.Maps.MapControl.WPF;
+
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Threading;
+
+using Wokhan.ComponentModel.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP.TCP;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
 using Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
+using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 public partial class Connection : ConnectionBaseInfo
 {
+    private Dispatcher dispatcher;
     public string Owner { get; private set; }
+
+    #region Geolocation
+
+
+    private Location _coordinates;
+    public Location? Coordinates => this.GetOrSetValueAsync(() => GeoLocationHelper.IPToLocationAsync(TargetIP), ref _coordinates, OnCoordinatesPropertyChanged);
+
+    private void OnCoordinatesPropertyChanged(string propertyName)
+    {
+        _straightRoute = null;
+
+        OnPropertyChanged(nameof(Coordinates));
+        OnPropertyChanged(nameof(StraightRoute));
+    }
+    
+
+    private LocationCollection? _straightRoute;
+    public LocationCollection? StraightRoute => this.GetOrSetValueAsync(() => ComputeStraightRoute(), ref _straightRoute, OnPropertyChanged);
+
+
+    private static LocationCollection NoLocation = new();
+    private LocationCollection ComputeStraightRoute()
+    {
+        if (Protocol != "UDP" && State != "ESTABLISHED" || !IPAddress.TryParse(TargetIP, out var _) || Owner is null || Coordinates is null || GeoLocationHelper.CurrentCoordinates is null)
+        {
+            return NoLocation;
+        }
+
+        return new LocationCollection() { GeoLocationHelper.CurrentCoordinates, Coordinates };
+    }
+
+
+    //TODO: should be defined on the Map side, not GeoConnection, as it relies on Bing Maps control. Or use a independent datamodel and map to Location in the Map class.
+    private LocationCollection? _fullRoute;
+    public LocationCollection? FullRoute => this.GetOrSetValueAsync(() => ComputeFullRoute(), ref _fullRoute, OnPropertyChanged);
+
+    private async Task<LocationCollection?> ComputeFullRoute()
+    {
+        if (Protocol != "UDP" && State != "ESTABLISHED" || !IPAddress.TryParse(TargetIP, out var _) || Owner is null || GeoLocationHelper.CurrentCoordinates is null)
+        {
+            return NoLocation;
+        }
+        
+        var loc = new LocationCollection() { GeoLocationHelper.CurrentCoordinates };
+        var route = await IPHelper.GetFullRoute(TargetIP).ConfigureAwait(false);
+        foreach (var ip in route)
+        {
+            var location = await GeoLocationHelper.IPToLocationAsync(ip);
+            // Ignore unresolved locations
+            if (location.Latitude != 0 && location.Longitude != 0)
+            {
+                loc.Add(location);
+            }
+        }
+        return loc;
+    }
+
+    internal void UpdateStartingPoint()
+    {
+        _fullRoute = null;
+        OnPropertyChanged(nameof(FullRoute));
+
+        _straightRoute = null;
+        OnPropertyChanged(nameof(StraightRoute));
+    }
+
+    #endregion
 
     /// <summary>
     /// Uses a cache for WMI information to avoid per-process costly queries.
@@ -101,15 +179,15 @@ public partial class Connection : ConnectionBaseInfo
 
     [ObservableProperty]
     private bool _isSelected;
-    
-    [ObservableProperty]
-    private bool _isDead;
-    
-    [ObservableProperty]
-    private string _lastError;
 
     [ObservableProperty]
-    private string _state;
+    private bool _isDead;
+
+    [ObservableProperty]
+    private string? _lastError;
+
+    [ObservableProperty]
+    private string? _state;
 
     [ObservableProperty]
     private bool _isDying;
@@ -129,7 +207,7 @@ public partial class Connection : ConnectionBaseInfo
     public DateTime LastSeen { get; private set; }
 
     private readonly IConnectionOwnerInfo rawConnection;
-    private ITcpRow rawrow;
+    private ITcpRow? rawrow;
 
     internal void UpdateValues(IConnectionOwnerInfo b)
     {
@@ -161,7 +239,7 @@ public partial class Connection : ConnectionBaseInfo
         LastSeen = DateTime.Now;
     }
 
-    
+
     private ulong _lastInboundReadValue;
     private ulong _lastOutboundReadValue;
 
@@ -186,16 +264,15 @@ public partial class Connection : ConnectionBaseInfo
                     OutboundBandwidth = bandwidth.OutboundBandwidth >= _lastOutboundReadValue ? bandwidth.OutboundBandwidth - _lastOutboundReadValue : bandwidth.OutboundBandwidth;
                     _lastInboundReadValue = bandwidth.InboundBandwidth;
                     _lastOutboundReadValue = bandwidth.OutboundBandwidth;
-                    return;
                 }
             }
             catch
             {
                 //TODO: Add exception log
+                InboundBandwidth = 0;
+                OutboundBandwidth = 0;
             }
 
-            InboundBandwidth = 0;
-            OutboundBandwidth = 0;
         });
     }
 

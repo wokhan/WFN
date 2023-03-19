@@ -114,7 +114,7 @@ public static class InstallHelper
                 rname = String.Format(Resources.RULE_NAME_FORMAT, "Windows Applications (auto)");
                 if (rules.All(r => r.Name != rname))
                 {
-                    CustomRule newRule = new CustomRule(rname, Environment.SystemDirectory + "\\wwahost.exe", null, null, (string)null, Protocol.ANY, null, null, null, FirewallHelper.GetGlobalProfile(), CustomRule.CustomRuleAction.Allow);
+                    CustomRule newRule = new CustomRule(rname, Environment.SystemDirectory + "\\wwahost.exe", null, null, (string?)null, Protocol.ANY, null, null, null, FirewallHelper.GetGlobalProfile(), CustomRule.CustomRuleAction.Allow);
                     ret = ret && FirewallHelper.AddRule(newRule.GetPreparedRule(false));
                 }
             }
@@ -165,7 +165,7 @@ public static class InstallHelper
         LogHelper.Debug("CreateNotifierTask");
         string tmpXML = Path.GetTempFileName();
         string newtask;
-        using (var taskStr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Wokhan.WindowsFirewallNotifier.Console.Resources.TaskTemplate.xml")))
+        using (var taskStr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Wokhan.WindowsFirewallNotifier.Console.Resources.TaskTemplate.xml")!))
         {
             string principle = $"<UserId><![CDATA[{WindowsIdentity.GetCurrent().Name}]]></UserId>";
             string command = "\"" + Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe") + "\"";

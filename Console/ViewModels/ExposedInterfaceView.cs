@@ -16,7 +16,7 @@ public partial class ExposedInterfaceView : INotifyPropertyChanged
 
     public string MAC => String.Join(":", Information.GetPhysicalAddress().GetAddressBytes().Select(b => b.ToString("X2")));
 
-    public NetworkInterface? Information { get; private set; }
+    public NetworkInterface Information { get; private set; }
     
     public IPInterfaceStatistics Statistics => Information.GetIPStatistics();
 
@@ -25,11 +25,6 @@ public partial class ExposedInterfaceView : INotifyPropertyChanged
     public ExposedInterfaceView(NetworkInterface inter)
     {
         this.Information = inter;
-    }
-
-    internal ExposedInterfaceView()
-    {
-        
     }
 
     internal void UpdateInner(NetworkInterface inter)

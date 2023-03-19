@@ -98,14 +98,14 @@ public partial class MainWindow : Window
         ((App)Application.Current).RestartAsAdmin();
     }
 
-    Options optionWindow = null;
+    Options? optionWindow = null;
     private void OpenOptions(object sender, RoutedEventArgs e)
     {
         (optionWindow ??= new Options() { Owner = this }).Show();
         optionWindow.Closed += (_, _) => optionWindow = null;
     }
 
-    About aboutWindow = null;
+    About? aboutWindow = null;
     private void OpenAbout(object sender, RoutedEventArgs e)
     {
         (aboutWindow ??= new About() { Owner = this }).Show();

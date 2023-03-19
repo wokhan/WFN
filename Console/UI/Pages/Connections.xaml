@@ -147,16 +147,17 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <ContentControl Content="{StaticResource Image_DataUp}">
-                                        <ContentControl.Resources>
-                                            <Style TargetType="Path">
+                                    <ContentControl>
+                                        <ContentControl.Style>
+                                            <Style TargetType="ContentControl">
+                                                <Setter Property="Content" Value="{StaticResource Image_DataUp}" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding OutboundBandwidth}" Value="0">
-                                                        <Setter Property="Fill" Value="Gray" />
+                                                        <Setter Property="Content" Value="{StaticResource Image_DataUp_None}" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
-                                        </ContentControl.Resources>
+                                        </ContentControl.Style>
                                     </ContentControl>
                                     <TextBlock Text="{Binding OutboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='ps'}" />
                                 </StackPanel>
@@ -167,16 +168,17 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <ContentControl Content="{StaticResource Image_DataDown}">
-                                        <ContentControl.Resources>
-                                            <Style TargetType="Path">
+                                    <ContentControl>
+                                        <ContentControl.Style>
+                                            <Style TargetType="ContentControl">
+                                                <Setter Property="Content" Value="{StaticResource Image_DataDown}" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding InboundBandwidth}" Value="0">
-                                                        <Setter Property="Fill" Value="Gray" />
+                                                        <Setter Property="Content" Value="{StaticResource Image_DataDown_None}" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
-                                        </ContentControl.Resources>
+                                        </ContentControl.Style>
                                     </ContentControl>
                                     <TextBlock Text="{Binding InboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='ps'}" />
                                 </StackPanel>

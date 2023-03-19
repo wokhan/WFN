@@ -112,7 +112,7 @@ public sealed partial class EventsLog : Page, IDisposable
     [RelayCommand(CanExecute = nameof(LocateCanExecute))]
     private void Locate()
     {
-        ProcessHelper.StartShellExecutable("explorer.exe", "/select," + SelectedItem.Path, true);
+        ProcessHelper.StartShellExecutable("explorer.exe", "/select," + SelectedItem!.Path, true);
     }
 
     public bool LocateCanExecute => SelectedItem is not null;

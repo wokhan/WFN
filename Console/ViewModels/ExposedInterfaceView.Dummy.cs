@@ -22,6 +22,7 @@ internal class ExposedInterfaceViewDummy : ExposedInterfaceView
 
     public class DummyIPInterfaceProperties : IPInterfaceProperties
     {
+#pragma warning disable CS8618 // Un champ non-nullable doit contenir une valeur non-null lors de la fermeture du constructeur. Envisagez de déclarer le champ comme nullable.
         public override IPAddressInformationCollection AnycastAddresses { get; }
         public override IPAddressCollection DhcpServerAddresses { get; }
         public override IPAddressCollection DnsAddresses { get; }
@@ -32,6 +33,7 @@ internal class ExposedInterfaceViewDummy : ExposedInterfaceView
         public override MulticastIPAddressInformationCollection MulticastAddresses { get; }// => new MulticastIPAddressInformationCollection { new MulticastIPAddressInformation("12345" };
         public override UnicastIPAddressInformationCollection UnicastAddresses { get; }
         public override IPAddressCollection WinsServersAddresses { get; }
+#pragma warning restore CS8618 // Un champ non-nullable doit contenir une valeur non-null lors de la fermeture du constructeur. Envisagez de déclarer le champ comme nullable.
 
         public override IPv4InterfaceProperties GetIPv4Properties() => null;
 
@@ -55,7 +57,7 @@ internal class ExposedInterfaceViewDummy : ExposedInterfaceView
 
     public new NetworkInterface Information => new DummyNetworkInterface();
 
-    public ExposedInterfaceViewDummy()
+    public ExposedInterfaceViewDummy() : base(null)
     {
     }
 }

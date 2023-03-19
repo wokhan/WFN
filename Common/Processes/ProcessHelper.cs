@@ -675,12 +675,12 @@ public static partial class ProcessHelper
     /// <param name="executable">Path to the executable to launche</param>
     /// <param name="args">Arguments to pass to the executable</param>
     /// <param name="showMessageBox">Shows a message box if an error occurs. Not really user friendly but straightforward</param>
-    public static void StartShellExecutable(string executable, string args = "", bool showMessageBox = false)
+    public static void StartShellExecutable(string executable, string? args = "", bool showMessageBox = false)
     {
         try
         {
             LogHelper.Debug($"Starting shell executable: {executable}, args: {args}");
-            Process.Start(new ProcessStartInfo(executable, args) { UseShellExecute = true });
+            Process.Start(new ProcessStartInfo(executable, args ?? "") { UseShellExecute = true });
         }
         catch (Exception ex)
         {

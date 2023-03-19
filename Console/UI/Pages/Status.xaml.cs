@@ -16,9 +16,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 
 public partial class Status : Page
 {
-    FirewallStatusWrapper status = new FirewallStatusWrapper();
+    FirewallStatusWrapper status = new();
 
-    public ObservableCollection<string> Messages { get; } = new ObservableCollection<string>();
+    public ObservableCollection<string> Messages { get; } = new();
 
     public Status()
     {
@@ -27,7 +27,7 @@ public partial class Status : Page
         this.Loaded += init;
     }
 
-    private void init(object src = null, RoutedEventArgs args = null)
+    private void init(object? src = null, RoutedEventArgs? args = null)
     {
         status = new FirewallStatusWrapper();
 

@@ -31,7 +31,7 @@ public partial class Rules : Page
 
 
     [ObservableProperty]
-    private List<WFPRules::Rule> allRules;
+    private List<WFPRules::Rule>? allRules;
 
     [ObservableProperty]
     private string _textFilter = String.Empty;

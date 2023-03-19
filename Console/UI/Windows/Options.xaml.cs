@@ -45,11 +45,6 @@ public partial class Options : Window
         Close();
     }
 
-    private void Close()
-    {
-        Window.GetWindow(this).Close();
-    }
-
     [RelayCommand]
     private void TestNotif()
     {

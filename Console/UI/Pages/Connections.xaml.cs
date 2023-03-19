@@ -29,7 +29,7 @@ public partial class Connections : TimerBasedPage
     private readonly object uisynclocker = new();
 
     //TODO: let the user pick a color palette for the bandwidth graph & connection
-    private List<Color> Colors;
+    private List<Color>? Colors;
 
     public ObservableCollection<Connection> AllConnections { get; } = new();
 
@@ -121,9 +121,9 @@ public partial class Connections : TimerBasedPage
                 item.IsNew = false;
             }
         }
-
+        
         if (graph.IsVisible) graph.UpdateGraph();
-        if (map.IsVisible) map.UpdateMap();
+        //if (map.IsVisible) map.UpdateMap();
     }
 
 

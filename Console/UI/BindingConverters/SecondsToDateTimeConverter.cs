@@ -12,7 +12,7 @@ public class SecondsToDateTimeConverter : IValueConverter
         return DateTime.Now.AddSeconds((long)value);
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
         return null;
     }
