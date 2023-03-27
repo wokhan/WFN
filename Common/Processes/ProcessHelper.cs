@@ -403,54 +403,52 @@ public static partial class ProcessHelper
             LogHelper.Warning($"Unable to retrieve process local user owner: process pid={pid} cannot be found!");
             return String.Empty;
         }
+
+        IntPtr hToken = IntPtr.Zero;
+        IntPtr hTokenInformation = IntPtr.Zero;
         try
         {
-            IntPtr hToken;
             if (!NativeMethods.OpenProcessToken(hProcess, NativeMethods.TOKEN_QUERY, out hToken))
             {
                 LogHelper.Warning("Unable to retrieve process local user owner: process pid={pid} cannot be opened!");
                 return String.Empty;
             }
-            try
+
+            uint dwBufSize = 0;
+            //TODO: Wait... isn't a negation missing here?!
+            if (NativeMethods.GetTokenInformation(hToken, NativeMethods.TOKEN_INFORMATION_CLASS.TokenUser, IntPtr.Zero, 0, ref dwBufSize))
             {
-                uint dwBufSize = 0;
-
-                if (NativeMethods.GetTokenInformation(hToken, NativeMethods.TOKEN_INFORMATION_CLASS.TokenUser, IntPtr.Zero, 0, ref dwBufSize))
-                {
-                    LogHelper.Warning("Unexpected result from call to GetTokenInformation.");
-                    return String.Empty;
-                }
-
-                IntPtr hTokenInformation = Marshal.AllocHGlobal((int)dwBufSize);
-                try
-                {
-                    if (!NativeMethods.GetTokenInformation(hToken, NativeMethods.TOKEN_INFORMATION_CLASS.TokenUser, hTokenInformation, dwBufSize, ref dwBufSize))
-                    {
-                        LogHelper.Warning("Unable to retrieve process local user owner: token cannot be opened!");
-                        return String.Empty;
-                    }
-
-                    string SID;
-                    if (!NativeMethods.ConvertSidToStringSidW(Marshal.PtrToStructure<NativeMethods.TOKEN_USER>(hTokenInformation).User.Sid, out SID))
-                    {
-                        LogHelper.Warning("Unable to retrieve process local user owner: SID cannot be converted!");
-                        return String.Empty;
-                    }
-
-                    return SID;
-                }
-                finally
-                {
-                    Marshal.FreeHGlobal(hTokenInformation);
-                }
+                LogHelper.Warning("Unexpected result from call to GetTokenInformation.");
+                return String.Empty;
             }
-            finally
+
+            hTokenInformation = Marshal.AllocHGlobal((int)dwBufSize);
+            if (!NativeMethods.GetTokenInformation(hToken, NativeMethods.TOKEN_INFORMATION_CLASS.TokenUser, hTokenInformation, dwBufSize, ref dwBufSize))
             {
-                NativeMethods.CloseHandle(hToken);
+                LogHelper.Warning("Unable to retrieve process local user owner: token cannot be opened!");
+                return String.Empty;
             }
+
+            if (!NativeMethods.ConvertSidToStringSidW(Marshal.PtrToStructure<NativeMethods.TOKEN_USER>(hTokenInformation).User.Sid, out string SID))
+            {
+                LogHelper.Warning("Unable to retrieve process local user owner: SID cannot be converted!");
+                return String.Empty;
+            }
+
+            return SID;
         }
         finally
         {
+            if (hTokenInformation != IntPtr.Zero)
+            {
+                Marshal.FreeHGlobal(hTokenInformation);
+            }
+
+            if (hToken != IntPtr.Zero)
+            {
+                NativeMethods.CloseHandle(hToken);
+            }
+
             NativeMethods.CloseHandle(hProcess);
         }
     }

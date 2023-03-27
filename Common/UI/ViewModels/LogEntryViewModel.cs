@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Media;
 
 using Wokhan.ComponentModel.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
@@ -24,11 +23,8 @@ public class LogEntryViewModel : ConnectionBaseInfo
     public FilterResult? MatchingFilter => this.GetOrSetValueAsync(() => NetshHelper.FindMatchingFilterInfo(int.Parse(FilterId)), ref _matchingFilter, OnPropertyChanged);
     public string? Reason { get; protected set; }
     public string? Message { get; protected set; }
+    public bool IsAllowed { get; private set; }
 
-    //TODO: should be in the XAML as conditionally triggered style
-    public SolidColorBrush? ReasonColor { get; protected set; }
-
-    public SolidColorBrush? DirectionColor { get; protected set; }
 
     public static bool TryCreateFromEventLogEntry<T>(EventLogEntry entry, int index, out T? view) where T : LogEntryViewModel, new()
     {
@@ -46,18 +42,13 @@ public class LogEntryViewModel : ConnectionBaseInfo
             var protocol = int.Parse(GetReplacementString(entry, 7));
 
             var path = GetReplacementString(entry, 1);
-            if (path == "-")
-            {
-                path = "System";
-            }
-            else
-            {
-                path = PathResolver.ResolvePath(path);
-            }
+            path = (path == "-" ? "System" : PathResolver.ResolvePath(path));
+
             var fileName = System.IO.Path.GetFileName(path);
 
             // try to get the servicename from pid (works only if service is running)
-            var serviceName = ServiceNameResolver.GetServicName(pid);
+            //TODO: set this as optional according to the EnableServiceResolution settings (have to check impacts first)
+            var serviceName = ServiceNameResolver.GetServiceInfo(pid, fileName);
 
             var le = new T()
             {
@@ -65,9 +56,10 @@ public class LogEntryViewModel : ConnectionBaseInfo
                 Id = entry.Index,
                 Pid = pid,
                 CreationTime = entry.TimeGenerated,
-                Path = (path == "-" ? "System" : path),
+                Path = path,
                 FileName = fileName,
-                ServiceName = serviceName,
+                ServiceName = serviceName?.Name,
+                ServiceDisplayName = serviceName?.DisplayName,
                 SourceIP = GetReplacementString(entry, 3),
                 SourcePort = GetReplacementString(entry, 4),
                 TargetIP = GetReplacementString(entry, 5),
@@ -80,8 +72,9 @@ public class LogEntryViewModel : ConnectionBaseInfo
                 Message = entry.Message
             };
 
-            le.ReasonColor = le.Reason.StartsWith("Block") ? Brushes.OrangeRed : Brushes.Blue;
-            le.DirectionColor = le.Direction.StartsWith("In") ? Brushes.OrangeRed : Brushes.Black;
+            le.IsAllowed = !le.Reason.StartsWith("Block");
+
+            le.SetProductInfo();
 
             view = le;
 
@@ -90,11 +83,10 @@ public class LogEntryViewModel : ConnectionBaseInfo
         catch (Exception ex)
         {
             LogHelper.Error("Cannot parse eventlog entry: eventID=" + entry.InstanceId.ToString(), ex);
+
+            view = null;
+            return false;
         }
-
-        view = null;
-
-        return false;
     }
 
     private static string? GetReplacementString(EventLogEntry entry, int i)

@@ -18,10 +18,7 @@ public partial class CurrentConn : LogEntryViewModel, INotifyPropertyChanged
     //private string _currentLocalUserOwner;
     //TODO: rename as it's not something "current"
     public string CurrentLocalUserOwner { get; set; }// => this.GetOrSetAsyncValue(() => ProcessHelper.GetLocalUserOwner(Pid), NotifyPropertyChanged, nameof(_currentLocalUserOwner));
-    //TODO: rename as it's not something "current"
-    public string CurrentService { get; set; }
-    //TODO: rename as it's not something "current"
-    public string CurrentServiceDesc { get; set; }
+
     public SortedSet<int> LocalPortArray { get; } = new SortedSet<int>();
     
     //public string TargetInfoUrl => $"http://whois.domaintools.com/{Target}";  // uses captcha validation :(

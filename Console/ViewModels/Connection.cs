@@ -1,21 +1,16 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-using LiveChartsCore.Kernel;
-
-using Microsoft.Maps.MapControl.WPF;
-
 using System;
 using System.Collections.Generic;
-using System.Net;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Data;
 using System.Windows.Media;
-using System.Windows.Threading;
 
 using Wokhan.ComponentModel.Extensions;
+using Wokhan.WindowsFirewallNotifier.Common.Net.GeoLocation;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP.TCP;
-using Wokhan.WindowsFirewallNotifier.Common.Processes;
 using Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 
@@ -23,156 +18,9 @@ namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 public partial class Connection : ConnectionBaseInfo
 {
-    private Dispatcher dispatcher;
     public string Owner { get; private set; }
 
-    #region Geolocation
-
-
-    private Location _coordinates;
-    public Location? Coordinates => this.GetOrSetValueAsync(() => GeoLocationHelper.IPToLocationAsync(TargetIP), ref _coordinates, OnCoordinatesPropertyChanged);
-
-    private void OnCoordinatesPropertyChanged(string propertyName)
-    {
-        _straightRoute = null;
-
-        OnPropertyChanged(nameof(Coordinates));
-        OnPropertyChanged(nameof(StraightRoute));
-    }
-    
-
-    private LocationCollection? _straightRoute;
-    public LocationCollection? StraightRoute => this.GetOrSetValueAsync(() => ComputeStraightRoute(), ref _straightRoute, OnPropertyChanged);
-
-
-    private static LocationCollection NoLocation = new();
-    private LocationCollection ComputeStraightRoute()
-    {
-        if (Protocol != "UDP" && State != "ESTABLISHED" || !IPAddress.TryParse(TargetIP, out var _) || Owner is null || Coordinates is null || GeoLocationHelper.CurrentCoordinates is null)
-        {
-            return NoLocation;
-        }
-
-        return new LocationCollection() { GeoLocationHelper.CurrentCoordinates, Coordinates };
-    }
-
-
-    //TODO: should be defined on the Map side, not GeoConnection, as it relies on Bing Maps control. Or use a independent datamodel and map to Location in the Map class.
-    private LocationCollection? _fullRoute;
-    public LocationCollection? FullRoute => this.GetOrSetValueAsync(() => ComputeFullRoute(), ref _fullRoute, OnPropertyChanged);
-
-    private async Task<LocationCollection?> ComputeFullRoute()
-    {
-        if (Protocol != "UDP" && State != "ESTABLISHED" || !IPAddress.TryParse(TargetIP, out var _) || Owner is null || GeoLocationHelper.CurrentCoordinates is null)
-        {
-            return NoLocation;
-        }
-        
-        var loc = new LocationCollection() { GeoLocationHelper.CurrentCoordinates };
-        var route = await IPHelper.GetFullRoute(TargetIP).ConfigureAwait(false);
-        foreach (var ip in route)
-        {
-            var location = await GeoLocationHelper.IPToLocationAsync(ip);
-            // Ignore unresolved locations
-            if (location.Latitude != 0 && location.Longitude != 0)
-            {
-                loc.Add(location);
-            }
-        }
-        return loc;
-    }
-
-    internal void UpdateStartingPoint()
-    {
-        _fullRoute = null;
-        OnPropertyChanged(nameof(FullRoute));
-
-        _straightRoute = null;
-        OnPropertyChanged(nameof(StraightRoute));
-    }
-
-    #endregion
-
-    /// <summary>
-    /// Uses a cache for WMI information to avoid per-process costly queries.
-    /// Warning: it has to be reset to null every time a new batch of processes will be handled, since it's not dynamically self-refreshed.
-    /// </summary>
-    public static Dictionary<int, string[]> LocalOwnerWMICache;
-
-    public Connection(IConnectionOwnerInfo ownerMod)
-    {
-        rawConnection = ownerMod;
-
-        IsNew = true;
-
-        Pid = ownerMod.OwningPid;
-        SourceIP = ownerMod.LocalAddress;
-        SourcePort = ownerMod.LocalPort.ToString();
-        CreationTime = ownerMod.CreationTime ?? DateTime.Now;
-        Protocol = ownerMod.Protocol;
-        TargetIP = ownerMod.RemoteAddress;
-        TargetPort = (ownerMod.RemotePort == -1 ? String.Empty : ownerMod.RemotePort.ToString());
-        LastSeen = DateTime.Now;
-        //this._state = Enum.GetName(typeof(ConnectionStatus), ownerMod.State);
-
-        try
-        {
-            // Mainly for non-admin users, could use Process.GetProcessById for admins...
-            var r = ProcessHelper.GetProcessOwnerWMI((int)ownerMod.OwningPid, ref LocalOwnerWMICache);
-            Path = r[1] ?? "Unknown"; //FIXME: Move to resources!
-            FileName = r[0] ?? "Unknown"; //FIXME: Use something else?
-        }
-        catch
-        {
-            FileName = "[Unknown or closed process]"; //FIXME: Move to resources!
-            Path = "Unresolved"; //FIXME: Use something else?
-        }
-
-        if (ownerMod.OwnerModule is null)
-        {
-            if (Pid == 0)
-            {
-                FileName = "System";
-                Owner = "System";
-                Path = "-";
-            }
-            else
-            {
-                Owner = "Unknown";
-                Path = Path ?? "Unresolved";
-            }
-        }
-        else
-        {
-            Owner = ownerMod.OwnerModule.ModuleName;
-            IconPath = ownerMod.OwnerModule.ModulePath;
-        }
-    }
-
-    private bool TryEnableStats()
-    {
-        try
-        {
-            // Ignoring bandwidth measurement for loopbacks as it is meaningless anyway
-            if (this.TargetIP == "127.0.0.1" || this.TargetIP == "::1")
-            {
-                return false;
-            }
-
-            rawrow = this.rawConnection.ToTcpRow();
-            rawrow.EnsureStats();
-
-            statsEnabled = true;
-        }
-        catch
-        {
-            InboundBandwidth = 0;
-            OutboundBandwidth = 0;
-            IsAccessDenied = true;
-        }
-
-        return false;
-    }
+    public DateTime LastSeen { get; private set; }
 
     [ObservableProperty]
     private bool _isAccessDenied;
@@ -204,10 +52,146 @@ public partial class Connection : ConnectionBaseInfo
     [ObservableProperty]
     private ulong _outboundBandwidth;
 
-    public DateTime LastSeen { get; private set; }
-
     private readonly IConnectionOwnerInfo rawConnection;
     private ITcpRow? rawrow;
+
+    #region Geolocation
+
+
+    private GeoLocation? _coordinates;
+    public GeoLocation? Coordinates => this.GetOrSetValueAsync(() => GeoLocationHelper.IPToLocationAsync(TargetIP), ref _coordinates, OnCoordinatesPropertyChanged);
+
+    private void OnCoordinatesPropertyChanged(string propertyName)
+    {
+        // Reset both the computed fullRoute and straightRoute to force resolution since the target changed
+        _straightRoute = null;
+        _fullRoute = null;
+
+        OnPropertyChanged(nameof(Coordinates));
+        OnPropertyChanged(nameof(StraightRoute));
+        OnPropertyChanged(nameof(FullRoute));
+    }
+
+
+    private IEnumerable<GeoLocation>? _straightRoute;
+    public IEnumerable<GeoLocation>? StraightRoute => this.GetOrSetValueAsync(() => ComputeStraightRoute(), ref _straightRoute, OnPropertyChanged);
+
+
+    private static IEnumerable<GeoLocation> NoLocation = Enumerable.Empty<GeoLocation>();
+
+    private IEnumerable<GeoLocation> ComputeStraightRoute()
+    {
+        if (TargetIP is "127.0.0.1" or "::1" || Protocol == "UDP" && State != "ESTABLISHED" || Owner is null || Coordinates is null || GeoLocationHelper.CurrentCoordinates is null)
+        {
+            return NoLocation;
+        }
+
+        return new[] { GeoLocationHelper.CurrentCoordinates, Coordinates };
+    }
+
+
+    private IEnumerable<GeoLocation>? _fullRoute;
+    public IEnumerable<GeoLocation>? FullRoute => this.GetOrSetValueAsync(() => ComputeFullRoute(), ref _fullRoute, OnPropertyChanged);
+
+    private async Task<IEnumerable<GeoLocation>?> ComputeFullRoute()
+    {
+        if (Protocol == "UDP" || State != "ESTABLISHED" || Owner is null)
+        {
+            return NoLocation;
+        }
+
+        return await GeoLocationHelper.ComputeRoute(TargetIP).ConfigureAwait(false);
+    }
+
+    internal void UpdateStartingPoint()
+    {
+        _fullRoute = null;
+        OnPropertyChanged(nameof(FullRoute));
+
+        _straightRoute = null;
+        OnPropertyChanged(nameof(StraightRoute));
+    }
+
+    #endregion
+
+    public Connection(IConnectionOwnerInfo ownerMod)
+    {
+        rawConnection = ownerMod;
+
+        IsNew = true;
+
+        Pid = ownerMod.OwningPid;
+        SourceIP = ownerMod.LocalAddress;
+        SourcePort = ownerMod.LocalPort.ToString();
+        CreationTime = ownerMod.CreationTime ?? DateTime.Now;
+        Protocol = ownerMod.Protocol;
+        TargetIP = ownerMod.RemoteAddress;
+        TargetPort = (ownerMod.RemotePort == -1 ? String.Empty : ownerMod.RemotePort.ToString());
+        LastSeen = DateTime.Now;
+        //this._state = Enum.GetName(typeof(ConnectionStatus), ownerMod.State);
+
+        if (Pid is 0 or 4)
+        {
+            FileName = Properties.Resources.Connection_ProcessFile_System;
+            Owner = Properties.Resources.Connection_ProcessOwner_System;
+        }
+        else
+        {
+            try
+            {
+                var module = Process.GetProcessById((int)ownerMod.OwningPid)?.MainModule;
+                if (module is not null)
+                {
+                    Path = module.FileName ?? Properties.Resources.Connection_ProcessPath_Unknown;
+                    FileName = module.ModuleName ?? Properties.Resources.Connection_ProcessFile_Unknown;
+                }
+            }
+            catch
+            {
+                FileName = Properties.Resources.Connection_ProcessFile_UnknownOrClosed;
+                Path = Properties.Resources.Connection_ProcessPath_Unresolved;
+            }
+
+            if (ownerMod.OwnerModule is null)
+            {
+                Owner = Properties.Resources.Connection_ProcessOwner_Unknown;
+                //Path = Path ?? Properties.Resources.Connection_ProcessPath_Unresolved;
+            }
+            else
+            {
+                Owner = ownerMod.OwnerModule.ModuleName;
+                IconPath = ownerMod.OwnerModule.ModulePath;
+            }
+        }
+
+        SetProductInfo();
+    }
+
+    private bool TryEnableStats()
+    {
+        try
+        {
+            // Ignoring bandwidth measurement for loopbacks as it is meaningless anyway
+            if (this.TargetIP == "127.0.0.1" || this.TargetIP == "::1")
+            {
+                return false;
+            }
+
+            rawrow = this.rawConnection.ToTcpRow();
+            rawrow.EnsureStats();
+
+            statsEnabled = true;
+        }
+        catch
+        {
+            InboundBandwidth = 0;
+            OutboundBandwidth = 0;
+            IsAccessDenied = true;
+        }
+
+        return false;
+    }
+
 
     internal void UpdateValues(IConnectionOwnerInfo b)
     {

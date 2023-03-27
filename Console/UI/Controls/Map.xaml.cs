@@ -6,6 +6,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+
 using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
@@ -21,7 +23,7 @@ public partial class Map : UserControl
     public ObservableCollection<Connection> Connections
     {
         get => (ObservableCollection<Connection>)GetValue(ConnectionsProperty);
-        set { SetValue(ConnectionsProperty, value); }// BindingOperations.EnableCollectionSynchronization(value, locker); }
+        set => SetValue(ConnectionsProperty, value);
     }
 
     [ObservableProperty]
@@ -52,11 +54,14 @@ public partial class Map : UserControl
     {
         if (!GeoLocationHelper.CheckDB())
         {
-            MessageBox.Show("The IP database cannot be found. The Map feature is disabled.", "Missing database");
+            ProgressMessage.Text = Properties.Resources.Map_MissingDBMessage;
+            Progress.IsIndeterminate = false;
+            Progress.Foreground = Brushes.OrangeRed;
+            Progress.Value = 100;
             return;
         }
 
-        await GeoLocationHelper.Init().ConfigureAwait(true);
+        await GeoLocationHelper.Init(true).ConfigureAwait(true);
 
         GeoLocationHelper.CurrentCoordinatesChanged += GeoLocationHelper_LocationChanged;
 
@@ -70,26 +75,5 @@ public partial class Map : UserControl
         {
             route.UpdateStartingPoint();
         }
-        CurrentMap.UpdateLayout();
-    }
-
-    //public void UpdateMap()
-    //{
-    //    if (GeoLocationHelper.Initialized)
-    //    {
-    //        Dispatcher.Invoke(() =>
-    //        {
-    //            CurrentMap.UpdateLayout();
-    //        });
-    //    }
-    //}
-
-    //TODO: Temporary check for addresses validity (for mapping purpose only). Doesn't look like the right way to do this.
-    private bool IsValid(string? remoteAddress)
-    {
-        return (!String.IsNullOrEmpty(remoteAddress)
-            && remoteAddress != "127.0.0.1"
-            && remoteAddress != "0.0.0.0"
-            && remoteAddress != "::0");
     }
 }

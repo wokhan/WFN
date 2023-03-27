@@ -238,12 +238,12 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
         OptionsView.IsTargetPortChecked = Protocol.IsIPProtocol(activeConn.RawProtocol);
         OptionsView.IsTargetIPChecked = Protocol.IsIPProtocol(activeConn.RawProtocol);
 
-        if (!String.IsNullOrEmpty(activeConn.CurrentService))
+        if (!String.IsNullOrEmpty(activeConn.ServiceDisplayName))
         {
             OptionsView.IsService = true;
             OptionsView.IsServiceMultiple = false;
             OptionsView.IsServiceRuleChecked = true;
-            OptionsView.SingleServiceName = activeConn.CurrentServiceDesc;
+            OptionsView.SingleServiceName = activeConn.ServiceName;
         }
         else if (activeConn.PossibleServices is not null && activeConn.PossibleServices.Length > 0)
         {
@@ -463,11 +463,11 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
             }
             else
             {
-                services = new[] { activeConn.CurrentService };
+                services = new[] { activeConn.ServiceDisplayName };
             }
         }
 
-        var ruleName = String.Format(Messages.RULE_NAME_FORMAT, activeConn.CurrentServiceDesc ?? activeConn.Description);
+        var ruleName = String.Format(Messages.RULE_NAME_FORMAT, activeConn.ServiceName ?? activeConn.Description);
         
         var success = createRule(activeConn, services, createWithAdvancedOptions, createTempRule, ruleName, doAllow);
 
@@ -500,7 +500,7 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
         for (int i = ((App)Application.Current).Connections.Count - 1; i >= 0; i--)
         {
             var c = ((App)Application.Current).Connections[i];
-            if (FirewallHelper.GetMatchingRules(c.Path, c.CurrentAppPkgId, c.RawProtocol, c.TargetIP, c.TargetPort, c.SourcePort, c.CurrentService, c.CurrentLocalUserOwner, false).Any()) //FIXME: LocalPort may have multiple!)
+            if (FirewallHelper.GetMatchingRules(c.Path, c.CurrentAppPkgId, c.RawProtocol, c.TargetIP, c.TargetPort, c.SourcePort, c.ServiceDisplayName, c.CurrentLocalUserOwner, false).Any()) //FIXME: LocalPort may have multiple!)
             {
                 LogHelper.Debug("Auto-removing a similar connection...");
                 ((App)Application.Current).Connections.Remove(c);

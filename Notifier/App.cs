@@ -192,6 +192,7 @@ public sealed class App : Application, IDisposable
     {
         try
         {
+            //TODO: looks incorrect to me since SourcePort can be a range ("start IP - end IP" format) since built with IPHelper.MergePorts below
             var sourcePortAsInt = int.Parse(conn.SourcePort);
             var existing = Dispatcher.Invoke(() => this.Connections.FirstOrDefault(c => StringComparer.InvariantCultureIgnoreCase.Equals(c.Path, conn.Path) && c.TargetIP == conn.TargetIP && c.TargetPort == conn.TargetPort && (sourcePortAsInt >= IPHelper.GetMaxUserPort() || c.SourcePort == conn.SourcePort) && c.RawProtocol == conn.RawProtocol));
             if (existing is not null)
@@ -200,32 +201,29 @@ public sealed class App : Application, IDisposable
                 if (!existing.LocalPortArray.Contains(sourcePortAsInt))
                 {
                     existing.LocalPortArray.Add(sourcePortAsInt);
-                    //Note: Unfortunately, C# doesn't have a simple List that automatically sorts... :(
-                    // TODO: it does with SortedSet. Don't get this comment...
-                    // existing.LocalPortArray.Sort();
                     existing.SourcePort = IPHelper.MergePorts(existing.LocalPortArray);
                 }
                 existing.TentativesCounter++;
             }
             else
             {
-                ServiceInfoResult svcInfo = null;
-                if (Settings.Default.EnableServiceDetection)
-                {
-                    svcInfo = ServiceNameResolver.GetServiceInfo(conn.Pid, conn.FileName);
-                }
+                // TODO: Service resolution is already done in LogEntryViewModel... so this condition should be moved there as well
+                //ServiceInfoResult svcInfo = null;
+                //if (Settings.Default.EnableServiceDetection)
+                //{
+                //    svcInfo = ServiceNameResolver.GetServiceInfo(conn.Pid, conn.FileName);
+                //}
 
                 conn.CurrentAppPkgId = ProcessHelper.GetAppPkgId(conn.Pid);
                 conn.CurrentLocalUserOwner = ProcessHelper.GetLocalUserOwner(conn.Pid);
-                conn.CurrentService = svcInfo?.DisplayName;
-                conn.CurrentServiceDesc = svcInfo?.Name;
+                
                 // Check whether this connection is blocked by a rule.
-                var blockingRules = FirewallHelper.GetMatchingRules(conn.Path, conn.CurrentAppPkgId, conn.RawProtocol, conn.TargetIP, conn.TargetPort, conn.SourcePort, conn.CurrentServiceDesc, conn.CurrentLocalUserOwner, blockOnly: true, outgoingOnly: true);
+                var blockingRules = FirewallHelper.GetMatchingRules(conn.Path, conn.CurrentAppPkgId, conn.RawProtocol, conn.TargetIP, conn.TargetPort, conn.SourcePort, conn.ServiceName, conn.CurrentLocalUserOwner, blockOnly: true, outgoingOnly: true);
                 if (blockingRules.Any())
                 {
                     LogHelper.Info("Connection matches a block-rule!");
 
-                    LogHelper.Debug($"pid: {Process.GetCurrentProcess().Id} GetMatchingRules: {conn.FileName}, {conn.Protocol}, {conn.TargetIP}, {conn.TargetPort}, {conn.SourcePort}, {svcInfo?.Name}");
+                    LogHelper.Debug($"pid: {Process.GetCurrentProcess().Id} GetMatchingRules: {conn.FileName}, {conn.Protocol}, {conn.TargetIP}, {conn.TargetPort}, {conn.SourcePort}, {conn.ServiceName}");
 
                     return false;
                 }

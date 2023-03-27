@@ -240,7 +240,7 @@ public abstract partial class IPHelper
     private const int buffer_size = 32;
     private const int max_hops = 30;
     private const int ping_timeout = 4000;
-    public static async Task<IEnumerable<IPAddress>> GetFullRoute(string adr)
+    public static async Task<IList<IPAddress>> GetFullRoute(string adr)
     {
         var ret = new List<IPAddress>();
         

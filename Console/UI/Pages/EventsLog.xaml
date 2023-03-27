@@ -71,7 +71,12 @@
                     <DataGridTextColumn Header="Dir" Binding="{Binding Direction,Mode=OneTime}" Width="Auto">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
-                                <Setter Property="Foreground" Value="{Binding DirectionColor}"/>
+                                <Setter Property="Foreground" Value="OrangeRed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Direction}" Value="Out">
+                                        <Setter Property="Foreground" Value="Black" />
+                                    </DataTrigger>
+                                </Style.Triggers>
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
@@ -79,8 +84,13 @@
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
                                 <Setter Property="ToolTip" Value="click for details" />
-                                <Setter Property="Foreground" Value="{Binding ReasonColor}"/>
+                                <Setter Property="Foreground" Value="Blue"/>
                                 <Setter Property="TextBlock.TextDecorations" Value="Underline"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsAllowed}" Value="False">
+                                        <Setter Property="Foreground" Value="OrangeRed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>

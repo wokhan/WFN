@@ -126,7 +126,7 @@
                                     <Image VerticalAlignment="Center" Margin="5,0,0,0" Grid.Column="0" Height="32" MinWidth="32" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Icon,Mode=OneWay}" />
                                     <StackPanel VerticalAlignment="Center" Margin="5" Grid.Column="1">
                                         <TextBlock FontWeight="Bold" Text="{Binding Description,Mode=OneWay}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                        <TextBlock Text="{Binding CurrentServiceDesc,Mode=OneWay}" Visibility="{Binding CurrentService,Mode=OneWay,Converter={StaticResource valueToVisibility}}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" FontSize="10" />
+                                        <TextBlock Text="{Binding ServiceName,Mode=OneWay}" Visibility="{Binding ServiceName,Mode=OneWay,Converter={StaticResource valueToVisibility}}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" FontSize="10" />
                                         <TextBlock Text="{Binding ProductName,Mode=OneWay}" Visibility="{Binding ProductName,Mode=OneWay,Converter={StaticResource valueToVisibility}}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" FontSize="10" />
                                     </StackPanel>
                                     <TextBlock Margin="5,5" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" Text="{Binding TentativesCounter,Mode=OneWay,StringFormat='Attempts: {0}'}" FontSize="10" />

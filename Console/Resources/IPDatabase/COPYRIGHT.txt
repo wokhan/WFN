@@ -1,1 +1,1 @@
-Database and Contents Copyright (c) 2019 MaxMind, Inc.
+Database and Contents Copyright (c) 2023 MaxMind, Inc.

@@ -15,7 +15,7 @@ public class AppDataSample
         {
             Path = "Test 1";
             CurrentAppPkgId = String.Empty;
-            CurrentService = "Service";
+            ServiceDisplayName = "Service";
             Description = "Sample data";
             ProductName = "WFN";
             Company = "Wokhan Solutions";

@@ -1,15 +1,15 @@
 ﻿using MaxMind.GeoIP2;
 using MaxMind.GeoIP2.Responses;
 
-using Microsoft.Maps.MapControl.WPF;
-
 using System;
+using System.Collections.Generic;
 using System.Device.Location;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
+using Wokhan.WindowsFirewallNotifier.Common.Net.GeoLocation;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using Wokhan.WindowsFirewallNotifier.Common.Properties;
 
@@ -22,8 +22,8 @@ public static class GeoLocationHelper
 
     public static event EventHandler? CurrentCoordinatesChanged;
     
-    private static Location? _currentCoordinates;
-    public static Location? CurrentCoordinates
+    private static GeoLocation? _currentCoordinates;
+    public static GeoLocation? CurrentCoordinates
     {
         get => _currentCoordinates;
         private set
@@ -36,14 +36,14 @@ public static class GeoLocationHelper
         }
     }
 
-    private static Location _unknownLocation = new();
+    private static readonly GeoLocation _unknownLocation = new();
 
     /// <summary>
     /// Retrieves the location based on IPv4 or IPv6 address.
     /// </summary>
     /// <param name="address">Standard IPv4 or IPv6 address</param>
     /// <returns></returns>
-    public static async Task<Location> IPToLocationAsync(string? address)
+    public static async Task<GeoLocation> IPToLocationAsync(string? address)
     {
         if (address is not null && IPAddress.TryParse(address, out IPAddress? adr))
         {
@@ -53,7 +53,7 @@ public static class GeoLocationHelper
         return _unknownLocation;
     }
 
-    public static async Task<Location> IPToLocationAsync(IPAddress? address)
+    public static async Task<GeoLocation> IPToLocationAsync(IPAddress? address)
     {
         if (address is null)
         {
@@ -69,11 +69,11 @@ public static class GeoLocationHelper
         {
             if (_databaseReader?.TryCity(address, out CityResponse? cr) ?? false)
             {
-                return new Location(cr!.Location.Latitude.GetValueOrDefault(), cr.Location.Longitude.GetValueOrDefault());
+                return new GeoLocation(cr!.Location.Latitude.GetValueOrDefault(), cr.Location.Longitude.GetValueOrDefault(), cr.Continent?.Name, cr.Country?.Name, cr.Country?.IsoCode, cr.City?.Name, cr.Location.AccuracyRadius);
             }
 
             return _unknownLocation;
-        });
+        }).ConfigureAwait(false);
     }
 
     public static bool Initialized { get; private set; }
@@ -87,7 +87,7 @@ public static class GeoLocationHelper
     private static DatabaseReader? _databaseReader;
     private static bool initPending;
 
-    public static async Task Init()
+    public static async Task Init(bool trackLocation)
     {
         if (initPending)
         {
@@ -104,15 +104,18 @@ public static class GeoLocationHelper
             Initialized = true;
         }).ConfigureAwait(true);
 
-        try
+        if (trackLocation)
         {
-            geoWatcher = new GeoCoordinateWatcher();
-            geoWatcher.PositionChanged += GeoWatcher_PositionChanged;
-            geoWatcher.Start();
-        }
-        catch (Exception exc)
-        {
-            LogHelper.Error("Unable to use GeoCoordinateWatcher. Falling back to IP address based method.", exc);
+            try
+            {
+                geoWatcher = new GeoCoordinateWatcher();
+                geoWatcher.PositionChanged += GeoWatcher_PositionChanged;
+                geoWatcher.Start();
+            }
+            catch (Exception exc)
+            {
+                LogHelper.Error("Unable to use GeoCoordinateWatcher. Falling back to IP address based method.", exc);
+            }
         }
 
         // If not yet set, fallback to the IP-based location
@@ -123,7 +126,31 @@ public static class GeoLocationHelper
     {
         if (!geoWatcher!.Position.Location.IsUnknown)
         {
-            CurrentCoordinates = new Location(geoWatcher.Position.Location.Latitude, geoWatcher.Position.Location.Longitude);
+            CurrentCoordinates = new GeoLocation(geoWatcher.Position.Location.Latitude, geoWatcher.Position.Location.Longitude);
         }
     }
+
+    public static async Task<List<GeoLocation>> ComputeRoute(string target)
+    {
+        if (target is "127.0.0.1" or "::1" || CurrentCoordinates is null || !IPAddress.TryParse(target, out var _))
+        {
+            return new List<GeoLocation>();
+        }
+        
+        var loc = new List<GeoLocation>() { CurrentCoordinates };
+        var route = await IPHelper.GetFullRoute(target).ConfigureAwait(false);
+
+        foreach (var ip in route)
+        {
+            var location = await IPToLocationAsync(ip);
+            // Ignore unresolved locations
+            if (location is not { Latitude: 0, Longitude: 0 })
+            {
+                loc.Add(location);
+            }
+        }
+
+        return loc;
+    }
+
 }

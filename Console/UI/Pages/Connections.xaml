@@ -9,7 +9,9 @@
     xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
     xmlns:settings="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Config;assembly=Wokhan.WindowsFirewallNotifier.Common"
     DataContext="{Binding RelativeSource={x:Static RelativeSource.Self}}"
-    xmlns:dummydata="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.ViewModels" xmlns:componentmodel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+    xmlns:viewmodels="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.ViewModels" 
+    xmlns:componentmodel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+    xmlns:flags="clr-namespace:CountryFlag.Wpf;assembly=CountryFlag.Wpf"
     mc:Ignorable="d" 
     d:DesignHeight="400" d:DesignWidth="800"
 	Title="Connections">
@@ -51,7 +53,7 @@
                 <RowDefinition Height="4" x:Name="separatorRow" />
                 <RowDefinition Height="*" x:Name="secondRow" />
             </Grid.RowDefinitions>
-            <DataGrid x:Name="connections" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizingWhenGrouping="True" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" d:DataContext="{d:DesignInstance Type=dummydata:ConnectionDummy,IsDesignTimeCreatable=True,CreateList=True}" DataContext="{StaticResource connectionsView}" ItemsSource="{Binding}" AutoGenerateColumns="False" HeadersVisibility="Column" Grid.ColumnSpan="3" Visibility="{Binding IsChecked,ElementName=toggleShowConnections,Mode=OneWay,Converter={StaticResource valueToVisibility}}" IsVisibleChanged="Components_VisibilityChanged">
+            <DataGrid x:Name="connections" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizingWhenGrouping="True" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" d:DataContext="{d:DesignInstance Type=viewmodels:ConnectionDummy,IsDesignTimeCreatable=True,CreateList=True}" DataContext="{StaticResource connectionsView}" ItemsSource="{Binding}" AutoGenerateColumns="False" HeadersVisibility="Column" Grid.ColumnSpan="3" Visibility="{Binding IsChecked,ElementName=toggleShowConnections,Mode=OneWay,Converter={StaticResource valueToVisibility}}" IsVisibleChanged="Components_VisibilityChanged">
                 <DataGrid.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.ContainerStyle>
@@ -72,7 +74,7 @@
                                                             <ColumnDefinition />
                                                         </Grid.ColumnDefinitions>
                                                         <Ellipse Width="10" Height="10" Fill="{StaticResource color}" />
-                                                        <TextBlock Grid.Column="1" FontWeight="Bold" Text="{Binding FileName}" ToolTip="{Binding Path}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                                        <TextBlock Grid.Column="1" FontWeight="Bold" Text="{Binding FileName}" ToolTip="{Binding Path,TargetNullValue='-'}" HorizontalAlignment="Left" VerticalAlignment="Center" />
                                                         <TextBlock Grid.Column="2" FontWeight="Bold" Text="{Binding ProductName,StringFormat=' ({0})'}" HorizontalAlignment="Left" VerticalAlignment="Center" />
                                                         <Rectangle Grid.Column="3" Margin="10,0,0,0" HorizontalAlignment="Stretch" Height="2" Fill="{StaticResource color}" />
                                                     </Grid>
@@ -116,8 +118,26 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol, Mode=OneTime}" />
-                    <DataGridTextColumn Header="PID" Binding="{Binding Pid, Mode=OneTime}" />
+                    <DataGridTextColumn Header="PID" Binding="{Binding Pid, Mode=OneTime}" Width="Auto" />
+                    <DataGridTemplateColumn Header="Protocol" Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate DataType="viewmodels:Connection">
+                                <Border HorizontalAlignment="Center" Padding="10,2" CornerRadius="10">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="Green" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Protocol,Mode=OneTime}" Value="UDP">
+                                                    <Setter Property="Background" Value="OrangeRed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="{Binding Protocol, Mode=OneTime}" />
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Local port" Binding="{Binding SourcePort, Mode=OneTime}">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
@@ -129,17 +149,28 @@
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Remote address" Binding="{Binding TargetIP, Mode=OneTime}">
-                        <DataGridTextColumn.CellStyle>
+                    <DataGridTemplateColumn Header="Remote address">
+                        <DataGridTemplateColumn.CellStyle>
                             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
                                 <Setter Property="ToolTip">
                                     <Setter.Value>
-                                        <TextBlock Text="{Binding TargetHostName,StringFormat='Host: {0}',TargetNullValue='...'}" />
+                                        <StackPanel>
+                                            <TextBlock><Run Text="Location: " FontWeight="Bold" /><Run Text="{Binding Coordinates.Country,Mode=OneWay,TargetNullValue='-'}" /><Run Text="{Binding Coordinates.City,StringFormat=' ({0})',Mode=OneWay,TargetNullValue=' (-)'}" /></TextBlock>
+                                            <TextBlock><Run Text="Hostname: " FontWeight="Bold" /><Run Text="{Binding TargetHostName,Mode=OneWay,TargetNullValue='...'}" /></TextBlock>
+                                        </StackPanel>
                                     </Setter.Value>
                                 </Setter>
                             </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
+                        </DataGridTemplateColumn.CellStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate DataType="viewmodels:Connection">
+                                <StackPanel Orientation="Horizontal">
+                                    <flags:CountryFlag CountryCode="{Binding Coordinates.CountryISOCode,Mode=OneWay,TargetNullValue=''}" Height="12" MaxWidth="40" Margin="0" Padding="0" />
+                                    <TextBlock Grid.Column="1" Text="{Binding TargetIP, Mode=OneTime}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Remote port" Binding="{Binding TargetPort, Mode=OneTime}" />
                     <DataGridTextColumn Header="State" Binding="{Binding State, Mode=OneWay}" />
                     <DataGridTextColumn Header="Creation" Binding="{Binding CreationTime, Mode=OneTime}" />
