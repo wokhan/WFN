@@ -235,7 +235,7 @@
                                 <TextBlock>
                                     <Run Text="Target IP:" />
                                     <Hyperlink NavigateUri="{Binding TargetInfoUrl,Mode=OneTime}" Foreground="{DynamicResource AccentColorBrush}" TextDecorations="None" RequestNavigate="hlk_Navigate">
-                                        <Run Text="{Binding TargetIP, FallbackValue='N/A',Mode=OneTime}" ToolTip="{Binding ResolvedHost}"/>
+                                        <Run Text="{Binding TargetIP, FallbackValue='N/A',Mode=OneTime}" ToolTip="{Binding TargetHostName,Mode=OneWay}"/>
                                     </Hyperlink>
                                 </TextBlock>
                             </CheckBox>

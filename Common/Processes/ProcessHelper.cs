@@ -397,7 +397,7 @@ public static partial class ProcessHelper
     public static string GetLocalUserOwner(uint pid)
     {
         //Based on: https://bytes.com/topic/c-sharp/answers/225065-how-call-win32-native-api-gettokeninformation-using-c
-        IntPtr hProcess = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.QueryInformation, false, (uint)pid);
+        IntPtr hProcess = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.QueryInformation, false, pid);
         if (hProcess == IntPtr.Zero)
         {
             LogHelper.Warning($"Unable to retrieve process local user owner: process pid={pid} cannot be found!");

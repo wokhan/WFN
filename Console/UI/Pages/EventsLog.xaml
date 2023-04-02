@@ -16,8 +16,8 @@
         <ContentControl Style="{StaticResource ToolBarPanel}">
             <Grid IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}">
                 <StackPanel>
-                    <Button ext:CustomAdorner.Image="{StaticResource Image_Refresh}" Content="Refresh" ToolTip="Reload to show the newest events" IsEnabled="{Binding EventsReader.NewMatchingEntriesCount,Converter={StaticResource objectToBool}}" Command="{Binding RefreshCommand}" />
-                    <Button Content="Locate" ext:CustomAdorner.Image="{StaticResource Image_Locate}" Command="{Binding LocateCommand}" ToolTip="Locate the selected item" IsEnabled="{Binding SelectedItem,ElementName=gridLog,Converter={StaticResource objectToBool}}" />
+                    <Button ext:CustomAdorner.Image="{StaticResource Image_Refresh}" Content="Refresh" ToolTip="Reload to show the newest events" IsEnabled="{Binding EventsReader.NewMatchingEntriesCount,Converter={StaticResource objectToBool},TargetNullValue=False}" Command="{Binding RefreshCommand}" />
+                    <Button Content="Locate" ext:CustomAdorner.Image="{StaticResource Image_Locate}" Command="{Binding LocateCommand}" ToolTip="Locate the selected item" />
                     <Button x:Name="btnEventLogVwr" ext:CustomAdorner.Image="/WFN;component/Resources/Images/btnLEvents.Image.png" Content="Events log viewer" Command="{Binding OpenEventsLogViewerCommand}" />
                     <TextBlock VerticalAlignment="Center" Text="{Binding EventsReader.NewMatchingEntriesCount, StringFormat='{}{0} new event(s)', FallbackValue='',TargetNullValue=''}" />
                 </StackPanel>
@@ -37,7 +37,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="0.3*" />
             </Grid.RowDefinitions>
-            <DataGrid VirtualizingPanel.VirtualizationMode="Recycling" BorderThickness="0" x:Name="gridLog" IsReadOnly="True" ColumnWidth="*" AutoGenerateColumns="False" HeadersVisibility="Column" GridLinesVisibility="None" Grid.ColumnSpan="3" SelectedItem="{Binding SelectedItem,Mode=TwoWay}">
+            <DataGrid VirtualizingPanel.VirtualizationMode="Recycling" BorderThickness="0" ItemsSource="{Binding DataView,Mode=OneWay}" IsReadOnly="True" ColumnWidth="*" AutoGenerateColumns="False" HeadersVisibility="Column" GridLinesVisibility="None" Grid.ColumnSpan="3" SelectedItem="{Binding SelectedItem,Mode=TwoWay}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Index" Binding="{Binding Index,Mode=OneTime}" Width="Auto">
                         <DataGridTextColumn.CellStyle>
@@ -99,7 +99,7 @@
             <GridSplitter Grid.Row="1" Height="4" Background="LightGray" HorizontalAlignment="Stretch" />
             <ScrollViewer Grid.Row="2">
                 <Grid Margin="10">
-                    <StackPanel TextElement.Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" DataContext="{Binding SelectedItem,ElementName=gridLog}">
+                    <StackPanel TextElement.Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" DataContext="{Binding SelectedItem,Mode=OneWay}">
                         <TextBlock><Run FontWeight="Bold" Text="Reason: "/><Run Text="{Binding Reason,Mode=OneTime,FallbackValue='-'}"/></TextBlock>
                         <TextBlock><Run FontWeight="Bold" Text="Filter: "/><Run Text="{Binding MatchingFilter.Name,Mode=OneWay, FallbackValue='-'}"/> (Id: <Run Text="{Binding MatchingFilter.FilterId,Mode=OneWay,FallbackValue='-'}"/>)</TextBlock>
                         <TextBlock><Run FontWeight="Bold" Text="Filter details : "/><Run Text="{Binding MatchingFilter.Description,Mode=OneWay,FallbackValue='-'}"/></TextBlock>

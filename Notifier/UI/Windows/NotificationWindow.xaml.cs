@@ -512,7 +512,7 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
     {
         bool success;
         int Profiles = OptionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
-        string finalRuleName = (createTempRule) ? Messages.RULE_TEMP_PREFIX + ruleName : ruleName;
+        string finalRuleName = createTempRule ? Messages.RULE_TEMP_PREFIX + ruleName : ruleName;
         var newRule = new CustomRule(finalRuleName,
                                      createWithAdvancedOptions || OptionsView.IsPathChecked ? activeConn.Path : null,
                                      !createWithAdvancedOptions && OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null,
@@ -538,15 +538,15 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
         return success;
     }
 
-    private static WinForms::NotifyIcon tempNotifyIcon_;
-    private List<CustomRule> tempRules_ = new List<CustomRule>();
+    private static WinForms::NotifyIcon _tempNotifyIcon;
+    private readonly List<CustomRule> _tempRules = new();
     private void CreateTempRuleNotifyIcon(CustomRule newRule)
     {
-        if (!tempRules_.Contains(newRule))
+        if (!_tempRules.Contains(newRule))
         {
-            tempRules_.Add(newRule);
+            _tempRules.Add(newRule);
         }
-        if (tempNotifyIcon_ is null)
+        if (_tempNotifyIcon is null)
         {
             // tray icon for temporary rule
             WinForms::NotifyIcon ni = new WinForms::NotifyIcon();
@@ -562,7 +562,7 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
             ni.ShowBalloonTip(2000);
             ni.Visible = true;
 
-            tempNotifyIcon_ = ni;
+            _tempNotifyIcon = ni;
         }
     }
 
@@ -577,15 +577,15 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
     private bool RemoveTempRulesAndNotfyIcon()
     {
         bool success = true;
-        if (tempRules_.Count > 0)
+        if (_tempRules.Count > 0)
         {
             LogHelper.Info("Now going to remove temporary rule(s)...");
-            success = tempRules_.TrueForAll(r => FirewallHelper.RemoveRule(r.Name));
+            success = _tempRules.TrueForAll(r => FirewallHelper.RemoveRule(r.Name));
         }
-        if (tempNotifyIcon_ is not null)
+        if (_tempNotifyIcon is not null)
         {
-            tempNotifyIcon_.Dispose();
-            tempNotifyIcon_ = null;
+            _tempNotifyIcon.Dispose();
+            _tempNotifyIcon = null;
         }
         return success;
     }

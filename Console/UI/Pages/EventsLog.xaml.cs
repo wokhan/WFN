@@ -24,6 +24,7 @@ public sealed partial class EventsLog : Page, IDisposable
 {
     public EventLogAsyncReader<LogEntryViewModel>? EventsReader { get; set; }
 
+    [ObservableProperty]
     public ICollectionView? dataView;
 
     public int TCPOnlyOrAll
@@ -72,24 +73,20 @@ public sealed partial class EventsLog : Page, IDisposable
         }
     }
 
-    private void StartHandlingSecurityLogEvents(bool reset = false)
+    private void StartHandlingSecurityLogEvents()
     {
         try
         {
-            if (reset || EventsReader is null)
+            EventsReader?.Dispose();
+            EventsReader = new EventLogAsyncReader<LogEntryViewModel>(EventLogAsyncReader.EVENTLOG_SECURITY, LogEntryViewModel.CreateFromEventLogEntry)
             {
-                EventsReader?.Dispose();
-                EventsReader = new EventLogAsyncReader<LogEntryViewModel>(EventLogAsyncReader.EVENTLOG_SECURITY, LogEntryViewModel.CreateFromEventLogEntry)
-                {
-                    FilterPredicate = EventLogAsyncReader.IsFirewallEvent
-                };
-                OnPropertyChanged(nameof(EventsReader));
+                FilterPredicate = EventLogAsyncReader.IsFirewallEvent
+            };
+            OnPropertyChanged(nameof(EventsReader));
 
-                dataView = CollectionViewSource.GetDefaultView(EventsReader.Entries);
-                gridLog.ItemsSource = dataView;
-            }
-
-            //eventsLogFilters.ResetTcpFilter();
+            // Fix for #159 - refreshing
+            var x = EventsReader.Entries;
+            DataView = CollectionViewSource.GetDefaultView(x);
         }
         catch (Exception exc)
         {
@@ -100,12 +97,14 @@ public sealed partial class EventsLog : Page, IDisposable
 
     private void StopHandlingSecurityLogEvents()
     {
+        DataView = null;
         EventsReader?.Dispose();
         EventsReader = null;
     }
 
     public void Dispose()
     {
+        DataView = null;
         EventsReader?.Dispose();
     }
 
@@ -126,7 +125,7 @@ public sealed partial class EventsLog : Page, IDisposable
     [RelayCommand]
     private void Refresh()
     {
-        StartHandlingSecurityLogEvents(true);
+        StartHandlingSecurityLogEvents();
     }
 
 
@@ -143,15 +142,15 @@ public sealed partial class EventsLog : Page, IDisposable
 
     internal void ResetTcpFilter()
     {
-        if (dataView is null)
+        if (DataView is null)
         {
             return;
         }
 
-        dataView.Filter -= TcpFilterPredicate;
+        DataView.Filter -= TcpFilterPredicate;
         if (IsTCPOnlyEnabled)
         {
-            dataView.Filter += TcpFilterPredicate;
+            DataView.Filter += TcpFilterPredicate;
         }
     }
 
@@ -166,12 +165,12 @@ public sealed partial class EventsLog : Page, IDisposable
             await Task.Delay(500).ConfigureAwait(true);
             if (!string.IsNullOrWhiteSpace(TextFilter))
             {
-                dataView!.Filter -= FilterTextPredicate;
-                dataView.Filter += FilterTextPredicate;
+                DataView!.Filter -= FilterTextPredicate;
+                DataView.Filter += FilterTextPredicate;
             }
             else
             {
-                dataView!.Filter -= FilterTextPredicate;
+                DataView!.Filter -= FilterTextPredicate;
             }
             _isResetTextFilterPending = false;
         }

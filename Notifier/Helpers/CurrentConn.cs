@@ -2,8 +2,6 @@
 
 using System.Collections.Generic;
 using System.ComponentModel;
-
-using Wokhan.ComponentModel.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 
@@ -25,13 +23,6 @@ public partial class CurrentConn : LogEntryViewModel, INotifyPropertyChanged
     //public string TargetInfoUrl => $"https://bgpview.io/ip/{Target}";
     public string TargetInfoUrl => string.Format(Settings.Default.TargetInfoUrl, TargetIP);  // eg: $"https://bgpview.io/ip/{Target}"
     public string TargetPortUrl => string.Format(Settings.Default.TargetPortUrl, TargetPort); // eg: $"https://www.speedguide.net/port.php?port={TargetPort}"
-
-    private string _resolvedHost;
-    public string ResolvedHost
-    {
-        get => _resolvedHost;
-        set => this.SetValue(ref _resolvedHost, value, OnPropertyChanged);
-    }
 
     //TODO: remove since it's now useless
     public string[] PossibleServices { get; set; }

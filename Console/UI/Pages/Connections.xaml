@@ -108,7 +108,7 @@
                     </Style>
                 </DataGrid.RowStyle>
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="Owner" SortMemberPath="Owner">
+                    <DataGridTemplateColumn Header="Owner" SortMemberPath="Owner" Width="Auto">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -128,7 +128,7 @@
                                             <Setter Property="Background" Value="Green" />
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding Protocol,Mode=OneTime}" Value="UDP">
-                                                    <Setter Property="Background" Value="OrangeRed" />
+                                                    <Setter Property="Background" Value="Orchid" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
