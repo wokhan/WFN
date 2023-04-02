@@ -207,7 +207,7 @@ public abstract class Rule : INotifyPropertyChanged
         return Enabled
                  && ((Profiles & currentProfile) != 0 || (Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0)
                  && (string.IsNullOrEmpty(ApplicationName) || StringComparer.CurrentCultureIgnoreCase.Equals(ApplicationName, path))
-                 && (string.IsNullOrEmpty(ServiceName) || service.Any() && ServiceName == "*" || StringComparer.CurrentCultureIgnoreCase.Equals(ServiceName, service))
+                 && (string.IsNullOrEmpty(ServiceName) || !string.IsNullOrEmpty(service) && ServiceName == "*" || StringComparer.CurrentCultureIgnoreCase.Equals(ServiceName, service))
                  && (Protocol == WFP.Protocol.ANY || Protocol == protocol)
                  && CheckRuleAddresses(RemoteAddresses, target)
                  && CheckRulePorts(RemotePorts, remoteport)
@@ -230,8 +230,8 @@ public abstract class Rule : INotifyPropertyChanged
                    && CheckRuleAddresses(RemoteAddresses, target)
                    && CheckRulePorts(RemotePorts, remoteport)
                    && (string.IsNullOrEmpty(AppPkgId) || AppPkgId == appPkgId)
-                   && (string.IsNullOrEmpty(ServiceName) || service.Any() && ServiceName == "*" || service.Equals(ServiceName, StringComparison.OrdinalIgnoreCase))
-                   ;
+                   && (string.IsNullOrEmpty(ServiceName) || !string.IsNullOrEmpty(service) && ServiceName == "*" || StringComparer.CurrentCultureIgnoreCase.Equals(ServiceName, service));
+
         if (ret && LogHelper.IsDebugEnabled())
         {
             LogHelper.Debug("Found enabled " + ActionStr + " " + DirectionStr + " Rule '" + Name + "'");
@@ -240,7 +240,7 @@ public abstract class Rule : INotifyPropertyChanged
             LogHelper.Debug("\t" + RemoteAddresses + " <--> " + target + " : " + CheckRuleAddresses(RemoteAddresses, target).ToString());
             LogHelper.Debug("\t" + RemotePorts + " <--> " + remoteport + " : " + CheckRulePorts(RemotePorts, remoteport).ToString());
             LogHelper.Debug("\t" + AppPkgId + " <--> " + appPkgId + "  : " + (string.IsNullOrEmpty(AppPkgId) || AppPkgId == appPkgId).ToString());
-            LogHelper.Debug("\t" + ServiceName + " <--> " + service + " : " + (string.IsNullOrEmpty(ServiceName) || service.Equals(ServiceName, StringComparison.OrdinalIgnoreCase)).ToString());
+            LogHelper.Debug("\t" + ServiceName + " <--> " + service + " : " + (string.IsNullOrEmpty(ServiceName) || !string.IsNullOrEmpty(service) && ServiceName == "*" || StringComparer.CurrentCultureIgnoreCase.Equals(ServiceName, service)));
         }
         return ret;
     }

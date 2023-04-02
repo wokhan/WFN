@@ -13,7 +13,6 @@ public static class EventLogAsyncReader
 {
     public static readonly string EVENTLOG_SECURITY = "security";
 
-
     public static bool IsFirewallEventSimple(EventLogEntry entry)
     {
         var instanceId = entry.InstanceId;
@@ -91,7 +90,7 @@ public sealed class EventLogAsyncReader<T> : IPagedSourceProviderAsync<T>, INoti
         remove { eventLog.EntryWritten -= value; }
     }
 
-    private EventLog eventLog;
+    private EventLog? eventLog;
 
     public EventLogAsyncReader(string eventLogName, Func<EventLogEntry, int, T?> projection, int pageSize = 20)
     {
@@ -139,7 +138,7 @@ public sealed class EventLogAsyncReader<T> : IPagedSourceProviderAsync<T>, INoti
     private DateTime firstEventTimeWritten;
     private readonly PaginationManager<T> paginationManager;
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public int NewMatchingEntriesCount { get; private set; }
     public int NewEntriesCount { get; private set; }

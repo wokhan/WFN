@@ -325,15 +325,16 @@ public static partial class ProcessHelper
         }
     }
 
+    static readonly Version minVersionForApps = new Version(6, 2);
     public static string GetAppPkgId(uint pid)
     {
-        if (Environment.OSVersion.Version <= new Version(6, 2))
+        if (Environment.OSVersion.Version <= minVersionForApps)
         {
             //Not Windows 8 or higher, there are no Apps
             return String.Empty;
         }
 
-        IntPtr hProcess = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.QueryLimitedInformation, false, (uint)pid);
+        IntPtr hProcess = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.QueryLimitedInformation, false, pid);
         if (hProcess == IntPtr.Zero)
         {
             LogHelper.Warning("Unable to retrieve process package id: process cannot be found!");

@@ -165,7 +165,26 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="viewmodels:Connection">
                                 <StackPanel Orientation="Horizontal">
-                                    <flags:CountryFlag CountryCode="{Binding Coordinates.CountryISOCode,Mode=OneWay,TargetNullValue=''}" Height="12" MaxWidth="40" Margin="0" Padding="0" />
+                                    <!-- Next is an ugly way to only show a flag when the country's ISO code is actually set (to avoid a useless exception) -->
+                                    <ContentControl>
+                                        <ContentControl.Style>
+                                            <Style TargetType="ContentControl">
+                                                <Style.Triggers>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding Coordinates,Mode=OneWay,Converter={StaticResource objectToBool}}" Value="True" />
+                                                            <Condition Binding="{Binding Coordinates.CountryISOCode,Mode=OneWay,Converter={StaticResource objectToBool}}" Value="True" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <flags:CountryFlag CountryCode="{Binding Coordinates.CountryISOCode,Mode=OneWay}" Height="12" MaxWidth="40" Margin="0" Padding="0" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </MultiDataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
                                     <TextBlock Grid.Column="1" Text="{Binding TargetIP, Mode=OneTime}" />
                                 </StackPanel>
                             </DataTemplate>
@@ -190,7 +209,7 @@
                                             </Style>
                                         </ContentControl.Style>
                                     </ContentControl>
-                                    <TextBlock Text="{Binding OutboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='ps'}" />
+                                    <TextBlock Text="{Binding OutboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='bps'}" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -211,7 +230,7 @@
                                             </Style>
                                         </ContentControl.Style>
                                     </ContentControl>
-                                    <TextBlock Text="{Binding InboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='ps'}" />
+                                    <TextBlock Text="{Binding InboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='bps'}" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

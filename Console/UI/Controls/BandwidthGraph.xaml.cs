@@ -21,6 +21,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 using Wokhan.Collections;
+using Wokhan.Core;
 using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls;
@@ -64,15 +65,6 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
         };
     }
 
-    private static string[] units = new[] { "", "K", "M", "G", "T" };
-    //TODO: move in Wokhan.Core library to replace the actual FormatBytes implementation (based on a loop). Do a perf test first and try with 1024 as a base (for KiB, MiB, ...).
-    private static string FormatBytes(double size, string? suffix = null)
-    {
-        var num = Math.Min(units.Length - 1, (int)Math.Log(size, 1000));
-        size = (int)(size / Math.Pow(1000, num) * 100) / 100;
-        return $"{size:#0.##}{units[num]}{suffix}";
-    }
-
     private void InitAxes()
     {
         var skAxisPaint = new SolidColorPaint(((SolidColorBrush)Application.Current.Resources[SystemColors.WindowTextBrushKey]).Color.ToSKColor());
@@ -90,7 +82,7 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
         yAxis.MinLimit = 0;
         yAxis.TextSize = 10;
         yAxis.MinStep = 1;
-        yAxis.Labeler = (value) => value == 0 ? "0Bps" : FormatBytes(Math.Pow(10, value), "Bps");
+        yAxis.Labeler = (value) => value == 0 ? "0Bps" : UnitFormatter.FormatValue(Math.Pow(10, value), "Bps");
         yAxis.LabelsPaint = skAxisPaint;
         yAxis.CrosshairPaint = crosshairPaint;
 
@@ -99,7 +91,7 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
         miniYAxis.TextSize = 10;
         miniYAxis.Padding = new LiveChartsCore.Drawing.Padding(0);
         miniYAxis.ShowSeparatorLines = false;
-        miniYAxis.Labeler = (value) => value == 0 ? "0Bps" : FormatBytes(Math.Pow(10, value), "Bps");
+        miniYAxis.Labeler = (value) => value == 0 ? "0Bps" : UnitFormatter.FormatValue(Math.Pow(10, value), "Bps");
 
         miniChart.XAxes.First().IsVisible = false;
     }

@@ -58,7 +58,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>-->
     <PackageReference Include="Microsoft.Maps.MapControl.WPF" Version="1.0.0.3" />
-    <PackageReference Include="Wokhan.Core" Version="0.9.6-beta" />
+    <PackageReference Include="Wokhan.Core" Version="0.9.8-beta" />
     <PackageReference Include="Wokhan.UI" Version="0.9.8-beta" />
   </ItemGroup>
   <ItemGroup>
