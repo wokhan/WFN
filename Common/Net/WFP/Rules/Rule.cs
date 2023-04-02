@@ -206,8 +206,8 @@ public abstract class Rule : INotifyPropertyChanged
         }*/
         return Enabled
                  && ((Profiles & currentProfile) != 0 || (Profiles & (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL) != 0)
-                 && (string.IsNullOrEmpty(ApplicationName) || StringComparer.CurrentCultureIgnoreCase.Compare(ApplicationName, path) == 0)
-                 && (string.IsNullOrEmpty(ServiceName) || service.Any() && ServiceName == "*" || StringComparer.CurrentCultureIgnoreCase.Equals(service, ServiceName))
+                 && (string.IsNullOrEmpty(ApplicationName) || StringComparer.CurrentCultureIgnoreCase.Equals(ApplicationName, path))
+                 && (string.IsNullOrEmpty(ServiceName) || service.Any() && ServiceName == "*" || StringComparer.CurrentCultureIgnoreCase.Equals(ServiceName, service))
                  && (Protocol == WFP.Protocol.ANY || Protocol == protocol)
                  && CheckRuleAddresses(RemoteAddresses, target)
                  && CheckRulePorts(RemotePorts, remoteport)
@@ -216,8 +216,7 @@ public abstract class Rule : INotifyPropertyChanged
                  //&& r.Interfaces == //@
                  //&& r.LocalAddresses //@
                  && (string.IsNullOrEmpty(AppPkgId) || AppPkgId == appPkgId)
-                 && (string.IsNullOrEmpty(LUOwn) || LUOwn == LocalUserOwner)
-                 ;
+                 && (string.IsNullOrEmpty(LUOwn) || LUOwn == LocalUserOwner);
     }
 
 
@@ -280,6 +279,7 @@ public abstract class Rule : INotifyPropertyChanged
         {
             return true;
         }
+        // TODO: Use an array instead of splitting every single time
         foreach (var token in rulePorts.Split(','))
         {
             if (token == checkedPort)

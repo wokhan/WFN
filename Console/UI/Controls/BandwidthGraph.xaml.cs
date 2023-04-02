@@ -53,7 +53,7 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
 
         InitializeComponent();
 
-        InitAxes();
+        this.Loaded += (o, s) => InitAxes();
     }
 
     private void InitMiniGraph()
