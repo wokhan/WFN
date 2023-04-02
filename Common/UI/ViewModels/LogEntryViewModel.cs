@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Wokhan.ComponentModel.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
@@ -20,7 +21,7 @@ public class LogEntryViewModel : ConnectionBaseInfo
     public string? FilterId { get; protected set; }
 
     private FilterResult? _matchingFilter;
-    public FilterResult? MatchingFilter => this.GetOrSetValueAsync(() => NetshHelper.FindMatchingFilterInfo(int.Parse(FilterId)), ref _matchingFilter, OnPropertyChanged);
+    public FilterResult? MatchingFilter => this.GetOrSetValueAsync(() => Task.Run(() => NetshHelper.FindMatchingFilterInfo(int.Parse(FilterId))), ref _matchingFilter, OnPropertyChanged);
     public string? Reason { get; protected set; }
     public string? Message { get; protected set; }
     public bool IsAllowed { get; private set; }

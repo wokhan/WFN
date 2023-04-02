@@ -74,7 +74,7 @@ public partial class Connection : ConnectionBaseInfo
 
 
     private IEnumerable<GeoLocation>? _straightRoute;
-    public IEnumerable<GeoLocation>? StraightRoute => this.GetOrSetValueAsync(() => ComputeStraightRoute(), ref _straightRoute, OnPropertyChanged);
+    public IEnumerable<GeoLocation>? StraightRoute => _straightRoute ??= ComputeStraightRoute();
 
 
     private static IEnumerable<GeoLocation> NoLocation = Enumerable.Empty<GeoLocation>();
@@ -133,6 +133,7 @@ public partial class Connection : ConnectionBaseInfo
         if (Pid is 0 or 4)
         {
             FileName = Properties.Resources.Connection_ProcessFile_System;
+            Path = Properties.Resources.Connection_ProcessFile_System;
             Owner = Properties.Resources.Connection_ProcessOwner_System;
         }
         else

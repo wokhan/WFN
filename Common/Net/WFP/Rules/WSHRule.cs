@@ -14,7 +14,7 @@ public class WSHRule : Rule
     //Based on [MS-GPFAS] ABNF Grammar:
     private ILookup<string, string> parsed;
 
-    private Version version;
+    //private Version version;
 
     public WSHRule(string regRule)
     {
@@ -25,27 +25,34 @@ public class WSHRule : Rule
         }
 
         // TODO: When is it used?
-        version = new Version(parts[0].Substring(1));
+        //version = new Version(parts[0].Substring(1));
         parsed = parts.Skip(1).Select(s => s.Split('=')).ToLookup(s => s[0].ToLower(), s => s[1]);
     }
 
+    private NET_FW_ACTION_? _action;
     public override NET_FW_ACTION_ Action =>
             //@@@ "ByPass"
-            parsed["action"].FirstOrDefault() == "Block" ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
+            _action ??= (parsed["action"].FirstOrDefault() == "Block" ? NET_FW_ACTION_.NET_FW_ACTION_BLOCK : NET_FW_ACTION_.NET_FW_ACTION_ALLOW);
 
-    public override string ApplicationName => PathResolver.ResolvePath(parsed["app"].FirstOrDefault());
 
-    public override string? AppPkgId => parsed["apppkgid"].FirstOrDefault();
+    private string? _applicationName;
+    public override string ApplicationName => _applicationName ??= PathResolver.ResolvePath(parsed["app"].FirstOrDefault(String.Empty));
 
-    public override string? Description => parsed["desc"].FirstOrDefault();
+    private string? _appPkgId;
+    public override string AppPkgId => _appPkgId ??= parsed["apppkgid"].FirstOrDefault(String.Empty);
 
-    public override NET_FW_RULE_DIRECTION_ Direction => parsed["dir"].FirstOrDefault() == "In" ? NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_IN : NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
+    private string? _description;
+    public override string Description => _description ??= parsed["desc"].FirstOrDefault(String.Empty);
+
+    private NET_FW_RULE_DIRECTION_? _direction;
+    public override NET_FW_RULE_DIRECTION_ Direction => _direction ??= (parsed["dir"].FirstOrDefault() == "In" ? NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_IN : NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT);
 
     public override bool EdgeTraversal => true; //FIXME: !
 
     public override int EdgeTraversalOptions => 0; //FIXME: !
 
-    public override bool Enabled => parsed.Contains("active") ? bool.Parse(parsed["active"].FirstOrDefault()) : true;
+    private bool? _enabled;
+    public override bool Enabled => _enabled ??= parsed.Contains("active") ? bool.Parse(parsed["active"].FirstOrDefault()) : true;
 
     public override string Grouping => ""; //FIXME: !
 
@@ -55,68 +62,76 @@ public class WSHRule : Rule
 
     public override string? InterfaceTypes => ""; //FIXME: !
 
-    public override string? LocalAddresses => string.Join(", ", parsed["la4"].Concat(parsed["la6"]).ToArray());
+    private string? _localAddresses;
+    public override string? LocalAddresses => _localAddresses ??= string.Join(", ", parsed["la4"].Concat(parsed["la6"]).ToArray());
 
-    public override string LocalPorts => parsed["lport"].FirstOrDefault();
+    private string? _localPorts;
+    public override string LocalPorts => _localPorts ??= parsed["lport"].FirstOrDefault(String.Empty);
 
-    public override string LUOwn => parsed["luown"].FirstOrDefault();
+    private string? _lUOwn;
+    public override string LUOwn => _lUOwn ??= parsed["luown"].FirstOrDefault(String.Empty);
 
-    public override string Name => "WSH - " + ResourcesLoader.GetMSResourceString(parsed["name"].FirstOrDefault());
+    private string? _name;
+    public override string Name => _name ??= "WSH - " + ResourcesLoader.GetMSResourceString(parsed["name"].FirstOrDefault("N/A"));
 
-    public override int Profiles
+    private int? _profiles;
+    public override int Profiles => _profiles ??= GetProfiles();
+
+    private int GetProfiles()
     {
-        get
+        if (!parsed["profile"].Any())
         {
-            if (!parsed["profile"].Any())
+            return (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL;
+        }
+        var profiles = 0;
+        foreach (var profile in parsed["profile"])
+        {
+            switch (profile)
             {
-                return (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_ALL;
+                case "Public":
+                    profiles += (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC;
+                    break;
+
+                case "Domain":
+                    profiles += (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN;
+                    break;
+
+                case "Private":
+                    profiles += (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE;
+                    break;
+
+                default:
+                    LogHelper.Warning("Unknown profile type: " + profile);
+                    break;
             }
-            var profiles = 0;
-            foreach (var profile in parsed["profile"])
-            {
-                switch (profile)
-                {
-                    case "Public":
-                        profiles += (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC;
-                        break;
+        }
+        return profiles;
+    }
 
-                    case "Domain":
-                        profiles += (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_DOMAIN;
-                        break;
+    private int? _protocol;
+    public override int Protocol => _protocol ??= GetProtocol();
 
-                    case "Private":
-                        profiles += (int)NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PRIVATE;
-                        break;
-
-                    default:
-                        LogHelper.Warning("Unknown profile type: " + profile);
-                        break;
-                }
-            }
-            return profiles;
+    private int GetProtocol()
+    {
+        if (parsed.Contains("protocol") && parsed["protocol"].Any())
+        {
+            return int.Parse(parsed["protocol"].First());
+        }
+        else
+        {
+            return WFP.Protocol.ANY;
         }
     }
 
-    public override int Protocol
-    {
-        get
-        {
-            if (parsed.Contains("protocol") && parsed["protocol"].Any())
-            {
-                return int.Parse(parsed["protocol"].First());
-            }
-            else
-            {
-                return WFP.Protocol.ANY;
-            }
-        }
-    }
 
-    public override string RemoteAddresses => string.Join(", ", parsed["ra4"].Concat(parsed["ra6"]).ToArray());
+    private string? _remoteAddresses;
+    public override string RemoteAddresses => _remoteAddresses ??= string.Join(", ", parsed["ra4"].Concat(parsed["ra6"]).ToArray());
 
-    public override string RemotePorts => parsed["rport"].FirstOrDefault();
+    private string? _remotePorts;
+    public override string RemotePorts => _remotePorts ??= parsed["rport"].FirstOrDefault(String.Empty);
 
-    public override string? ServiceName => parsed["svc"].FirstOrDefault();
+    private string? _serviceName;
+    public override string ServiceName => _serviceName ??= parsed["svc"].FirstOrDefault(String.Empty);
 
     //FIXME: v2.10?
     //public int EdgeTraversalOptions { get; set; }

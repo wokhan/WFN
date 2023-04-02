@@ -55,7 +55,7 @@
                     </Style>
                 </DataGrid.CellStyle>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=OneTime}" SortDirection="Ascending"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=OneTime}" SortDirection="Ascending" />
                     <DataGridTemplateColumn Header="Path" SortMemberPath="ApplicationShortName">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="rules:Rule">

@@ -3,15 +3,12 @@ using NetFwTypeLib;
 
 using System;
 using System.IO;
-using System.Linq;
-using System.Net.Cache;
 using System.Threading.Tasks;
 
 using System.Windows.Media.Imaging;
 
 using Wokhan.ComponentModel.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.Core.Resources;
-using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
 using Wokhan.WindowsFirewallNotifier.Common.UAP;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
