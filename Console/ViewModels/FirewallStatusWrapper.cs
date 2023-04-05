@@ -1,9 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 using System;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 
@@ -20,11 +18,11 @@ public partial class FirewallStatusWrapper : ObservableObject
     private bool _privateIsInBlocked;
     
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(AllIsOutBlocked))] 
+    [NotifyPropertyChangedFor(nameof(AllIsOutBlocked), nameof(OneIsOutBlocked))] 
     private bool _privateIsOutBlocked;
     
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(AllIsOutAllowed))]
+    [NotifyPropertyChangedFor(nameof(AllIsOutAllowed), nameof(OneIsOutBlocked))]
     private bool _privateIsOutAllowed;
     
     [ObservableProperty]
@@ -46,11 +44,11 @@ public partial class FirewallStatusWrapper : ObservableObject
     private bool _publicIsInBlocked;
     
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(AllIsOutBlocked))]
+    [NotifyPropertyChangedFor(nameof(AllIsOutBlocked), nameof(OneIsOutBlocked))]
     private bool _publicIsOutBlocked;
     
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(AllIsOutAllowed))]
+    [NotifyPropertyChangedFor(nameof(AllIsOutAllowed), nameof(OneIsOutBlocked))]
     private bool _publicIsOutAllowed;
     
     [ObservableProperty]
@@ -72,11 +70,11 @@ public partial class FirewallStatusWrapper : ObservableObject
     private bool _domainIsInBlocked;
     
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(AllIsOutBlocked))]
+    [NotifyPropertyChangedFor(nameof(AllIsOutBlocked), nameof(OneIsOutBlocked))]
     private bool _domainIsOutBlocked;
     
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(AllIsOutAllowed))]
+    [NotifyPropertyChangedFor(nameof(AllIsOutAllowed), nameof(OneIsOutBlocked))]
     private bool _domainIsOutAllowed;
     
     [ObservableProperty]
@@ -131,6 +129,11 @@ public partial class FirewallStatusWrapper : ObservableObject
 
     public FirewallStatusWrapper()
     {
+        Init();
+    }
+
+    public void Init()
+    {
         FirewallHelper.UpdatePrivateStatus(out FirewallHelper.Status privateInStatus, out FirewallHelper.Status privateOutStatus);
         FirewallHelper.UpdatePublicStatus(out FirewallHelper.Status publicInStatus, out FirewallHelper.Status publicOutStatus);
         FirewallHelper.UpdateDomainStatus(out FirewallHelper.Status domainInStatus, out FirewallHelper.Status domainOutStatus);
@@ -154,7 +157,6 @@ public partial class FirewallStatusWrapper : ObservableObject
         DomainIsOutAllowed = !DomainIsOutBlocked;
     }
 
-
     public void Save([param: NotNull] Func<Func<bool>, string, string, bool> checkResult)
     {
         if (!checkResult(UpdateFirewallPolicies, "Successfully applied the firewall settings", "Failed to apply the firewall settings!"))
@@ -170,6 +172,8 @@ public partial class FirewallStatusWrapper : ObservableObject
         {
             InstallHelper.Uninstall(checkResult);
         }
+
+        Init();
     }
 
     private bool UpdateFirewallPolicies()

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
@@ -17,7 +16,7 @@ using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
-public partial class Connection : ConnectionBaseInfo
+public partial class MonitoredConnection : ConnectionBaseInfo
 {
     public string Owner { get; private set; }
 
@@ -115,7 +114,7 @@ public partial class Connection : ConnectionBaseInfo
 
     #endregion
 
-    public Connection(IConnectionOwnerInfo ownerMod)
+    public MonitoredConnection(IConnectionOwnerInfo ownerMod)
     {
         rawConnection = ownerMod;
 

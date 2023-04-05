@@ -8,6 +8,7 @@
       xmlns:resx="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Properties;assembly=Wokhan.WindowsFirewallNotifier.Common" 
       xmlns:controls="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.Controls" 
       x:Class="Wokhan.WindowsFirewallNotifier.Console.UI.Pages.Status" 
+      DataContext="{Binding RelativeSource={x:Static RelativeSource.Self}}"
       mc:Ignorable="d" 
       x:Name="me"
       d:DesignHeight="600" d:DesignWidth="800"
@@ -15,13 +16,16 @@
     <DockPanel>
         <controls:AdminPanel Caption="Only an administrator can use this feature." />
         <ContentControl Style="{StaticResource ToolBarPanel}">
-            <StackPanel HorizontalAlignment="Left">
-                <Button Content="Apply" x:Name="btnSave" Command="{Binding SaveCommand, ElementName=me}" IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}" ext:CustomAdorner.Image="{StaticResource Image_Save}" />
-                <Button Content="Reload" x:Name="btnRevert" Command="{Binding RevertCommand, ElementName=me}" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" />
-            </StackPanel>
+            <Grid>
+                <StackPanel HorizontalAlignment="Left">
+                    <Button Content="Apply" x:Name="btnSave" Command="{Binding SaveCommand}" IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}" ext:CustomAdorner.Image="{StaticResource Image_Save}" />
+                    <Button Content="Reload" x:Name="btnRevert" Command="{Binding RevertCommand}" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" />
+                </StackPanel>
+                <Button HorizontalAlignment="Right" Command="{Binding TestNotifCommand,ElementName=me}" ext:CustomAdorner.Image="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Content="Start Notifier now" />
+            </Grid>
         </ContentControl>
         <ScrollViewer DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static SystemColors.InfoBrushKey}}" Height="70">
-            <ItemsControl x:Name="messsageInfoPanel" ItemsSource="{Binding Messages}">
+            <ItemsControl ItemsSource="{Binding Messages}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}" />
@@ -29,7 +33,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <StackPanel x:Name="stackOptions" TextElement.Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}">
+        <StackPanel DataContext="{Binding StatusWrapper,Mode=OneWay}" TextElement.Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}">
             <TextBlock Margin="5" TextWrapping="Wrap" Text="{x:Static resx:Resources.Status_Heading1 }" />
             <TextBlock Margin="5" TextWrapping="Wrap" FontStyle="Italic" Text="{x:Static resx:Resources.Status_NoteAboutProfiles}" />
             <Grid IsEnabled="{Binding IsElevated, Source={x:Static Application.Current}}">
@@ -171,15 +175,6 @@
                 </CheckBox>
             </Grid>
             <TextBlock Margin="10,10,10,0" FontStyle="Italic" TextWrapping="Wrap" Text="{x:Static resx:Resources.Status_FooterRemark}" />
-            <Grid Margin="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <StackPanel>
-                </StackPanel>
-                <Button Grid.Column="1" Margin="50,10" x:Name="btnTestNotif" Command="{Binding TestNotifCommand,ElementName=me}" Height="Auto" HorizontalAlignment="Center" ext:CustomAdorner.Image="/Wokhan.WindowsFirewallNotifier.Common;component/Resources/Notifier.ico" Content="Start Notifier now" />
-            </Grid>
         </StackPanel>
     </DockPanel>
 </Page>

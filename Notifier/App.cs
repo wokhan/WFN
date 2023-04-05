@@ -14,6 +14,7 @@ using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
 using Wokhan.WindowsFirewallNotifier.Common.Security;
+using Wokhan.WindowsFirewallNotifier.Common.UAP;
 using Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 using Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
 using Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows;
@@ -158,7 +159,7 @@ public sealed class App : Application, IDisposable
 
         bool allowed = EventLogAsyncReader.IsFirewallEventAllowed(entry.InstanceId);
         activityWindow.ShowActivity(allowed ? ActivityWindow.ActivityEnum.Allowed : ActivityWindow.ActivityEnum.Blocked);
-        if (allowed || !LogEntryViewModel.TryCreateFromEventLogEntry(entry, 0, out CurrentConn view))
+        if (allowed || !LoggedConnection.TryCreateFromEventLogEntry(entry, 0, out CurrentConn view))
         {
             return;
         }
@@ -214,7 +215,7 @@ public sealed class App : Application, IDisposable
                 //    svcInfo = ServiceNameResolver.GetServiceInfo(conn.Pid, conn.FileName);
                 //}
 
-                conn.CurrentAppPkgId = ProcessHelper.GetAppPkgId(conn.Pid);
+                conn.CurrentAppPkgId = StorePackageHelper.GetAppPkgId(conn.Pid);
                 conn.CurrentLocalUserOwner = ProcessHelper.GetLocalUserOwner(conn.Pid);
                 
                 // Check whether this connection is blocked by a rule.
@@ -223,7 +224,7 @@ public sealed class App : Application, IDisposable
                 {
                     LogHelper.Info("Connection matches a block-rule!");
 
-                    LogHelper.Debug($"pid: {Process.GetCurrentProcess().Id} GetMatchingRules: {conn.FileName}, {conn.Protocol}, {conn.TargetIP}, {conn.TargetPort}, {conn.SourcePort}, {conn.ServiceName}");
+                    LogHelper.Debug($"pid: {Environment.ProcessId} GetMatchingRules: {conn.FileName}, {conn.Protocol}, {conn.TargetIP}, {conn.TargetPort}, {conn.SourcePort}, {conn.ServiceName}");
 
                     return false;
                 }

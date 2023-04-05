@@ -16,23 +16,13 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 
 public partial class Status : Page
 {
-    FirewallStatusWrapper status = new();
-
     public ObservableCollection<string> Messages { get; } = new();
+
+    public FirewallStatusWrapper StatusWrapper { get; private set; } = new();
 
     public Status()
     {
         InitializeComponent();
-
-        this.Loaded += init;
-    }
-
-    private void init(object? src = null, RoutedEventArgs? args = null)
-    {
-        status = new FirewallStatusWrapper();
-
-        stackOptions.DataContext = status;
-        messsageInfoPanel.DataContext = this;
     }
 
     [RelayCommand]
@@ -42,9 +32,7 @@ public partial class Status : Page
 
         Messages.Add("=== Applying modifications ===");
 
-        status.Save(RunAndLogResult);
-
-        init();
+        StatusWrapper.Save(RunAndLogResult);
     }
 
     [RelayCommand]
@@ -56,7 +44,7 @@ public partial class Status : Page
         Settings.Default.IsInstalled = false;
         Settings.Default.Save();
 
-        init();
+        StatusWrapper.Init();
     }
 
     [RelayCommand]

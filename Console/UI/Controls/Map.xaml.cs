@@ -18,11 +18,11 @@ public partial class Map : UserControl
 {
     //private object locker = new();
 
-    public static readonly DependencyProperty ConnectionsProperty = DependencyProperty.Register(nameof(Connections), typeof(ObservableCollection<Connection>), typeof(Map));
+    public static readonly DependencyProperty ConnectionsProperty = DependencyProperty.Register(nameof(Connections), typeof(ObservableCollection<MonitoredConnection>), typeof(Map));
 
-    public ObservableCollection<Connection> Connections
+    public ObservableCollection<MonitoredConnection> Connections
     {
-        get => (ObservableCollection<Connection>)GetValue(ConnectionsProperty);
+        get => (ObservableCollection<MonitoredConnection>)GetValue(ConnectionsProperty);
         set => SetValue(ConnectionsProperty, value);
     }
 

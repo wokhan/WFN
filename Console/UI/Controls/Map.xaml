@@ -33,7 +33,7 @@
                                 <maps:MapPolyline.ToolTip>
                                     <StackPanel>
                                         <TextBlock><Run FontWeight="Bold" Text="Connection owner: " /><Image Source="{Binding Icon}" Stretch="Uniform" Margin="5,0" VerticalAlignment="Center" Height="16" /><Run Text="{Binding Owner,Mode=OneTime}" /></TextBlock>
-                                        <TextBlock><Run FontWeight="Bold" Text="Bandwidth: " />Up=<Run Text="{Binding InboundBandwidth,Mode=OneWay,Converter={StaticResource unitFormatter}, ConverterParameter='ps'}" /> / Down=<Run Text="{Binding InboundBandwidth,Mode=OneWay,Converter={StaticResource unitFormatter}, ConverterParameter='ps'}" /></TextBlock>
+                                        <TextBlock><Run FontWeight="Bold" Text="Bandwidth: " />Up=<Run Text="{Binding InboundBandwidth,Mode=OneWay,Converter={StaticResource unitFormatter}, ConverterParameter='bps'}" /> / Down=<Run Text="{Binding InboundBandwidth,Mode=OneWay,Converter={StaticResource unitFormatter}, ConverterParameter='bps'}" /></TextBlock>
                                     </StackPanel>
                                 </maps:MapPolyline.ToolTip>
                                 <maps:MapPolyline.Resources>

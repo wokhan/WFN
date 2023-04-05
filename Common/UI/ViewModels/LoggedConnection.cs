@@ -14,7 +14,7 @@ using WFP = Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 
-public class LogEntryViewModel : ConnectionBaseInfo
+public class LoggedConnection : ConnectionBaseInfo
 {
     public int Index { get; protected set; }
     public int Id { get; protected set; }
@@ -27,7 +27,7 @@ public class LogEntryViewModel : ConnectionBaseInfo
     public bool IsAllowed { get; private set; }
 
 
-    public static bool TryCreateFromEventLogEntry<T>(EventLogEntry entry, int index, out T? view) where T : LogEntryViewModel, new()
+    public static bool TryCreateFromEventLogEntry<T>(EventLogEntry entry, int index, out T? view) where T : LoggedConnection, new()
     {
         if (entry is null)
         {
@@ -95,8 +95,8 @@ public class LogEntryViewModel : ConnectionBaseInfo
         return entry.ReplacementStrings.DefaultIfEmpty(string.Empty).ElementAtOrDefault(i);
     }
 
-    public static LogEntryViewModel? CreateFromEventLogEntry(EventLogEntry entry, int index)
+    public static LoggedConnection? CreateFromEventLogEntry(EventLogEntry entry, int index)
     {
-        return TryCreateFromEventLogEntry(entry, index, out LogEntryViewModel? ret) ? ret : null;
+        return TryCreateFromEventLogEntry(entry, index, out LoggedConnection? ret) ? ret : null;
     }
 }

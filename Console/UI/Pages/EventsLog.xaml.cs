@@ -22,7 +22,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 [ObservableObject]
 public sealed partial class EventsLog : Page, IDisposable
 {
-    public EventLogAsyncReader<LogEntryViewModel>? EventsReader { get; set; }
+    public EventLogAsyncReader<LoggedConnection>? EventsReader { get; set; }
 
     [ObservableProperty]
     public ICollectionView? dataView;
@@ -53,7 +53,7 @@ public sealed partial class EventsLog : Page, IDisposable
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(LocateCommand))]
-    private LogEntryViewModel? selectedItem;
+    private LoggedConnection? selectedItem;
 
     public EventsLog()
     {
@@ -78,7 +78,7 @@ public sealed partial class EventsLog : Page, IDisposable
         try
         {
             EventsReader?.Dispose();
-            EventsReader = new EventLogAsyncReader<LogEntryViewModel>(EventLogAsyncReader.EVENTLOG_SECURITY, LogEntryViewModel.CreateFromEventLogEntry)
+            EventsReader = new EventLogAsyncReader<LoggedConnection>(EventLogAsyncReader.EVENTLOG_SECURITY, LoggedConnection.CreateFromEventLogEntry)
             {
                 FilterPredicate = EventLogAsyncReader.IsFirewallEvent
             };
@@ -129,10 +129,10 @@ public sealed partial class EventsLog : Page, IDisposable
     }
 
 
-    private bool TcpFilterPredicate(object entryAsObject) => ((LogEntryViewModel)entryAsObject).Protocol == "TCP";
+    private bool TcpFilterPredicate(object entryAsObject) => ((LoggedConnection)entryAsObject).Protocol == "TCP";
     private bool FilterTextPredicate(object entryAsObject)
     {
-        var le = (LogEntryViewModel)entryAsObject;
+        var le = (LoggedConnection)entryAsObject;
 
         // Note: do not use Remote Host, because this will trigger dns resolution over all entries
         return (le.TargetIP is not null && le.TargetIP.StartsWith(TextFilter, StringComparison.Ordinal))

@@ -31,7 +31,7 @@ public partial class Connections : TimerBasedPage
     //TODO: let the user pick a color palette for the bandwidth graph & connection
     private List<Color>? Colors;
 
-    public ObservableCollection<Connection> AllConnections { get; } = new();
+    public ObservableCollection<MonitoredConnection> AllConnections { get; } = new();
 
     public Connections()
     {
@@ -129,7 +129,7 @@ public partial class Connections : TimerBasedPage
 
     private void AddOrUpdateConnection(IConnectionOwnerInfo connectionInfo)
     {
-        Connection? lvi;
+        MonitoredConnection? lvi;
         // TEMP: test to avoid enumerating while modifying (might result in a deadlock, to test carefully!)
         lock (locker)
             lvi = AllConnections.FirstOrDefault(l => l.Pid == connectionInfo.OwningPid && l.Protocol == connectionInfo.Protocol && l.SourcePort == connectionInfo.LocalPort.ToString());
@@ -141,7 +141,7 @@ public partial class Connections : TimerBasedPage
         else
         {
             lock (locker)
-                AllConnections.Add(new Connection(connectionInfo) { Color = Colors[AllConnections.Count % Colors.Count] });
+                AllConnections.Add(new MonitoredConnection(connectionInfo) { Color = Colors[AllConnections.Count % Colors.Count] });
         }
     }
 

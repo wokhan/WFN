@@ -2,12 +2,11 @@
 
 using System.Collections.Generic;
 using System.ComponentModel;
-using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.Helpers;
 
-public partial class CurrentConn : LogEntryViewModel, INotifyPropertyChanged
+public partial class CurrentConn : LoggedConnection, INotifyPropertyChanged
 {
     //private string _currentAppPkgId;
     //TODO: rename as it's not something "current"
@@ -19,16 +18,6 @@ public partial class CurrentConn : LogEntryViewModel, INotifyPropertyChanged
 
     public SortedSet<int> LocalPortArray { get; } = new SortedSet<int>();
     
-    //public string TargetInfoUrl => $"http://whois.domaintools.com/{Target}";  // uses captcha validation :(
-    //public string TargetInfoUrl => $"https://bgpview.io/ip/{Target}";
-    public string TargetInfoUrl => string.Format(Settings.Default.TargetInfoUrl, TargetIP);  // eg: $"https://bgpview.io/ip/{Target}"
-    public string TargetPortUrl => string.Format(Settings.Default.TargetPortUrl, TargetPort); // eg: $"https://www.speedguide.net/port.php?port={TargetPort}"
-
-    //TODO: remove since it's now useless
-    public string[] PossibleServices { get; set; }
-    //TODO: remove since it's now useless
-    public string[] PossibleServicesDesc { get; set; }
-
     [ObservableProperty]
     private int _tentativesCounter = 1;
 }

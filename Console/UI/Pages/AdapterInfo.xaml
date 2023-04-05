@@ -58,11 +58,11 @@
                                     <TextBlock Grid.Column="1" Text="{Binding Information.Name}" />
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="2" Margin="20,0,10,0">
                                         <ContentControl Margin="0,0,5,0" Content="{StaticResource Image_DataUp}"/>
-                                        <TextBlock Text="{Binding Statistics.BytesSent,Converter={StaticResource unitFormatter}}" Margin="0,0,10,0" />
+                                        <TextBlock Text="{Binding Statistics.BytesSent,Converter={StaticResource unitFormatter},ConverterParameter='bps'}" Margin="0,0,10,0" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="3" Margin="10,0,10,0">
                                         <ContentControl Margin="0,0,5,0" Content="{StaticResource Image_DataDown}"/>
-                                        <TextBlock Text="{Binding Statistics.BytesReceived,Converter={StaticResource unitFormatter}}" />
+                                        <TextBlock Text="{Binding Statistics.BytesReceived,Converter={StaticResource unitFormatter},ConverterParameter='bps'}" />
                                     </StackPanel>
                                 </Grid>
                             </Expander.Header>
@@ -96,7 +96,7 @@
                                             <TextBlock Grid.Row="1" Text="Interface type" />
                                             <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Information.NetworkInterfaceType}" />
                                             <TextBlock Grid.Row="2" Text="Speed" />
-                                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Information.Speed,Converter={StaticResource unitFormatter},ConverterParameter='ps'}" />
+                                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Information.Speed,Converter={StaticResource unitFormatter},ConverterParameter='bps'}" />
                                             <TextBlock Grid.Row="3" Text="MAC address" />
                                             <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding MAC,Mode=OneTime}" />
                                         </Grid>

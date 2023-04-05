@@ -1,7 +1,7 @@
-﻿using System;
-using NetFwTypeLib;
+﻿using NetFwTypeLib;
+
+using System;
 using System.ComponentModel;
-using System.Collections.Generic;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 
@@ -92,20 +92,13 @@ public class CustomRule : Rule
         return firewallRule;
     }
 
-    public CustomRule(string ruleName, string? currentPath, string? currentAppPkgId, string? localUserOwner, IEnumerable<string>? services, int protocol, string? target, string? targetPort, string? localport
-        , int profiles, CustomRuleAction action)
-        : this(ruleName, currentPath, currentAppPkgId, localUserOwner, (services is null ? null : string.Join(",", services)), protocol, target, targetPort, localport, profiles, action)
-    {
-        //Chained to the constructor below!
-    }
-
-    public CustomRule(string ruleName, string? currentPath, string? currentAppPkgId, string? localUserOwner, string? services, int protocol, string? target
+    public CustomRule(string ruleName, string? currentPath, string? currentAppPkgId, string? localUserOwner, string? service, int protocol, string? target
         , string? targetPort, string? localport, int profiles, CustomRuleAction action)
     {
         ApplicationName = string.IsNullOrWhiteSpace(currentPath) ? null : currentPath;
         AppPkgId = currentAppPkgId;
         LUOwn = localUserOwner;
-        ServiceName = string.IsNullOrEmpty(services) ? null : services;
+        ServiceName = String.IsNullOrEmpty(service) ? null : service;
         Protocol = protocol;
         RemoteAddresses = target;
         RemotePorts = targetPort;

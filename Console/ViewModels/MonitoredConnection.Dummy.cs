@@ -4,7 +4,7 @@ using Wokhan.WindowsFirewallNotifier.Common.Net.IP.TCP.TCP4;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
-public class ConnectionDummy : Connection
+public class ConnectionDummy : MonitoredConnection
 {
     public new string Owner { get => "Demo"; private set { } }
 

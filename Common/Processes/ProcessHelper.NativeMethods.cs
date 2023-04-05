@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Processes;
 
@@ -84,93 +83,6 @@ public static partial class ProcessHelper
             public int Attributes;
         }
 
-        [LibraryImport("advapi32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
-        internal static partial IntPtr OpenSCManagerW(string? machineName, string? databaseName, uint dwAccess);
-
-        [LibraryImport("advapi32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
-        internal static partial uint EnumServicesStatusExW(IntPtr hSCManager,
-               int infoLevel, uint dwServiceType,
-               uint dwServiceState, IntPtr lpServices, uint cbBufSize,
-               out uint pcbBytesNeeded, out uint lpServicesReturned,
-               ref uint lpResumeHandle, string? pszGroupName);
-
-        [LibraryImport("advapi32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static partial bool CloseServiceHandle(IntPtr hSCObject);
-
-        [Flags]
-        internal enum ACCESS_MASK : uint { DELETE = 0x00010000, READ_CONTROL = 0x00020000, WRITE_DAC = 0x00040000, WRITE_OWNER = 0x00080000, SYNCHRONIZE = 0x00100000, STANDARD_RIGHTS_REQUIRED = 0x000f0000, STANDARD_RIGHTS_READ = 0x00020000, STANDARD_RIGHTS_WRITE = 0x00020000, STANDARD_RIGHTS_EXECUTE = 0x00020000, STANDARD_RIGHTS_ALL = 0x001f0000, SPECIFIC_RIGHTS_ALL = 0x0000ffff, ACCESS_SYSTEM_SECURITY = 0x01000000, MAXIMUM_ALLOWED = 0x02000000, GENERIC_READ = 0x80000000, GENERIC_WRITE = 0x40000000, GENERIC_EXECUTE = 0x20000000, GENERIC_ALL = 0x10000000, DESKTOP_READOBJECTS = 0x00000001, DESKTOP_CREATEWINDOW = 0x00000002, DESKTOP_CREATEMENU = 0x00000004, DESKTOP_HOOKCONTROL = 0x00000008, DESKTOP_JOURNALRECORD = 0x00000010, DESKTOP_JOURNALPLAYBACK = 0x00000020, DESKTOP_ENUMERATE = 0x00000040, DESKTOP_WRITEOBJECTS = 0x00000080, DESKTOP_SWITCHDESKTOP = 0x00000100, WINSTA_ENUMDESKTOPS = 0x00000001, WINSTA_READATTRIBUTES = 0x00000002, WINSTA_ACCESSCLIPBOARD = 0x00000004, WINSTA_CREATEDESKTOP = 0x00000008, WINSTA_WRITEATTRIBUTES = 0x00000010, WINSTA_ACCESSGLOBALATOMS = 0x00000020, WINSTA_EXITWINDOWS = 0x00000040, WINSTA_ENUMERATE = 0x00000100, WINSTA_READSCREEN = 0x00000200, WINSTA_ALL_ACCESS = 0x0000037f }
-
-        [Flags]
-        internal enum SERVICE_STATE : int { SERVICE_ACTIVE = 0x00000001, SERVICE_INACTIVE = 0x00000002, SERVICE_STATE_ALL = SERVICE_ACTIVE | SERVICE_INACTIVE }
-
-        [Flags]
-        internal enum SERVICE_TYPES : int { SERVICE_KERNEL_DRIVER = 0x00000001, SERVICE_FILE_SYSTEM_DRIVER = 0x00000002, SERVICE_ADAPTER = 0x00000004, SERVICE_RECOGNIZER_DRIVER = 0x00000008, SERVICE_DRIVER = SERVICE_KERNEL_DRIVER | SERVICE_FILE_SYSTEM_DRIVER | SERVICE_RECOGNIZER_DRIVER, SERVICE_WIN32_OWN_PROCESS = 0x00000010, SERVICE_WIN32_SHARE_PROCESS = 0x00000020, SERVICE_WIN32 = SERVICE_WIN32_OWN_PROCESS | SERVICE_WIN32_SHARE_PROCESS, }
-
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        internal struct SERVICE_STATUS { public static readonly int SizeOf = Marshal.SizeOf(typeof(SERVICE_STATUS)); public SERVICE_TYPES dwServiceType; public SERVICE_STATE dwCurrentState; public uint dwControlsAccepted; public uint dwWin32ExitCode; public uint dwServiceSpecificExitCode; public uint dwCheckPoint; public uint dwWaitHint; }
-
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        internal struct ENUM_SERVICE_STATUS_PROCESS
-        {
-            public static readonly int SizeOf = Marshal.SizeOf(typeof(ENUM_SERVICE_STATUS_PROCESS));
-
-            [MarshalAs(UnmanagedType.LPTStr)]
-            public string lpServiceName;
-
-            [MarshalAs(UnmanagedType.LPTStr)]
-            public string lpDisplayName;
-
-            public SERVICE_STATUS_PROCESS ServiceStatus;
-        }
-
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        internal struct SERVICE_STATUS_PROCESS
-        {
-            public static readonly int SizeOf = Marshal.SizeOf(typeof(SERVICE_STATUS_PROCESS));
-
-            public uint dwServiceType;
-            public uint dwCurrentState;
-            public uint dwControlsAccepted;
-            public uint dwWin32ExitCode;
-            public uint dwServiceSpecificExitCode;
-            public uint dwCheckPoint;
-            public uint dwWaitHint;
-            public uint dwProcessId;
-            public uint dwServiceFlags;
-        }
-
-        [Flags]
-        internal enum SCM_ACCESS : uint
-        {
-            SC_MANAGER_CONNECT = 0x00001,
-            SC_MANAGER_CREATE_SERVICE = 0x00002,
-            SC_MANAGER_ENUMERATE_SERVICE = 0x00004,
-            SC_MANAGER_LOCK = 0x00008,
-            SC_MANAGER_QUERY_LOCK_STATUS = 0x00010,
-            SC_MANAGER_MODIFY_BOOT_CONFIG = 0x00020,
-            SC_MANAGER_ALL_ACCESS = ACCESS_MASK.STANDARD_RIGHTS_REQUIRED | SC_MANAGER_CONNECT | SC_MANAGER_CREATE_SERVICE | SC_MANAGER_ENUMERATE_SERVICE | SC_MANAGER_LOCK | SC_MANAGER_QUERY_LOCK_STATUS | SC_MANAGER_MODIFY_BOOT_CONFIG, GENERIC_READ = ACCESS_MASK.STANDARD_RIGHTS_READ | SC_MANAGER_ENUMERATE_SERVICE | SC_MANAGER_QUERY_LOCK_STATUS, GENERIC_WRITE = ACCESS_MASK.STANDARD_RIGHTS_WRITE | SC_MANAGER_CREATE_SERVICE | SC_MANAGER_MODIFY_BOOT_CONFIG, GENERIC_EXECUTE = ACCESS_MASK.STANDARD_RIGHTS_EXECUTE | SC_MANAGER_CONNECT | SC_MANAGER_LOCK, GENERIC_ALL = SC_MANAGER_ALL_ACCESS,
-        }
-
-        [Flags]
-        internal enum SC_ENUM_TYPE : uint
-        {
-            SC_ENUM_PROCESS_INFO = 0
-        }
-
-        internal const uint ERROR_MORE_DATA = 234;
-
-        //Note: Only exists on Windows 8 and higher
-        /*[DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        internal static extern uint GetPackageFullName(IntPtr hProcess, ref uint packageFullNameLength, StringBuilder packageFullName);*/
-
-        //Note: Only exists on Windows 8 and higher
-        [LibraryImport("kernel32.dll")]
-        internal static unsafe partial uint GetPackageFamilyName(IntPtr hProcess, ref uint packageFamilyNameLength, char* packageFamilyName);
-
-        //Note: Only exists on Windows 8 and higher
-        [LibraryImport("userenv.dll", StringMarshalling = StringMarshalling.Utf16)]
-        internal static partial uint DeriveAppContainerSidFromAppContainerName(string pszAppContainerName, out IntPtr ppsidAppContainerSid);
 
         internal const uint ERROR_SUCCESS = 0;
         internal const uint APPMODEL_ERROR_NO_PACKAGE = 15700;
@@ -192,9 +104,6 @@ public static partial class ProcessHelper
         [LibraryImport("advapi32", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static partial bool ConvertSidToStringSidW(IntPtr pSID, [MarshalAs(UnmanagedType.LPTStr)] out string pStringSid);
-
-        [LibraryImport("advapi32")]
-        internal static partial IntPtr FreeSid(IntPtr pSid);
 
         [LibraryImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]

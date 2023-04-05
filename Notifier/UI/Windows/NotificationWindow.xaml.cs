@@ -19,6 +19,7 @@ using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.UI.Themes;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Wokhan.WindowsFirewallNotifier.Notifier.UI.Windows;
 
@@ -245,21 +246,6 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
             OptionsView.IsServiceRuleChecked = true;
             OptionsView.SingleServiceName = activeConn.ServiceName;
         }
-        else if (activeConn.PossibleServices is not null && activeConn.PossibleServices.Length > 0)
-        {
-            OptionsView.IsService = true;
-            if (activeConn.PossibleServices.Length > 1)
-            {
-                OptionsView.IsServiceMultiple = true;
-                OptionsView.SingleServiceName = "";
-            }
-            else
-            {
-                OptionsView.IsServiceMultiple = false;
-                OptionsView.SingleServiceName = activeConn.PossibleServicesDesc.FirstOrDefault();
-            }
-            OptionsView.IsServiceRuleChecked = false; //If we're unsure, let's choose the safe option. There are executables out there that run services but also open connections outside of those services. A false positive in such a case would create a rule that doesn't work.
-        }
         else
         {
             OptionsView.IsService = false;
@@ -449,27 +435,9 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
             return;
         }
 
-        string[] services = null;
-        if (OptionsView.IsServiceRuleChecked)
-        {
-            if (activeConn.PossibleServices is not null && activeConn.PossibleServices.Length > 0)
-            {
-                ServicesForm sf = new ServicesForm(activeConn);
-                if (!(bool)sf.ShowDialog())
-                {
-                    return;
-                }
-                services = sf.SelectedServices;
-            }
-            else
-            {
-                services = new[] { activeConn.ServiceDisplayName };
-            }
-        }
-
         var ruleName = String.Format(Messages.RULE_NAME_FORMAT, activeConn.ServiceName ?? activeConn.Description);
         
-        var success = createRule(activeConn, services, createWithAdvancedOptions, createTempRule, ruleName, doAllow);
+        var success = createRule(activeConn, createWithAdvancedOptions, createTempRule, ruleName, doAllow);
 
         if (success)
         {
@@ -508,7 +476,7 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
         }
     }
 
-    private bool createRule(CurrentConn activeConn, string[] services, bool createWithAdvancedOptions, bool createTempRule, string ruleName, bool doAllow)
+    private bool createRule(CurrentConn activeConn, bool createWithAdvancedOptions, bool createTempRule, string ruleName, bool doAllow)
     {
         bool success;
         int Profiles = OptionsView.IsCurrentProfileChecked ? FirewallHelper.GetCurrentProfile() : FirewallHelper.GetGlobalProfile();
@@ -517,7 +485,7 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
                                      createWithAdvancedOptions || OptionsView.IsPathChecked ? activeConn.Path : null,
                                      !createWithAdvancedOptions && OptionsView.IsAppChecked ? activeConn.CurrentAppPkgId : null,
                                      activeConn.CurrentLocalUserOwner,
-                                     services,
+                                     OptionsView.IsServiceRuleChecked ? activeConn.ServiceDisplayName : null,
                                      !createWithAdvancedOptions && OptionsView.IsProtocolChecked ? activeConn.RawProtocol : -1,
                                      !createWithAdvancedOptions && OptionsView.IsTargetIPChecked ? activeConn.TargetIP : null,
                                      !createWithAdvancedOptions && OptionsView.IsTargetPortChecked ? activeConn.TargetPort : null,
@@ -595,10 +563,18 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
         ProcessHelper.StartShellExecutable("explorer.exe", String.Format("/select,\"{0}\"", e.Uri), true);
     }
 
-    private void hlk_Navigate(object sender, RequestNavigateEventArgs e)
+    [RelayCommand]
+    private void NavigateToInfoPort(string targetPort)
     {
-        ProcessHelper.StartShellExecutable(e.Uri?.AbsoluteUri, null, true);
-        e.Handled = true;
+        // eg: $"https://www.speedguide.net/port.php?port={TargetPort}"
+        ProcessHelper.StartShellExecutable(string.Format(Settings.Default.TargetPortUrl, targetPort), null, true);
+    }
+
+    [RelayCommand]
+    private void NavigateToInfoUrl(string targetIP)
+    {
+        // eg: $"https://bgpview.io/ip/{Target}"
+        ProcessHelper.StartShellExecutable(string.Format(Settings.Default.TargetInfoUrl, targetIP), null, true);
     }
 
     private void NotifWindow_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)

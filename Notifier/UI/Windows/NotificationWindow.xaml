@@ -220,7 +220,7 @@
                             <CheckBox Grid.Row="2" Grid.Column="1" Margin="3" IsChecked="{Binding OptionsView.IsTargetPortChecked, ElementName=NotifWindow}" ToolTipService.ShowOnDisabled="True">
                                 <TextBlock>
                                     <Run Text="{x:Static resx:Resources.TXT_REMOTE_PORTS}" />
-                                    <Hyperlink NavigateUri="{Binding TargetPortUrl,Mode=OneTime}" RequestNavigate="hlk_Navigate">
+                                    <Hyperlink Command="{Binding NavigateToInfoPortCommand,ElementName=NotifWindow}" CommandParameter="{Binding TargetPort,Mode=OneTime}">
                                         <TextBlock Text="{Binding TargetPort,Mode=OneTime, FallbackValue='N/A'}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
                                     </Hyperlink>
                                 </TextBlock>
@@ -234,7 +234,7 @@
                             <CheckBox Grid.Row="1" Grid.Column="1" Margin="3" IsChecked="{Binding OptionsView.IsTargetIPChecked, ElementName=NotifWindow}">
                                 <TextBlock>
                                     <Run Text="Target IP:" />
-                                    <Hyperlink NavigateUri="{Binding TargetInfoUrl,Mode=OneTime}" Foreground="{DynamicResource AccentColorBrush}" TextDecorations="None" RequestNavigate="hlk_Navigate">
+                                    <Hyperlink Command="{Binding NavigateToInfoUrlCommand,ElementName=NotifWindow}" CommandParameter="{Binding TargetIP,Mode=OneTime}" Foreground="{DynamicResource AccentColorBrush}" TextDecorations="None">
                                         <Run Text="{Binding TargetIP, FallbackValue='N/A',Mode=OneTime}" ToolTip="{Binding TargetHostName,Mode=OneWay}"/>
                                     </Hyperlink>
                                 </TextBlock>

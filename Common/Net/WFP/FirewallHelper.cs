@@ -9,6 +9,7 @@ using System.Linq;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Net.WFP.Rules;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;
+using Wokhan.WindowsFirewallNotifier.Common.UAP;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.WFP;
 
@@ -207,7 +208,7 @@ public static partial class FirewallHelper
     /// <returns></returns>
     public static IEnumerable<Rule> GetMatchingRulesForEvent(uint pid, string path, string target, string targetPort, bool blockOnly = true, bool outgoingOnly = false)
     {
-        var appPkgId = pid > 0 ? ProcessHelper.GetAppPkgId(pid) : string.Empty;
+        var appPkgId = pid > 0 ? StorePackageHelper.GetAppPkgId(pid) : string.Empty;
         var currentProfile = GetCurrentProfile();
         var svcName = "*";
         path ??= "";

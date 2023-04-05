@@ -28,7 +28,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Controls;
 
 public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
 {
-    public static readonly DependencyProperty ConnectionsProperty = DependencyProperty.Register(nameof(Connections), typeof(ObservableCollection<Connection>), typeof(BandwidthGraph));
+    public static readonly DependencyProperty ConnectionsProperty = DependencyProperty.Register(nameof(Connections), typeof(ObservableCollection<MonitoredConnection>), typeof(BandwidthGraph));
 
     private const int MAX_DURATION_SEC = 10;
 
@@ -82,7 +82,7 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
         yAxis.MinLimit = 0;
         yAxis.TextSize = 10;
         yAxis.MinStep = 1;
-        yAxis.Labeler = (value) => value == 0 ? "0Bps" : UnitFormatter.FormatValue(Math.Pow(10, value), "Bps");
+        yAxis.Labeler = (value) => value == 0 ? "0bps" : UnitFormatter.FormatValue(Math.Pow(10, value), "bps");
         yAxis.LabelsPaint = skAxisPaint;
         yAxis.CrosshairPaint = crosshairPaint;
 
@@ -91,7 +91,7 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
         miniYAxis.TextSize = 10;
         miniYAxis.Padding = new LiveChartsCore.Drawing.Padding(0);
         miniYAxis.ShowSeparatorLines = false;
-        miniYAxis.Labeler = (value) => value == 0 ? "0Bps" : UnitFormatter.FormatValue(Math.Pow(10, value), "Bps");
+        miniYAxis.Labeler = (value) => value == 0 ? "0bps" : UnitFormatter.FormatValue(Math.Pow(10, value), "bps");
 
         miniChart.XAxes.First().IsVisible = false;
     }
@@ -102,9 +102,9 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
 
     public double AbsoluteStart => xAxis?.DataBounds.Min ?? 0;
 
-    public ObservableCollection<Connection> Connections
+    public ObservableCollection<MonitoredConnection> Connections
     {
-        get => (ObservableCollection<Connection>)GetValue(ConnectionsProperty);
+        get => (ObservableCollection<MonitoredConnection>)GetValue(ConnectionsProperty);
         set => SetValue(ConnectionsProperty, value);
     }
 
