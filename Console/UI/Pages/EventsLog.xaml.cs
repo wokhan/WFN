@@ -49,7 +49,7 @@ public sealed partial class EventsLog : Page, IDisposable
 
     [ObservableProperty]
     private string _textFilter = String.Empty;
-    partial void OnTextFilterChanged(string _) => ResetTextFilter();
+    partial void OnTextFilterChanged(string value) => ResetTextFilter();
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(LocateCommand))]

@@ -1,0 +1,8 @@
+OpenProcess
+OpenProcessToken
+GetTokenInformation
+TOKEN_USER
+ConvertSidToStringSidW
+CloseHandle
+ShowWindow
+SetForegroundWindow

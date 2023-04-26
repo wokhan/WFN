@@ -149,7 +149,7 @@
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
-                    <DataGridTemplateColumn Header="Remote address">
+                    <DataGridTemplateColumn Header="Remote address" Width="Auto">
                         <DataGridTemplateColumn.CellStyle>
                             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
                                 <Setter Property="ToolTip">
@@ -209,7 +209,8 @@
                                             </Style>
                                         </ContentControl.Style>
                                     </ContentControl>
-                                    <TextBlock Text="{Binding OutboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='bps'}" />
+                                    <TextBlock Visibility="{Binding IsAccessDenied,Mode=OneWay,Converter={StaticResource valueToVisibility}}" Text="N/A" />
+                                    <TextBlock Visibility="{Binding IsAccessDenied,Mode=OneWay,Converter={StaticResource valueToVisibilityNegate}}" Text="{Binding OutboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='bps'}" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -230,7 +231,8 @@
                                             </Style>
                                         </ContentControl.Style>
                                     </ContentControl>
-                                    <TextBlock Text="{Binding InboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='bps'}" />
+                                    <TextBlock Visibility="{Binding IsAccessDenied,Mode=OneWay,Converter={StaticResource valueToVisibility}}" Text="N/A" />
+                                    <TextBlock Visibility="{Binding IsAccessDenied,Mode=OneWay,Converter={StaticResource valueToVisibilityNegate}}" Text="{Binding InboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='bps'}" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

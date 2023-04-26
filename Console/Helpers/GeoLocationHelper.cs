@@ -119,7 +119,7 @@ public static class GeoLocationHelper
         }
 
         // If not yet set, fallback to the IP-based location
-        CurrentCoordinates ??= await IPToLocationAsync(IPHelper.CurrentIP);
+        CurrentCoordinates ??= await IPToLocationAsync(await IPHelper.GetPublicIPAddressAsync());
     }
 
     private static void GeoWatcher_PositionChanged(object? sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
@@ -138,7 +138,7 @@ public static class GeoLocationHelper
         }
         
         var loc = new List<GeoLocation>() { CurrentCoordinates };
-        var route = await IPHelper.GetFullRoute(target).ConfigureAwait(false);
+        var route = await IPHelper.GetFullRouteAsync(target).ConfigureAwait(false);
 
         foreach (var ip in route)
         {

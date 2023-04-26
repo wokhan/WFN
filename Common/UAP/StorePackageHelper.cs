@@ -1,17 +1,16 @@
 ﻿using Microsoft.Win32;
 
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.System.Threading;
 
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
@@ -31,11 +30,11 @@ public static partial class StorePackageHelper
     {
         return Task.Run(() =>
         {
-        var path = (string?)Registry.ClassesRoot.OpenSubKey($"Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppModel\\Repository\\Packages\\{packageName}")?.GetValue("PackageRootFolder");
-        string? logo = null;
-        string? executable = null;
-        string? name = null;
-        string? description = null;
+            var path = (string?)Registry.ClassesRoot.OpenSubKey($"Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppModel\\Repository\\Packages\\{packageName}")?.GetValue("PackageRootFolder");
+            string? logo = null;
+            string? executable = null;
+            string? name = null;
+            string? description = null;
 
             if (path is not null)
             {
@@ -65,7 +64,10 @@ public static partial class StorePackageHelper
 
 
     static readonly Version minVersionForApps = new Version(6, 2);
-    public static string? GetAppPkgId(uint pid)
+
+
+
+    public unsafe static string? GetAppPkgId(uint pid)
     {
         if (Environment.OSVersion.Version <= minVersionForApps)
         {
@@ -73,8 +75,8 @@ public static partial class StorePackageHelper
             return String.Empty;
         }
 
-        IntPtr hProcess = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.QueryLimitedInformation, false, pid);
-        if (hProcess == IntPtr.Zero)
+        var hProcess = NativeMethods.OpenProcess_SafeHandle(PROCESS_ACCESS_RIGHTS.PROCESS_QUERY_LIMITED_INFORMATION, false, pid);
+        if (hProcess is null)
         {
             LogHelper.Warning("Unable to retrieve process package id: process cannot be found!");
             return String.Empty;
@@ -84,30 +86,27 @@ public static partial class StorePackageHelper
             //Based on: https://github.com/jimschubert/clr-profiler/blob/master/src/CLRProfiler45Source/WindowsStoreAppHelper/WindowsStoreAppHelper.cs
             uint packageFamilyNameLength = 0;
             string packageFamilyName;
-            unsafe
+
+            var retGetPFName = NativeMethods.GetPackageFamilyName(hProcess, ref packageFamilyNameLength, null);
+            if ((retGetPFName == WIN32_ERROR.APPMODEL_ERROR_NO_PACKAGE) || (packageFamilyNameLength == 0))
             {
-                uint retGetPFName = NativeMethods.GetPackageFamilyName(hProcess, ref packageFamilyNameLength, null);
-                if ((retGetPFName == NativeMethods.APPMODEL_ERROR_NO_PACKAGE) || (packageFamilyNameLength == 0))
-                {
-                    // Not a WindowsStoreApp process
-                    return String.Empty;
-                }
-
-                // Call again, now that we know the size
-                char* packageFamilyNameBld = stackalloc char[(int)packageFamilyNameLength];
-                retGetPFName = NativeMethods.GetPackageFamilyName(hProcess, ref packageFamilyNameLength, packageFamilyNameBld);
-                if (retGetPFName != NativeMethods.ERROR_SUCCESS)
-                {
-                    LogHelper.Warning("Unable to retrieve process package id: failed to retrieve family package name!");
-                    return String.Empty;
-                }
-
-                packageFamilyName = new String(packageFamilyNameBld);
+                // Not a WindowsStoreApp process
+                return String.Empty;
             }
 
-            IntPtr pSID;
-            uint ret = NativeMethods.DeriveAppContainerSidFromAppContainerName(packageFamilyName, out pSID);
-            if (ret != NativeMethods.S_OK)
+            // Call again, now that we know the size
+            char* packageFamilyNameBld = stackalloc char[(int)packageFamilyNameLength];
+            retGetPFName = NativeMethods.GetPackageFamilyName(hProcess, ref packageFamilyNameLength, packageFamilyNameBld);
+            if (retGetPFName != WIN32_ERROR.ERROR_SUCCESS)
+            {
+                LogHelper.Warning("Unable to retrieve process package id: failed to retrieve family package name!");
+                return String.Empty;
+            }
+
+            packageFamilyName = new String(packageFamilyNameBld);
+
+            uint ret = NativeMethods.DeriveAppContainerSidFromAppContainerName(packageFamilyName, out var pSID);
+            if (ret != 0)
             {
                 LogHelper.Warning("Unable to retrieve process package id: failed to retrieve package SID!");
                 return String.Empty;
@@ -115,9 +114,9 @@ public static partial class StorePackageHelper
 
             try
             {
-                if (NativeMethods.ConvertSidToStringSidW(pSID, out var SID))
+                if (NativeMethods.ConvertSidToStringSid(pSID, out var SID))
                 {
-                    return SID;
+                    return SID.ToString();
                 }
 
                 LogHelper.Warning("Unable to retrieve process package id: SID cannot be converted!");
@@ -130,7 +129,7 @@ public static partial class StorePackageHelper
         }
         finally
         {
-            NativeMethods.CloseHandle(hProcess);
+            hProcess?.Close();
         }
     }
 }

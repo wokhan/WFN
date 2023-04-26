@@ -1,11 +1,17 @@
-﻿using System;
+﻿using Microsoft.Win32.SafeHandles;
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management;
-using System.Runtime.InteropServices;
 using System.Windows;
+
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Security;
+using Windows.Win32.System.Threading;
 
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
@@ -184,62 +190,52 @@ public static partial class ProcessHelper
 
 
 
-    public static string GetLocalUserOwner(uint pid)
+    public unsafe static string GetLocalUserOwner(uint pid)
     {
         //Based on: https://bytes.com/topic/c-sharp/answers/225065-how-call-win32-native-api-gettokeninformation-using-c
-        IntPtr hProcess = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.QueryInformation, false, pid);
-        if (hProcess == IntPtr.Zero)
+        var hProcess = NativeMethods.OpenProcess_SafeHandle(PROCESS_ACCESS_RIGHTS.PROCESS_QUERY_INFORMATION, false, pid);
+        if (hProcess is null)
         {
             LogHelper.Warning($"Unable to retrieve process local user owner: process pid={pid} cannot be found!");
             return String.Empty;
         }
 
-        IntPtr hToken = IntPtr.Zero;
-        IntPtr hTokenInformation = IntPtr.Zero;
+        SafeFileHandle hToken = new SafeFileHandle();
+        TOKEN_USER hTokenInformation;
         try
         {
-            if (!NativeMethods.OpenProcessToken(hProcess, NativeMethods.TOKEN_QUERY, out hToken))
+            if (!NativeMethods.OpenProcessToken(hProcess, TOKEN_ACCESS_MASK.TOKEN_QUERY, out hToken))
             {
                 LogHelper.Warning("Unable to retrieve process local user owner: process pid={pid} cannot be opened!");
                 return String.Empty;
             }
 
-            uint dwBufSize = 0;
             //TODO: Wait... isn't a negation missing here?!
-            if (NativeMethods.GetTokenInformation(hToken, NativeMethods.TOKEN_INFORMATION_CLASS.TokenUser, IntPtr.Zero, 0, ref dwBufSize))
+            if (NativeMethods.GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, null, 0, out var dwBufSize))
             {
                 LogHelper.Warning("Unexpected result from call to GetTokenInformation.");
                 return String.Empty;
             }
 
-            hTokenInformation = Marshal.AllocHGlobal((int)dwBufSize);
-            if (!NativeMethods.GetTokenInformation(hToken, NativeMethods.TOKEN_INFORMATION_CLASS.TokenUser, hTokenInformation, dwBufSize, ref dwBufSize))
+            hTokenInformation = new TOKEN_USER();
+            if (!NativeMethods.GetTokenInformation(hToken, TOKEN_INFORMATION_CLASS.TokenUser, &hTokenInformation, dwBufSize, out dwBufSize))
             {
                 LogHelper.Warning("Unable to retrieve process local user owner: token cannot be opened!");
                 return String.Empty;
             }
 
-            if (!NativeMethods.ConvertSidToStringSidW(Marshal.PtrToStructure<NativeMethods.TOKEN_USER>(hTokenInformation).User.Sid, out string SID))
+            if (!NativeMethods.ConvertSidToStringSid(hTokenInformation.User.Sid, out PWSTR SID))
             {
                 LogHelper.Warning("Unable to retrieve process local user owner: SID cannot be converted!");
                 return String.Empty;
             }
 
-            return SID;
+            return SID.ToString();
         }
         finally
         {
-            if (hTokenInformation != IntPtr.Zero)
-            {
-                Marshal.FreeHGlobal(hTokenInformation);
-            }
-
-            if (hToken != IntPtr.Zero)
-            {
-                NativeMethods.CloseHandle(hToken);
-            }
-
-            NativeMethods.CloseHandle(hProcess);
+            hToken?.Close();
+            hProcess?.Close();
         }
     }
 
@@ -415,11 +411,12 @@ public static partial class ProcessHelper
             if (bProcess.MainWindowHandle == IntPtr.Zero)
             {
                 // the window is hidden so try to restore it before setting focus.
-                NativeMethods.ShowWindow(bProcess.Handle, NativeMethods.ShowWindowEnum.Restore);
+                //TODO: this cannot work, obviously. The handle isn't the right one.
+                //NativeMethods.ShowWindow((HWND)bProcess.Handle, Windows.Win32.UI.WindowsAndMessaging.SHOW_WINDOW_CMD.SW_RESTORE);
             }
 
             // set user the focus to the window
-            _ = NativeMethods.SetForegroundWindow(bProcess.MainWindowHandle);
+            _ = NativeMethods.SetForegroundWindow((HWND)bProcess.MainWindowHandle);
         }
         else
         {

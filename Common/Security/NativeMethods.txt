@@ -1,0 +1,4 @@
+GetTokenInformation
+CloseHandle
+
+TOKEN_ELEVATION_TYPE

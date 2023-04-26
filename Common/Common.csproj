@@ -13,7 +13,14 @@
     <Authors>Wokhan Solutions</Authors>
     <OutputPath>..\bin\$(ConfigurationName)</OutputPath>
     <Nullable>Enable</Nullable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="**\NativeMethods.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="**\NativeMethods.txt" />
+  </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Wokhan.WindowsFirewallNotifier.Console.Tests" />
   </ItemGroup>
@@ -28,6 +35,9 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.2.206-beta">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
     <PackageReference Include="System.Management" Version="7.0.0" />
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="7.0.0" />

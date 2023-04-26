@@ -1,6 +1,8 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
 
@@ -11,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -65,9 +68,10 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
         };
     }
 
+
     private void InitAxes()
     {
-        var skAxisPaint = new SolidColorPaint(((SolidColorBrush)Application.Current.Resources[SystemColors.WindowTextBrushKey]).Color.ToSKColor());
+        var skAxisPaint = new SolidColorPaint(((SolidColorBrush)Application.Current.Resources[System.Windows.SystemColors.WindowTextBrushKey]).Color.ToSKColor());
         crosshairPaint = new SolidColorPaint(SKColors.Red) { StrokeThickness = 1 };
 
         xAxis = (Axis)chart.XAxes.First();
@@ -127,11 +131,20 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
     public ObservableCollection<ISeries> Series { get; } = new();
     public double ThumbSize => (xAxis is not null ? (xAxis.MaxLimit - xAxis.MinLimit) * scrollArea.Track.ActualWidth / (xAxis.DataBounds.Max - xAxis.DataBounds.Min) : 0) ?? 0;
 
+    private string tooltipFormatter(ChartPoint<CustomDateTimePoint, BezierPoint<CircleGeometry>, LabelGeometry> arg)
+    {
+        return $"{((LineSeries<CustomDateTimePoint>)arg.Context.Series).Tag} - In: {UnitFormatter.FormatValue(arg.PrimaryValue, "bps")} / Out: {UnitFormatter.FormatValue(arg.TertiaryValue, "bps")}";
+    }
+
     private void logMapper(CustomDateTimePoint dateTimePoint, ChartPoint chartPoint)
     {
         chartPoint.SecondaryValue = dateTimePoint.DateTime.Ticks;
         chartPoint.PrimaryValue = dateTimePoint.Value == 0 ? 0 : Math.Log10(dateTimePoint.Value);
+        chartPoint.TertiaryValue = dateTimePoint.BandwidthIn;
+        chartPoint.QuaternaryValue = dateTimePoint.BandwidthOut;
     }
+
+    DashEffect outDashEffect = new DashEffect(new[] { 2f, 2f });
 
     public void UpdateGraph()
     {
@@ -156,8 +169,11 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
                 seriesOutValues = new();
 
                 var color = connectionGroup.First().Color.ToSKColor();
-                Series.Add(new LineSeries<CustomDateTimePoint>() { Name = $"{connectionGroup.Key} - In", Fill = null, Stroke = new SolidColorPaint(color) { StrokeThickness = 2 }, Values = seriesInValues, LineSmoothness = 0, Mapping = logMapper });
-                Series.Add(new LineSeries<CustomDateTimePoint>() { Name = $"{connectionGroup.Key} - Out", Fill = null, Stroke = new SolidColorPaint(color) { StrokeThickness = 2, PathEffect = new DashEffect(new[] { 2f, 2f }) }, Values = seriesOutValues, LineSmoothness = 0, Mapping = logMapper });
+                var inStroke = new SolidColorPaint(color) { StrokeThickness = 2 };
+                var outStroke = new SolidColorPaint(color) { StrokeThickness = 2, PathEffect = outDashEffect };
+
+                Series.Add(new LineSeries<CustomDateTimePoint>() { Tag = connectionGroup.Key, Name = $"{connectionGroup.Key} - In", TooltipLabelFormatter = tooltipFormatter, Fill = null, Stroke = inStroke, GeometryStroke = inStroke, Values = seriesInValues, LineSmoothness = 0, Mapping = logMapper });
+                Series.Add(new LineSeries<CustomDateTimePoint>() { Tag = connectionGroup.Key, Name = $"{connectionGroup.Key} - Out", IsVisibleAtLegend = false, IsHoverable = false, Fill = null, Stroke = outStroke, GeometryStroke = outStroke, Values = seriesOutValues, LineSmoothness = 0, Mapping = logMapper });
 
                 allSeries.Add(connectionGroup.Key, Tuple.Create(seriesInValues, seriesOutValues));
             }
@@ -170,14 +186,14 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
                 lastSumOut += connection.OutboundBandwidth;
             }
 
-            AddAndMergePoints(seriesInValues, lastSumIn);
+            AddAndMergePoints(seriesInValues, lastSumIn, lastSumOut);
             AddAndMergePoints(seriesOutValues, lastSumOut);
 
             Interlocked.Add(ref totalIn, lastSumIn);
             Interlocked.Add(ref totalOut, lastSumOut);
         }
 
-        seriesInTotal.Add(new CustomDateTimePoint(datetime, totalIn));
+        seriesInTotal.Add(new CustomDateTimePoint(datetime, totalIn, totalOut));
         seriesOutTotal.Add(new CustomDateTimePoint(datetime, totalOut));
 
         NotifyPropertyChanged(nameof(AbsoluteStart));
@@ -197,11 +213,11 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
         }
     }
 
-    private void AddAndMergePoints(ObservableCollection<CustomDateTimePoint> series, ulong sum)
+    private void AddAndMergePoints(ObservableCollection<CustomDateTimePoint> series, ulong sum, ulong bandwidthOut = 0)
     {
         if (sum != 0 || series.Count == 0 || series[^1].Value != 0)
         {
-            series.Add(new CustomDateTimePoint(datetime, sum));
+            series.Add(new CustomDateTimePoint(datetime, sum, sum, bandwidthOut));
             //if (series.Count > 3 && series[^2].Value == sum && series[^3].Value == sum)
             //{
             //    series.RemoveAt(series.Count - 2);

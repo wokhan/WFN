@@ -2,9 +2,9 @@
 
 public abstract partial class IPHelper
 {
-    internal enum AF_INET
+    internal class AF_INET
     {
-        IP4 = 2,
-        IP6 = 23
+        internal const uint IP4 = 2;
+        internal const uint IP6 = 23;
     }
 }

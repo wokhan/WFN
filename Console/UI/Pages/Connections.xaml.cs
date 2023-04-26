@@ -127,7 +127,7 @@ public partial class Connections : TimerBasedPage
     }
 
 
-    private void AddOrUpdateConnection(IConnectionOwnerInfo connectionInfo)
+    private void AddOrUpdateConnection(Connection connectionInfo)
     {
         MonitoredConnection? lvi;
         // TEMP: test to avoid enumerating while modifying (might result in a deadlock, to test carefully!)

@@ -1,25 +1,13 @@
 ﻿using System;
 
-using Wokhan.WindowsFirewallNotifier.Common.Net.IP.TCP;
+using Windows.Win32.NetworkManagement.IpHelper;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 
 public interface IConnectionOwnerInfo
 {
-    // CHANGE
-    byte[] RemoteAddrBytes { get; }
-
-    string RemoteAddress { get; }
-    int RemotePort { get; }
-    string LocalAddress { get; }
-    int LocalPort { get; }
-    Owner? OwnerModule { get; }
-    string Protocol { get; }
-    DateTime? CreationTime { get; }
-    uint OwningPid { get; }
-    ConnectionStatus State { get; }
-    bool IsLoopback { get; }
-
-    ITcpRow ToTcpRow();
+    internal uint SetPerTcpConnectionEStats(ref TCP_ESTATS_BANDWIDTH_RW_v0 rw, MIB_TCP6ROW? tcp6Row);
+    internal TCP_ESTATS_BANDWIDTH_ROD_v0? GetPerTcpConnectionEState(MIB_TCP6ROW? tcp6Row);
+    internal uint GetOwnerModule(IntPtr buffer, ref uint buffSize);
 
 }

@@ -1,0 +1,9 @@
+GetPackageFamilyName
+DeriveAppContainerSidFromAppContainerName
+OpenProcess
+ConvertSidToStringSid
+FreeSid
+CloseHandle
+
+ERROR_SUCCESS
+APPMODEL_ERROR_NO_PACKAGE

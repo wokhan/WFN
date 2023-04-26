@@ -10,7 +10,6 @@ using System.Windows.Media;
 using Wokhan.ComponentModel.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.Net.GeoLocation;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
-using Wokhan.WindowsFirewallNotifier.Common.Net.IP.TCP;
 using Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 
@@ -23,10 +22,13 @@ public partial class MonitoredConnection : ConnectionBaseInfo
     public DateTime LastSeen { get; private set; }
 
     [ObservableProperty]
-    private bool _isAccessDenied;
+    private bool _isSelected;
 
     [ObservableProperty]
-    private bool _isSelected;
+    private bool _isNew;
+    
+    [ObservableProperty]
+    private bool _isDying;
 
     [ObservableProperty]
     private bool _isDead;
@@ -38,12 +40,6 @@ public partial class MonitoredConnection : ConnectionBaseInfo
     private string? _state;
 
     [ObservableProperty]
-    private bool _isDying;
-
-    [ObservableProperty]
-    private bool _isNew;
-
-    [ObservableProperty]
     private Color _color = Colors.Black;
 
     [ObservableProperty]
@@ -52,8 +48,11 @@ public partial class MonitoredConnection : ConnectionBaseInfo
     [ObservableProperty]
     private ulong _outboundBandwidth;
 
-    private readonly IConnectionOwnerInfo rawConnection;
-    private ITcpRow? rawrow;
+    [ObservableProperty]
+    private bool _isAccessDenied;
+
+
+    private readonly Connection rawConnection;
 
     #region Geolocation
 
@@ -81,7 +80,7 @@ public partial class MonitoredConnection : ConnectionBaseInfo
 
     private IEnumerable<GeoLocation> ComputeStraightRoute()
     {
-        if (TargetIP is "127.0.0.1" or "::1" || Protocol == "UDP" && State != "ESTABLISHED" || Owner is null || Coordinates is null || GeoLocationHelper.CurrentCoordinates is null)
+        if (rawConnection.IsLoopback || Protocol == "UDP" && State != "ESTABLISHED" || Owner is null || Coordinates is null || GeoLocationHelper.CurrentCoordinates is null)
         {
             return NoLocation;
         }
@@ -114,20 +113,22 @@ public partial class MonitoredConnection : ConnectionBaseInfo
 
     #endregion
 
-    public MonitoredConnection(IConnectionOwnerInfo ownerMod)
+    public MonitoredConnection(Connection ownerMod)
     {
         rawConnection = ownerMod;
 
         IsNew = true;
 
         Pid = ownerMod.OwningPid;
-        SourceIP = ownerMod.LocalAddress;
+        SourceIP = ownerMod.LocalAddress.ToString();
         SourcePort = ownerMod.LocalPort.ToString();
         CreationTime = ownerMod.CreationTime ?? DateTime.Now;
         Protocol = ownerMod.Protocol;
-        TargetIP = ownerMod.RemoteAddress;
+        TargetIP = ownerMod.RemoteAddress.ToString();
         TargetPort = (ownerMod.RemotePort == -1 ? String.Empty : ownerMod.RemotePort.ToString());
         LastSeen = DateTime.Now;
+
+        _isAccessDenied = Protocol != "TCP";
         //this._state = Enum.GetName(typeof(ConnectionStatus), ownerMod.State);
 
         if (Pid is 0 or 4)
@@ -140,6 +141,7 @@ public partial class MonitoredConnection : ConnectionBaseInfo
         {
             try
             {
+                //TODO: check if this is solely to retrieve the owner's executable path as we already have the exe in Connection.cs through GetOwningModule
                 var module = Process.GetProcessById((int)ownerMod.OwningPid)?.MainModule;
                 if (module is not null)
                 {
@@ -168,97 +170,26 @@ public partial class MonitoredConnection : ConnectionBaseInfo
         SetProductInfo();
     }
 
-    private bool TryEnableStats()
-    {
-        try
-        {
-            // Ignoring bandwidth measurement for loopbacks as it is meaningless anyway
-            if (this.TargetIP == "127.0.0.1" || this.TargetIP == "::1")
-            {
-                return false;
-            }
-
-            rawrow = this.rawConnection.ToTcpRow();
-            rawrow.EnsureStats();
-
-            statsEnabled = true;
-        }
-        catch
-        {
-            InboundBandwidth = 0;
-            OutboundBandwidth = 0;
-            IsAccessDenied = true;
-        }
-
-        return false;
-    }
-
-
-    internal void UpdateValues(IConnectionOwnerInfo b)
+    internal void UpdateValues(Connection b)
     {
         //lvi.LocalAddress = b.LocalAddress;
         //lvi.Protocol = b.Protocol;
-        if (this.TargetIP != b.RemoteAddress)
+        var remoteIP = b.RemoteAddress.ToString();
+        if (this.TargetIP != remoteIP)
         {
-            TargetIP = b.RemoteAddress;
+            TargetIP = remoteIP;
             // Force reset the target host name by setting it to null (it will be recomputed next)
             TargetHostName = null;
         }
 
         TargetPort = (b.RemotePort == -1 ? String.Empty : b.RemotePort.ToString());
         State = Enum.GetName(typeof(ConnectionStatus), b.State);
-        if (b.State == ConnectionStatus.ESTABLISHED && !IsAccessDenied)
+        if (!_isAccessDenied)
         {
-            if (!statsEnabled)
-            {
-                TryEnableStats();
-            }
-            EstimateBandwidth();
-        }
-        else
-        {
-            InboundBandwidth = 0;
-            OutboundBandwidth = 0;
+            // TODO: Should use an object here (embedding all parameters as fields)
+            (InboundBandwidth, OutboundBandwidth) = rawConnection.GetEstimatedBandwidth(ref _isAccessDenied);
         }
 
         LastSeen = DateTime.Now;
     }
-
-
-    private ulong _lastInboundReadValue;
-    private ulong _lastOutboundReadValue;
-
-    private bool statsEnabled;
-    private void EstimateBandwidth()
-    {
-        if (!statsEnabled)
-        {
-            return;
-        }
-
-        Task.Run(() =>
-        {
-            try
-            {
-                if (rawrow is not null && !IsAccessDenied)
-                {
-                    var bandwidth = rawrow.GetTCPBandwidth();
-                    // Fix according to https://docs.microsoft.com/en-us/windows/win32/api/iphlpapi/nf-iphlpapi-setpertcpconnectionestats
-                    // One must subtract the previously read value to get the right one (as reenabling statistics doesn't work as before starting from Win 10 1709)
-                    InboundBandwidth = bandwidth.InboundBandwidth >= _lastInboundReadValue ? bandwidth.InboundBandwidth - _lastInboundReadValue : bandwidth.InboundBandwidth;
-                    OutboundBandwidth = bandwidth.OutboundBandwidth >= _lastOutboundReadValue ? bandwidth.OutboundBandwidth - _lastOutboundReadValue : bandwidth.OutboundBandwidth;
-                    _lastInboundReadValue = bandwidth.InboundBandwidth;
-                    _lastOutboundReadValue = bandwidth.OutboundBandwidth;
-                }
-            }
-            catch
-            {
-                //TODO: Add exception log
-                InboundBandwidth = 0;
-                OutboundBandwidth = 0;
-            }
-
-        });
-    }
-
 }

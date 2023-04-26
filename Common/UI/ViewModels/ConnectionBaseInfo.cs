@@ -12,7 +12,7 @@ using Wokhan.WindowsFirewallNotifier.Common.Net.DNS;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 
-public abstract class ConnectionBaseInfo : ObservableObject
+public abstract partial class ConnectionBaseInfo : ObservableObject
 {
     public DateTime CreationTime { get; init; }
 
@@ -43,8 +43,12 @@ public abstract class ConnectionBaseInfo : ObservableObject
     public string? ServiceDisplayName { get; protected set; }
     public string? SourceIP { get; protected set; }
     public string? SourcePort { get; set; }
-    public string? TargetIP { get; protected set; }
-    public string? TargetPort { get; protected set; }
+
+    [ObservableProperty]
+    private string? _targetIP;
+
+    [ObservableProperty]
+    private string? _targetPort;
 
 
     public int RawProtocol { get; protected set; }

@@ -5,6 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+
+using Windows.Win32;
+
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.IO.Files;
@@ -33,7 +36,7 @@ public static partial class PathResolver
                 foreach (var drive in drives)
                 {
                     trimmedDrive = drive.TrimEnd('\\');
-                    if (NativeMethods.QueryDosDeviceW(trimmedDrive, sb, (uint)len) == 0)
+                    if (NativeMethods.QueryDosDevice(trimmedDrive, sb, (uint)len) == 0)
                     {
                         throw new Win32Exception(Marshal.GetLastWin32Error(), "Call to QueryDosDevice failed!");
                     }

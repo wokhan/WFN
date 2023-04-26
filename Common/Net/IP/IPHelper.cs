@@ -1,22 +1,22 @@
 ﻿using Microsoft.Win32;
 
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-using Wokhan.WindowsFirewallNotifier.Common.IO.Streams;
+using Windows.Win32;
+using Windows.Win32.NetworkManagement.IpHelper;
+
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
-using Wokhan.WindowsFirewallNotifier.Common.Net.IP.TCP;
-using Wokhan.WindowsFirewallNotifier.Common.Net.IP.UDP;
 
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP;
@@ -28,22 +28,21 @@ public abstract partial class IPHelper
 
     protected const uint NO_ERROR = 0;
     protected const uint ERROR_INSUFFICIENT_BUFFER = 122;
-    protected const uint ERROR_NOT_FOUND = 1168;
+    internal const uint ERROR_NOT_FOUND = 1168;
 
-    internal static string GetAddressAsString(byte[] _remoteAddr)
+    internal static readonly TCP_ESTATS_BANDWIDTH_ROD_v0 NoBandwidth = new TCP_ESTATS_BANDWIDTH_ROD_v0();
+
+    public static event EventHandler<PropertyChangedEventArgs>? StaticPropertyChanged;
+
+    internal static int GetRealPort(uint _remotePort)
     {
-        return $"{_remoteAddr[0]}.{_remoteAddr[1]}.{_remoteAddr[2]}.{_remoteAddr[3]}";
+        // This is not working as expected
+        //return IPAddress.NetworkToHostOrder((ushort)_remotePort);
+        // While this is. Which is fun since this is the code of NetworkToHostOrder...
+        return (int)(BitConverter.IsLittleEndian ? BinaryPrimitives.ReverseEndianness((ushort)_remotePort) : (ushort)_remotePort);
     }
 
-    internal static int GetRealPort(byte[] _remotePort)
-    {
-        return IPAddress.NetworkToHostOrder(BitConverter.ToInt32(new[] { _remotePort[2], _remotePort[3], _remotePort[0], _remotePort[1] }, 0));
-    }
-
-    internal static string GetRealAddress(byte[] _remoteAddress)
-    {
-        return new IPAddress(_remoteAddress).ToString();
-    }
+    internal static Dictionary<Connection, MIB_TCPROW_LH> TCP4MIBCACHE = new();
 
     public static string MergePorts(IEnumerable<int> ports)
     {
@@ -104,79 +103,28 @@ public abstract partial class IPHelper
         return result;
     }
 
+    private static int maxUserPort = -1;
     public static int GetMaxUserPort()
     {
-        using var maxUserPortKey = Registry.LocalMachine.OpenSubKey(MAX_USER_PORT_REGISTRY_KEY, false);
-        var maxUserPortValue = maxUserPortKey?.GetValue(MAX_USER_PORT_REGISTRY_VALUE);
-        if (maxUserPortValue is null)
+        if (maxUserPort == -1)
         {
-            //Default from Windows Vista and up
-            return 49152;
-        }
+            using var maxUserPortKey = Registry.LocalMachine.OpenSubKey(MAX_USER_PORT_REGISTRY_KEY, false);
+            var maxUserPortValue = maxUserPortKey?.GetValue(MAX_USER_PORT_REGISTRY_VALUE);
+            if (maxUserPortValue is null)
+            {
+                //Default from Windows Vista and up
+                maxUserPort = 49152;
+            }
 
-        return Convert.ToInt32(maxUserPortValue);
+            maxUserPort = Convert.ToInt32(maxUserPortValue);
+        }
+        return maxUserPort;
     }
 
 
-    internal delegate uint GetOwnerModuleDelegate<T>(T pTcpEntry, TCPIP_OWNER_MODULE_INFO_CLASS Class, IntPtr Buffer, ref uint pdwSize);
+    internal delegate uint GetOwnerModuleDelegate(IntPtr buffer, ref uint pdwSize);
 
-    internal static Owner? GetOwningModuleInternal<TRow>(GetOwnerModuleDelegate<TRow> getOwnerModule, TRow row) where TRow : IConnectionOwnerInfo
-    {
-        Owner? ret = null;
-        /*if (ownerCache.TryGetValue(row, out ret))
-        {
-            return ret;
-        }*/
 
-        if (row.OwningPid == 0)
-        {
-            return Owner.System;
-        }
-
-        IntPtr buffer = IntPtr.Zero;
-        try
-        {
-            uint buffSize = 0;
-            var retn = getOwnerModule(row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, IntPtr.Zero, ref buffSize);
-            if (retn != NO_ERROR && retn != ERROR_INSUFFICIENT_BUFFER)
-            {
-                //Cannot get owning module for this connection
-                LogHelper.Info("Unable to get the connection owner: ownerPid=" + row.OwningPid + " remoteAdr=" + row.RemoteAddress + ":" + row.RemotePort);
-                return ret;
-            }
-            if (buffSize == 0)
-            {
-                //No buffer? Probably means we can't retrieve any information about this connection; skip it
-                LogHelper.Info("Unable to get the connection owner (no buffer).");
-                return ret;
-            }
-            buffer = Marshal.AllocHGlobal((int)buffSize);
-
-            //GetOwnerModuleFromTcpEntry needs the fields of TCPIP_OWNER_MODULE_INFO_BASIC to be NULL
-            NativeMethods.RtlZeroMemory(buffer, buffSize);
-
-            var resp = getOwnerModule(row, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, buffer, ref buffSize);
-            if (resp == 0)
-            {
-                ret = new Owner(Marshal.PtrToStructure<TCPIP_OWNER_MODULE_BASIC_INFO>(buffer));
-            }
-            else if (resp != ERROR_NOT_FOUND) // Ignore closed connections
-            {
-                LogHelper.Error("Unable to get the connection owner.", new Win32Exception((int)resp));
-            }
-
-            //ownerCache.Add(row, ret);
-
-            return ret;
-        }
-        finally
-        {
-            if (buffer != IntPtr.Zero)
-            {
-                Marshal.FreeHGlobal(buffer);
-            }
-        }
-    }
     /// <summary>
     /// Returns details about connection of localPort by process identified by pid.
     /// </summary>
@@ -189,47 +137,138 @@ public abstract partial class IPHelper
         return ret?.OwnerModule;
     }
 
-    public static IEnumerable<IConnectionOwnerInfo> GetAllConnections(bool tcpOnly = false)
+    public static IEnumerable<Connection> GetAllConnections(bool tcpOnly = false)
     {
-        var ret = TCPHelper.GetAllTCPConnections();
+        var ret = GetAllTCPConnections<MIB_TCPTABLE_OWNER_MODULE, MIB_TCPROW_OWNER_MODULE>(AF_INET.IP4).Select(tcpConn => new Connection(tcpConn));
         if (!tcpOnly)
         {
-            ret = ret.Concat(UDPHelper.GetAllUDPConnections());
+            ret = ret.Concat(GetAllUDPConnections<MIB_UDPTABLE_OWNER_MODULE, MIB_UDPROW_OWNER_MODULE>(AF_INET.IP4).Select(tcpConn => new Connection(tcpConn)));
         }
 
         if (Socket.OSSupportsIPv6)
         {
-            ret = ret.Concat(TCPHelper.GetAllTCP6Connections());
+            ret = ret.Concat(GetAllTCPConnections<MIB_TCP6TABLE_OWNER_MODULE, MIB_TCP6ROW_OWNER_MODULE>(AF_INET.IP6).Select(tcpConn => new Connection(tcpConn)));
             if (!tcpOnly)
             {
-                ret = ret.Concat(UDPHelper.GetAllUDP6Connections());
+                ret = ret.Concat(GetAllUDPConnections<MIB_UDP6TABLE_OWNER_MODULE, MIB_UDP6ROW_OWNER_MODULE>(AF_INET.IP6).Select(tcpConn => new Connection(tcpConn)));
             }
         }
 
         return ret;
     }
 
-
-    private static IPAddress? _currentIP;
-    public static IPAddress CurrentIP
+    private unsafe static IEnumerable<TRow> GetAllTCPConnections<TTable, TRow>(uint ipv) where TRow : IConnectionOwnerInfo
     {
-        get => _currentIP ??= GetPublicIpAddress();
-    }
-
-    public static IPAddress GetPublicIpAddress()
-    {
-        var request = (HttpWebRequest)WebRequest.Create(new Uri("http://checkip.eurodyndns.org/"));
-        request.Method = "GET";
-        request.UserAgent = "curl";
+        IntPtr ptr = IntPtr.Zero;
         try
         {
-            using WebResponse response = request.GetResponse();
-            using var reader = new StreamReader(response.GetResponseStream());
+            uint buffSize = 0;
+            _ = NativeMethods.GetExtendedTcpTable(null, ref buffSize, false, ipv, TCP_TABLE_CLASS.TCP_TABLE_OWNER_MODULE_ALL, 0);
 
-            var ans = reader.ReadLines().Skip(2).First();
-            var adr = CurrentIPAddressRegEx().Match(ans);
+            ptr = Marshal.AllocHGlobal((int)buffSize);
 
-            return IPAddress.Parse(adr.Groups[1].Value.Trim());
+            var ret = NativeMethods.GetExtendedTcpTable((void*)ptr, ref buffSize, false, ipv, TCP_TABLE_CLASS.TCP_TABLE_OWNER_MODULE_ALL, 0);
+
+            if (ret == 0)
+            {
+                return ReadConnectionTable<TTable, TRow>(ptr);
+            }
+            else
+            {
+                throw new Win32Exception((int)ret);
+            }
+        }
+        finally
+        {
+            if (ptr != IntPtr.Zero)
+            {
+                Marshal.FreeHGlobal(ptr);
+            }
+        }
+    }
+
+    private unsafe static IEnumerable<TRow> GetAllUDPConnections<TTable, TRow>(uint ipv) where TRow : IConnectionOwnerInfo
+    {
+        IntPtr ptr = IntPtr.Zero;
+        try
+        {
+            uint buffSize = 0;
+            _ = NativeMethods.GetExtendedUdpTable(null, ref buffSize, false, ipv, UDP_TABLE_CLASS.UDP_TABLE_OWNER_MODULE, 0);
+
+            ptr = Marshal.AllocHGlobal((int)buffSize);
+
+            var ret = NativeMethods.GetExtendedUdpTable((void*)ptr, ref buffSize, false, ipv, UDP_TABLE_CLASS.UDP_TABLE_OWNER_MODULE, 0);
+
+            if (ret == 0)
+            {
+                return ReadConnectionTable<TTable, TRow>(ptr);
+            }
+            else
+            {
+                throw new Win32Exception((int)ret);
+            }
+        }
+        finally
+        {
+            if (ptr != IntPtr.Zero)
+            {
+                Marshal.FreeHGlobal(ptr);
+            }
+        }
+    }
+
+    private static unsafe IEnumerable<TRow> ReadConnectionTable<TTable, TRow>(IntPtr ptr) where TRow : IConnectionOwnerInfo
+    {
+        var dwNumEntries = Marshal.ReadInt32(ptr);
+        // Padding may exist after dwNumEntries member; so we have to compute the actual offset.
+        // See https://learn.microsoft.com/en-us/windows/win32/api/tcpmib/ns-tcpmib-mib_tcptable_owner_module#remarks
+        var rowPtr = ptr + Marshal.OffsetOf<TTable>(nameof(MIB_TCPTABLE_OWNER_MODULE.table));
+
+        return new Span<TRow>((void*)rowPtr, dwNumEntries).ToArray();
+    }
+
+    private static IPAddress? _currentIP;
+    public static IPAddress? CurrentIP
+    {
+        get
+        {
+            if (_currentIP is null)
+            {
+                SetCurrentIPAsync();
+            }
+            return _currentIP;
+        }
+        set
+        {
+            if (value != _currentIP)
+            {
+                _currentIP = value;
+                StaticPropertyChanged?.Invoke(null, new PropertyChangedEventArgs(nameof(CurrentIP)));
+            }
+        }
+    }
+
+    private static async void SetCurrentIPAsync()
+    {
+        CurrentIP = await GetPublicIPAddressAsync();
+    }
+
+    [GeneratedRegex("^Current IP Address: (?<ip>.*)$", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
+    private static partial Regex CurrentIPAddressRegEx();
+
+    public static async Task<IPAddress> GetPublicIPAddressAsync()
+    {
+        try
+        {
+            // It's usually not a good idea to instantiate the HttpClient this way (one have to either use a factory or a static client),
+            // but this method will be only called once.
+            using var client = new HttpClient();
+
+            var response = await client.GetStringAsync("http://checkip.eurodyndns.org/");
+
+            var adr = CurrentIPAddressRegEx().Match(response);
+
+            return IPAddress.Parse(adr.Groups["ip"].ValueSpan.Trim());
         }
         catch
         {
@@ -240,17 +279,17 @@ public abstract partial class IPHelper
     private const int buffer_size = 32;
     private const int max_hops = 30;
     private const int ping_timeout = 4000;
-    public static async Task<IList<IPAddress>> GetFullRoute(string adr)
+    public static async Task<IList<IPAddress>> GetFullRouteAsync(string adr)
     {
         var ret = new List<IPAddress>();
-        
+
         using var pong = new Ping();
 
         var po = new PingOptions(1, true);
         PingReply? r = null;
         var buffer = new byte[buffer_size];
         Array.Fill(buffer, (byte)0);
-        
+
         for (var i = 1; i < max_hops; i++)
         {
             if (r is not null && r.Status != IPStatus.TimedOut)
@@ -272,7 +311,4 @@ public abstract partial class IPHelper
         ret.Add(IPAddress.Parse(adr));
         return ret;
     }
-
-    [GeneratedRegex("Current IP Address: (.*)", RegexOptions.Singleline)]
-    private static partial Regex CurrentIPAddressRegEx();
 }
