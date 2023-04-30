@@ -18,12 +18,10 @@ public abstract partial class ConnectionBaseInfo : ObservableObject
 
     public uint Pid { get; protected set; }
 
-    public string? IconPath { get; protected set; }
-
     protected BitmapSource? _icon;
     public BitmapSource? Icon
     {
-        get => this.GetOrSetValueAsync(() => IconHelper.GetIconAsync(IconPath ?? Path), ref _icon, OnPropertyChanged);
+        get => this.GetOrSetValueAsync(() => IconHelper.GetIconAsync(Path), ref _icon, OnPropertyChanged);
         set => this.SetValue(ref _icon, value, OnPropertyChanged);
     }
 
@@ -41,18 +39,25 @@ public abstract partial class ConnectionBaseInfo : ObservableObject
     public string? Company { get; protected set; }
     public string? ServiceName { get; protected set; }
     public string? ServiceDisplayName { get; protected set; }
-    public string? SourceIP { get; protected set; }
-    public string? SourcePort { get; set; }
+    public string SourceIP { get; protected set; }
+    public string SourcePort { get; set; }
 
     [ObservableProperty]
     private string? _targetIP;
+
+    partial void OnTargetIPChanged(string? value)
+    {
+        // Resets the TargetHostName property so that it gets asynchronously resolved next time it's needed.
+        // We don't trigger the resolution here manually since we cannot be sure "something" is interested by its value.
+        TargetHostName = null;
+    }
 
     [ObservableProperty]
     private string? _targetPort;
 
 
     public int RawProtocol { get; protected set; }
-    public string? Protocol { get; protected set; }
+    public string Protocol { get; protected set; }
     public string? Direction { get; protected set; }
 
     protected void SetProductInfo()
@@ -68,8 +73,8 @@ public abstract partial class ConnectionBaseInfo : ObservableObject
         }
         else if (Path == "System")
         {
-            Description = "System";
-            ProductName = "System";
+            Description = "Windows system process";
+            ProductName = Environment.OSVersion.ToString();
             Company = String.Empty;
         }
         // TODO: To check if stil applies => File.Exists returns false when accessing system32 files from a x86 application; solution would be to target AnyCPU

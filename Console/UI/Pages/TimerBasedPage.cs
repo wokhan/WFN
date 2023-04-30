@@ -1,14 +1,15 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 
-public class TimerBasedPage : Page, INotifyPropertyChanged
+[ObservableObject]
+public partial class TimerBasedPage : Page
 {
     private readonly Timer timer;
 
@@ -22,13 +23,11 @@ public class TimerBasedPage : Page, INotifyPropertyChanged
             if (timer.Enabled != value)
             {
                 timer.Enabled = value;
-                NotifyPropertyChanged();
+                OnPropertyChanged();
             }
         }
     }
 
-
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     private bool? wasRunningWhenUnloaded;
     private bool isCurrentlyRunning;
@@ -57,11 +56,6 @@ public class TimerBasedPage : Page, INotifyPropertyChanged
             OnTimerTick(sender, e);
             isCurrentlyRunning = false;
         }
-    }
-
-    protected void NotifyPropertyChanged([CallerMemberName] string? caller = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(caller));
     }
 
     private void Page_Loaded(object sender, RoutedEventArgs e)

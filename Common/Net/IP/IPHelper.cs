@@ -16,8 +16,6 @@ using System.Threading.Tasks;
 using Windows.Win32;
 using Windows.Win32.NetworkManagement.IpHelper;
 
-using Wokhan.WindowsFirewallNotifier.Common.Logging;
-
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 
@@ -119,22 +117,6 @@ public abstract partial class IPHelper
             maxUserPort = Convert.ToInt32(maxUserPortValue);
         }
         return maxUserPort;
-    }
-
-
-    internal delegate uint GetOwnerModuleDelegate(IntPtr buffer, ref uint pdwSize);
-
-
-    /// <summary>
-    /// Returns details about connection of localPort by process identified by pid.
-    /// </summary>
-    /// <param name="row"></param>
-    /// <returns></returns>
-    public static Owner? GetOwner(uint pid, int localPort)
-    {
-        var allConn = GetAllConnections();
-        var ret = allConn.FirstOrDefault(r => r.LocalPort == localPort && r.OwningPid == pid);
-        return ret?.OwnerModule;
     }
 
     public static IEnumerable<Connection> GetAllConnections(bool tcpOnly = false)

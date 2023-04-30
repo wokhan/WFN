@@ -22,7 +22,7 @@
                     <TextBlock VerticalAlignment="Center" Text="{Binding EventsReader.NewMatchingEntriesCount, StringFormat='{}{0} new event(s)', FallbackValue='',TargetNullValue=''}" />
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Right" Margin="3,0,3,0">
-                    <TextBox ext:CustomAdorner.Header="Filter" x:Name="txtFilter" Width="149" Text="{Binding FilterText,  UpdateSourceTrigger=PropertyChanged}" ToolTip="Filter to be applied for App, Service or Remote IP"/>
+                    <TextBox ext:CustomAdorner.Header="Filter" x:Name="txtFilter" Width="149" Text="{Binding TextFilter,  UpdateSourceTrigger=PropertyChanged}" ToolTip="Filter to be applied for App, Service or Remote IP"/>
                     <ComboBox Style="{StaticResource FilterComboStyle}"  SelectedIndex="{Binding TCPOnlyOrAll,FallbackValue=0}" VerticalContentAlignment="Center">
                         <sys:String>All</sys:String>
                         <sys:String>TCP Only</sys:String>

@@ -2,15 +2,13 @@
 using System.ComponentModel;
 using System.Net;
 using System.Runtime.InteropServices;
-
-using Windows.Win32;
 using Windows.Win32.NetworkManagement.IpHelper;
 
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 
 namespace Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 
-public class Connection
+public record Connection
 {
     private const uint NO_ERROR = 0;
     private const uint ERROR_INSUFFICIENT_BUFFER = 122;
@@ -36,13 +34,11 @@ public class Connection
 
     public bool IsLoopback { get; private set; }
 
-    private MIB_TCP6ROW tcp6MIBRow;
+    private MIB_TCP6ROW? tcp6MIBRow;
+    public bool IsMonitored { get; private set; }
 
+    
     private IConnectionOwnerInfo sourceRow;
-
-    unsafe delegate uint GetOwnerModuleDelegate(object ROW, TCPIP_OWNER_MODULE_INFO_CLASS infoClass, void* buffer, ref int buffSize);
-
-    GetOwnerModuleDelegate getOwnerModule;
 
     internal Connection(MIB_TCPROW_OWNER_MODULE tcpRow)
     {
@@ -106,46 +102,30 @@ public class Connection
         CreationTime = udp6Row.liCreateTimestamp == 0 ? null : DateTime.FromFileTime(udp6Row.liCreateTimestamp);
     }
 
-    private bool EnsureStats(ref bool isAccessDenied)
+    public bool TryEnableStats()
     {
-        if (Protocol != "TCP")
-        {
-            throw new InvalidOperationException("Statistics are not available for non-TCP connections. Please check first the connection's protocol.");
-        }
-
-        if (isAccessDenied || State != ConnectionStatus.ESTABLISHED || IPAddress.IsLoopback(RemoteAddress))
+        if (Protocol != "TCP" || State == ConnectionStatus.LISTENING || IPAddress.IsLoopback(RemoteAddress))
         {
             return false;
         }
 
-        var result = new TCP_ESTATS_BANDWIDTH_RW_v0() { EnableCollectionInbound = TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled, EnableCollectionOutbound = TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled };
-        var r = sourceRow.SetPerTcpConnectionEStats(ref result, tcp6MIBRow);
-        if (r != 0)
-        {
-            throw new Win32Exception((int)r);
-        }
+        var setting = new TCP_ESTATS_BANDWIDTH_RW_v0() { EnableCollectionInbound = TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled, EnableCollectionOutbound = TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled };
+        var r = sourceRow.SetPerTcpConnectionEStats(ref setting, tcp6MIBRow);
+        
+        IsMonitored = (r == NO_ERROR && setting.EnableCollectionInbound == TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled && setting.EnableCollectionOutbound == TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled);
 
-        if (result.EnableCollectionInbound != TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled || result.EnableCollectionOutbound != TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled)
-        {
-            isAccessDenied = true;
-            return false;
-        }
-
-        return true;
+        return IsMonitored;
     }
 
+    bool _firstPassDone;
     ulong _lastInboundReadValue;
     ulong _lastOutboundReadValue;
 
-    //TODO: not fond of those ref params, but using an interface prevents me to use local private fields - and using a property with a proper setter would result in a backing field creatino, breaking the initial struct layout.
-    public (ulong InboundBandwidth, ulong OutboundBandwidth) GetEstimatedBandwidth(ref bool isAccessDenied)
+    public (ulong InboundBandwidth, ulong OutboundBandwidth, bool IsMonitored) GetEstimatedBandwidth()
     {
-        if (!EnsureStats(ref isAccessDenied))
+        if (!IsMonitored)
         {
-            _lastInboundReadValue = 0;
-            _lastOutboundReadValue = 0;
-
-            return (0, 0);
+            return (0, 0, false);
         }
 
         try
@@ -154,28 +134,39 @@ public class Connection
 
             if (rodObjectNullable is null)
             {
-                isAccessDenied = true;
-                return (0, 0);
+                IsMonitored = false;
+                return (0, 0, false);
             }
 
             var rodObject = rodObjectNullable.Value;
 
             // Fix according to https://docs.microsoft.com/en-us/windows/win32/api/iphlpapi/nf-iphlpapi-setpertcpconnectionestats
             // One must subtract the previously read value to get the right one (as reenabling statistics doesn't work as before starting from Win 10 1709)
-            var inbound = rodObject.InboundBandwidth >= _lastInboundReadValue ? rodObject.InboundBandwidth - _lastInboundReadValue : rodObject.InboundBandwidth;
-            var outbound = rodObject.OutboundBandwidth >= _lastOutboundReadValue ? rodObject.OutboundBandwidth - _lastOutboundReadValue : rodObject.OutboundBandwidth;
+            ulong inbound = 0;
+            ulong outbound = 0;
+
+            // Ignore first pass as data will be wrong (as observed during testing)
+            if (_firstPassDone)
+            {
+                inbound = rodObject.InboundBandwidth >= _lastInboundReadValue ? rodObject.InboundBandwidth - _lastInboundReadValue : rodObject.InboundBandwidth;
+                outbound = rodObject.OutboundBandwidth >= _lastOutboundReadValue ? rodObject.OutboundBandwidth - _lastOutboundReadValue : rodObject.OutboundBandwidth;
+            }
+
+            _firstPassDone = true;
 
             _lastInboundReadValue = rodObject.InboundBandwidth;
             _lastOutboundReadValue = rodObject.OutboundBandwidth;
 
-            return (inbound, outbound);
+            return (inbound, outbound, true);
         }
         catch (Win32Exception we) when (we.NativeErrorCode == IPHelper.ERROR_NOT_FOUND)
         {
+            IsMonitored = false;
+
             _lastInboundReadValue = 0;
             _lastOutboundReadValue = 0;
 
-            return (0, 0);
+            return (0, 0, false);
         }
     }
 
@@ -237,5 +228,15 @@ public class Connection
                 Marshal.FreeHGlobal(buffer);
             }
         }
+    }
+
+    public void UpdateWith(Connection rawConnection)
+    {
+        this.State = rawConnection.State;
+        this.RemoteAddress = rawConnection.RemoteAddress;
+        this.RemotePort = rawConnection.RemotePort;
+        this.IsLoopback = rawConnection.IsLoopback;
+
+        this.tcp6MIBRow = rawConnection.tcp6MIBRow;
     }
 }

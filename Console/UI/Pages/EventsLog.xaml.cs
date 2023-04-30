@@ -135,9 +135,9 @@ public sealed partial class EventsLog : Page, IDisposable
         var le = (LoggedConnection)entryAsObject;
 
         // Note: do not use Remote Host, because this will trigger dns resolution over all entries
-        return (le.TargetIP is not null && le.TargetIP.StartsWith(TextFilter, StringComparison.Ordinal))
-            || (le.ServiceName is not null && le.ServiceName.Contains(TextFilter, StringComparison.OrdinalIgnoreCase))
-            || (le.FileName is not null && le.FileName.Contains(TextFilter, StringComparison.OrdinalIgnoreCase));
+        return (le.TargetIP?.StartsWith(TextFilter, StringComparison.Ordinal) == true)
+            || (le.FileName?.Contains(TextFilter, StringComparison.OrdinalIgnoreCase) == true)
+            || (le.ServiceName?.Contains(TextFilter, StringComparison.OrdinalIgnoreCase) == true);
     }
 
     internal void ResetTcpFilter()

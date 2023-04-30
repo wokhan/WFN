@@ -133,9 +133,4 @@
       <DependentUpon>$([System.String]::Copy(%(Filename)).Replace(".Dummy",".cs"))</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Compile Update="ViewModels\MonitoredConnection.Dummy.cs">
-      <DependentUpon>MonitoredConnection.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
 </Project>

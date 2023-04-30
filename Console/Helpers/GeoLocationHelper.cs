@@ -132,7 +132,7 @@ public static class GeoLocationHelper
 
     public static async Task<List<GeoLocation>> ComputeRoute(string target)
     {
-        if (target is "127.0.0.1" or "::1" || CurrentCoordinates is null || !IPAddress.TryParse(target, out var _))
+        if (CurrentCoordinates is null || !IPAddress.TryParse(target, out var targetIp) || IPAddress.IsLoopback(targetIp))
         {
             return new List<GeoLocation>();
         }

@@ -14,14 +14,4 @@ internal partial struct MIB_UDP6ROW_OWNER_MODULE : IConnectionOwnerInfo
     {
         return NativeMethods.GetOwnerModuleFromUdp6Entry(this, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, buffer.ToPointer(), ref buffSize);
     }
-
-    TCP_ESTATS_BANDWIDTH_ROD_v0? IConnectionOwnerInfo.GetPerTcpConnectionEState(MIB_TCP6ROW? tcp6Row)
-    {
-        throw new NotImplementedException();
-    }
-
-    uint IConnectionOwnerInfo.SetPerTcpConnectionEStats(ref TCP_ESTATS_BANDWIDTH_RW_v0 rw, MIB_TCP6ROW? tcp6Row)
-    {
-        throw new NotImplementedException();
-    }
 }

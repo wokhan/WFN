@@ -1,19 +1,27 @@
-﻿using LiveChartsCore.SkiaSharpView;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+using LiveChartsCore.SkiaSharpView;
 
 using SkiaSharp.Views.WPF;
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Data;
+
 using System.Windows.Media;
 
+using Wokhan.Collections;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
+
 using Wokhan.WindowsFirewallNotifier.Common.UI.Themes;
 using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
@@ -33,15 +41,58 @@ public partial class Connections : TimerBasedPage
 
     public ObservableCollection<MonitoredConnection> AllConnections { get; } = new();
 
+    public GroupedObservableCollection<GroupedMonitoredConnections, MonitoredConnection> GroupedConnections { get; init; }
+
+    [ObservableProperty]
+    private string? _textFilter = String.Empty;
+
+    partial void OnTextFilterChanged(string? value) => ResetTextFilter();
+
+    CollectionViewSource connectionsView;
+
     public Connections()
     {
         UpdateConnectionsColors();
+
+        AllConnections.CollectionChanged += AllConnections_CollectionChanged;
+        GroupedConnections = new(connection => new GroupedMonitoredConnections(connection, Colors![GroupedConnections!.Count % Colors.Count]));
 
         BindingOperations.EnableCollectionSynchronization(AllConnections, uisynclocker);
 
         Settings.Default.PropertyChanged += SettingsChanged;
 
         InitializeComponent();
+
+        connectionsView = (CollectionViewSource)this.Resources["connectionsView"];
+        connectionsView.GroupDescriptions.Add(new GroupedCollectionGroupDescription<GroupedMonitoredConnections, MonitoredConnection>());
+    }
+
+    private void AllConnections_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    foreach (MonitoredConnection item in e.NewItems!)
+                    {
+                        GroupedConnections.Add(item);
+                    }
+                    break;
+
+                case NotifyCollectionChangedAction.Remove:
+                    foreach (MonitoredConnection item in e.OldItems!)
+                    {
+                        var group = GroupedConnections.First(group => group.Key.Path == item.Path);
+                        group.Remove(item);
+                        if (group.Count() == 0)
+                        {
+                            GroupedConnections.Remove(group);
+                        }
+                    }
+                    break;
+            }
+        });
     }
 
     private void SettingsChanged(object? sender, PropertyChangedEventArgs? e)
@@ -106,22 +157,31 @@ public partial class Connections : TimerBasedPage
         for (int i = AllConnections.Count - 1; i >= 0; i--)
         {
             var item = AllConnections[i];
-            var elapsed = DateTime.Now.Subtract(item.LastSeen).TotalMilliseconds;
-            if (elapsed > ConnectionTimeoutRemove)
+
+            switch (DateTime.Now.Subtract(item.LastSeen).TotalMilliseconds)
             {
-                lock (locker)
-                    AllConnections.Remove(item);
-            }
-            else if (elapsed > ConnectionTimeoutDying)
-            {
-                item.IsDying = true;
-            }
-            else if (DateTime.Now.Subtract(item.CreationTime).TotalMilliseconds > ConnectionTimeoutNew)
-            {
-                item.IsNew = false;
+                case > ConnectionTimeoutRemove:
+                    AllConnections.RemoveAt(i);
+                    break;
+
+                case > ConnectionTimeoutDying:
+                    item.IsDying = true;
+                    break;
+
+                default:
+                    if (DateTime.Now.Subtract(item.CreationTime).TotalMilliseconds > ConnectionTimeoutNew)
+                    {
+                        item.IsNew = false;
+                    }
+                    break;
             }
         }
-        
+
+        foreach(var group in GroupedConnections)
+        {
+            group.Key.UpdateBandwidth(group);
+        }
+
         if (graph.IsVisible) graph.UpdateGraph();
         //if (map.IsVisible) map.UpdateMap();
     }
@@ -129,10 +189,7 @@ public partial class Connections : TimerBasedPage
 
     private void AddOrUpdateConnection(Connection connectionInfo)
     {
-        MonitoredConnection? lvi;
-        // TEMP: test to avoid enumerating while modifying (might result in a deadlock, to test carefully!)
-        lock (locker)
-            lvi = AllConnections.FirstOrDefault(l => l.Pid == connectionInfo.OwningPid && l.Protocol == connectionInfo.Protocol && l.SourcePort == connectionInfo.LocalPort.ToString());
+        MonitoredConnection? lvi = AllConnections.FirstOrDefault(mconn => mconn.Matches(connectionInfo));
 
         if (lvi is not null)
         {
@@ -140,8 +197,7 @@ public partial class Connections : TimerBasedPage
         }
         else
         {
-            lock (locker)
-                AllConnections.Add(new MonitoredConnection(connectionInfo) { Color = Colors[AllConnections.Count % Colors.Count] });
+            AllConnections.Add(new MonitoredConnection(connectionInfo));
         }
     }
 
@@ -156,10 +212,49 @@ public partial class Connections : TimerBasedPage
             _ => LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList(),
         };
 
-        lock (locker)
-            for (var i = 0; i < AllConnections.Count; i++)
+        // TODO: check for concurrent access issue when switching themes while updating
+        // I removed the lock but it could have been useful here...
+        if (GroupedConnections is not null)
+        {
+            for (var i = 0; i < GroupedConnections.Count; i++)
             {
-                AllConnections[i].Color = Colors[i % Colors.Count];
+                GroupedConnections[i].Key.Color = Colors[i % Colors.Count];
             }
+        }
+    }
+
+
+    private bool _isResetTextFilterPending;
+    internal async void ResetTextFilter()
+    {
+        if (!_isResetTextFilterPending)
+        {
+            _isResetTextFilterPending = true;
+            await Task.Delay(500).ConfigureAwait(true);
+            if (!string.IsNullOrWhiteSpace(TextFilter))
+            {
+                connectionsView!.Filter -= ConnectionsView_Filter;
+                connectionsView.Filter += ConnectionsView_Filter; ;
+            }
+            else
+            {
+                connectionsView!.Filter -= ConnectionsView_Filter;
+            }
+            _isResetTextFilterPending = false;
+        }
+    }
+
+    private void ConnectionsView_Filter(object sender, FilterEventArgs e)
+    {
+        e.Accepted = true;
+        //var connection = (ObservableGrouping<GroupedMonitoredConnectionsX, MonitoredConnection>)e.Item;
+        
+        // Note: do not use Remote Host, because this will trigger dns resolution over all entries
+        // TODO: fix since we're now using ObservableGrouping (with already grouped collection)
+        //e.Accepted = ((connection.FileName?.Contains(TextFilter, StringComparison.OrdinalIgnoreCase) == true)
+        //           || (connection.ServiceName?.Contains(TextFilter, StringComparison.OrdinalIgnoreCase) == true)
+        //           || (connection.TargetIP?.StartsWith(TextFilter, StringComparison.Ordinal) == true)
+        //           || connection.State.StartsWith(TextFilter, StringComparison.Ordinal)
+        //           || connection.Protocol.Contains(TextFilter, StringComparison.OrdinalIgnoreCase));
     }
 }

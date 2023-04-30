@@ -2,14 +2,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+
 using System.Windows.Media;
 
 using Wokhan.ComponentModel.Extensions;
+using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
 using Wokhan.WindowsFirewallNotifier.Common.Net.GeoLocation;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
+using Wokhan.WindowsFirewallNotifier.Common.Processes;
 using Wokhan.WindowsFirewallNotifier.Common.UI.ViewModels;
 using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 
@@ -26,7 +30,7 @@ public partial class MonitoredConnection : ConnectionBaseInfo
 
     [ObservableProperty]
     private bool _isNew;
-    
+
     [ObservableProperty]
     private bool _isDying;
 
@@ -37,7 +41,15 @@ public partial class MonitoredConnection : ConnectionBaseInfo
     private string? _lastError;
 
     [ObservableProperty]
-    private string? _state;
+    private string _state;
+
+    partial void OnStateChanged(string value)
+    {
+        if (!IsMonitored)
+        {
+            IsMonitored = _rawConnection.TryEnableStats();
+        }
+    }
 
     [ObservableProperty]
     private Color _color = Colors.Black;
@@ -48,11 +60,12 @@ public partial class MonitoredConnection : ConnectionBaseInfo
     [ObservableProperty]
     private ulong _outboundBandwidth;
 
+
     [ObservableProperty]
-    private bool _isAccessDenied;
+    private bool _isMonitored;
 
 
-    private readonly Connection rawConnection;
+    private Connection _rawConnection;
 
     #region Geolocation
 
@@ -80,7 +93,7 @@ public partial class MonitoredConnection : ConnectionBaseInfo
 
     private IEnumerable<GeoLocation> ComputeStraightRoute()
     {
-        if (rawConnection.IsLoopback || Protocol == "UDP" && State != "ESTABLISHED" || Owner is null || Coordinates is null || GeoLocationHelper.CurrentCoordinates is null)
+        if (_rawConnection.IsLoopback || Protocol == "UDP" && State != "ESTABLISHED" || Owner is null || Coordinates is null || GeoLocationHelper.CurrentCoordinates is null)
         {
             return NoLocation;
         }
@@ -113,83 +126,69 @@ public partial class MonitoredConnection : ConnectionBaseInfo
 
     #endregion
 
-    public MonitoredConnection(Connection ownerMod)
+    public MonitoredConnection(Connection rawconnection)
     {
-        rawConnection = ownerMod;
+        _rawConnection = rawconnection;
 
         IsNew = true;
-
-        Pid = ownerMod.OwningPid;
-        SourceIP = ownerMod.LocalAddress.ToString();
-        SourcePort = ownerMod.LocalPort.ToString();
-        CreationTime = ownerMod.CreationTime ?? DateTime.Now;
-        Protocol = ownerMod.Protocol;
-        TargetIP = ownerMod.RemoteAddress.ToString();
-        TargetPort = (ownerMod.RemotePort == -1 ? String.Empty : ownerMod.RemotePort.ToString());
+        State = rawconnection.State.ToString();
+        
         LastSeen = DateTime.Now;
+        Pid = rawconnection.OwningPid;
+        SourceIP = rawconnection.LocalAddress.ToString();
+        SourcePort = rawconnection.LocalPort.ToString();
+        CreationTime = rawconnection.CreationTime ?? DateTime.Now;
+        Protocol = rawconnection.Protocol;
+        TargetIP = rawconnection.RemoteAddress.ToString();
+        TargetPort = (rawconnection.RemotePort == -1 ? String.Empty : rawconnection.RemotePort.ToString());
 
-        _isAccessDenied = Protocol != "TCP";
-        //this._state = Enum.GetName(typeof(ConnectionStatus), ownerMod.State);
-
-        if (Pid is 0 or 4)
+        if (rawconnection.OwnerModule == Common.Net.IP.Owner.System)
         {
             FileName = Properties.Resources.Connection_ProcessFile_System;
-            Path = Properties.Resources.Connection_ProcessFile_System;
-            Owner = Properties.Resources.Connection_ProcessOwner_System;
+            Path = Common.Net.IP.Owner.System.ModulePath;
+            Owner = Common.Net.IP.Owner.System.ModuleName!;
+            Icon = IconHelper.SystemIcon;
         }
         else
         {
+            Owner = rawconnection.OwnerModule?.ModuleName ?? "Unknown";
+
             try
             {
-                //TODO: check if this is solely to retrieve the owner's executable path as we already have the exe in Connection.cs through GetOwningModule
-                var module = Process.GetProcessById((int)ownerMod.OwningPid)?.MainModule;
-                if (module is not null)
-                {
-                    Path = module.FileName ?? Properties.Resources.Connection_ProcessPath_Unknown;
-                    FileName = module.ModuleName ?? Properties.Resources.Connection_ProcessFile_Unknown;
-                }
+                var module = Process.GetProcessById((int)rawconnection.OwningPid)?.MainModule;
+                Path = module?.FileName ?? "Unknown";
+                FileName = module?.ModuleName ?? Properties.Resources.Connection_ProcessFile_Unknown;
             }
-            catch
+            catch (Win32Exception we) when (we.NativeErrorCode == 5)
             {
-                FileName = Properties.Resources.Connection_ProcessFile_UnknownOrClosed;
-                Path = Properties.Resources.Connection_ProcessPath_Unresolved;
-            }
-
-            if (ownerMod.OwnerModule is null)
-            {
-                Owner = Properties.Resources.Connection_ProcessOwner_Unknown;
-                //Path = Path ?? Properties.Resources.Connection_ProcessPath_Unresolved;
-            }
-            else
-            {
-                Owner = ownerMod.OwnerModule.ModuleName;
-                IconPath = ownerMod.OwnerModule.ModulePath;
+                var r = ProcessHelper.GetProcessOwnerWMI(rawconnection.OwningPid);
+                Path = r?.Path ?? "Unknown";
+                FileName = r?.Name ?? Properties.Resources.Connection_ProcessFile_Unknown;
             }
         }
 
         SetProductInfo();
     }
 
-    internal void UpdateValues(Connection b)
+    internal void UpdateValues(Connection updatedConnection)
     {
-        //lvi.LocalAddress = b.LocalAddress;
-        //lvi.Protocol = b.Protocol;
-        var remoteIP = b.RemoteAddress.ToString();
-        if (this.TargetIP != remoteIP)
-        {
-            TargetIP = remoteIP;
-            // Force reset the target host name by setting it to null (it will be recomputed next)
-            TargetHostName = null;
-        }
-
-        TargetPort = (b.RemotePort == -1 ? String.Empty : b.RemotePort.ToString());
-        State = Enum.GetName(typeof(ConnectionStatus), b.State);
-        if (!_isAccessDenied)
-        {
-            // TODO: Should use an object here (embedding all parameters as fields)
-            (InboundBandwidth, OutboundBandwidth) = rawConnection.GetEstimatedBandwidth(ref _isAccessDenied);
-        }
-
         LastSeen = DateTime.Now;
+
+        // Update the underlying Connection object (remote address, and so on).
+        _rawConnection.UpdateWith(updatedConnection);
+
+        TargetIP = _rawConnection.RemoteAddress.ToString();
+        TargetPort = (_rawConnection.RemotePort == -1 ? String.Empty : _rawConnection.RemotePort.ToString());
+        State = _rawConnection.State.ToString();
+        
+        if (IsMonitored)
+        {
+            (InboundBandwidth, OutboundBandwidth, IsMonitored) = _rawConnection.GetEstimatedBandwidth();
+        }
+    }
+
+    public bool Matches(Connection connectionInfo)
+    {
+        return Pid == connectionInfo.OwningPid && Protocol == connectionInfo.Protocol && SourcePort == connectionInfo.LocalPort.ToString();
     }
 }

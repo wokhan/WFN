@@ -31,25 +31,19 @@ public static partial class ProcessHelper
 
         Process.Start(proc);
     }
-    //public static string[] GetProcessOwnerWMI(int owningPid, ref Dictionary<int, string[]> previousCache)
-    //{
-    //    if (previousCache is null)
-    //    {
-    //        using var searcher = new ManagementObjectSearcher("SELECT ProcessId, Name, ExecutablePath, CommandLine FROM Win32_Process");
-    //        using var results = searcher.Get();
-    //        // Looks like the first cast to uint is required for this to work (pretty weird if you ask me).
-    //        previousCache = results.Cast<ManagementObject>().ToDictionary(r => (int)(uint)r["ProcessId"], r => new[] { (string)r["Name"], (string)r["ExecutablePath"], (string)r["CommandLine"] });
-    //    }
 
-    //    if (!previousCache.ContainsKey(owningPid))
-    //    {
-    //        using var searcher = new ManagementObjectSearcher($"SELECT ProcessId, Name, ExecutablePath, CommandLine FROM Win32_Process WHERE ProcessId = {owningPid}");
-    //        using var r = searcher.Get().Cast<ManagementObject>().FirstOrDefault();
-    //        previousCache.Add(owningPid, new[] { (string)r["Name"], (string)r["ExecutablePath"], (string)r["CommandLine"] });
-    //    }
+    public static (string Name, string Path, string CommandLine)? GetProcessOwnerWMI(uint owningPid)
+    {
+        using var searcher = new ManagementObjectSearcher($"SELECT ProcessId, Name, ExecutablePath, CommandLine FROM Win32_Process WHERE ProcessId = {owningPid}");
+        using var r = searcher.Get().Cast<ManagementObject>().FirstOrDefault();
 
-    //    return previousCache[owningPid];
-    //}
+        if (r is null)
+        {
+            return null;
+        }
+
+        return ((string)r["Name"], (string)r["ExecutablePath"], (string)r["CommandLine"]);
+    }
 
     //public static IEnumerable<string>? GetAllServices(uint pid)
     //{
