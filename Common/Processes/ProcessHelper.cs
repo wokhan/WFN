@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Runtime.InteropServices;
 using System.Windows;
 
 using Windows.Win32;
@@ -218,7 +219,8 @@ public static partial class ProcessHelper
                 return String.Empty;
             }
 
-            if (!NativeMethods.ConvertSidToStringSid(hTokenInformation.User.Sid, out PWSTR SID))
+            PWSTR SID = new PWSTR();
+            if (!NativeMethods.ConvertSidToStringSid(hTokenInformation.User.Sid, &SID))
             {
                 LogHelper.Warning("Unable to retrieve process local user owner: SID cannot be converted!");
                 return String.Empty;

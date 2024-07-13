@@ -16,7 +16,7 @@ internal partial struct MIB_TCPROW_OWNER_MODULE : IConnectionOwnerInfo
         return NativeMethods.GetOwnerModuleFromTcpEntry(this, TCPIP_OWNER_MODULE_INFO_CLASS.TCPIP_OWNER_MODULE_INFO_BASIC, buffer.ToPointer(), ref buffSize);
     }
 
-    unsafe TCP_ESTATS_BANDWIDTH_ROD_v0? IConnectionOwnerInfo.GetPerTcpConnectionEState(MIB_TCP6ROW? tcp6Row)
+    unsafe TCP_ESTATS_BANDWIDTH_ROD_v0? IConnectionOwnerInfo.GetPerTcpConnectionEState(MIB_TCP6ROW? _)
     {
         var rw = new TCP_ESTATS_BANDWIDTH_RW_v0() { EnableCollectionInbound = TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled, EnableCollectionOutbound = TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled };
         var rod = new TCP_ESTATS_BANDWIDTH_ROD_v0();
@@ -36,7 +36,7 @@ internal partial struct MIB_TCPROW_OWNER_MODULE : IConnectionOwnerInfo
         return null;
     }
 
-    unsafe uint IConnectionOwnerInfo.SetPerTcpConnectionEStats(ref TCP_ESTATS_BANDWIDTH_RW_v0 rw, MIB_TCP6ROW? tcp6Row)
+    unsafe uint IConnectionOwnerInfo.SetPerTcpConnectionEStats(ref TCP_ESTATS_BANDWIDTH_RW_v0 rw, MIB_TCP6ROW? _)
     {
         uint ret;
         

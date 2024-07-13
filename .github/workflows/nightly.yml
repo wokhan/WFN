@@ -36,11 +36,11 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 7.0.100
+        dotnet-version: 8.0.300
     - name: Build and publish
       run: dotnet publish ${{ matrix.release }} -c Release ${{ matrix.self-contained }}
     - name: Zip published files
-      run: compress-archive -path ./bin/net7.0-windows/${{ matrix.pub-folder }}publish/* -destinationpath ./bin/net7.0-windows/wfn-${{ matrix.release-name }}.zip
+      run: compress-archive -path ./bin/net8.0-windows/${{ matrix.pub-folder }}publish/* -destinationpath ./bin/net8.0-windows/wfn-${{ matrix.release-name }}.zip
     - name: Deploy nightly
       uses: WebFreak001/deploy-nightly@v2.0.0
       env:
@@ -48,7 +48,7 @@ jobs:
       with:
         upload_url: https://uploads.github.com/repos/wokhan/WFN/releases/24573510/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
         release_id: 24573510 # same as above (id can just be taken out the upload_url, it's used to find old releases)
-        asset_path: ./bin/net7.0-windows/wfn-${{ matrix.release-name }}.zip # path to archive to upload
+        asset_path: ./bin/net8.0-windows/wfn-${{ matrix.release-name }}.zip # path to archive to upload
         asset_name: wfn-$$-${{ matrix.release-name }}.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
         asset_content_type: application/zip # required by GitHub API
         max_releases: 5 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted

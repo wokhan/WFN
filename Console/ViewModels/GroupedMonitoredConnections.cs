@@ -1,47 +1,59 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-
-using System.Linq;
 using System.Windows.Media;
-
-using Wokhan.Collections;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
-public partial class GroupedMonitoredConnections : ObservableObject
+public partial class GroupedMonitoredConnections : ObservableObject, IComparable
 {
+    public string FileName { get; init; }
+    public string Path { get; init; }
+    public string? ProductName { get; init; }
+
+    private SolidColorBrush? _brush;
+    public SolidColorBrush Brush => _brush ??= new SolidColorBrush(Color);
+
+    public Color Color { get; set; }
+
+    [ObservableProperty]
+    private ulong _inboundBandwidth;
+
+    [ObservableProperty]
+    private ulong _outboundBandwidth;
+
     public GroupedMonitoredConnections(MonitoredConnection connection, Color color)
     {
+        
         Path = connection.Path!;
         FileName = connection.FileName!;
         ProductName = connection.ProductName;
         Color = color;
+
+        connection.Color = color;
     }
 
-    public string FileName { get; init; }
-    public string Path { get; init; }
-    public string? ProductName { get; init; }
-    public Color Color { get; set; }
-
-    [ObservableProperty]
-    private long _inboundBandwidth;
-
-    [ObservableProperty]
-    private long _outboundBandwidth;
-
-    public void UpdateBandwidth(ObservableGrouping<GroupedMonitoredConnections, MonitoredConnection> group)
+    public int CompareTo(object? obj)
     {
-        InboundBandwidth = group.Sum(connection => (long)connection.InboundBandwidth);
-        OutboundBandwidth = group.Sum(connection => (long)connection.OutboundBandwidth);
+        return Path.CompareTo((obj as GroupedMonitoredConnections)?.Path);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
+
+        if (ReferenceEquals(obj, null))
+        {
+            return false;
+        }
+
+        return Path.Equals((obj as GroupedMonitoredConnections)?.Path);
     }
 
     public override int GetHashCode()
     {
         return Path.GetHashCode();
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return Path.Equals(((GroupedMonitoredConnections)obj).Path);
     }
 }
 

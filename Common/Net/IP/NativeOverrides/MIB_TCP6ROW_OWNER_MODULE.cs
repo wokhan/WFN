@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Windows;
 
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
@@ -19,12 +21,17 @@ internal partial struct MIB_TCP6ROW_OWNER_MODULE : IConnectionOwnerInfo
 
     unsafe TCP_ESTATS_BANDWIDTH_ROD_v0? IConnectionOwnerInfo.GetPerTcpConnectionEState(MIB_TCP6ROW? tcp6Row)
     {
+        if (tcp6Row is null)
+        {
+            return null;
+        }
+
         var rw = new TCP_ESTATS_BANDWIDTH_RW_v0() { EnableCollectionInbound = TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled, EnableCollectionOutbound = TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled };
         var rod = new TCP_ESTATS_BANDWIDTH_ROD_v0();
 
         var row = tcp6Row.Value;
 
-        var ret = NativeMethods.GetPerTcp6ConnectionEStats(in row, TCP_ESTATS_TYPE.TcpConnectionEstatsBandwidth, (byte*)&rw, 0, MarshalHelper.rwS, null, 0, 0, (byte*)&rod, 0, MarshalHelper.rodS);
+        var ret = NativeMethods.GetPerTcp6ConnectionEStats(&row, TCP_ESTATS_TYPE.TcpConnectionEstatsBandwidth, (byte*)&rw, 0, MarshalHelper.rwS, null, 0, 0, (byte*)&rod, 0, MarshalHelper.rodS);
 
         if (ret == 0 && rw.EnableCollectionInbound == TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled && rw.EnableCollectionOutbound == TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled)
         {
@@ -36,6 +43,11 @@ internal partial struct MIB_TCP6ROW_OWNER_MODULE : IConnectionOwnerInfo
 
     unsafe uint IConnectionOwnerInfo.SetPerTcpConnectionEStats(ref TCP_ESTATS_BANDWIDTH_RW_v0 rw, MIB_TCP6ROW? tcp6Row)
     {
+        if (tcp6Row is null)
+        {
+            return 87; // ERROR_INVALID_PARAMETER
+        }
+
         var row = tcp6Row.Value;
         fixed (void* rwPtr = &rw)
         {

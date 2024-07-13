@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>true</ImplicitUsings>
     <!-- auto-increment version - see: https://stackoverflow.com/a/60571414 -->
     <!-- TODO: add this to other projects as well? -->
     <FileVersion>2.6.$([System.DateTime]::UtcNow.Date.Subtract($([System.DateTime]::Parse("2020-01-01"))).TotalDays).$([System.Math]::Floor($([MSBuild]::Divide($([System.DateTime]::UtcNow.TimeOfDay.TotalSeconds), 1.32))))</FileVersion>
@@ -48,16 +49,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="CountryFlag.Wpf" Version="1.0.0" />
-    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-beta.701" />
-    <PackageReference Include="MaxMind.Db" Version="4.0.0" />
-    <PackageReference Include="MaxMind.GeoIP2" Version="5.1.0" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-rc2" />
+    <PackageReference Include="Mapsui.Wpf" Version="5.0.0-beta.1" />
+    <PackageReference Include="MaxMind.Db" Version="4.1.0" />
+    <PackageReference Include="MaxMind.GeoIP2" Version="5.2.0" />
     <!--<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>-->
-    <PackageReference Include="Microsoft.Maps.MapControl.WPF" Version="1.0.0.3" />
     <PackageReference Include="Wokhan.Core" Version="0.9.8-beta" />
     <PackageReference Include="Wokhan.UI" Version="0.9.8-beta" />
   </ItemGroup>

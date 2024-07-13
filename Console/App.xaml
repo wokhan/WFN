@@ -18,6 +18,7 @@
             <BindingConverters:ValueToVisibilityConverter x:Key="valueToVisibility" />
             <BindingConverters:ValueToVisibilityNegateConverter x:Key="valueToVisibilityNegate" />
             <BindingConverters:ValueChecker x:Key="valueChecker" />
+            <!--<BindingConverters:UnitFormatConverter x:Key="unitFormatter" />-->
             
             <LocalBindingConverters:UnitFormatConverter x:Key="unitFormatter" />
             
@@ -238,6 +239,7 @@
                         <!--<Setter Property="ext:CustomAdorner.CornerRadius" Value="2" />-->
                         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
                         <Setter Property="BorderThickness" Value="1" />
+                        <Setter Property="Margin" Value="3" />
                     </Style>
                     <Style TargetType="Label">
                         <Setter Property="VerticalAlignment" Value="Center" />

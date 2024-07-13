@@ -1,13 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 using Wokhan.ComponentModel.Extensions;
 using Wokhan.WindowsFirewallNotifier.Common.IO.Files;
@@ -23,13 +19,15 @@ public partial class MonitoredConnection : ConnectionBaseInfo
 {
     public string Owner { get; private set; }
 
+    public string? WindowTitle { get; private set; }
+
     public DateTime LastSeen { get; private set; }
 
     [ObservableProperty]
     private bool _isSelected;
 
     [ObservableProperty]
-    private bool _isNew;
+    private bool _isNew = true;
 
     [ObservableProperty]
     private bool _isDying;
@@ -41,7 +39,10 @@ public partial class MonitoredConnection : ConnectionBaseInfo
     private string? _lastError;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(StateImage))]
     private string _state;
+
+    public Path StateImage => (Path)((App)App.Current).TryFindResource("CONN_STATE_" + _state);
 
     partial void OnStateChanged(string value)
     {
@@ -52,7 +53,11 @@ public partial class MonitoredConnection : ConnectionBaseInfo
     }
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Brush))]
     private Color _color = Colors.Black;
+
+    private Brush? _brush;
+    public Brush Brush => _brush ??= new SolidColorBrush(_color);
 
     [ObservableProperty]
     private ulong _inboundBandwidth;
@@ -98,7 +103,7 @@ public partial class MonitoredConnection : ConnectionBaseInfo
             return NoLocation;
         }
 
-        return new[] { GeoLocationHelper.CurrentCoordinates, Coordinates };
+        return [GeoLocationHelper.CurrentCoordinates, Coordinates];
     }
 
 
@@ -126,13 +131,16 @@ public partial class MonitoredConnection : ConnectionBaseInfo
 
     #endregion
 
-    public MonitoredConnection(Connection rawconnection)
+    public MonitoredConnection(Connection rawconnection, double? connectionTimeoutNew)
     {
         _rawConnection = rawconnection;
 
-        IsNew = true;
         State = rawconnection.State.ToString();
-        
+
+        if (connectionTimeoutNew is not null && rawconnection.CreationTime is not null)
+        {
+            IsNew = DateTime.Now.Subtract(rawconnection.CreationTime.Value).TotalMilliseconds <= connectionTimeoutNew;
+        }
         LastSeen = DateTime.Now;
         Pid = rawconnection.OwningPid;
         SourceIP = rawconnection.LocalAddress.ToString();
@@ -155,7 +163,12 @@ public partial class MonitoredConnection : ConnectionBaseInfo
 
             try
             {
-                var module = Process.GetProcessById((int)rawconnection.OwningPid)?.MainModule;
+                var process = Process.GetProcessById((int)rawconnection.OwningPid);
+
+                // Not working yet (for Firefox at least, it returns the wrong title everytime, taking the active tab)
+                // WindowTitle = process?.MainWindowTitle;
+
+                var module = process?.MainModule;
                 Path = module?.FileName ?? "Unknown";
                 FileName = module?.ModuleName ?? Properties.Resources.Connection_ProcessFile_Unknown;
             }
@@ -180,7 +193,7 @@ public partial class MonitoredConnection : ConnectionBaseInfo
         TargetIP = _rawConnection.RemoteAddress.ToString();
         TargetPort = (_rawConnection.RemotePort == -1 ? String.Empty : _rawConnection.RemotePort.ToString());
         State = _rawConnection.State.ToString();
-        
+
         if (IsMonitored)
         {
             (InboundBandwidth, OutboundBandwidth, IsMonitored) = _rawConnection.GetEstimatedBandwidth();

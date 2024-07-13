@@ -1,7 +1,4 @@
-﻿
-using Windows.Win32.NetworkManagement.IpHelper;
-
-using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
+﻿using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
@@ -11,7 +8,7 @@ public class ConnectionDummy : MonitoredConnection
 
     //public ConnectionDummy() { }//: base(new MIB_TCPROW_OWNER_MODULE()) { }
 
-    public ConnectionDummy(Connection ownerMod) : base(ownerMod)
+    public ConnectionDummy(Connection ownerMod) : base(ownerMod, null)
     {
     }
 }

@@ -31,7 +31,7 @@ public class DnsResolverTest : NUnitTestBase
         Task.WaitAll();
 
         LogDictEntries();
-        Assert.AreEqual("dns.google", ResolvedIPInformation.CachedIPHostEntryDict["8.8.8.8"].resolvedHost);
+        Assert.That(ResolvedIPInformation.CachedIPHostEntryDict["8.8.8.8"].resolvedHost, Is.EqualTo("dns.google"));
         Assert.True(ResolvedIPInformation.CachedIPHostEntryDict.Values.Count == 4);
 
         ipList = new List<string>

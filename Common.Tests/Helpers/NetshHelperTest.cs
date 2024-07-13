@@ -33,9 +33,9 @@ public class NetshHelperTest : NUnitTestBase
         Assert.NotNull(result);
         Assert.False(result.HasErrors);
         WriteDebugOutput($"name ={result.Name}, description={result.Description}");
-        Assert.AreEqual("Default Outbound", result.Name);
+        Assert.That(result.Name, Is.EqualTo("Default Outbound"));
         Assert.True(result.Description is not null);
-        Assert.AreEqual(FiltersContextEnum.FILTERS, result.FoundIn);
+        Assert.That(result.FoundIn, Is.EqualTo(FiltersContextEnum.FILTERS));
     }
 
     //TODO: Commented out by @wokhan since test result depends on OS language and will fail on non-english ones
@@ -78,9 +78,9 @@ public class NetshHelperTest : NUnitTestBase
         Assert.NotNull(result);
         Assert.False(result.HasErrors);
         WriteDebugOutput($"name={result.Name}, description={result.Description}");
-        Assert.AreEqual("Boot Time Filter", result.Name);
+        Assert.That(result.Name, Is.EqualTo("Boot Time Filter"));
         Assert.True(result.Description is not null);
-        Assert.AreEqual(result.FoundIn, FiltersContextEnum.WFPSTATE);
+        Assert.That(FiltersContextEnum.WFPSTATE, Is.EqualTo(result.FoundIn));
     }
 
     //TODO: Commented out by @wokhan since test result depends on OS language and will fail on non-english ones
@@ -108,7 +108,7 @@ public class NetshHelperTest : NUnitTestBase
         Assert.NotNull(result);
         Assert.False(result.HasErrors);
         WriteDebugOutput($"name={result.Name}, description={result.Description}");
-        Assert.AreEqual("Port Scanning Prevention Filter", result.Name);
+        Assert.That(result.Name, Is.EqualTo("Port Scanning Prevention Filter"));
         Assert.True(result.Description is not null);
     }
     [Test, ManualTestCategory]

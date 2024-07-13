@@ -35,6 +35,7 @@ public record Connection
     public bool IsLoopback { get; private set; }
 
     private MIB_TCP6ROW? tcp6MIBRow;
+    
     public bool IsMonitored { get; private set; }
 
     
@@ -47,7 +48,7 @@ public record Connection
         OwningPid = tcpRow.dwOwningPid;
         LocalAddress = new IPAddress(tcpRow.dwLocalAddr);
         LocalPort = IPHelper.GetRealPort(tcpRow.dwLocalPort);
-        if (tcpRow.dwState != (uint)MIB_TCP_STATE.MIB_TCP_STATE_LISTEN)
+        if (!tcpRow.dwState.Equals(MIB_TCP_STATE.MIB_TCP_STATE_LISTEN))
         {
             RemoteAddress = new IPAddress(tcpRow.dwRemoteAddr);
             RemotePort = IPHelper.GetRealPort(tcpRow.dwRemotePort);
@@ -67,7 +68,7 @@ public record Connection
         OwningPid = tcp6Row.dwOwningPid;
         LocalAddress = new IPAddress(tcp6Row.ucLocalAddr.AsSpan().ToArray());
         LocalPort = IPHelper.GetRealPort(tcp6Row.dwLocalPort);
-        if (tcp6Row.dwState != (uint)MIB_TCP_STATE.MIB_TCP_STATE_LISTEN)
+        if (!tcp6Row.dwState.Equals(MIB_TCP_STATE.MIB_TCP_STATE_LISTEN))
         {
             RemoteAddress = new IPAddress(tcp6Row.ucRemoteAddr.AsSpan().ToArray());
             RemotePort = IPHelper.GetRealPort(tcp6Row.dwRemotePort);
@@ -110,6 +111,7 @@ public record Connection
         }
 
         var setting = new TCP_ESTATS_BANDWIDTH_RW_v0() { EnableCollectionInbound = TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled, EnableCollectionOutbound = TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled };
+        // Note: passing tcp6MIBROW as a parameter even for TCP V4 connections, but it will not be used as tcpMIBRow_LH (for V4) is taken directly from sourcerow
         var r = sourceRow.SetPerTcpConnectionEStats(ref setting, tcp6MIBRow);
         
         IsMonitored = (r == NO_ERROR && setting.EnableCollectionInbound == TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled && setting.EnableCollectionOutbound == TCP_BOOLEAN_OPTIONAL.TcpBoolOptEnabled);
@@ -130,6 +132,7 @@ public record Connection
 
         try
         {
+            // Note: passing tcp6MIBROW as a parameter even for TCP V4 connections, but it will not be used as tcpMIBRow_LH (for V4) is taken directly from sourcerow
             var rodObjectNullable = sourceRow.GetPerTcpConnectionEState(tcp6MIBRow);
 
             if (rodObjectNullable is null)
@@ -158,6 +161,15 @@ public record Connection
             _lastOutboundReadValue = rodObject.OutboundBandwidth;
 
             return (inbound, outbound, true);
+        }
+        catch (InvalidOperationException)
+        {
+            IsMonitored = false;
+
+            _lastInboundReadValue = 0;
+            _lastOutboundReadValue = 0;
+
+            return (0, 0, false);
         }
         catch (Win32Exception we) when (we.NativeErrorCode == IPHelper.ERROR_NOT_FOUND)
         {
@@ -236,7 +248,7 @@ public record Connection
         this.RemoteAddress = rawConnection.RemoteAddress;
         this.RemotePort = rawConnection.RemotePort;
         this.IsLoopback = rawConnection.IsLoopback;
-
+        
         this.tcp6MIBRow = rawConnection.tcp6MIBRow;
     }
 }

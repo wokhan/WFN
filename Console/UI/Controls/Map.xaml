@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:maps="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
     xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:net="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.Net.IP;assembly=Wokhan.WindowsFirewallNotifier.Common"
@@ -11,21 +10,49 @@
     xmlns:flags="clr-namespace:CountryFlag.Wpf;assembly=CountryFlag.Wpf"
     xmlns:viewmodels="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.ViewModels"
     xmlns:bindingconverters="clr-namespace:Wokhan.WindowsFirewallNotifier.Console.UI.BindingConverters"
+    xmlns:wpf="clr-namespace:Mapsui.UI.Wpf;assembly=Mapsui.UI.Wpf"
+    xmlns:mapsui="clr-namespace:Mapsui;assembly=Mapsui"
+    xmlns:layers="clr-namespace:Mapsui.Layers;assembly=Mapsui"
+    xmlns:system="clr-namespace:System;assembly=System.Runtime"
+    xmlns:boxwidgets="clr-namespace:Mapsui.Widgets.BoxWidgets;assembly=Mapsui"
+    xmlns:infowidgets="clr-namespace:Mapsui.Widgets.InfoWidgets;assembly=Mapsui"
     mc:Ignorable="d" x:Name="me"
     d:DesignHeight="400" d:DesignWidth="700">
     <UserControl.Resources>
-        <bindingconverters:GeoLocationToBingLocation x:Key="locationConverter" />
-        <bindingconverters:GeoLocationsToBingLocationCollection x:Key="locationToCollectionConverter" />
+        <!--<bindingconverters:GeoLocationToBingLocation x:Key="locationConverter" />-->
+        <!--<bindingconverters:GeoLocationsToBingLocationCollection x:Key="locationToCollectionConverter" />-->
+        <!--<ObjectDataProvider x:Key="infoWidget" ObjectType="{x:Type infowidgets:MapInfoWidget}">
+            <ObjectDataProvider.ConstructorParameters>
+                <Binding ElementName="CurrentMap" />
+            </ObjectDataProvider.ConstructorParameters>
+        </ObjectDataProvider>-->
     </UserControl.Resources>
     <DockPanel DataContext="{Binding ElementName=me}">
         <ContentControl Style="{StaticResource ToolBarPanel}">
             <StackPanel Orientation="Horizontal">
+                <Button ToolTip="Reset to my position" Command="{Binding FocusOnCurrentLocationCommand}" Content="Reset" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" />
                 <ToggleButton ToolTip="Show full routes" IsChecked="{Binding IsFullRouteDisplayed}" Content="Full routes" ext:CustomAdorner.Image="{StaticResource Image_FullRoute}" />
-                <ToggleButton ToolTip="Mode (aerial / map)" IsChecked="{Binding IsAerial}" Content="Aerial mode" ext:CustomAdorner.Image="{StaticResource Image_MapAerial}" />
+                <!--<ToggleButton ToolTip="Mode (aerial / map)" IsChecked="{Binding IsAerial}" Content="Aerial mode" ext:CustomAdorner.Image="{StaticResource Image_MapAerial}" />-->
             </StackPanel>
         </ContentControl>
         <Grid>
-            <maps:Map x:Name="CurrentMap" Center="{Binding Path=(helpers:GeoLocationHelper.CurrentCoordinates),Mode=OneWay,Converter={StaticResource locationConverter},TargetNullValue='0,0,0'}" BorderThickness="0" CredentialsProvider="AsuL3JPMhN5U5z09JOCSXp5C_4J_X6YV3FTk7jEMCDLkQdGee7xPspAuIAxbhyyK" Mode="{Binding Mode}">
+            <wpf:MapControl x:Name="CurrentMap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" MouseMove="CurrentMap_MouseMove">
+                <wpf:MapControl.Map>
+                    <mapsui:Map x:Name="map" />
+                </wpf:MapControl.Map>
+            </wpf:MapControl>
+            <Canvas>
+                <Border Visibility="Collapsed" x:Name="infoPopup" Padding="10" CornerRadius="10" BorderThickness="2" BorderBrush="Gray" Background="LightYellow" DataContext="{x:Null}">
+                    <StackPanel>
+                        <TextBlock><Run FontWeight="Bold" Text="IP: " /><Run Text="{Binding TargetIP,Mode=OneTime}" /></TextBlock>
+                        <TextBlock><Run FontWeight="Bold" Text="Hostname: " /><Run Text="{Binding TargetHostName,Mode=OneWay}" /></TextBlock>
+                        <TextBlock><Run FontWeight="Bold" Text="Location: " /><flags:CountryFlag CountryCode="{Binding Coordinates.CountryISOCode,Mode=OneTime,TargetNullValue=AD}" Width="16" Margin="5,0" VerticalAlignment="Bottom" /><Run Text="{Binding Coordinates.Country,Mode=OneTime}" /> (<Run Text="{Binding Coordinates.City,Mode=OneTime,TargetNullValue=-}" />)</TextBlock>
+                        <Separator />
+                        <TextBlock><Run FontWeight="Bold" Text="Connection owner: " /><Image Source="{Binding Icon}" Stretch="Uniform" Margin="5,0" VerticalAlignment="Center" Height="16" /><Run Text="{Binding Owner,Mode=OneTime}" /></TextBlock>
+                    </StackPanel>
+                </Border>
+            </Canvas>
+            <!--<wpf:MapControl x:Name="CurrentMap" Center="{Binding Path=(helpers:GeoLocationHelper.CurrentCoordinates),Mode=OneWay,Converter={StaticResource locationConverter},TargetNullValue='0,0,0'}" BorderThickness="0" CredentialsProvider="AsuL3JPMhN5U5z09JOCSXp5C_4J_X6YV3FTk7jEMCDLkQdGee7xPspAuIAxbhyyK" Mode="{Binding Mode}">
                 <maps:MapItemsControl x:Name="layerRoutes" ItemsSource="{Binding Connections}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="viewmodels:Connection">
@@ -38,7 +65,7 @@
                                 </maps:MapPolyline.ToolTip>
                                 <maps:MapPolyline.Resources>
                                     <Style TargetType="Polyline">
-                                        <Setter Property="Stroke" Value="Gray" />
+                                        <Setter Property="Stroke" Value="{Binding Brush}" />
                                         <Setter Property="StrokeThickness" Value="2" />
                                         <Style.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
@@ -80,11 +107,8 @@
                 </maps:MapItemsControl>
                 <maps:MapItemsControl ItemsSource="{Binding Connections}">
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="viewmodels:Connection">
-                            <DataTemplate.Resources>
-                                <SolidColorBrush x:Key="color" Color="{Binding Color}" x:Shared="False" />
-                            </DataTemplate.Resources>
-                            <Ellipse maps:MapLayer.Position="{Binding Coordinates,Converter={StaticResource locationConverter}}" Fill="{StaticResource color}" Selector.IsSelected="{Binding IsSelected,Mode=TwoWay}" ToolTipService.InitialShowDelay="0" ToolTipService.HasDropShadow="True">
+                        <DataTemplate DataType="viewmodels:MonitoredConnection">
+                            <Ellipse maps:MapLayer.Position="{Binding Coordinates,Converter={StaticResource locationConverter}}" Fill="{Binding Brush}" Selector.IsSelected="{Binding IsSelected,Mode=TwoWay}" ToolTipService.InitialShowDelay="0" ToolTipService.HasDropShadow="True">
                                 <Ellipse.ToolTip>
                                     <StackPanel>
                                         <TextBlock><Run FontWeight="Bold" Text="IP: " /><Run Text="{Binding TargetIP,Mode=OneTime}" /></TextBlock>
@@ -134,7 +158,7 @@
                         </maps:Pushpin.ToolTip>
                     </maps:Pushpin>
                 </maps:MapLayer>
-            </maps:Map>
+            </wpf:MapControl>-->
             <Border HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.InfoBrushKey}}">
                 <StackPanel Margin="30,10" x:Name="ProgressStack">
                     <TextBlock Text="Loading database..." x:Name="ProgressMessage" />

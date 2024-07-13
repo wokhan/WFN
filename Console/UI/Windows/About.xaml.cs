@@ -1,7 +1,5 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Reflection;
-using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Navigation;
 using Wokhan.WindowsFirewallNotifier.Common.Processes;

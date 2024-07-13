@@ -1,7 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-using System;
-using System.Collections.Generic;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,7 +9,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 [ObservableObject]
 public partial class TimerBasedPage : Page
 {
-    private readonly Timer timer;
+    private readonly System.Timers.Timer timer;
 
     public virtual List<double> Intervals { get; } = new List<double> { 0.5, 1, 5, 10 };
 

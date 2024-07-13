@@ -15,13 +15,13 @@
     mc:Ignorable="d"
     d:DesignHeight="400" d:DesignWidth="800"
 	Title="Connections">
-    <Page.Resources>
+    <!--<Page.Resources>
         <CollectionViewSource x:Key="connectionsView" Source="{Binding GroupedConnections}">
             <CollectionViewSource.SortDescriptions>
                 <componentmodel:SortDescription PropertyName="FileName" Direction="Ascending" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
-    </Page.Resources>
+    </Page.Resources>-->
     <DockPanel>
         <controls:AdminPanel Caption="Information provided here might be inaccurate for non-admin users." />
         <ContentControl Style="{StaticResource ToolBarPanel}" Panel.ZIndex="0">
@@ -33,7 +33,7 @@
                     <ToggleButton Content="Map" ext:CustomAdorner.Image="{StaticResource Image_Menu_Map}" x:Name="toggleShowMap" DataContext="{Binding Path=(settings:Settings.Default)}" IsChecked="{Binding ShowMap}" />
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Right">
-                    <TextBox ext:CustomAdorner.Header="Filter" Width="149" Text="{Binding TextFilter,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ToolTip="Process, state or IP filter"/>
+                    <TextBox ext:CustomAdorner.Header="Filter: " Width="149" Text="{Binding TextFilter,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ToolTip="Process, state or IP filter"/>
                     <ComboBox Style="{StaticResource AutoTrackRefresh}" ItemsSource="{Binding Intervals, StringFormat='\{0\}s'}" SelectedValue="{Binding Interval}" />
                     <Label Style="{StaticResource HelpButtonStyle}" ToolTip="This screen displays all active connections on this computer, updated every second (by default).&#10;Closed connections (in orange) will remain displayed a few seconds before disappearing." />
                 </StackPanel>
@@ -50,7 +50,7 @@
                 <RowDefinition Height="4" x:Name="separatorRow" />
                 <RowDefinition Height="*" x:Name="secondRow" />
             </Grid.RowDefinitions>
-            <DataGrid x:Name="connections" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizingWhenGrouping="True" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" d:DataContext="{d:DesignInstance Type=viewmodels:ConnectionDummy,IsDesignTimeCreatable=True,CreateList=True}" ItemsSource="{Binding Source={StaticResource connectionsView}}" AutoGenerateColumns="False" HeadersVisibility="Column" Grid.ColumnSpan="3" Visibility="{Binding IsChecked,ElementName=toggleShowConnections,Mode=OneWay,Converter={StaticResource valueToVisibility}}" IsVisibleChanged="Components_VisibilityChanged">
+            <DataGrid x:Name="connections" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizingWhenGrouping="True" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" d:DataContext="{d:DesignInstance Type=viewmodels:ConnectionDummy,IsDesignTimeCreatable=True,CreateList=True}" ItemsSource="{Binding ConnectionsView}" AutoGenerateColumns="False" HeadersVisibility="Column" Grid.ColumnSpan="3" Visibility="{Binding IsChecked,ElementName=toggleShowConnections,Mode=OneWay,Converter={StaticResource valueToVisibility}}" IsVisibleChanged="Components_VisibilityChanged">
                 <DataGrid.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.ContainerStyle>
@@ -59,9 +59,6 @@
                                     <Setter.Value>
                                         <ControlTemplate TargetType="GroupItem">
                                             <Expander IsExpanded="True" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Background="Transparent">
-                                                <Expander.Resources>
-                                                    <SolidColorBrush x:Key="color" Color="{Binding Name.Color}" x:Shared="False"/>
-                                                </Expander.Resources>
                                                 <Expander.Header>
                                                     <Grid Margin="10" Width="{Binding Path=ActualWidth,RelativeSource={RelativeSource FindAncestor,AncestorType=Expander}}">
                                                         <Grid.ColumnDefinitions>
@@ -70,13 +67,13 @@
                                                             <ColumnDefinition Width="*"/>
                                                             <ColumnDefinition Width="Auto" />
                                                         </Grid.ColumnDefinitions>
-                                                        <Ellipse Width="10" Height="10" Fill="{StaticResource color}" />
-                                                        <TextBlock Grid.Column="1" FontWeight="Bold" ToolTip="{Binding Name.Path,TargetNullValue='-'}" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                                            <Run Text="{Binding Name.FileName}" />
-                                                            <Run Text="{Binding Name.ProductName,StringFormat=' ({0})'}" />
+                                                        <Ellipse Width="10" Height="10" Fill="{Binding Name.Brush,Mode=OneTime}" />
+                                                        <TextBlock Grid.Column="1" FontWeight="Bold" ToolTip="{Binding Name.Path,TargetNullValue='-',Mode=OneTime}" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                            <Run Text="{Binding Name.FileName,Mode=OneWay}" />
+                                                            <Run Text="{Binding Name.ProductName,StringFormat=' ({0})',Mode=OneTime}" />
                                                         </TextBlock>
-                                                        <Rectangle Grid.Column="2" Margin="10,0,0,0" HorizontalAlignment="Stretch" Height="2" Fill="{StaticResource color}" />
-                                                        <Border Margin="0,0,50,0" Padding="20,5"  Grid.Column="3" BorderBrush="{StaticResource color}" BorderThickness="2" CornerRadius="10">
+                                                        <Rectangle Grid.Column="2" Margin="10,0,0,0" HorizontalAlignment="Stretch" Height="2" Fill="{Binding Name.Brush,Mode=OneTime}" />
+                                                        <Border Margin="0,0,50,0" Padding="20,5"  Grid.Column="3" BorderBrush="{Binding Name.Brush,Mode=OneTime}" BorderThickness="2" CornerRadius="10">
                                                             <StackPanel Orientation="Horizontal">
                                                                 <ContentControl Margin="0,0,5,0" Width="16">
                                                                     <ContentControl.Style>
@@ -133,20 +130,24 @@
                             <DataTrigger Binding="{Binding IsNew}" Value="True">
                                 <Setter Property="Background" Value="LightBlue" />
                             </DataTrigger>
+                            <DataTrigger Binding="{Binding IsMonitored}" Value="False">
+                                <Setter Property="Foreground" Value="Gray" />
+                            </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </DataGrid.RowStyle>
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="Owner" SortMemberPath="Owner" Width="Auto">
+                    <DataGridTemplateColumn Header="Owner" SortMemberPath="Owner">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
-                                    <Image Source="{Binding Icon}" Width="16" Height="16" HorizontalAlignment="Left" />
+                                    <Image Source="{Binding Icon}" Width="16" Height="16" Margin="5,0" HorizontalAlignment="Left" />
                                     <TextBlock Margin="30,0,0,0" Text="{Binding Owner, Mode=OneTime}" />
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+                    <!--<DataGridTextColumn Header="Window title" Binding="{Binding WindowTitle, Mode=OneTime}" Width="Auto" />-->
                     <DataGridTextColumn Header="PID" Binding="{Binding Pid, Mode=OneTime}" Width="Auto" />
                     <DataGridTemplateColumn Header="Protocol" Width="Auto">
                         <DataGridTemplateColumn.CellTemplate>
@@ -162,12 +163,13 @@
                                             </Style.Triggers>
                                         </Style>
                                     </Border.Style>
-                                    <TextBlock Text="{Binding Protocol, Mode=OneTime}" />
+                                    <TextBlock Text="{Binding Protocol, Mode=OneTime}" Foreground="White"/>
                                 </Border>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Local port" Binding="{Binding SourcePort, Mode=OneTime}">
+                    <DataGridTextColumn Header="Local address" Binding="{Binding SourceIP, Mode=OneTime}" Width="Auto" />
+                    <DataGridTextColumn Header="Local port" Binding="{Binding SourcePort, Mode=OneTime}" Width="Auto">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
                                 <Setter Property="ToolTip">
@@ -178,9 +180,42 @@
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
-                    <DataGridTemplateColumn Header="Remote address">
+                    <DataGridTemplateColumn Header="State" Width="Auto">
                         <DataGridTemplateColumn.CellStyle>
                             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                                <Setter Property="ToolTip">
+                                    <Setter.Value>
+                                        <StackPanel>
+                                            <TextBlock>
+                                                <Run Text="State: " FontWeight="Bold" />
+                                                <Run Text="{Binding State,Mode=OneWay}" />
+                                            </TextBlock>
+                                            <TextBlock>
+                                                <Run Text="Created on: " FontWeight="Bold" />
+                                                <Run Text="{Binding CreationTime,Mode=OneTime}" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DataGridTemplateColumn.CellStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ContentControl Content="{Binding StateImage,Mode=OneWay}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Remote address" Width="Auto">
+                        <DataGridTemplateColumn.CellStyle>
+                            <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Protocol}" Value="UDP">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding TargetIP}" Value="255.255.255.255">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
                                 <Setter Property="ToolTip">
                                     <Setter.Value>
                                         <StackPanel>
@@ -227,67 +262,39 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Remote port" Binding="{Binding TargetPort, Mode=OneTime}" />
-                    <DataGridTextColumn Header="State" Binding="{Binding State, Mode=OneWay}">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
-                                <Setter Property="ToolTip">
-                                    <Setter.Value>
-                                        <StackPanel>
-                                            <TextBlock>
-                                                <Run Text="State: " FontWeight="Bold" />
-                                                <Run Text="{Binding State,Mode=OneWay}" />
-                                            </TextBlock>
-                                            <TextBlock>
-                                                <Run Text="Created on: " FontWeight="Bold" />
-                                                <Run Text="{Binding CreationTime,Mode=OneTime}" />
-                                            </TextBlock>
-                                        </StackPanel>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                    <DataGridTemplateColumn Header="Down" Width="Auto">
+                    <DataGridTemplateColumn Header="Down" Width="Auto" MinWidth="50">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Margin="5,0">
-                                    <ContentControl Width="16">
-                                        <ContentControl.Style>
-                                            <Style TargetType="ContentControl">
-                                                <Setter Property="Content" Value="{StaticResource Image_DataDown}" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding InboundBandwidth}" Value="0">
-                                                        <Setter Property="Content" Value="{StaticResource Image_DataDown_None}" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ContentControl.Style>
-                                    </ContentControl>
-                                    <TextBlock Visibility="{Binding IsMonitored,Mode=OneWay,Converter={StaticResource valueToVisibilityNegate}}" Text="-" />
-                                    <TextBlock Visibility="{Binding IsMonitored,Mode=OneWay,Converter={StaticResource valueToVisibility}}" Text="{Binding InboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='bps'}" />
-                                </StackPanel>
+                                <TextBlock>
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="{Binding InboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='bps'}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding InboundBandwidth,Mode=OneWay}" Value="0">
+                                                    <Setter Property="Text" Value="-" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Up" Width="Auto">
+                    <DataGridTemplateColumn Header="Up" Width="Auto" MinWidth="50">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Margin="5,0">
-                                    <ContentControl Width="16">
-                                        <ContentControl.Style>
-                                            <Style TargetType="ContentControl">
-                                                <Setter Property="Content" Value="{StaticResource Image_DataUp}" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding OutboundBandwidth}" Value="0">
-                                                        <Setter Property="Content" Value="{StaticResource Image_DataUp_None}" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ContentControl.Style>
-                                    </ContentControl>
-                                    <TextBlock Visibility="{Binding IsMonitored,Mode=OneWay,Converter={StaticResource valueToVisibilityNegate}}" Text="-" />
-                                    <TextBlock Visibility="{Binding IsMonitored,Mode=OneWay,Converter={StaticResource valueToVisibility}}" Text="{Binding OutboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='bps'}" />
-                                </StackPanel>
+                                <TextBlock>
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="{Binding OutboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='bps'}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding OutboundBandwidth,Mode=OneWay}" Value="0">
+                                                    <Setter Property="Text" Value="-" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -295,9 +302,9 @@
                 </DataGrid.Columns>
             </DataGrid>
             <GridSplitter Grid.Row="1" Grid.ColumnSpan="3" Height="4" Background="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
-            <controls:BandwidthGraph x:Name="graph" Background="Transparent" Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" Connections="{Binding AllConnections}" Grid.Row="2" Visibility="{Binding IsChecked,ElementName=toggleShowGraph,Mode=OneWay,Converter={StaticResource valueToVisibility}}"  IsVisibleChanged="Components_VisibilityChanged" />
+            <controls:BandwidthGraph x:Name="graph" Background="Transparent" Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" Connections="{Binding GroupedConnections}" Grid.Row="2" Visibility="{Binding IsChecked,ElementName=toggleShowGraph,Mode=OneWay,Converter={StaticResource valueToVisibility}}"  IsVisibleChanged="Components_VisibilityChanged" />
             <GridSplitter Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="4" Background="LightGray"/>
-            <controls:Map x:Name="map" Connections="{Binding AllConnections}" Grid.Row="2" Grid.Column="2" Visibility="{Binding IsChecked,ElementName=toggleShowMap,Mode=OneWay,Converter={StaticResource valueToVisibility}}"  IsVisibleChanged="Components_VisibilityChanged" />
+            <controls:Map x:Name="map" Connections="{Binding GroupedConnections}" Grid.Row="2" Grid.Column="2" Visibility="{Binding IsChecked,ElementName=toggleShowMap,Mode=OneWay,Converter={StaticResource valueToVisibility}}"  IsVisibleChanged="Components_VisibilityChanged" />
         </Grid>
     </DockPanel>
 </pages:TimerBasedPage>

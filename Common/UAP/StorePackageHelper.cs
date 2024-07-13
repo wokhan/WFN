@@ -124,7 +124,8 @@ public static partial class StorePackageHelper
             }
             finally
             {
-                NativeMethods.FreeSid(pSID);
+                //Already freed since it's a safe handle?
+                //NativeMethods.FreeSid(pSID);
             }
         }
         finally

@@ -3,15 +3,8 @@
 using LiveChartsCore.SkiaSharpView;
 
 using SkiaSharp.Views.WPF;
-
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Data;
@@ -39,60 +32,36 @@ public partial class Connections : TimerBasedPage
     //TODO: let the user pick a color palette for the bandwidth graph & connection
     private List<Color>? Colors;
 
-    public ObservableCollection<MonitoredConnection> AllConnections { get; } = new();
-
     public GroupedObservableCollection<GroupedMonitoredConnections, MonitoredConnection> GroupedConnections { get; init; }
 
+    public CollectionView ConnectionsView { get; init; } 
+
     [ObservableProperty]
-    private string? _textFilter = String.Empty;
+    private string _textFilter = String.Empty;
 
     partial void OnTextFilterChanged(string? value) => ResetTextFilter();
-
-    CollectionViewSource connectionsView;
 
     public Connections()
     {
         UpdateConnectionsColors();
 
-        AllConnections.CollectionChanged += AllConnections_CollectionChanged;
-        GroupedConnections = new(connection => new GroupedMonitoredConnections(connection, Colors![GroupedConnections!.Count % Colors.Count]));
+        Func<MonitoredConnection, GroupedMonitoredConnections> keyGetter = (MonitoredConnection connection) => GroupedConnections!.Keys.FirstOrDefault(group => group.Path == connection.Path) ?? new GroupedMonitoredConnections(connection, Colors![GroupedConnections!.Count % Colors.Count]);
 
-        BindingOperations.EnableCollectionSynchronization(AllConnections, uisynclocker);
+        GroupedConnections = new(keyGetter);
+
+        //ConnectionsView = new GroupedObservableCollectionsView2<GroupedMonitoredConnections, MonitoredConnection>(GroupedConnections, keyGetter);
+        ConnectionsView = new GroupedObservableCollectionView<GroupedMonitoredConnections, MonitoredConnection>(GroupedConnections, keyGetter);
+        //GroupedConnections.CollectionChanged += GroupedConnections_CollectionChanged;
+        //BindingOperations.EnableCollectionSynchronization(GroupedConnections, uisynclocker);
+
+        //ConnectionsViewSource.Source = GroupedConnections;
+        //ConnectionsViewSource.SortDescriptions.Add(new SortDescription(nameof(GroupedMonitoredConnections.FileName), ListSortDirection.Ascending));
+        //ConnectionsViewSource.GroupDescriptions.Add(new PropertyGroupDescription("Key"));//<GroupedMonitoredConnections, MonitoredConnection>(group => group.Path));
 
         Settings.Default.PropertyChanged += SettingsChanged;
 
         InitializeComponent();
 
-        connectionsView = (CollectionViewSource)this.Resources["connectionsView"];
-        connectionsView.GroupDescriptions.Add(new GroupedCollectionGroupDescription<GroupedMonitoredConnections, MonitoredConnection>());
-    }
-
-    private void AllConnections_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        Dispatcher.Invoke(() =>
-        {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    foreach (MonitoredConnection item in e.NewItems!)
-                    {
-                        GroupedConnections.Add(item);
-                    }
-                    break;
-
-                case NotifyCollectionChangedAction.Remove:
-                    foreach (MonitoredConnection item in e.OldItems!)
-                    {
-                        var group = GroupedConnections.First(group => group.Key.Path == item.Path);
-                        group.Remove(item);
-                        if (group.Count() == 0)
-                        {
-                            GroupedConnections.Remove(group);
-                        }
-                    }
-                    break;
-            }
-        });
     }
 
     private void SettingsChanged(object? sender, PropertyChangedEventArgs? e)
@@ -148,48 +117,67 @@ public partial class Connections : TimerBasedPage
 
     protected override void OnTimerTick(object? state, ElapsedEventArgs e)
     {
-        foreach (var c in IPHelper.GetAllConnections())
+        foreach (var connection in IPHelper.GetAllConnections())
         {
-            AddOrUpdateConnection(c);
+            AddOrUpdateConnection(connection);
         }
 
-        // Start from the end as it's easier to handle removal from a collection when what you removed doesn't impact the actual index / count
-        for (int i = AllConnections.Count - 1; i >= 0; i--)
-        {
-            var item = AllConnections[i];
+        DateTime now = DateTime.Now;
 
-            switch (DateTime.Now.Subtract(item.LastSeen).TotalMilliseconds)
+        // Start from the end as it's easier to handle removal from a collection when what you removed doesn't impact the actual index / count (also a foreach would fail if we modify the collection)
+        for (int j = GroupedConnections.Count - 1; j >= 0; j--)
+        {
+            var group = GroupedConnections[j];
+            var inboundBandwidth = 0UL;
+            var outboundBandwidth = 0UL;
+
+            for (int i = group.Count - 1; i >= 0; i--)
             {
-                case > ConnectionTimeoutRemove:
-                    AllConnections.RemoveAt(i);
-                    break;
+                var connection = group[i];
 
-                case > ConnectionTimeoutDying:
-                    item.IsDying = true;
-                    break;
-
-                default:
-                    if (DateTime.Now.Subtract(item.CreationTime).TotalMilliseconds > ConnectionTimeoutNew)
+                var lastSeenMS = now.Subtract(connection.LastSeen).TotalMilliseconds;
+                if (lastSeenMS > ConnectionTimeoutRemove)
+                {
+                    Dispatcher.Invoke(() =>
                     {
-                        item.IsNew = false;
+                        if (group.Remove(connection) && group.Count == 0)
+                        {
+                            GroupedConnections.Remove(group);
+                        }
+                    });
+                }
+                else if (lastSeenMS > ConnectionTimeoutDying)
+                {
+                    connection.IsDying = true;
+                }
+                else
+                {
+                    connection.IsDying = false;
+                    if (connection.IsNew && DateTime.Now.Subtract(connection.CreationTime).TotalMilliseconds > ConnectionTimeoutNew)
+                    {
+                        connection.IsNew = false;
                     }
-                    break;
-            }
-        }
+                }
 
-        foreach(var group in GroupedConnections)
-        {
-            group.Key.UpdateBandwidth(group);
+                if (connection.IsMonitored)
+                {
+                    inboundBandwidth += connection.InboundBandwidth;
+                    outboundBandwidth += connection.OutboundBandwidth;
+                }
+            }
+
+            group.Key.InboundBandwidth = inboundBandwidth;
+            group.Key.OutboundBandwidth = outboundBandwidth;
         }
 
         if (graph.IsVisible) graph.UpdateGraph();
-        //if (map.IsVisible) map.UpdateMap();
+        if (map.IsVisible) map.UpdateMap();
     }
 
 
     private void AddOrUpdateConnection(Connection connectionInfo)
     {
-        MonitoredConnection? lvi = AllConnections.FirstOrDefault(mconn => mconn.Matches(connectionInfo));
+        MonitoredConnection? lvi = GroupedConnections.Values.FirstOrDefault(mconn => mconn.Matches(connectionInfo));
 
         if (lvi is not null)
         {
@@ -197,7 +185,11 @@ public partial class Connections : TimerBasedPage
         }
         else
         {
-            AllConnections.Add(new MonitoredConnection(connectionInfo));
+            Dispatcher.Invoke(() =>
+            {
+                //using var defer = ConnectionsView.DeferRefresh();
+                GroupedConnections.Add(new MonitoredConnection(connectionInfo, ConnectionTimeoutNew));
+            });
         }
     }
 
@@ -208,7 +200,7 @@ public partial class Connections : TimerBasedPage
         {
             ThemeHelper.THEME_LIGHT => LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList(),
             ThemeHelper.THEME_DARK => LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList(),
-            ThemeHelper.THEME_SYSTEM => new List<Color> { SystemColors.WindowTextColor },
+            ThemeHelper.THEME_SYSTEM => [SystemColors.WindowTextColor],
             _ => LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList(),
         };
 
@@ -233,28 +225,27 @@ public partial class Connections : TimerBasedPage
             await Task.Delay(500).ConfigureAwait(true);
             if (!string.IsNullOrWhiteSpace(TextFilter))
             {
-                connectionsView!.Filter -= ConnectionsView_Filter;
-                connectionsView.Filter += ConnectionsView_Filter; ;
+                ConnectionsView!.Filter = ConnectionsView_Filter;
             }
             else
             {
-                connectionsView!.Filter -= ConnectionsView_Filter;
+                ConnectionsView!.Filter = null;
             }
             _isResetTextFilterPending = false;
         }
     }
 
-    private void ConnectionsView_Filter(object sender, FilterEventArgs e)
+    private bool ConnectionsView_Filter(object obj)
     {
-        e.Accepted = true;
-        //var connection = (ObservableGrouping<GroupedMonitoredConnectionsX, MonitoredConnection>)e.Item;
-        
+        var connection = (MonitoredConnection)obj;
+
         // Note: do not use Remote Host, because this will trigger dns resolution over all entries
         // TODO: fix since we're now using ObservableGrouping (with already grouped collection)
-        //e.Accepted = ((connection.FileName?.Contains(TextFilter, StringComparison.OrdinalIgnoreCase) == true)
-        //           || (connection.ServiceName?.Contains(TextFilter, StringComparison.OrdinalIgnoreCase) == true)
-        //           || (connection.TargetIP?.StartsWith(TextFilter, StringComparison.Ordinal) == true)
-        //           || connection.State.StartsWith(TextFilter, StringComparison.Ordinal)
-        //           || connection.Protocol.Contains(TextFilter, StringComparison.OrdinalIgnoreCase));
+        return ((connection.FileName?.Contains(TextFilter, StringComparison.OrdinalIgnoreCase) == true)
+             || (connection.ServiceName?.Contains(TextFilter, StringComparison.OrdinalIgnoreCase) == true)
+             || (connection.TargetIP?.StartsWith(TextFilter, StringComparison.Ordinal) == true)
+             || connection.State.StartsWith(TextFilter, StringComparison.Ordinal)
+             || connection.Protocol.Contains(TextFilter, StringComparison.OrdinalIgnoreCase)
+             || connection.SourcePort.Contains(TextFilter));
     }
 }

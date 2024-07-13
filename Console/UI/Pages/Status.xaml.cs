@@ -1,10 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 
-using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Windows;
 using System.Windows.Controls;
 
 using Wokhan.WindowsFirewallNotifier.Common.Config;

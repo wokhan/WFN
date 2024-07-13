@@ -1,12 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-using Microsoft.Win32;
-
-using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -46,8 +41,8 @@ public partial class MainWindow : Window
 
         timer = new Timer(Timer_Tick, null, 1000, 1000);
 
-        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-        Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+        //AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        //Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
     }
 
     private void Timer_Tick(object? _)

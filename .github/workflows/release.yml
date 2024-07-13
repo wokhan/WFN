@@ -24,11 +24,11 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 7.0.100
+        dotnet-version: 8.0.300
     - name: Build and publish
       run: dotnet publish ${{ matrix.release }} -c Release ${{ matrix.self-contained }}
     - name: Zip published files
-      run: compress-archive -path ./bin/net7.0-windows/${{ matrix.pub-folder }}publish/* -destinationpath ./bin/net7.0-windows/wfn-${{ matrix.release-name }}.zip
+      run: compress-archive -path ./bin/net8.0-windows/${{ matrix.pub-folder }}publish/* -destinationpath ./bin/net8.0-windows/wfn-${{ matrix.release-name }}.zip
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.2.2
@@ -41,7 +41,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ./bin/net7.0-windows/wfn-${{ matrix.release-name }}.zip
+          asset_path: ./bin/net8.0-windows/wfn-${{ matrix.release-name }}.zip
           asset_name: wfn-${{ steps.get_release.outputs.tag_name }}-${{ matrix.release-name }}.zip 
           asset_content_type: application/zip 
       

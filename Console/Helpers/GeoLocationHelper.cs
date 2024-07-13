@@ -1,12 +1,9 @@
 ﻿using MaxMind.GeoIP2;
 using MaxMind.GeoIP2.Responses;
 
-using System;
-using System.Collections.Generic;
 using System.Device.Location;
 using System.IO;
 using System.Net;
-using System.Threading.Tasks;
 
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
 using Wokhan.WindowsFirewallNotifier.Common.Net.GeoLocation;
@@ -134,7 +131,7 @@ public static class GeoLocationHelper
     {
         if (CurrentCoordinates is null || !IPAddress.TryParse(target, out var targetIp) || IPAddress.IsLoopback(targetIp))
         {
-            return new List<GeoLocation>();
+            return [];
         }
         
         var loc = new List<GeoLocation>() { CurrentCoordinates };
