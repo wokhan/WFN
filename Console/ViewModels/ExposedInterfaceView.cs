@@ -1,36 +1,62 @@
-﻿using System.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.Diagnostics;
 using System.Net.NetworkInformation;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
-public partial class ExposedInterfaceView : INotifyPropertyChanged
+public partial class ExposedInterfaceView : ObservableObject
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public string MAC { get; init; }
 
-    public void NotifyPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+    [ObservableProperty]
+    private NetworkInterface _information;
 
-    public string MAC => String.Join(":", Information.GetPhysicalAddress().GetAddressBytes().Select(b => b.ToString("X2")));
+    [ObservableProperty]
+    public IPInterfaceStatistics _statistics;
 
-    public NetworkInterface Information { get; private set; }
+    [ObservableProperty]
+    private IPInterfaceProperties _properties;
     
-    public IPInterfaceStatistics Statistics => Information.GetIPStatistics();
+    [ObservableProperty]
+    private ComputedBandwidth _bandwidth = new();
 
-    public IPInterfaceProperties Properties => Information.GetIPProperties();
-
-    public ExposedInterfaceView(NetworkInterface inter)
+    private readonly int delay = 400; // Arbitrary delay, must be lower than the Adapters page timer
+    private readonly Stopwatch sw = new();
+    private async Task ComputeBandwidth()
     {
-        this.Information = inter;
+        var initial = Information.GetIPStatistics();
+        sw.Restart();
+        await Task.Delay(delay);
+        var final = Information.GetIPStatistics();
+        sw.Stop();
+
+        var inb = AdjustBandwidth(initial.BytesReceived, final.BytesReceived, sw.ElapsedMilliseconds);
+        var outb = AdjustBandwidth(initial.BytesSent, final.BytesSent, sw.ElapsedMilliseconds);
+
+        Bandwidth = new ComputedBandwidth(inb, outb);
     }
 
-    internal void UpdateInner(NetworkInterface inter)
+    private static double AdjustBandwidth(long bytes1, long bytes2, long elapsedms)
     {
-        this.Information = inter;
-        NotifyPropertyChanged(nameof(Information));
-        NotifyPropertyChanged(nameof(Statistics));
-        NotifyPropertyChanged(nameof(Properties));
-        NotifyPropertyChanged(nameof(MAC));
+        return Math.Max(0, (bytes2 - bytes1) * 8 / elapsedms * 1000);
+    }
+
+    public record ComputedBandwidth(double In = 0, double Out = 0);
+
+    public ExposedInterfaceView(NetworkInterface netInterface)
+    {
+        this.MAC = String.Join(":", netInterface.GetPhysicalAddress().GetAddressBytes().Select(b => b.ToString("X2")));
+        
+        UpdateInner(netInterface);
+    }
+
+    internal void UpdateInner(NetworkInterface netInterface)
+    {
+        Information = netInterface;
+
+        _ = ComputeBandwidth();
+
+        Statistics = Information.GetIPStatistics();
+        Properties = Information.GetIPProperties();
     }
 }

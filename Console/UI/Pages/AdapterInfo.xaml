@@ -14,7 +14,7 @@
     <Page.Resources>
         <Converters:SecondsToDateTimeConverter x:Key="secondsConverter" />
         <Style x:Key="Card" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+            <Setter Property="Background" Value="#33AAAAAA" />
             <Setter Property="CornerRadius" Value="5" />
             <Setter Property="Padding" Value="10" />
             <Setter Property="Margin" Value="5" />
@@ -31,17 +31,17 @@
             </Grid>
         </ContentControl>
         <ScrollViewer>
-            <ItemsControl ItemsSource="{Binding}" DataContext="{Binding AllInterfaces}" d:DataContext="{d:DesignInstance Type=dummydata:ExposedInterfaceViewDummy,IsDesignTimeCreatable=True,CreateList=True}" Grid.IsSharedSizeScope="True">
+            <ItemsControl ItemsSource="{Binding}" DataContext="{Binding AllInterfaces}" d:DataContext="{d:DesignInstance Type=dummydata:ExposedInterfaceViewDummy,IsDesignTimeCreatable=True,CreateList=True}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="ExposedInterfaceView">
-                        <Expander IsExpanded="True" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Padding="5" Margin="10">
+                        <Expander IsExpanded="True" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Background="Transparent">
                             <Expander.Header>
-                                <Grid TextElement.FontWeight="Bold" Width="{Binding ActualWidth,RelativeSource={RelativeSource AncestorType=Expander}}">
+                                <Grid Margin="10" Width="{Binding ActualWidth,RelativeSource={RelativeSource AncestorType=Expander}}">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" SharedSizeGroup="status" />
-                                        <ColumnDefinition Width="*" SharedSizeGroup="name"/>
-                                        <ColumnDefinition Width="Auto" SharedSizeGroup="bandwidthUP" />
-                                        <ColumnDefinition Width="Auto" SharedSizeGroup="bandwidthDOWN" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <ContentControl>
                                         <ContentControl.Style>
@@ -55,15 +55,16 @@
                                             </Style>
                                         </ContentControl.Style>
                                     </ContentControl>
-                                    <TextBlock Grid.Column="1" Text="{Binding Information.Name}" />
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="2" Margin="20,0,10,0">
-                                        <ContentControl Margin="0,0,5,0" Content="{StaticResource Image_DataUp}"/>
-                                        <TextBlock Text="{Binding Statistics.BytesSent,Converter={StaticResource unitFormatter},ConverterParameter='bps'}" Margin="0,0,10,0" />
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="3" Margin="10,0,10,0">
-                                        <ContentControl Margin="0,0,5,0" Content="{StaticResource Image_DataDown}"/>
-                                        <TextBlock Text="{Binding Statistics.BytesReceived,Converter={StaticResource unitFormatter},ConverterParameter='bps'}" />
-                                    </StackPanel>
+                                    <TextBlock Grid.Column="1" TextElement.FontWeight="Bold" Text="{Binding Information.Name}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                    <Rectangle Grid.Column="2" Margin="10,0,0,0" HorizontalAlignment="Stretch" Height="2" Fill="Gray" />
+                                    <Border Grid.Column="3" Margin="0,0,50,0" Padding="20,5" BorderBrush="Gray" BorderThickness="2" CornerRadius="10">
+                                        <StackPanel Orientation="Horizontal">
+                                            <ContentControl Margin="0,0,5,0" Width="16" Content="{StaticResource Image_DataDown}"/>
+                                            <TextBlock Text="{Binding Bandwidth.In,Mode=OneWay,Converter={StaticResource unitFormatter},ConverterParameter='bps'}" />
+                                            <ContentControl Margin="20,0,5,0" Width="16" Content="{StaticResource Image_DataUp}"/>
+                                            <TextBlock Text="{Binding Bandwidth.Out,Mode=OneWay,Converter={StaticResource unitFormatter},ConverterParameter='bps'}" />
+                                        </StackPanel>
+                                    </Border>
                                 </Grid>
                             </Expander.Header>
                             <StackPanel>
@@ -90,28 +91,29 @@
                                                 <RowDefinition />
                                                 <RowDefinition />
                                                 <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
                                             <TextBlock Text="Description" />
                                             <TextBlock Grid.Column="1" Text="{Binding Information.Description}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Information.Description}" />
                                             <TextBlock Grid.Row="1" Text="Interface type" />
                                             <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Information.NetworkInterfaceType}" />
-                                            <TextBlock Grid.Row="2" Text="Speed" />
+                                            <TextBlock Grid.Row="2" Text="Max speed" />
                                             <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Information.Speed,Converter={StaticResource unitFormatter},ConverterParameter='bps'}" />
                                             <TextBlock Grid.Row="3" Text="MAC address" />
                                             <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding MAC,Mode=OneTime}" />
                                         </Grid>
                                     </Border>
                                     <Border Style="{StaticResource Card}">
-                                        <Grid >
+                                        <Grid HorizontalAlignment="Stretch">
                                             <Grid.Resources>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Margin" Value="4" />
                                                 </Style>
                                             </Grid.Resources>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" MinWidth="90" />
+                                                <ColumnDefinition Width="Auto" MinWidth="90" />
                                             </Grid.ColumnDefinitions>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition />
@@ -119,22 +121,26 @@
                                                 <RowDefinition />
                                                 <RowDefinition />
                                                 <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
                                             <Label FontWeight="Bold" Content="Detailed statistics" />
-                                            <Label Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Incoming" />
-                                            <TextBlock Grid.Row="1" Text="Non-unicast packets" />
-                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Statistics.NonUnicastPacketsReceived}" />
-                                            <TextBlock Grid.Row="2" Text="Unicast packets" />
-                                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Statistics.UnicastPacketsReceived}" />
-                                            <TextBlock Grid.Row="3" Text="Discarded packets" />
-                                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Statistics.IncomingPacketsDiscarded}" />
-                                            <TextBlock Grid.Row="4" Text="Erroneous packets" />
-                                            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Statistics.IncomingPacketsWithErrors}" />
-                                            <Label Grid.Column="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Outgoing" Grid.ColumnSpan="2" />
-                                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Statistics.NonUnicastPacketsSent}" />
-                                            <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Statistics.UnicastPacketsSent}" />
-                                            <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Statistics.OutgoingPacketsDiscarded}" />
-                                            <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding Statistics.OutgoingPacketsWithErrors}" />
+                                            <Label Grid.Column="1" VerticalContentAlignment="Center" Content="Received" />
+                                            <Label Grid.Column="2" VerticalContentAlignment="Center" Content="Sent" />
+                                            <TextBlock Grid.Row="1" Text="Total Bytes (current session)" />
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Statistics.BytesReceived,Converter={StaticResource unitFormatter},ConverterParameter='B'}" />
+                                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Statistics.BytesSent,Converter={StaticResource unitFormatter},ConverterParameter='B'}" />
+                                            <TextBlock Grid.Row="2" Text="Non-unicast packets" />
+                                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Statistics.NonUnicastPacketsReceived}" />
+                                            <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Statistics.NonUnicastPacketsSent}" />
+                                            <TextBlock Grid.Row="3" Text="Unicast packets" />
+                                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Statistics.UnicastPacketsReceived}" />
+                                            <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Statistics.UnicastPacketsSent}" />
+                                            <TextBlock Grid.Row="4" Text="Discarded packets" />
+                                            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Statistics.IncomingPacketsDiscarded}" />
+                                            <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding Statistics.OutgoingPacketsDiscarded}" />
+                                            <TextBlock Grid.Row="5" Text="Erroneous packets" />
+                                            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Statistics.IncomingPacketsWithErrors}" />
+                                            <TextBlock Grid.Row="5" Grid.Column="2" Text="{Binding Statistics.OutgoingPacketsWithErrors}" />
                                         </Grid>
                                     </Border>
                                 </UniformGrid>

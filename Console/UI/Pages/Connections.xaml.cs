@@ -1,10 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
+using HarfBuzzSharp;
+
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.Themes;
 
 using SkiaSharp.Views.WPF;
+
 using System.ComponentModel;
 using System.Data;
+using System.Drawing.Imaging;
 using System.Timers;
 using System.Windows;
 using System.Windows.Data;
@@ -26,37 +31,27 @@ public partial class Connections : TimerBasedPage
     private const double ConnectionTimeoutDying = 2000.0; //milliseconds
     private const double ConnectionTimeoutNew = 1000.0; //milliseconds
 
-    private readonly object locker = new();
-    private readonly object uisynclocker = new();
-
     //TODO: let the user pick a color palette for the bandwidth graph & connection
     private List<Color>? Colors;
 
     public GroupedObservableCollection<GroupedMonitoredConnections, MonitoredConnection> GroupedConnections { get; init; }
 
-    public CollectionView ConnectionsView { get; init; } 
+    public GroupedObservableCollectionView<GroupedMonitoredConnections, MonitoredConnection> ConnectionsView { get; init; }
 
     [ObservableProperty]
     private string _textFilter = String.Empty;
 
-    partial void OnTextFilterChanged(string? value) => ResetTextFilter();
+    partial void OnTextFilterChanged(string value) => ResetTextFilter();
 
     public Connections()
     {
         UpdateConnectionsColors();
 
-        Func<MonitoredConnection, GroupedMonitoredConnections> keyGetter = (MonitoredConnection connection) => GroupedConnections!.Keys.FirstOrDefault(group => group.Path == connection.Path) ?? new GroupedMonitoredConnections(connection, Colors![GroupedConnections!.Count % Colors.Count]);
+        GroupedMonitoredConnections keyGetter(MonitoredConnection connection) => GroupedConnections!.Keys.FirstOrDefault(group => group.Path == connection.Path) ?? new GroupedMonitoredConnections(connection, Colors![GroupedConnections!.Count % Colors.Count]);
 
         GroupedConnections = new(keyGetter);
-
-        //ConnectionsView = new GroupedObservableCollectionsView2<GroupedMonitoredConnections, MonitoredConnection>(GroupedConnections, keyGetter);
-        ConnectionsView = new GroupedObservableCollectionView<GroupedMonitoredConnections, MonitoredConnection>(GroupedConnections, keyGetter);
-        //GroupedConnections.CollectionChanged += GroupedConnections_CollectionChanged;
-        //BindingOperations.EnableCollectionSynchronization(GroupedConnections, uisynclocker);
-
-        //ConnectionsViewSource.Source = GroupedConnections;
-        //ConnectionsViewSource.SortDescriptions.Add(new SortDescription(nameof(GroupedMonitoredConnections.FileName), ListSortDirection.Ascending));
-        //ConnectionsViewSource.GroupDescriptions.Add(new PropertyGroupDescription("Key"));//<GroupedMonitoredConnections, MonitoredConnection>(group => group.Path));
+        ConnectionsView = new(GroupedConnections, keyGetter);
+        ConnectionsView.SortDescriptions.Add(new SortDescription("FileName", ListSortDirection.Ascending));
 
         Settings.Default.PropertyChanged += SettingsChanged;
 

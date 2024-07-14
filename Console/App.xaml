@@ -24,9 +24,13 @@
             
             <system:Double x:Key="ConsoleSizeHeight">600</system:Double>
             <system:Double x:Key="ConsoleSizeWidth">900</system:Double>
+
+            <Style TargetType="DataGrid">
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
             
             <Style TargetType="DataGridColumnHeader">
-                <!--<Setter Property="Background" Value="WhiteSmoke" />-->
+                <Setter Property="Background" Value="Transparent" />
                 <Setter Property="BorderThickness" Value="0,0,1,1" />
                 <Setter Property="BorderBrush" Value="LightGray" />
                 <Setter Property="Padding" Value="5" />
@@ -224,7 +228,7 @@
                 <Setter Property="ContentTemplate">
                     <Setter.Value>
                         <DataTemplate>
-                            <Grid Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}">
+                            <Grid Background="Transparent">
                                 <ContentControl Margin="10" Content="{Binding}" />
                             </Grid>
                         </DataTemplate>

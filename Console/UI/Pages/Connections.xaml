@@ -15,13 +15,6 @@
     mc:Ignorable="d"
     d:DesignHeight="400" d:DesignWidth="800"
 	Title="Connections">
-    <!--<Page.Resources>
-        <CollectionViewSource x:Key="connectionsView" Source="{Binding GroupedConnections}">
-            <CollectionViewSource.SortDescriptions>
-                <componentmodel:SortDescription PropertyName="FileName" Direction="Ascending" />
-            </CollectionViewSource.SortDescriptions>
-        </CollectionViewSource>
-    </Page.Resources>-->
     <DockPanel>
         <controls:AdminPanel Caption="Information provided here might be inaccurate for non-admin users." />
         <ContentControl Style="{StaticResource ToolBarPanel}" Panel.ZIndex="0">
@@ -50,7 +43,15 @@
                 <RowDefinition Height="4" x:Name="separatorRow" />
                 <RowDefinition Height="*" x:Name="secondRow" />
             </Grid.RowDefinitions>
-            <DataGrid x:Name="connections" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizingWhenGrouping="True" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Single" IsReadOnly="True" d:DataContext="{d:DesignInstance Type=viewmodels:ConnectionDummy,IsDesignTimeCreatable=True,CreateList=True}" ItemsSource="{Binding ConnectionsView}" AutoGenerateColumns="False" HeadersVisibility="Column" Grid.ColumnSpan="3" Visibility="{Binding IsChecked,ElementName=toggleShowConnections,Mode=OneWay,Converter={StaticResource valueToVisibility}}" IsVisibleChanged="Components_VisibilityChanged">
+            <DataGrid x:Name="connections" 
+                      VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizingWhenGrouping="True" 
+                      AutoGenerateColumns="False" HeadersVisibility="Column" ScrollViewer.HorizontalScrollBarVisibility="Disabled" GridLinesVisibility="None" 
+                      BorderThickness="0" 
+                      SelectionMode="Single" IsReadOnly="True" 
+                      ItemsSource="{Binding ConnectionsView}" 
+                      d:DataContext="{d:DesignInstance Type=viewmodels:ConnectionDummy,IsDesignTimeCreatable=True,CreateList=True}" 
+                      Grid.ColumnSpan="3" 
+                      Visibility="{Binding IsChecked,ElementName=toggleShowConnections,Mode=OneWay,Converter={StaticResource valueToVisibility}}" IsVisibleChanged="Components_VisibilityChanged">
                 <DataGrid.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.ContainerStyle>
@@ -87,8 +88,8 @@
                                                                         </Style>
                                                                     </ContentControl.Style>
                                                                 </ContentControl>
-                                                                <TextBlock Grid.Column="1" Text="{Binding Name.InboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='bps'}" />
-                                                                <ContentControl Grid.Column="2" Margin="20,0,5,0" Width="16">
+                                                                <TextBlock Text="{Binding Name.InboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='bps'}" />
+                                                                <ContentControl Margin="20,0,5,0" Width="16">
                                                                     <ContentControl.Style>
                                                                         <Style TargetType="ContentControl">
                                                                             <Setter Property="Content" Value="{StaticResource Image_DataUp}" />
@@ -100,7 +101,7 @@
                                                                         </Style>
                                                                     </ContentControl.Style>
                                                                 </ContentControl>
-                                                                <TextBlock Grid.Column="3" Text="{Binding Name.OutboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='bps'}" />
+                                                                <TextBlock Text="{Binding Name.OutboundBandwidth, Mode=OneWay, Converter={StaticResource unitFormatter}, ConverterParameter='bps'}" />
                                                             </StackPanel>
                                                         </Border>
                                                     </Grid>
@@ -261,7 +262,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Remote port" Binding="{Binding TargetPort, Mode=OneTime}" />
+                    <DataGridTextColumn Header="Remote port" Binding="{Binding TargetPort, Mode=OneTime}" Width="Auto" />
                     <DataGridTemplateColumn Header="Down" Width="Auto" MinWidth="50">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
