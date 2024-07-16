@@ -15,10 +15,10 @@ public partial class App : Application
 {
     public App() : base()
     {
+        LogHelper.Debug("Starting Console: " + Environment.CommandLine);
+
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         this.DispatcherUnhandledException += Current_DispatcherUnhandledException;
-
-        LogHelper.Debug("Starting Console: " + Environment.CommandLine);
 
         if (Settings.Default.AlwaysRunAs && !UAC.CheckProcessElevated())
         {
@@ -57,16 +57,16 @@ public partial class App : Application
         //    Resources["AccentColorBrush"] = Settings.Default.AccentColor;
         //}
 
-        if (Settings.Default.ConsoleSizeWidth > 900)
-        {
-            Resources["ConsoleSizeWidth"] = Settings.Default.ConsoleSizeWidth;
-        }
+        //if (Settings.Default.ConsoleSizeWidth > 900)
+        //{
+        //    Resources["ConsoleSizeWidth"] = Settings.Default.ConsoleSizeWidth;
+        //}
 
-        if (Settings.Default.ConsoleSizeHeight > 600)
-        {
-            Resources["ConsoleSizeHeight"] = Settings.Default.ConsoleSizeHeight;
-        }
-            
+        //if (Settings.Default.ConsoleSizeHeight > 600)
+        //{
+        //    Resources["ConsoleSizeHeight"] = Settings.Default.ConsoleSizeHeight;
+        //}
+
         var themeUri = ThemeHelper.GetURIForCurrentTheme();
         Resources.MergedDictionaries[0].Source = new Uri(themeUri);
     }

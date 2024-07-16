@@ -11,6 +11,9 @@
     <SolidColorBrush x:Key="DataGridCellSelectedForeground" Color="Black" />
     <SolidColorBrush x:Key="DataGridRowSelectedBackground" Color="LightBlue" />
 
+    <system:Double x:Key="WindowBackgroundOpacity">0.05</system:Double>
+    <SolidColorBrush x:Key="ContainerBackground" Color="{x:Static SystemColors.ControlColor}" />
+
     <SolidColorBrush x:Key="TabItemOverBackground" Color="{x:Static SystemColors.ControlColor}" />
 
     <SolidColorBrush x:Key="ButtonBackground" Color="{x:Static SystemColors.ControlDarkColor}" />

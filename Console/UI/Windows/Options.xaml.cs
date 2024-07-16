@@ -3,6 +3,7 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
@@ -19,6 +20,8 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Windows;
 /// </summary>
 public partial class Options : Window
 {
+    public IList<string> Backgrounds { get; } = Enumerable.Range(1, 10).Select(i => $"/WFN;component/Resources/Backgrounds/BG ({i}).jpg").ToList();
+
     public Dictionary<string, Brush> Colors { get; } = typeof(Colors).GetProperties(BindingFlags.Public | BindingFlags.Static).ToDictionary(c => c.Name, c => (Brush)new SolidColorBrush((Color)c.GetValue(null)));
 
     public Options()
@@ -61,15 +64,26 @@ public partial class Options : Window
         Settings.Default.EnableVerboseLogging = false;
     }
 
-    private void txtUserConfigurationPath_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+
+    [RelayCommand]
+    private void SelectTheme(string theme)
     {
-        ProcessHelper.BrowseToFile($"\"{Settings.Default.ConfigurationPath}\"");
+        Settings.Default.Theme = theme;
     }
 
-    private void SelectTheme(object sender, RoutedEventArgs e)
+    ToggleButton? selected = null;
+    private void SelectBackground(object sender, RoutedEventArgs e)
     {
-        Settings.Default.Theme = (string)((ToggleButton)sender).CommandParameter;
+        var source = (ToggleButton)sender;
+        if (selected is not null)
+        {
+            selected.IsChecked = false;
+        }
+        selected = source;
+
+        Settings.Default.Background = (string)source.CommandParameter;
     }
+
 
     private void ApplyButtonTheme(object sender, RoutedEventArgs e)
     {
@@ -79,8 +93,26 @@ public partial class Options : Window
         button.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri(ThemeHelper.GetURIForTheme(theme)) });
     }
 
-    private void SelectTheme(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void ToggleButtonBG_Loaded(object sender, RoutedEventArgs e)
     {
+        var source = (ToggleButton)sender;
+        if (Settings.Default.Background.Equals(source.CommandParameter))
+        {
+            source.IsChecked = true;
+            selected = source;
+        }
+    }
 
+    [RelayCommand]
+    private void OpenLogLocation()
+    {
+        ProcessHelper.OpenFolder(LogHelper.CurrentLogsPath);
+    }
+
+
+    [RelayCommand]
+    private void OpenSettingsLocation()
+    {
+        ProcessHelper.BrowseToFile(Settings.Default.ConfigurationPath);
     }
 }

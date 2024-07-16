@@ -9,20 +9,16 @@
       xmlns:ext="clr-namespace:Wokhan.UI.Xaml.Extensibility;assembly=Wokhan.UI"
       xmlns:uicontrols="clr-namespace:Wokhan.UI.Xaml.Controls;assembly=Wokhan.UI"
       xmlns:themes="clr-namespace:Wokhan.WindowsFirewallNotifier.Common.UI.Themes;assembly=Wokhan.WindowsFirewallNotifier.Common"
+      xmlns:system="clr-namespace:System;assembly=System.Runtime"
       mc:Ignorable="d" 
       x:Name="me"
       ShowInTaskbar="False"
       ResizeMode="NoResize"
       WindowStartupLocation="CenterOwner"
-      Height="600" Width="600"
+      Height="600" Width="700"
       Title="Settings" Margin="10" DataContext="{Binding Path=(settings:Settings.Default)}">
     <Window.Resources>
-        <Style x:Key="ThemeBoxStyle" TargetType="ToggleButton">
-            <!--<Setter Property="BorderBrush" Value="Gray" />
-            <Setter Property="BorderThickness" Value="4" />
-            <Setter Property="BorderBrush" Value="Gray" />
-            <Setter Property="Margin" Value="10" />
-            <Setter Property="Padding" Value="0" />-->
+        <Style x:Key="BoxStyle" TargetType="ToggleButton">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
@@ -43,10 +39,12 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+        <Style x:Key="ThemeBoxStyle" TargetType="ToggleButton" BasedOn="{StaticResource BoxStyle}">
             <Setter Property="ContentTemplate">
                 <Setter.Value>
                     <DataTemplate>
-                        <Grid Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" IsHitTestVisible="False" Focusable="False">
+                        <Grid Width="190" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" IsHitTestVisible="False" Focusable="False">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -76,7 +74,7 @@
     <DockPanel>
         <uicontrols:CustomWindowChrome CanClose="True" Height="38" DockPanel.Dock="Top" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" />
         <controls:AdminPanel Margin="-10" Caption="*Those options can only be modified by an administrator." />
-        <ContentControl Height="50" DockPanel.Dock="Bottom" Style="{StaticResource ToolBarPanel}">
+        <ContentControl Margin="-5,2,-10,-8" DockPanel.Dock="Bottom" Style="{StaticResource ToolBarPanel}">
             <Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                     <Button x:Name="btnSave" Command="{Binding OKCommand,ElementName=me}" ext:CustomAdorner.Image="{StaticResource Image_Shield}" Content="Save" />
@@ -100,12 +98,30 @@
                 </StackPanel>
                 <TextBlock Text="Theme" Style="{StaticResource SectionHeader}" />
                 <WrapPanel>
-                    <ToggleButton CommandParameter="{x:Static themes:ThemeHelper.THEME_DARK}" Click="SelectTheme" Style="{StaticResource ThemeBoxStyle}" Loaded="ApplyButtonTheme" IsChecked="{Binding Theme,Converter={StaticResource valueChecker},ConverterParameter={x:Static themes:ThemeHelper.THEME_DARK},Mode=OneWay}" />
-                    <ToggleButton CommandParameter="{x:Static themes:ThemeHelper.THEME_LIGHT}" Click="SelectTheme" Style="{StaticResource ThemeBoxStyle}" Loaded="ApplyButtonTheme"  IsChecked="{Binding Theme,Converter={StaticResource valueChecker},ConverterParameter={x:Static themes:ThemeHelper.THEME_LIGHT},Mode=OneWay}" />
-                    <ToggleButton CommandParameter="{x:Static themes:ThemeHelper.THEME_AUTO}" Click="SelectTheme" Style="{StaticResource ThemeBoxStyle}" Loaded="ApplyButtonTheme" IsChecked="{Binding Theme,Converter={StaticResource valueChecker},ConverterParameter={x:Static themes:ThemeHelper.THEME_AUTO},Mode=OneWay}" />
-                    <ToggleButton CommandParameter="{x:Static themes:ThemeHelper.THEME_SYSTEM}" Click="SelectTheme" Style="{StaticResource ThemeBoxStyle}" Loaded="ApplyButtonTheme" IsChecked="{Binding Theme,Converter={StaticResource valueChecker},ConverterParameter={x:Static themes:ThemeHelper.THEME_SYSTEM},Mode=OneWay}" />
+                    <ToggleButton CommandParameter="{x:Static themes:ThemeHelper.THEME_DARK}" Command="{Binding ElementName=me,Path=SelectThemeCommand}" Style="{StaticResource ThemeBoxStyle}" Loaded="ApplyButtonTheme" IsChecked="{Binding Theme,Converter={StaticResource valueChecker},ConverterParameter={x:Static themes:ThemeHelper.THEME_DARK},Mode=OneWay}" />
+                    <ToggleButton CommandParameter="{x:Static themes:ThemeHelper.THEME_LIGHT}" Command="{Binding ElementName=me,Path=SelectThemeCommand}" Style="{StaticResource ThemeBoxStyle}" Loaded="ApplyButtonTheme"  IsChecked="{Binding Theme,Converter={StaticResource valueChecker},ConverterParameter={x:Static themes:ThemeHelper.THEME_LIGHT},Mode=OneWay}" />
+                    <ToggleButton CommandParameter="{x:Static themes:ThemeHelper.THEME_AUTO}" Command="{Binding ElementName=me,Path=SelectThemeCommand}" Style="{StaticResource ThemeBoxStyle}" Loaded="ApplyButtonTheme" IsChecked="{Binding Theme,Converter={StaticResource valueChecker},ConverterParameter={x:Static themes:ThemeHelper.THEME_AUTO},Mode=OneWay}" />
+                    <ToggleButton CommandParameter="{x:Static themes:ThemeHelper.THEME_SYSTEM}" Command="{Binding ElementName=me,Path=SelectThemeCommand}" Style="{StaticResource ThemeBoxStyle}" Loaded="ApplyButtonTheme" IsChecked="{Binding Theme,Converter={StaticResource valueChecker},ConverterParameter={x:Static themes:ThemeHelper.THEME_SYSTEM},Mode=OneWay}" />
                 </WrapPanel>
-
+                <TextBlock Text="Background" FontWeight="Bold" Margin="10" />
+                <WrapPanel>
+                    <ItemsControl ItemsSource="{Binding ElementName=me,Path=Backgrounds}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="5" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="system:String">
+                                <ToggleButton Width="100" Height="100" Style="{StaticResource BoxStyle}" CommandParameter="{Binding}" Click="SelectBackground" Loaded="ToggleButtonBG_Loaded">
+                                    <ToggleButton.Background>
+                                        <ImageBrush ImageSource="{Binding}" Stretch="UniformToFill" />
+                                    </ToggleButton.Background>
+                                </ToggleButton>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </WrapPanel>
                 <!--<StackPanel Margin="10">
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Accent color: " />
@@ -130,7 +146,10 @@
                     <!-- TODO: not working  <CheckBox Margin="0,0,0,10"  Padding="5,0" Content="Minimize the console to the system tray instead of the taskbar." IsChecked="{Binding MinimizeToTray, Source={x:Static settings:Settings.Default}}" /> -->
                     <CheckBox Margin="0,0,0,10" Padding="5,0" Content="Enable verbose logging (for debugging purpose only, may use a lot more disk space)" IsChecked="{Binding EnableVerboseLogging, Mode=TwoWay}" />
                     <TextBlock Margin="30,0,0,10" Text="Note: the log files can either be in the WFN installation directory or the current user's appdata folder." />
-                    <TextBlock Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding Mode=OneTime, Source={x:Static logging:LogHelper.CurrentLogsPath}, StringFormat=Path for the current user: \{0\}}" Tag="{Binding Mode=OneTime, Source={x:Static logging:LogHelper.CurrentLogsPath}}" x:Name="txtCurrentLogPath" MouseDown="txtCurrentLogPath_MouseDown" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
+                    <TextBlock Margin="30,0,0,10" TextWrapping="Wrap" >
+                        <Run Text="Path for the current user:" />
+                        <Hyperlink Command="{Binding ElementName=me,Path=OpenLogLocationCommand}"><Run Text="{x:Static logging:LogHelper.CurrentLogsPath}" /></Hyperlink>
+                    </TextBlock>
                     <!--<CheckBox Margin="0,0,0,10" Padding="5,0" Content="Always run as admin*" ToolTip="Options marked with * need admin rights to change" IsChecked="{Binding AlwaysRunAs, Source={x:Static settings:Settings.Default}}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />-->
                     <CheckBox Margin="0,0,0,10" Padding="5,0" Content="Enable DNS host name resolver in Security log (experimental)*" ToolTip="Enables host name resolver in Security Log" IsChecked="{Binding EnableDnsResolver,Mode=TwoWay}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
                     <CheckBox Margin="0,0,0,10" Padding="5,0" Content="Enable successful connection events*" ToolTip="Enables logging of successful connection events in Security Log" IsChecked="{Binding AuditPolEnableSuccessEvent, Mode=TwoWay}" IsEnabled="{Binding IsElevated,Source={x:Static Application.Current}}" />
@@ -140,7 +159,9 @@
                     <Label Content="When portable mode is enabled, all users on this computer will share the same configuration, stored in the current application folder." />
                     <CheckBox Margin="0,0,0,10" Padding="5,0" Content="Enable" IsChecked="{Binding IsPortable,Mode=TwoWay}" />
                     <Label Content="Settings file location (click to open in explorer)" />
-                    <TextBlock MouseDown="txtUserConfigurationPath_MouseDown" Margin="30,0,0,10" TextWrapping="Wrap" Text="{Binding ConfigurationPath,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto"/>
+                    <TextBlock Margin="30,0,0,10" TextWrapping="Wrap">
+                        <Hyperlink Command="{Binding ElementName=me,Path=OpenSettingsLocationCommand}"><Run Text="{Binding ConfigurationPath,Mode=OneWay}" /></Hyperlink>
+                    </TextBlock>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

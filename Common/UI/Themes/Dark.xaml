@@ -11,6 +11,9 @@
     <SolidColorBrush x:Key="DataGridRowSelectedBackground" Color="SlateGray" />
     <SolidColorBrush x:Key="DataGridRowAltBackground" Color="#101010" />
 
+    <system:Double x:Key="WindowBackgroundOpacity">0.1</system:Double>
+    <SolidColorBrush x:Key="ContainerBackground">#CC222222</SolidColorBrush>
+
     <SolidColorBrush x:Key="TabItemOverBackground" Color="#202020" />
 
     <SolidColorBrush x:Key="ButtonBackground" Color="#303030" />

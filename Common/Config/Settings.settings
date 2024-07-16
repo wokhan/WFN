@@ -89,5 +89,8 @@
     <Setting Name="Theme" Type="System.String" Scope="User">
       <Value Profile="(Default)">Automatic</Value>
     </Setting>
+    <Setting Name="Background" Type="System.String" Scope="User">
+      <Value Profile="(Default)">/WFN;component/Resources/Backgrounds/BG (10).jpg</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

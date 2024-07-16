@@ -47,35 +47,37 @@
                 </StackPanel>
             </Grid>
         </ContentControl>
-        <Grid>
-            <DataGrid BorderThickness="0" x:Name="gridRules" ItemsSource="{Binding Source={StaticResource AllRulesCvs}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Extended" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column" SelectedItem="{Binding SelectedItem,Mode=TwoWay}">
-                <DataGrid.CellStyle>
-                    <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
-                        <Setter Property="VerticalAlignment" Value="Center" />
-                    </Style>
-                </DataGrid.CellStyle>
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=OneTime}" SortDirection="Ascending" />
-                    <DataGridTemplateColumn Header="Path" SortMemberPath="ApplicationShortName">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate DataType="rules:Rule">
-                                <Grid>
-                                    <Image Source="{Binding Icon,Mode=OneWay}" Width="16" Height="16" HorizontalAlignment="Left" />
-                                    <TextBlock Margin="20,0,0,0" ToolTip="{Binding ApplicationName,Mode=OneWay}" Text="{Binding ApplicationShortName,Mode=OneWay}" />
-                                </Grid>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Service" Binding="{Binding ServiceName, Mode=OneTime}" />
-                    <DataGridTextColumn Header="Direction" Binding="{Binding DirectionStr, Mode=OneTime}" />
-                    <DataGridTextColumn Header="Profiles" Binding="{Binding ProfilesStr, Mode=OneTime}" />
-                    <DataGridTextColumn Header="Action" Binding="{Binding ActionStr, Mode=OneTime}" />
-                    <DataGridTextColumn Header="Local ports" Binding="{Binding LocalPorts, Mode=OneTime}" />
-                    <DataGridTextColumn Header="Remote addresses" Binding="{Binding RemoteAddresses, Mode=OneTime}" />
-                    <DataGridTextColumn Header="Remote port" Binding="{Binding RemotePorts, Mode=OneTime}" />
-                    <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding Enabled, Mode=OneTime}" />
-                </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
+        <ContentControl Style="{StaticResource Container}">
+            <Grid>
+                <DataGrid BorderThickness="0" x:Name="gridRules" ItemsSource="{Binding Source={StaticResource AllRulesCvs}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ColumnWidth="*" GridLinesVisibility="None" SelectionMode="Extended" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column" SelectedItem="{Binding SelectedItem,Mode=TwoWay}">
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGrid.CellStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=OneTime}" SortDirection="Ascending" />
+                        <DataGridTemplateColumn Header="Path" SortMemberPath="ApplicationShortName">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate DataType="rules:Rule">
+                                    <Grid>
+                                        <Image Source="{Binding Icon,Mode=OneWay}" Width="16" Height="16" HorizontalAlignment="Left" />
+                                        <TextBlock Margin="20,0,0,0" ToolTip="{Binding ApplicationName,Mode=OneWay}" Text="{Binding ApplicationShortName,Mode=OneWay}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Service" Binding="{Binding ServiceName, Mode=OneTime}" />
+                        <DataGridTextColumn Header="Direction" Binding="{Binding DirectionStr, Mode=OneTime}" />
+                        <DataGridTextColumn Header="Profiles" Binding="{Binding ProfilesStr, Mode=OneTime}" />
+                        <DataGridTextColumn Header="Action" Binding="{Binding ActionStr, Mode=OneTime}" />
+                        <DataGridTextColumn Header="Local ports" Binding="{Binding LocalPorts, Mode=OneTime}" />
+                        <DataGridTextColumn Header="Remote addresses" Binding="{Binding RemoteAddresses, Mode=OneTime}" />
+                        <DataGridTextColumn Header="Remote port" Binding="{Binding RemotePorts, Mode=OneTime}" />
+                        <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding Enabled, Mode=OneTime}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </ContentControl>
     </DockPanel>
 </Page>

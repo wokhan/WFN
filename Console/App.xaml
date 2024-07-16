@@ -19,23 +19,23 @@
             <BindingConverters:ValueToVisibilityNegateConverter x:Key="valueToVisibilityNegate" />
             <BindingConverters:ValueChecker x:Key="valueChecker" />
             <!--<BindingConverters:UnitFormatConverter x:Key="unitFormatter" />-->
-            
+
             <LocalBindingConverters:UnitFormatConverter x:Key="unitFormatter" />
-            
+
             <system:Double x:Key="ConsoleSizeHeight">600</system:Double>
             <system:Double x:Key="ConsoleSizeWidth">900</system:Double>
 
             <Style TargetType="DataGrid">
                 <Setter Property="Background" Value="Transparent" />
             </Style>
-            
+
             <Style TargetType="DataGridColumnHeader">
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="BorderThickness" Value="0,0,1,1" />
                 <Setter Property="BorderBrush" Value="LightGray" />
                 <Setter Property="Padding" Value="5" />
             </Style>
-            
+
             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="Background" Value="Transparent" />
@@ -47,7 +47,7 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-            
+
             <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="MinHeight" Value="30" />
@@ -57,11 +57,11 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-            
+
             <Style TargetType="TextBlock" x:Key="SectionHeader">
                 <Setter Property="FontSize" Value="18" />
             </Style>
-            
+
             <Style TargetType="RadioButton" x:Key="RadioButtonSlide">
                 <Setter Property="OverridesDefaultStyle" Value="True"/>
                 <Setter Property="Background" Value="{DynamicResource ButtonBackground}"/>
@@ -99,7 +99,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
+
             <Style x:Key="HelpButtonStyle" TargetType="Label">
                 <Setter Property="ext:CustomAdorner.CornerRadius" Value="2,2,0,0" />
                 <Setter Property="Content" Value="{StaticResource Image_Help}" />
@@ -131,7 +131,7 @@
                     </Style>
                 </Style.Resources>
             </Style>
-            
+
             <Style x:Key="InfoPanel" TargetType="Border">
                 <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.InfoBrushKey}}" />
                 <Style.Resources>
@@ -224,13 +224,25 @@
                 </Style.Triggers>
             </Style>
 
+            <Style x:Key="Container" TargetType="ContentControl">
+                <Setter Property="ContentTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <Border Background="{DynamicResource ContainerBackground}" CornerRadius="10" Padding="10" Margin="5,0,10,10">
+                                <ContentControl Content="{Binding}" />
+                            </Border>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
             <Style x:Key="ToolBarPanel" TargetType="ContentControl">
                 <Setter Property="ContentTemplate">
                     <Setter.Value>
                         <DataTemplate>
-                            <Grid Background="Transparent">
+                            <Border Background="{DynamicResource ContainerBackground}" CornerRadius="10" Margin="5,0,10,10">
                                 <ContentControl Margin="10" Content="{Binding}" />
-                            </Grid>
+                            </Border>
                         </DataTemplate>
                     </Setter.Value>
                 </Setter>
@@ -255,7 +267,7 @@
                     </Style>
                 </Style.Resources>
             </Style>
-            
+
             <Style x:Key="NonAdminPanel" TargetType="ContentControl" BasedOn="{StaticResource ToolBarPanel}">
                 <Setter Property="DockPanel.Dock" Value="Bottom" />
                 <Setter Property="Visibility" Value="{Binding IsElevated,Source={x:Static Application.Current},Converter={StaticResource valueToVisibilityNegate}}" />

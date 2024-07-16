@@ -30,144 +30,146 @@
                 </StackPanel>
             </Grid>
         </ContentControl>
-        <ScrollViewer>
-            <ItemsControl ItemsSource="{Binding}" DataContext="{Binding AllInterfaces}" d:DataContext="{d:DesignInstance Type=dummydata:ExposedInterfaceViewDummy,IsDesignTimeCreatable=True,CreateList=True}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="ExposedInterfaceView">
-                        <Expander IsExpanded="True" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Background="Transparent">
-                            <Expander.Header>
-                                <Grid Margin="10" Width="{Binding ActualWidth,RelativeSource={RelativeSource AncestorType=Expander}}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <ContentControl>
-                                        <ContentControl.Style>
-                                            <Style TargetType="ContentControl">
-                                                <Setter Property="Content" Value="{StaticResource Image_Adapter_Red}" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Information.OperationalStatus}" Value="Up">
-                                                        <Setter Property="Content" Value="{StaticResource Image_Adapter_Green}" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ContentControl.Style>
-                                    </ContentControl>
-                                    <TextBlock Grid.Column="1" TextElement.FontWeight="Bold" Text="{Binding Information.Name}" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                                    <Rectangle Grid.Column="2" Margin="10,0,0,0" HorizontalAlignment="Stretch" Height="2" Fill="Gray" />
-                                    <Border Grid.Column="3" Margin="0,0,50,0" Padding="20,5" BorderBrush="Gray" BorderThickness="2" CornerRadius="10">
-                                        <StackPanel Orientation="Horizontal">
-                                            <ContentControl Margin="0,0,5,0" Width="16" Content="{StaticResource Image_DataDown}"/>
-                                            <TextBlock Text="{Binding Bandwidth.In,Mode=OneWay,Converter={StaticResource unitFormatter},ConverterParameter='bps'}" />
-                                            <ContentControl Margin="20,0,5,0" Width="16" Content="{StaticResource Image_DataUp}"/>
-                                            <TextBlock Text="{Binding Bandwidth.Out,Mode=OneWay,Converter={StaticResource unitFormatter},ConverterParameter='bps'}" />
-                                        </StackPanel>
-                                    </Border>
-                                </Grid>
-                            </Expander.Header>
-                            <StackPanel>
-                                <UniformGrid Columns="2">
-                                    <Border Style="{StaticResource Card}">
-                                        <Grid>
-                                            <Grid.Resources>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="Margin" Value="4" />
+        <ContentControl Style="{StaticResource Container}">
+            <ScrollViewer>
+                <ItemsControl ItemsSource="{Binding}" DataContext="{Binding AllInterfaces}" d:DataContext="{d:DesignInstance Type=dummydata:ExposedInterfaceViewDummy,IsDesignTimeCreatable=True,CreateList=True}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="ExposedInterfaceView">
+                            <Expander IsExpanded="True" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Background="Transparent">
+                                <Expander.Header>
+                                    <Grid Margin="10" Width="{Binding ActualWidth,RelativeSource={RelativeSource AncestorType=Expander}}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <ContentControl>
+                                            <ContentControl.Style>
+                                                <Style TargetType="ContentControl">
+                                                    <Setter Property="Content" Value="{StaticResource Image_Adapter_Red}" />
                                                     <Style.Triggers>
-                                                        <Trigger Property="Grid.Column" Value="0">
-                                                            <Setter Property="FontWeight" Value="Bold" />
-                                                        </Trigger>
+                                                        <DataTrigger Binding="{Binding Information.OperationalStatus}" Value="Up">
+                                                            <Setter Property="Content" Value="{StaticResource Image_Adapter_Green}" />
+                                                        </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
-                                            </Grid.Resources>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition />
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition />
-                                                <RowDefinition />
-                                                <RowDefinition />
-                                                <RowDefinition />
-                                                <RowDefinition />
-                                                <RowDefinition />
-                                            </Grid.RowDefinitions>
-                                            <TextBlock Text="Description" />
-                                            <TextBlock Grid.Column="1" Text="{Binding Information.Description}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Information.Description}" />
-                                            <TextBlock Grid.Row="1" Text="Interface type" />
-                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Information.NetworkInterfaceType}" />
-                                            <TextBlock Grid.Row="2" Text="Max speed" />
-                                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Information.Speed,Converter={StaticResource unitFormatter},ConverterParameter='bps'}" />
-                                            <TextBlock Grid.Row="3" Text="MAC address" />
-                                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding MAC,Mode=OneTime}" />
-                                        </Grid>
-                                    </Border>
+                                            </ContentControl.Style>
+                                        </ContentControl>
+                                        <TextBlock Grid.Column="1" TextElement.FontWeight="Bold" Text="{Binding Information.Name}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                        <Rectangle Grid.Column="2" Margin="10,0,0,0" HorizontalAlignment="Stretch" Height="2" Fill="{DynamicResource AccentColorBrush}" />
+                                        <Border Grid.Column="3" Margin="0,0,50,0" Padding="20,5" BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="2" CornerRadius="10">
+                                            <StackPanel Orientation="Horizontal">
+                                                <ContentControl Margin="0,0,5,0" Width="16" Content="{StaticResource Image_DataDown}"/>
+                                                <TextBlock Text="{Binding Bandwidth.In,Mode=OneWay,Converter={StaticResource unitFormatter},ConverterParameter='bps'}" />
+                                                <ContentControl Margin="20,0,5,0" Width="16" Content="{StaticResource Image_DataUp}"/>
+                                                <TextBlock Text="{Binding Bandwidth.Out,Mode=OneWay,Converter={StaticResource unitFormatter},ConverterParameter='bps'}" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                </Expander.Header>
+                                <StackPanel>
+                                    <UniformGrid Columns="2">
+                                        <Border Style="{StaticResource Card}">
+                                            <Grid>
+                                                <Grid.Resources>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Margin" Value="4" />
+                                                        <Style.Triggers>
+                                                            <Trigger Property="Grid.Column" Value="0">
+                                                                <Setter Property="FontWeight" Value="Bold" />
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Grid.Resources>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Text="Description" />
+                                                <TextBlock Grid.Column="1" Text="{Binding Information.Description}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Information.Description}" />
+                                                <TextBlock Grid.Row="1" Text="Interface type" />
+                                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Information.NetworkInterfaceType}" />
+                                                <TextBlock Grid.Row="2" Text="Max speed" />
+                                                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Information.Speed,Converter={StaticResource unitFormatter},ConverterParameter='bps'}" />
+                                                <TextBlock Grid.Row="3" Text="MAC address" />
+                                                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding MAC,Mode=OneTime}" />
+                                            </Grid>
+                                        </Border>
+                                        <Border Style="{StaticResource Card}">
+                                            <Grid HorizontalAlignment="Stretch">
+                                                <Grid.Resources>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Margin" Value="4" />
+                                                    </Style>
+                                                </Grid.Resources>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" MinWidth="90" />
+                                                    <ColumnDefinition Width="Auto" MinWidth="90" />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <Label FontWeight="Bold" Content="Detailed statistics" />
+                                                <Label Grid.Column="1" VerticalContentAlignment="Center" Content="Received" />
+                                                <Label Grid.Column="2" VerticalContentAlignment="Center" Content="Sent" />
+                                                <TextBlock Grid.Row="1" Text="Total Bytes (current session)" />
+                                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Statistics.BytesReceived,Converter={StaticResource unitFormatter},ConverterParameter='B'}" />
+                                                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Statistics.BytesSent,Converter={StaticResource unitFormatter},ConverterParameter='B'}" />
+                                                <TextBlock Grid.Row="2" Text="Non-unicast packets" />
+                                                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Statistics.NonUnicastPacketsReceived}" />
+                                                <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Statistics.NonUnicastPacketsSent}" />
+                                                <TextBlock Grid.Row="3" Text="Unicast packets" />
+                                                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Statistics.UnicastPacketsReceived}" />
+                                                <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Statistics.UnicastPacketsSent}" />
+                                                <TextBlock Grid.Row="4" Text="Discarded packets" />
+                                                <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Statistics.IncomingPacketsDiscarded}" />
+                                                <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding Statistics.OutgoingPacketsDiscarded}" />
+                                                <TextBlock Grid.Row="5" Text="Erroneous packets" />
+                                                <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Statistics.IncomingPacketsWithErrors}" />
+                                                <TextBlock Grid.Row="5" Grid.Column="2" Text="{Binding Statistics.OutgoingPacketsWithErrors}" />
+                                            </Grid>
+                                        </Border>
+                                    </UniformGrid>
                                     <Border Style="{StaticResource Card}">
-                                        <Grid HorizontalAlignment="Stretch">
-                                            <Grid.Resources>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="Margin" Value="4" />
-                                                </Style>
-                                            </Grid.Resources>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" MinWidth="90" />
-                                                <ColumnDefinition Width="Auto" MinWidth="90" />
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition />
-                                                <RowDefinition />
-                                                <RowDefinition />
-                                                <RowDefinition />
-                                                <RowDefinition />
-                                                <RowDefinition />
-                                            </Grid.RowDefinitions>
-                                            <Label FontWeight="Bold" Content="Detailed statistics" />
-                                            <Label Grid.Column="1" VerticalContentAlignment="Center" Content="Received" />
-                                            <Label Grid.Column="2" VerticalContentAlignment="Center" Content="Sent" />
-                                            <TextBlock Grid.Row="1" Text="Total Bytes (current session)" />
-                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Statistics.BytesReceived,Converter={StaticResource unitFormatter},ConverterParameter='B'}" />
-                                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Statistics.BytesSent,Converter={StaticResource unitFormatter},ConverterParameter='B'}" />
-                                            <TextBlock Grid.Row="2" Text="Non-unicast packets" />
-                                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Statistics.NonUnicastPacketsReceived}" />
-                                            <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Statistics.NonUnicastPacketsSent}" />
-                                            <TextBlock Grid.Row="3" Text="Unicast packets" />
-                                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Statistics.UnicastPacketsReceived}" />
-                                            <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Statistics.UnicastPacketsSent}" />
-                                            <TextBlock Grid.Row="4" Text="Discarded packets" />
-                                            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Statistics.IncomingPacketsDiscarded}" />
-                                            <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding Statistics.OutgoingPacketsDiscarded}" />
-                                            <TextBlock Grid.Row="5" Text="Erroneous packets" />
-                                            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Statistics.IncomingPacketsWithErrors}" />
-                                            <TextBlock Grid.Row="5" Grid.Column="2" Text="{Binding Statistics.OutgoingPacketsWithErrors}" />
-                                        </Grid>
+                                        <StackPanel>
+                                            <Label FontWeight="Bold" Content="IP addresses" />
+                                            <DataGrid IsHitTestVisible="False" GridLinesVisibility="None" Background="Transparent" AutoGenerateColumns="False" BorderThickness="0" HeadersVisibility="Column" ColumnWidth="*" IsReadOnly="True" ItemsSource="{Binding Properties.UnicastAddresses,Mode=OneWay}">
+                                                <DataGrid.CellStyle>
+                                                    <Style TargetType="DataGridCell">
+                                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                                        <Setter Property="Margin" Value="5" />
+                                                    </Style>
+                                                </DataGrid.CellStyle>
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="Address" Binding="{Binding Address,Mode=OneTime}" />
+                                                    <DataGridTextColumn Header="Preferred lifetime" Binding="{Binding AddressPreferredLifetime,Mode=OneWay,Converter={StaticResource secondsConverter}}" />
+                                                    <DataGridTextColumn Header="Valid lifetime" Binding="{Binding AddressValidLifetime,Mode=OneWay,Converter={StaticResource secondsConverter}}" />
+                                                    <DataGridTextColumn Header="DHCP lease" Binding="{Binding DhcpLeaseLifetime,Mode=OneWay,Converter={StaticResource secondsConverter}}" />
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </StackPanel>
                                     </Border>
-                                </UniformGrid>
-                                <Border Style="{StaticResource Card}">
-                                    <StackPanel>
-                                        <Label FontWeight="Bold" Content="IP addresses" />
-                                        <DataGrid IsHitTestVisible="False" GridLinesVisibility="None" Background="Transparent" AutoGenerateColumns="False" BorderThickness="0" HeadersVisibility="Column" ColumnWidth="*" IsReadOnly="True" ItemsSource="{Binding Properties.UnicastAddresses,Mode=OneWay}">
-                                            <DataGrid.CellStyle>
-                                                <Style TargetType="DataGridCell">
-                                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                                    <Setter Property="Margin" Value="5" />
-                                                </Style>
-                                            </DataGrid.CellStyle>
-                                            <DataGrid.Columns>
-                                                <DataGridTextColumn Header="Address" Binding="{Binding Address,Mode=OneTime}" />
-                                                <DataGridTextColumn Header="Preferred lifetime" Binding="{Binding AddressPreferredLifetime,Mode=OneWay,Converter={StaticResource secondsConverter}}" />
-                                                <DataGridTextColumn Header="Valid lifetime" Binding="{Binding AddressValidLifetime,Mode=OneWay,Converter={StaticResource secondsConverter}}" />
-                                                <DataGridTextColumn Header="DHCP lease" Binding="{Binding DhcpLeaseLifetime,Mode=OneWay,Converter={StaticResource secondsConverter}}" />
-                                            </DataGrid.Columns>
-                                        </DataGrid>
-                                    </StackPanel>
-                                </Border>
-                            </StackPanel>
-                        </Expander>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+                                </StackPanel>
+                            </Expander>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </ContentControl>
     </DockPanel>
 </pages:TimerBasedPage>

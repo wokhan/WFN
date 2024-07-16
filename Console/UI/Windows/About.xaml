@@ -71,7 +71,7 @@
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
-        <ContentControl Grid.Row="2" Height="50" DockPanel.Dock="Bottom" Style="{StaticResource ToolBarPanel}">
+        <ContentControl Grid.Row="2" Margin="-5,2,-10,-8" Style="{StaticResource ToolBarPanel}">
             <Button Click="Close" ext:CustomAdorner.Image="{StaticResource Image_Refresh}" Content="Close" VerticalAlignment="Top" HorizontalAlignment="Center" />
         </ContentControl>
     </Grid>

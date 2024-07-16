@@ -31,83 +31,85 @@
                 </StackPanel>
             </Grid>
         </ContentControl>
-        <Grid IsEnabled="{Binding IsElevated,Source={x:Static console:App.Current}}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="0.7*" />
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="0.3*" />
-            </Grid.RowDefinitions>
-            <DataGrid VirtualizingPanel.VirtualizationMode="Recycling" BorderThickness="0" ItemsSource="{Binding DataView,Mode=OneWay}" IsReadOnly="True" ColumnWidth="*" AutoGenerateColumns="False" HeadersVisibility="Column" GridLinesVisibility="None" Grid.ColumnSpan="3" SelectedItem="{Binding SelectedItem,Mode=TwoWay}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Index" Binding="{Binding Index,Mode=OneTime}" Width="Auto">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
-                                <Setter Property="ToolTip">
-                                    <Setter.Value>
-                                        <TextBlock Text="{Binding Id, Mode=OneTime}" />
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="Date/Time" Binding="{Binding CreationTime,Mode=OneTime}" Width="Auto"/>
-                    <DataGridTextColumn Header="PID" Binding="{Binding Pid,Mode=OneTime}" Width="Auto"/>
-                    <DataGridTemplateColumn Header="Application" SortMemberPath="FileName" Width="0.2*" >
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Image Source="{Binding Icon}" Width="16" HorizontalAlignment="Left" />
-                                    <Label Content="{Binding FileName}" Margin="20,0,0,0" ToolTip="{Binding Path}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Service"  Binding="{Binding ServiceName,Mode=OneTime}" Width="0.1*"/>
-                    <DataGridTextColumn Header="Remote IP" Binding="{Binding TargetIP,Mode=OneTime}" Width="0.1*"/>
-                    <DataGridTextColumn x:Name="RemoteHostCol" Header="Remote Host" Binding="{Binding TargetHostName}" Width="0.1*" />
-                    <DataGridTextColumn Header="Port" Binding="{Binding TargetPort,Mode=OneTime}" Width="Auto"/>
-                    <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol,Mode=OneTime}" Width="Auto"/>
-                    <DataGridTextColumn Header="FilterId" Binding="{Binding FilterId,Mode=OneTime}" Width="Auto"/>
-                    <DataGridTextColumn Header="Dir" Binding="{Binding Direction,Mode=OneTime}" Width="Auto">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
-                                <Setter Property="Foreground" Value="OrangeRed"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Direction}" Value="Out">
-                                        <Setter Property="Foreground" Value="Black" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn x:Name="Reason" Header="Action" Binding="{Binding Reason}" Width="Auto">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-                                <Setter Property="ToolTip" Value="click for details" />
-                                <Setter Property="Foreground" Value="Blue"/>
-                                <Setter Property="TextBlock.TextDecorations" Value="Underline"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsAllowed}" Value="False">
-                                        <Setter Property="Foreground" Value="OrangeRed"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-            <GridSplitter Grid.Row="1" Height="4" Background="LightGray" HorizontalAlignment="Stretch" />
-            <ScrollViewer Grid.Row="2">
-                <Grid Margin="10">
-                    <StackPanel TextElement.Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" DataContext="{Binding SelectedItem,Mode=OneWay}">
-                        <TextBlock><Run FontWeight="Bold" Text="Reason: "/><Run Text="{Binding Reason,Mode=OneTime,FallbackValue='-'}"/></TextBlock>
-                        <TextBlock><Run FontWeight="Bold" Text="Filter: "/><Run Text="{Binding MatchingFilter.Name,Mode=OneWay, FallbackValue='-'}"/> (Id: <Run Text="{Binding MatchingFilter.FilterId,Mode=OneWay,FallbackValue='-'}"/>)</TextBlock>
-                        <TextBlock><Run FontWeight="Bold" Text="Filter details : "/><Run Text="{Binding MatchingFilter.Description,Mode=OneWay,FallbackValue='-'}"/></TextBlock>
-                        <TextBlock><Run FontWeight="Bold" Text="Service: " /><Run Text="{Binding ServiceName,Mode=OneTime,FallbackValue='-'}"/></TextBlock>
-                        <TextBlock><Run FontWeight="Bold" Text="Entry details: " /><LineBreak /><Run Text="{Binding Message,Mode=OneTime,FallbackValue='-'}"/></TextBlock>
-                    </StackPanel>
-                </Grid>
-            </ScrollViewer>
-        </Grid>
+        <ContentControl Style="{StaticResource Container}">
+            <Grid IsEnabled="{Binding IsElevated,Source={x:Static console:App.Current}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.7*" />
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="0.3*" />
+                </Grid.RowDefinitions>
+                <DataGrid VirtualizingPanel.VirtualizationMode="Recycling" BorderThickness="0" ItemsSource="{Binding DataView,Mode=OneWay}" IsReadOnly="True" ColumnWidth="*" AutoGenerateColumns="False" HeadersVisibility="Column" GridLinesVisibility="None" Grid.ColumnSpan="3" SelectedItem="{Binding SelectedItem,Mode=TwoWay}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Index" Binding="{Binding Index,Mode=OneTime}" Width="Auto">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                                    <Setter Property="ToolTip">
+                                        <Setter.Value>
+                                            <TextBlock Text="{Binding Id, Mode=OneTime}" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Date/Time" Binding="{Binding CreationTime,Mode=OneTime}" Width="Auto"/>
+                        <DataGridTextColumn Header="PID" Binding="{Binding Pid,Mode=OneTime}" Width="Auto"/>
+                        <DataGridTemplateColumn Header="Application" SortMemberPath="FileName" Width="0.2*" >
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Image Source="{Binding Icon}" Width="16" HorizontalAlignment="Left" />
+                                        <Label Content="{Binding FileName}" Margin="20,0,0,0" ToolTip="{Binding Path}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Service"  Binding="{Binding ServiceName,Mode=OneTime}" Width="0.1*"/>
+                        <DataGridTextColumn Header="Remote IP" Binding="{Binding TargetIP,Mode=OneTime}" Width="0.1*"/>
+                        <DataGridTextColumn x:Name="RemoteHostCol" Header="Remote Host" Binding="{Binding TargetHostName}" Width="0.1*" />
+                        <DataGridTextColumn Header="Port" Binding="{Binding TargetPort,Mode=OneTime}" Width="Auto"/>
+                        <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol,Mode=OneTime}" Width="Auto"/>
+                        <DataGridTextColumn Header="FilterId" Binding="{Binding FilterId,Mode=OneTime}" Width="Auto"/>
+                        <DataGridTextColumn Header="Dir" Binding="{Binding Direction,Mode=OneTime}" Width="Auto">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                                    <Setter Property="Foreground" Value="OrangeRed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Direction}" Value="Out">
+                                            <Setter Property="Foreground" Value="Black" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn x:Name="Reason" Header="Action" Binding="{Binding Reason}" Width="Auto">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                    <Setter Property="ToolTip" Value="click for details" />
+                                    <Setter Property="Foreground" Value="Blue"/>
+                                    <Setter Property="TextBlock.TextDecorations" Value="Underline"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsAllowed}" Value="False">
+                                            <Setter Property="Foreground" Value="OrangeRed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <GridSplitter Grid.Row="1" Height="4" Background="LightGray" HorizontalAlignment="Stretch" />
+                <ScrollViewer Grid.Row="2">
+                    <Grid Margin="10">
+                        <StackPanel TextElement.Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" DataContext="{Binding SelectedItem,Mode=OneWay}">
+                            <TextBlock><Run FontWeight="Bold" Text="Reason: "/><Run Text="{Binding Reason,Mode=OneTime,FallbackValue='-'}"/></TextBlock>
+                            <TextBlock><Run FontWeight="Bold" Text="Filter: "/><Run Text="{Binding MatchingFilter.Name,Mode=OneWay, FallbackValue='-'}"/> (Id: <Run Text="{Binding MatchingFilter.FilterId,Mode=OneWay,FallbackValue='-'}"/>)</TextBlock>
+                            <TextBlock><Run FontWeight="Bold" Text="Filter details : "/><Run Text="{Binding MatchingFilter.Description,Mode=OneWay,FallbackValue='-'}"/></TextBlock>
+                            <TextBlock><Run FontWeight="Bold" Text="Service: " /><Run Text="{Binding ServiceName,Mode=OneTime,FallbackValue='-'}"/></TextBlock>
+                            <TextBlock><Run FontWeight="Bold" Text="Entry details: " /><LineBreak /><Run Text="{Binding Message,Mode=OneTime,FallbackValue='-'}"/></TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        </ContentControl>
     </DockPanel>
 </Page>

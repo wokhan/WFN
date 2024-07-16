@@ -20,14 +20,15 @@ namespace Wokhan.WindowsFirewallNotifier.Common.Processes;
 
 public static partial class ProcessHelper
 {
-    public static void RunElevated(string process)
+    public static void RunElevated(string process, string? args = null)
     {
         ProcessStartInfo proc = new ProcessStartInfo
         {
             UseShellExecute = true,
             WorkingDirectory = Environment.CurrentDirectory,
             FileName = process,
-            Verb = "runas"
+            Verb = "runas",
+            Arguments = args
         };
 
         Process.Start(proc);

@@ -11,6 +11,9 @@
     <SolidColorBrush x:Key="DataGridRowSelectedBackground" Color="LightBlue" />
     <SolidColorBrush x:Key="DataGridRowAltBackground" Color="LightGray" />
 
+    <system:Double x:Key="WindowBackgroundOpacity">0.1</system:Double>
+    <SolidColorBrush x:Key="ContainerBackground">#BEFFFFFF</SolidColorBrush>
+
     <SolidColorBrush x:Key="TabItemOverBackground" Color="WhiteSmoke" />
     
     <SolidColorBrush x:Key="ButtonBackground" Color="WhiteSmoke" />
@@ -20,7 +23,7 @@
     <SolidColorBrush x:Key="StatusScreenPublicBackgroundBrush" Color="#FFC5FFC5" />
     <SolidColorBrush x:Key="StatusScreenDomainBackgroundBrush" Color="#FFC1F4FF" />
     <SolidColorBrush x:Key="StatusScreenAllBackgroundBrush" Color="LightGray" />
-
+    
     <system:Double x:Key="{x:Static SystemParameters.CaptionHeightKey}">38</system:Double>
 
     <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="WhiteSmoke" />

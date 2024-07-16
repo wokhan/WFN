@@ -39,7 +39,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Backgrounds\Blue-Abstract.jpg" />
+    <None Remove="Resources\Backgrounds\BG %281%29.jpg" />
+    <None Remove="Resources\Backgrounds\BG %2810%29.jpg" />
+    <None Remove="Resources\Backgrounds\BG %282%29.jpg" />
+    <None Remove="Resources\Backgrounds\BG %283%29.jpg" />
+    <None Remove="Resources\Backgrounds\BG %284%29.jpg" />
+    <None Remove="Resources\Backgrounds\BG %285%29.jpg" />
+    <None Remove="Resources\Backgrounds\BG %286%29.jpg" />
+    <None Remove="Resources\Backgrounds\BG %287%29.jpg" />
+    <None Remove="Resources\Backgrounds\BG %288%29.jpg" />
+    <None Remove="Resources\Backgrounds\BG %289%29.jpg" />
     <None Remove="Resources\Images\WFN-Logo-Transparent.ico" />
     <None Remove="Resources\Images\WFN-Logo-Transparent.png" />
   </ItemGroup>
@@ -70,7 +79,16 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Backgrounds\Blue-Abstract.jpg" />
+    <Resource Include="Resources\Backgrounds\BG (1).jpg" />
+    <Resource Include="Resources\Backgrounds\BG (10).jpg" />
+    <Resource Include="Resources\Backgrounds\BG (2).jpg" />
+    <Resource Include="Resources\Backgrounds\BG (3).jpg" />
+    <Resource Include="Resources\Backgrounds\BG (4).jpg" />
+    <Resource Include="Resources\Backgrounds\BG (5).jpg" />
+    <Resource Include="Resources\Backgrounds\BG (6).jpg" />
+    <Resource Include="Resources\Backgrounds\BG (7).jpg" />
+    <Resource Include="Resources\Backgrounds\BG (8).jpg" />
+    <Resource Include="Resources\Backgrounds\BG (9).jpg" />
     <Resource Include="Resources\Images\WFN-Logo-Transparent.ico" />
     <Resource Include="Resources\Images\WFN-Logo-Transparent.png" />
     <Resource Include="Resources\Images\WFN Logo.png" />
