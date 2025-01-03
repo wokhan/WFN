@@ -11,7 +11,7 @@ public partial class TimerBasedPage : Page
 {
     private readonly System.Timers.Timer timer;
 
-    public virtual List<double> Intervals { get; } = new List<double> { 0.5, 1, 5, 10 };
+    public virtual List<double> Intervals { get; } = [0.5, 1, 5, 10];
 
     public virtual bool IsTrackingEnabled
     {

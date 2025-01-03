@@ -14,14 +14,14 @@ public class DnsResolverTest : NUnitTestBase
     public void TestDnsResolverResolveIpAddresses()
     {
         // Hostname -> IP lookup: https://whatismyipaddress.com/hostname-ip
-        List<string> ipList = new List<string>
-        {
+        List<string> ipList =
+        [
             "52.200.121.83",  // origin on ec2-52-200-121-83.compute-1.amazonaws.com
             "52.200.121.83",  // duplicate
             "8.8.8.8", // dns.google
             "2001:4860:4860::8888", // dns.google
             Dns.GetHostAddresses("www.google.ch").FirstOrDefault().ToString()
-        };
+        ];
 
         WriteDebugOutput("Resolve first 3 entries:");
         _ = ResolvedIPInformation.ResolveIpAddressAsync(ipList[0]).ConfigureAwait(true);
@@ -34,13 +34,13 @@ public class DnsResolverTest : NUnitTestBase
         Assert.That(ResolvedIPInformation.CachedIPHostEntryDict["8.8.8.8"].resolvedHost, Is.EqualTo("dns.google"));
         Assert.True(ResolvedIPInformation.CachedIPHostEntryDict.Values.Count == 4);
 
-        ipList = new List<string>
-        {
+        ipList =
+        [
             "2001:4860:4860::8888", // dns.google
             "172.217.5.195", // lax28s10-in-f195.1e100.net (www.google.ch)
             "23.211.5.15", // a23-211-5-15.deploy.static.akamaitechnologies.com
             "1.78.64.10", // sp1-78-64-10.msa.spmode.ne.jp
-        };
+        ];
         WriteDebugOutput("Resolve next 3 entries:");
         _ = ResolvedIPInformation.ResolveIpAddressAsync(ipList[0]).ConfigureAwait(false);
         _ = ResolvedIPInformation.ResolveIpAddressAsync(ipList[1]).ConfigureAwait(false);
@@ -57,11 +57,11 @@ public class DnsResolverTest : NUnitTestBase
     //[Test, ManualTestCategory]
     public void TestDnsResolverResolveIpAddresses_unresolved()
     {
-        List<string> ipList = new List<string>
-        {
+        List<string> ipList =
+        [
             // unresolvable ips
             "1.9.1.9", // cdns01.tm.net.my
-        };
+        ];
         WriteDebugOutput("Unresolvabe IPs:");
 
         _ = ResolvedIPInformation.ResolveIpAddressAsync("1.9.1.9").ConfigureAwait(false);

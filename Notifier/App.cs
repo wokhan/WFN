@@ -34,7 +34,7 @@ public sealed class App : Application, IDisposable
     private static ActivityWindow activityWindow;
     private EventLog eventLog;
 
-    public ObservableCollection<CurrentConn> Connections { get; } = new ObservableCollection<CurrentConn>();
+    public ObservableCollection<CurrentConn> Connections { get; } = [];
 
     /// <summary>
     /// Main entrypoint of the application.

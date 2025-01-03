@@ -24,5 +24,5 @@ public class AppDataSample
     }
 
     internal static CurrentConn DemoConnection = new DemoCurrentConn();
-    public IList<CurrentConn> Connections { get; } = new List<CurrentConn> { DemoConnection, DemoConnection };
+    public IList<CurrentConn> Connections { get; } = [DemoConnection, DemoConnection];
 }

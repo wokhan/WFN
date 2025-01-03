@@ -1,26 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-using HarfBuzzSharp;
-
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.Themes;
-
-using SkiaSharp.Views.WPF;
-
 using System.ComponentModel;
-using System.Data;
-using System.Drawing.Imaging;
 using System.Timers;
 using System.Windows;
-using System.Windows.Data;
 
 using System.Windows.Media;
 
 using Wokhan.Collections;
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Net.IP;
-
-using Wokhan.WindowsFirewallNotifier.Common.UI.Themes;
+using Wokhan.WindowsFirewallNotifier.Console.Helpers;
 using Wokhan.WindowsFirewallNotifier.Console.ViewModels;
 
 namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
@@ -191,13 +180,15 @@ public partial class Connections : TimerBasedPage
     internal void UpdateConnectionsColors()
     {
         // TODO: temporary improvement for dark themes colors. I'll have to rework this anyway.
-        Colors = Settings.Default.Theme switch
-        {
-            ThemeHelper.THEME_LIGHT => LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList(),
-            ThemeHelper.THEME_DARK => LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList(),
-            ThemeHelper.THEME_SYSTEM => [SystemColors.WindowTextColor],
-            _ => LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList(),
-        };
+        //Colors = Settings.Default.Theme switch
+        //{
+        //    ThemeHelper.THEME_LIGHT => LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList(),
+        //    ThemeHelper.THEME_DARK => LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList(),
+        //    ThemeHelper.THEME_SYSTEM => [SystemColors.WindowTextColor],
+        //    _ => LiveChartsCore.Themes.ColorPalletes.FluentDesign.Select(c => c.AsSKColor().ToColor()).ToList(),
+        //};
+
+        Colors = ColorGenerator.Variations;
 
         // TODO: check for concurrent access issue when switching themes while updating
         // I removed the lock but it could have been useful here...

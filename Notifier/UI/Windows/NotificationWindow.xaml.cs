@@ -507,7 +507,7 @@ public partial class NotificationWindow : System.Windows.Window, INotifyProperty
     }
 
     private static WinForms::NotifyIcon _tempNotifyIcon;
-    private readonly List<CustomRule> _tempRules = new();
+    private readonly List<CustomRule> _tempRules = [];
     private void CreateTempRuleNotifyIcon(CustomRule newRule)
     {
         if (!_tempRules.Contains(newRule))

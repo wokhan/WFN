@@ -14,7 +14,7 @@ namespace Wokhan.WindowsFirewallNotifier.Console.UI.Pages;
 
 public partial class Status : Page
 {
-    public ObservableCollection<string> Messages { get; } = new();
+    public ObservableCollection<string> Messages { get; } = [];
 
     public FirewallStatusWrapper StatusWrapper { get; private set; } = new();
 

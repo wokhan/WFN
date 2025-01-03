@@ -16,7 +16,7 @@ public partial class CurrentConn : LoggedConnection, INotifyPropertyChanged
     //TODO: rename as it's not something "current"
     public string CurrentLocalUserOwner { get; set; }// => this.GetOrSetAsyncValue(() => ProcessHelper.GetLocalUserOwner(Pid), NotifyPropertyChanged, nameof(_currentLocalUserOwner));
 
-    public SortedSet<int> LocalPortArray { get; } = new SortedSet<int>();
+    public SortedSet<int> LocalPortArray { get; } = [];
     
     [ObservableProperty]
     private int _tentativesCounter = 1;

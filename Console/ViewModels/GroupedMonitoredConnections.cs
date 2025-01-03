@@ -8,6 +8,7 @@ public partial class GroupedMonitoredConnections : ObservableObject, IComparable
     public string FileName { get; init; }
     public string Path { get; init; }
     public string? ProductName { get; init; }
+    public uint ProcessId { get; init; }
 
     private SolidColorBrush? _brush;
     public SolidColorBrush Brush => _brush ??= new SolidColorBrush(Color);
@@ -26,6 +27,7 @@ public partial class GroupedMonitoredConnections : ObservableObject, IComparable
         Path = connection.Path!;
         FileName = connection.FileName!;
         ProductName = connection.ProductName;
+        ProcessId = connection.Pid;
         Color = color;
 
         connection.Color = color;

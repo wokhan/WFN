@@ -40,7 +40,7 @@ public abstract partial class IPHelper
         return (int)(BitConverter.IsLittleEndian ? BinaryPrimitives.ReverseEndianness((ushort)_remotePort) : (ushort)_remotePort);
     }
 
-    internal static Dictionary<Connection, MIB_TCPROW_LH> TCP4MIBCACHE = new();
+    internal static Dictionary<Connection, MIB_TCPROW_LH> TCP4MIBCACHE = [];
 
     public static string MergePorts(IEnumerable<int> ports)
     {

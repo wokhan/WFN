@@ -107,7 +107,7 @@ public sealed class EventLogAsyncReader<T> : IPagedSourceProviderAsync<T>, INoti
 
     private readonly Func<EventLogEntry, int, T?> _projection;
     public Func<int, T>? PlaceHolderCreator { get; set; }
-    private readonly Dictionary<int, int> filteredPagesMap = new Dictionary<int, int>();
+    private readonly Dictionary<int, int> filteredPagesMap = [];
 
     public int Count => eventLog.Entries.Count;
 

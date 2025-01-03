@@ -142,7 +142,7 @@ public static partial class ProcessHelper
     {
         // use WMI "Win32_Service" query to get service names by pid
         // https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/win32-service
-        Dictionary<uint, ServiceInfoResult> dict = new Dictionary<uint, ServiceInfoResult>();
+        Dictionary<uint, ServiceInfoResult> dict = [];
         using (var searcher = new ManagementObjectSearcher("SELECT ProcessId, Name, DisplayName, PathName FROM Win32_Service WHERE ProcessId != 0"))
         {
             using var results = searcher.Get();

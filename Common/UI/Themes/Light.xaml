@@ -28,13 +28,16 @@
 
     <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="WhiteSmoke" />
     <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="Black" />
+    <Color x:Key="{x:Static SystemColors.WindowTextColorKey}">Black</Color>
     <SolidColorBrush x:Key="{x:Static SystemColors.ActiveCaptionBrushKey}" Color="LightGray" />
     <SolidColorBrush x:Key="{x:Static SystemColors.ScrollBarBrushKey}" Color="WhiteSmoke" />
     <SolidColorBrush x:Key="{x:Static SystemColors.MenuBarBrushKey}" Color="LightGray" />
     <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="Black" />
     <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="White" />
     <SolidColorBrush x:Key="{x:Static SystemColors.InfoBrushKey}" Color="LightYellow" />
+    <Color x:Key="{x:Static SystemColors.InfoColorKey}">LightYellow</Color>
     <SolidColorBrush x:Key="{x:Static SystemColors.InfoTextBrushKey}" Color="Black" />
+    <Color x:Key="{x:Static SystemColors.InfoTextColorKey}">Black</Color>
     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Gray" />
     <!--<SolidColorBrush x:Key="{x:Static SystemColors.ButtonHighlightBrushKey}" Color="#202020" />-->
 

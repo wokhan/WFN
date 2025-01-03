@@ -1,4 +1,5 @@
 ﻿using LiveChartsCore;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -28,15 +29,15 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
 
     private const int MAX_DURATION_SEC = 10;
 
-    private ObservableDictionary<string, Tuple<ObservableCollection<BandwidthDateTimePoint>, ObservableCollection<BandwidthDateTimePoint>>> allSeries = new();
+    private readonly ObservableDictionary<string, Tuple<ObservableCollection<BandwidthDateTimePoint>, ObservableCollection<BandwidthDateTimePoint>>> allSeries = [];
 
     private DateTime datetime = DateTime.Now;
 
     private bool isXPanned;
 
-    private ObservableCollection<BandwidthDateTimePoint> seriesInTotal = new();
+    private readonly ObservableCollection<BandwidthDateTimePoint> seriesInTotal = [];
 
-    private ObservableCollection<BandwidthDateTimePoint> seriesOutTotal = new();
+    private readonly ObservableCollection<BandwidthDateTimePoint> seriesOutTotal = [];
 
     private Axis xAxis;
     private Axis yAxis;
@@ -55,16 +56,16 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
 
     private void InitMiniGraph()
     {
-        MiniSeries = new List<ISeries> {
-            new LineSeries<BandwidthDateTimePoint>() { Name = "In", Stroke = new SolidColorPaint(SKColors.LightGreen), GeometryStroke = null, GeometryFill = null, Values = seriesInTotal, Mapping = logMapper },
-            new LineSeries<BandwidthDateTimePoint>() { Name = "Out", Stroke = new SolidColorPaint(SKColors.OrangeRed), GeometryStroke = null, GeometryFill = null, Values = seriesOutTotal, Mapping = logMapper }
-        };
+        MiniSeries = [
+            new LineSeries<BandwidthDateTimePoint>() { Name = "In", Stroke = new SolidColorPaint(SKColors.LightGreen), GeometryStroke = null, GeometryFill = null, Values = seriesInTotal, Mapping = LogMapper },
+            new LineSeries<BandwidthDateTimePoint>() { Name = "Out", Stroke = new SolidColorPaint(SKColors.OrangeRed), GeometryStroke = null, GeometryFill = null, Values = seriesOutTotal, Mapping = LogMapper }
+        ];
     }
 
 
     private void InitAxes()
     {
-        var skAxisPaint = new SolidColorPaint(((SolidColorBrush)Application.Current.Resources[System.Windows.SystemColors.WindowTextBrushKey]).Color.ToSKColor());
+        var skAxisPaint = new SolidColorPaint(((Color)Application.Current.Resources[SystemColors.WindowTextColorKey]).ToSKColor());
         crosshairPaint = new SolidColorPaint(SKColors.Red) { StrokeThickness = 1 };
 
         xAxis = (Axis)chart.XAxes.First();
@@ -77,14 +78,15 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
 
         yAxis = (Axis)chart.YAxes.First();
         yAxis.MinLimit = 0;
+        yAxis.MinStep = 10;
         yAxis.TextSize = 10;
-        yAxis.MinStep = 1;
         yAxis.Labeler = (value) => value == 0 ? "0bps" : UnitFormatter.FormatValue(Math.Pow(10, value), "bps");
         yAxis.LabelsPaint = skAxisPaint;
         yAxis.CrosshairPaint = crosshairPaint;
 
         var miniYAxis = miniChart.YAxes.First();
         miniYAxis.MinLimit = 0;
+        miniYAxis.MinStep = 10;
         miniYAxis.TextSize = 10;
         miniYAxis.Padding = new LiveChartsCore.Drawing.Padding(0);
         miniYAxis.ShowSeparatorLines = false;
@@ -123,31 +125,16 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
         }
     }
     public IEnumerable<ISeries> MiniSeries { get; private set; }
-    public ObservableCollection<ISeries> Series { get; } = new();
+    public ObservableCollection<ISeries> Series { get; } = [];
     public double ThumbSize => (xAxis is not null ? (xAxis.MaxLimit - xAxis.MinLimit) * scrollArea.Track.ActualWidth / (xAxis.DataBounds.Max - xAxis.DataBounds.Min) : 0) ?? 0;
 
-    private string tooltipFormatter(ChartPoint<BandwidthDateTimePoint, CircleGeometry, LabelGeometry> arg)
+    private Coordinate LogMapper(BandwidthDateTimePoint dateTimePoint, int _)
     {
-        return $"{((LineSeries<BandwidthDateTimePoint>)arg.Context.Series).Tag} - In: {UnitFormatter.FormatValue(arg.PrimaryValue, "bps")} / Out: {UnitFormatter.FormatValue(arg.TertiaryValue, "bps")}";
+        var value = dateTimePoint.BandwidthIn ?? dateTimePoint.BandwidthOut ?? 0;
+        return new Coordinate(dateTimePoint.DateTime.Ticks, value == 0 ? 0 : Math.Log10(value));
     }
 
-    private Coordinate logMapper(BandwidthDateTimePoint dateTimePoint, int _)
-    {
-        var value = (long)(dateTimePoint.BandwidthIn ?? dateTimePoint.BandwidthOut)!;
-
-        // Only points in the first series (IN bandwidth) have to store the secondary values for the legend
-        // We keep both in / out values since we don't want the log10 for them but the original values.
-        if (dateTimePoint.BandwidthIn is not null)
-        {
-            return new Coordinate(value == 0 ? 0 : Math.Log10(value), dateTimePoint.DateTime.Ticks, dateTimePoint.BandwidthIn ?? 0, dateTimePoint.BandwidthOut ?? 0, 0, 0, Error.Empty);
-        }
-        else
-        {
-            return new Coordinate(value == 0 ? 0 : Math.Log10(value), dateTimePoint.DateTime.Ticks);
-        }
-    }
-
-    readonly DashEffect outDashEffect = new DashEffect(new[] { 2f, 2f });
+    readonly DashEffect outDashEffect = new([2f, 2f]);
 
     public void UpdateGraph()
     {
@@ -170,19 +157,18 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
             {
                 seriesInValues = [];
                 seriesOutValues = [];
-                
+
                 var color = connectionGroup.Key.Color.ToSKColor();
                 var inStroke = new SolidColorPaint(color) { StrokeThickness = 2 };
                 var outStroke = new SolidColorPaint(color) { StrokeThickness = 2, PathEffect = outDashEffect };
-
-                Series.Add(new LineSeries<BandwidthDateTimePoint>() { Tag = connectionGroup.Key.Path, Name = $"{connectionGroup.Key} - In", XToolTipLabelFormatter = tooltipFormatter, Fill = null, Stroke = inStroke, GeometryStroke = inStroke, Values = seriesInValues, LineSmoothness = 0, Mapping = logMapper });
-                Series.Add(new LineSeries<BandwidthDateTimePoint>() { Tag = connectionGroup.Key.Path, Name = $"{connectionGroup.Key} - Out", IsVisibleAtLegend = false, IsHoverable = false, Fill = null, Stroke = outStroke, GeometryStroke = outStroke, Values = seriesOutValues, LineSmoothness = 0, Mapping = logMapper });
-             
+                
+                Series.Add(new LineSeries<BandwidthDateTimePoint>() { Tag = connectionGroup.Key, Name = $"{connectionGroup.Key.FileName} ({connectionGroup.Key.ProcessId}) - In", Fill = null, Stroke = inStroke, GeometryStroke = inStroke, Values = seriesInValues, LineSmoothness = 0, Mapping = LogMapper });
+                Series.Add(new LineSeries<BandwidthDateTimePoint, SquareGeometry>() { Name = $"{connectionGroup.Key.FileName} ({connectionGroup.Key.ProcessId}) - Out", Fill = null, Stroke = outStroke, GeometryStroke = outStroke, Values = seriesOutValues, LineSmoothness = 0, Mapping = LogMapper });
+                
                 allSeries.Add(connectionGroup.Key.Path, Tuple.Create(seriesInValues, seriesOutValues));
             }
 
-            AddAndMergePoints(seriesInValues, connectionGroup.Key.InboundBandwidth, connectionGroup.Key.OutboundBandwidth);
-            AddAndMergePoints(seriesOutValues, bandwidthOut: connectionGroup.Key.OutboundBandwidth);
+            AddAndMergePoints(connectionGroup.Key, seriesInValues, seriesOutValues);
 
             totalIn += connectionGroup.Key.InboundBandwidth;
             totalOut += connectionGroup.Key.OutboundBandwidth;
@@ -208,17 +194,19 @@ public partial class BandwidthGraph : UserControl, INotifyPropertyChanged
         }
     }
 
-    private void AddAndMergePoints(ObservableCollection<BandwidthDateTimePoint> series, ulong? bandwidthIn = null, ulong? bandwidthOut = null)
+
+    private void AddAndMergePoints(GroupedMonitoredConnections group, ObservableCollection<BandwidthDateTimePoint> seriesIn, ObservableCollection<BandwidthDateTimePoint> seriesOut)
     {
-        if (series.Count == 0
-            || (bandwidthIn == 0 && (series[^1].BandwidthIn != 0 || bandwidthOut is not null and not 0))
-            || (bandwidthOut == 0 && series[^1].BandwidthOut != 0))
+        bool isOut = group.OutboundBandwidth != 0 || (seriesOut.Count > 0 && seriesOut[^1].BandwidthOut != 0);
+        if (isOut || group.OutboundBandwidth != 0 || group.InboundBandwidth != 0 || (seriesIn.Count > 0 && seriesIn[^1].BandwidthIn != 0))
         {
-            series.Add(new BandwidthDateTimePoint(datetime, bandwidthIn, bandwidthOut));
-            //if (series.Count > 3 && series[^2].Value == sum && series[^3].Value == sum)
-            //{
-            //    series.RemoveAt(series.Count - 2);
-            //}
+            // Adding both inbound and outbound bandwidth as they will be used in the tooltip
+            seriesIn.Add(new BandwidthDateTimePoint(datetime, group.InboundBandwidth, group.OutboundBandwidth, group));
+        }
+
+        if (isOut)
+        {
+            seriesOut.Add(new BandwidthDateTimePoint(datetime, BandwidthOut: group.OutboundBandwidth));
         }
     }
 
