@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
+using System.Security;
 using System.Security.Principal;
 using System.ServiceProcess;
 using System.Text;
+using System.Xml.Linq;
 
 using Wokhan.WindowsFirewallNotifier.Common.Config;
 using Wokhan.WindowsFirewallNotifier.Common.Logging;
@@ -162,25 +164,41 @@ public static class InstallHelper
     {
         LogHelper.Debug("CreateNotifierTask");
         string tmpXML = Path.GetTempFileName();
-        string newtask;
-        using (var taskStr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Wokhan.WindowsFirewallNotifier.Console.Resources.TaskTemplate.xml")!))
+        try
         {
-            string principle = $"<UserId><![CDATA[{WindowsIdentity.GetCurrent().Name}]]></UserId>";
-            string command = "\"" + Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe") + "\"";
-            string arguments = Settings.Default.StartNotifierMinimized ? "-minimized " + Settings.Default.StartNotifierMinimized : ""; // TODO: To be implemented
-            string dateTime = DateTime.Now.ToString("s");
-            newtask = String.Format(taskStr.ReadToEnd(), principle, command, arguments, dateTime);
+            string newtask;
+            using (var taskStr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Wokhan.WindowsFirewallNotifier.Console.Resources.TaskTemplate.xml")!))
+            {
+                // Values are inserted as XML text: they must be escaped (paths can contain '&', '<'...).
+                string principle = $"<UserId><![CDATA[{WindowsIdentity.GetCurrent().Name}]]></UserId>";
+                string command = SecurityElement.Escape("\"" + Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notifier.exe") + "\"");
+                string arguments = SecurityElement.Escape(Settings.Default.StartNotifierMinimized ? "-minimized " + Settings.Default.StartNotifierMinimized : ""); // TODO: To be implemented
+                string dateTime = DateTime.Now.ToString("s");
+                newtask = String.Format(taskStr.ReadToEnd(), principle, command, arguments, dateTime);
+            }
+
+            // Fail early (and visibly) instead of letting schtasks reject a malformed file.
+            XDocument.Parse(newtask);
+
+            File.WriteAllText(tmpXML, newtask, Encoding.Unicode);
+
+            if (!ProcessHelper.GetProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", $"/IT /Create /TN {NOTIFIER_TASK_NAME} /XML \"" + tmpXML + "\""))
+            {
+                LogHelper.Error("Unable to create the Notifier scheduled task.", null);
+                return false;
+            }
+
+            return RunNotifierTask();
         }
-
-        File.WriteAllText(tmpXML, newtask, Encoding.Unicode);
-
-        bool ret = ProcessHelper.GetProcessFeedback(Environment.SystemDirectory + "\\schtasks.exe", $"/IT /Create /TN {NOTIFIER_TASK_NAME} /XML \"" + tmpXML + "\"");
-
-        File.Delete(tmpXML);
-
-        ret = RunNotifierTask();
-
-        return ret;
+        catch (Exception ex)
+        {
+            LogHelper.Error("Unable to prepare the Notifier scheduled task.", ex);
+            return false;
+        }
+        finally
+        {
+            File.Delete(tmpXML);
+        }
     }
 
     /// <summary>
