@@ -193,49 +193,54 @@ public sealed class App : Application, IDisposable
     {
         try
         {
-            //TODO: looks incorrect to me since SourcePort can be a range ("start IP - end IP" format) since built with IPHelper.MergePorts below
-            var sourcePortAsInt = int.Parse(conn.SourcePort);
-            var existing = Dispatcher.Invoke(() => this.Connections.FirstOrDefault(c => StringComparer.InvariantCultureIgnoreCase.Equals(c.Path, conn.Path) && c.TargetIP == conn.TargetIP && c.TargetPort == conn.TargetPort && (sourcePortAsInt >= IPHelper.GetMaxUserPort() || c.SourcePort == conn.SourcePort) && c.RawProtocol == conn.RawProtocol));
-            if (existing is not null)
+            // The source port can be non-numeric: never drop a notification because of that.
+            if (!int.TryParse(conn.SourcePort, out var sourcePortAsInt))
+            {
+                LogHelper.Warning($"Unexpected source port '{conn.SourcePort}' for '{conn.FileName}', using 0.");
+                sourcePortAsInt = 0;
+            }
+
+            // Fast path: the connection is already pending.
+            if (Dispatcher.Invoke(() => TryMergeWithExisting(conn, sourcePortAsInt)))
             {
                 LogHelper.Debug("Connection matches an already existing connection request.");
-                if (!existing.LocalPortArray.Contains(sourcePortAsInt))
-                {
-                    existing.LocalPortArray.Add(sourcePortAsInt);
-                    existing.SourcePort = IPHelper.MergePorts(existing.LocalPortArray);
-                }
-                existing.TentativesCounter++;
+                return false;
             }
-            else
+
+            // TODO: Service resolution is already done in LogEntryViewModel... so this condition should be moved there as well
+            //ServiceInfoResult svcInfo = null;
+            //if (Settings.Default.EnableServiceDetection)
+            //{
+            //    svcInfo = ServiceNameResolver.GetServiceInfo(conn.Pid, conn.FileName);
+            //}
+
+            // Slow work stays off the UI thread.
+            conn.CurrentAppPkgId = StorePackageHelper.GetAppPkgId(conn.Pid);
+            conn.CurrentLocalUserOwner = ProcessHelper.GetLocalUserOwner(conn.Pid);
+
+            // Check whether this connection is blocked by a rule.
+            var blockingRules = FirewallHelper.GetMatchingRules(conn.Path, conn.CurrentAppPkgId, conn.RawProtocol, conn.TargetIP, conn.TargetPort, conn.SourcePort, conn.ServiceName, conn.CurrentLocalUserOwner, blockOnly: true, outgoingOnly: true);
+            if (blockingRules.Any())
             {
-                // TODO: Service resolution is already done in LogEntryViewModel... so this condition should be moved there as well
-                //ServiceInfoResult svcInfo = null;
-                //if (Settings.Default.EnableServiceDetection)
-                //{
-                //    svcInfo = ServiceNameResolver.GetServiceInfo(conn.Pid, conn.FileName);
-                //}
+                LogHelper.Info("Connection matches a block-rule!");
 
-                conn.CurrentAppPkgId = StorePackageHelper.GetAppPkgId(conn.Pid);
-                conn.CurrentLocalUserOwner = ProcessHelper.GetLocalUserOwner(conn.Pid);
-                
-                // Check whether this connection is blocked by a rule.
-                var blockingRules = FirewallHelper.GetMatchingRules(conn.Path, conn.CurrentAppPkgId, conn.RawProtocol, conn.TargetIP, conn.TargetPort, conn.SourcePort, conn.ServiceName, conn.CurrentLocalUserOwner, blockOnly: true, outgoingOnly: true);
-                if (blockingRules.Any())
+                LogHelper.Debug($"pid: {Environment.ProcessId} GetMatchingRules: {conn.FileName}, {conn.Protocol}, {conn.TargetIP}, {conn.TargetPort}, {conn.SourcePort}, {conn.ServiceName}");
+
+                return false;
+            }
+
+            // Check again and add in a single UI-thread step, so that concurrent events cannot create duplicates.
+            return Dispatcher.Invoke(() =>
+            {
+                if (TryMergeWithExisting(conn, sourcePortAsInt))
                 {
-                    LogHelper.Info("Connection matches a block-rule!");
-
-                    LogHelper.Debug($"pid: {Environment.ProcessId} GetMatchingRules: {conn.FileName}, {conn.Protocol}, {conn.TargetIP}, {conn.TargetPort}, {conn.SourcePort}, {conn.ServiceName}");
-
                     return false;
                 }
 
-
                 conn.LocalPortArray.Add(sourcePortAsInt);
-
-                Dispatcher.Invoke(() => this.Connections.Add(conn));
-
+                this.Connections.Add(conn);
                 return true;
-            }
+            });
         }
         catch (Exception e)
         {
@@ -243,6 +248,28 @@ public sealed class App : Application, IDisposable
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Merges the connection into an already pending one, if any. Must run on the UI thread.
+    /// </summary>
+    /// <returns>true if the connection was merged into an existing request</returns>
+    private bool TryMergeWithExisting(CurrentConn conn, int sourcePort)
+    {
+        var existing = this.Connections.FirstOrDefault(c => StringComparer.InvariantCultureIgnoreCase.Equals(c.Path, conn.Path) && c.TargetIP == conn.TargetIP && c.TargetPort == conn.TargetPort && (sourcePort >= IPHelper.GetMaxUserPort() || c.SourcePort == conn.SourcePort) && c.RawProtocol == conn.RawProtocol);
+        if (existing is null)
+        {
+            return false;
+        }
+
+        if (!existing.LocalPortArray.Contains(sourcePort))
+        {
+            existing.LocalPortArray.Add(sourcePort);
+            existing.SourcePort = IPHelper.MergePorts(existing.LocalPortArray);
+        }
+
+        existing.TentativesCounter++;
+        return true;
     }
 
 
